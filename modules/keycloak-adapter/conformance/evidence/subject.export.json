@@ -1,0 +1,21 @@
+{
+  "verb": "subject.export",
+  "module": "keycloak-adapter",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-16T21:47:33.374Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 8
+  },
+  "artifact": {
+    "uri": "s3://evidence/keycloak-adapter/subject.export.json",
+    "sha256": "f31a212173180a6c3dc6e378f42fc7755fcfb9966e192148c30ea8e5a71461bc"
+  }
+}

@@ -34,8 +34,9 @@ Bølge 0 er implementeret:
 | 3.3 Ops-dashboards (Prometheus/Grafana/Loki) | ✅ | [`observability/`](observability), `make observability-dashboards` / `observability-check`, [ADR-0010](docs/adr/0010-dashboards-fra-manifest.md) |
 | 3.4 Security-plan (Trivy/Falco/Wazuh) | ✅ | [`security/`](security), check `SEC-*` i OSCAL-pakken, [ADR-0011](docs/adr/0011-sikkerhedsfund-i-evidensplanen.md) |
 | 4.1 Ejer-curriculum | ✅ | [`curriculum/`](curriculum), `make curriculum-check` / `curriculum-test`, kontrol `at-2`, [ADR-0012](docs/adr/0012-ejer-curriculum.md) |
+| 4.2 Yderligere adaptere (IAM) | ✅ | [`modules/keycloak-adapter`](modules/keycloak-adapter), `make iam-adapter-test` / `iam-adapter-evidence`, [`docs/spec/iam-adapter.md`](docs/spec/iam-adapter.md) |
 
-Bølge 1 og bølge 2 er komplette: agenten kører et A1-verbum end-to-end, stopper ved utilgængelig PDP/audit-log, eskalerer ved budget- og loop-brud, afviser udeklarerede verber, A4-handlinger og prompt injection. De seks agent-konformanstests er grønne, og reviewer-effekten måles. Bølge 3 er komplet: OSCAL-evidens emitteres automatisk, kontrolmappingen mod NIS2/GDPR/AI Act er maskinlæsbar og håndhævet, SLO-dashboards og agenthandlinger genereres fra manifesterne, og Trivy/Falco/Wazuh-fund indgår i evidensplanen. Bølge 4 er i gang med ejer-curriculumet.
+Bølge 1 og bølge 2 er komplette: agenten kører et A1-verbum end-to-end, stopper ved utilgængelig PDP/audit-log, eskalerer ved budget- og loop-brud, afviser udeklarerede verber, A4-handlinger og prompt injection. De seks agent-konformanstests er grønne, og reviewer-effekten måles. Bølge 3 er komplet: OSCAL-evidens emitteres automatisk, kontrolmappingen mod NIS2/GDPR/AI Act er maskinlæsbar og håndhævet, SLO-dashboards og agenthandlinger genereres fra manifesterne, og Trivy/Falco/Wazuh-fund indgår i evidensplanen. Bølge 4 er i gang: ejer-curriculumet er bygget på rigtige approval-payloads, og IAM-adapteren (Keycloak/Authentik) er den første nye adapter.
 
 ## Kom i gang
 
@@ -143,6 +144,14 @@ Ejer-curriculum:
 make curriculum-check         # validér curriculum og afvisningsscenarier
 make curriculum-render        # vis moduler og scenarier
 make curriculum-test          # 5 tests, inkl. håndhævelse i approval-servicen
+```
+
+IAM-adapter:
+
+```bash
+make iam-adapter-test        # 7 tests mod mock Keycloak
+make iam-adapter-evidence    # fremkald konformansbevis og partial-erkendelse
+make conform MODULE=keycloak-adapter
 ```
 
 ## Struktur

@@ -9,7 +9,9 @@ const modules = loadModules();
 const targets = sloTargets(modules);
 
 test("sloTargets udtrækker ét SLO pr. modul med slo-blok, sorteret", () => {
-  assert.deepEqual(targets.map((t) => t.name), ["audit-service", "dummy-ok", "mattermost-adapter"]);
+  const expected = modules.filter((m) => m.manifest.slo).map((m) => m.manifest.metadata.name).sort();
+  assert.deepEqual(targets.map((t) => t.name), expected);
+  assert.ok(targets.length >= 3, "forventer mindst tre moduler med SLO");
   for (const t of targets) {
     assert.equal(typeof t.availability, "number");
     assert.equal(typeof t.latencyP95Ms, "number");

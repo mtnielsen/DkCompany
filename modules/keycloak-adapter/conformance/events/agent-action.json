@@ -1,0 +1,20 @@
+{
+  "specversion": "1.0",
+  "id": "8f808c7f-c769-4360-a337-c2b40911032c",
+  "source": "urn:platform:module:keycloak-adapter",
+  "type": "dk.platform.keycloak-adapter.subject-locate.completed",
+  "time": "2026-09-16T21:47:33.362Z",
+  "datacontenttype": "application/json",
+  "tenantid": "acme",
+  "traceid": "828a7420b9431d7850d5758fd86a898c",
+  "spanid": "98b6b3bf3d0772e9",
+  "principal": {
+    "kind": "agent",
+    "id": "spiffe://platform.example.org/agents/keycloak-adapter"
+  },
+  "dataclassification": "personal",
+  "data": {
+    "verb": "subject.locate",
+    "decision": "allow"
+  }
+}

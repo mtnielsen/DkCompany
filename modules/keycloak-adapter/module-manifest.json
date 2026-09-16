@@ -1,0 +1,169 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ModuleManifest",
+  "metadata": {
+    "name": "keycloak-adapter",
+    "version": "1.0.0",
+    "description": "IAM-adapter. Wrapper Keycloak/Authentik uændret og opfylder privacy-verberne gennem Admin API'et. Erkender ærligt, at subject.erase er partial: brugeren slettes, men event-store, backups og cachede tokens er ikke nødvendigvis væk.",
+    "owner": { "team": "platform", "contact": "platform@example.org" },
+    "accountableHuman": { "subject": "oidc|anna.andersen", "role": "Platform Owner" },
+    "labels": { "tier": "adapter", "wave": "4" }
+  },
+  "identity": {
+    "userStore": "none",
+    "oidc": {
+      "issuer": "https://id.example.org/realms/platform",
+      "clientId": "keycloak-adapter",
+      "scopes": ["openid", "profile", "email", "groups"],
+      "claimMapping": { "subject": "sub", "email": "email", "groups": "groups", "tenant": "tenant_id" },
+      "pkceRequired": true,
+      "tokenAudience": "keycloak-adapter"
+    },
+    "scim": {
+      "version": "2.0",
+      "endpoint": "https://id.example.org/scim/v2",
+      "mode": "consumer",
+      "supportsPatch": true,
+      "supportsBulk": false
+    },
+    "spiffe": {
+      "spiffeId": "spiffe://platform.example.org/modules/keycloak-adapter",
+      "trustDomain": "platform.example.org",
+      "credentialMode": "just-in-time",
+      "maxCredentialTtlSeconds": 900
+    },
+    "audit": { "authenticationEventsTo": "dk.platform.identity.authn.", "retainDays": 365 }
+  },
+  "telemetry": {
+    "serviceName": "keycloak-adapter",
+    "otel": {
+      "exporter": "otlp-grpc",
+      "endpoint": "https://otel-collector.platform.example.org:4317",
+      "signals": ["traces", "metrics", "logs"],
+      "resourceAttributes": {
+        "service.name": "keycloak-adapter",
+        "service.version": "1.0.0",
+        "deployment.environment": "dev"
+      },
+      "sampling": { "strategy": "parentbased-traceidratio", "ratio": 0.2 }
+    },
+    "cloudEvents": {
+      "source": "urn:platform:module:keycloak-adapter",
+      "typePrefix": "dk.platform.keycloak-adapter.",
+      "sink": "https://events.platform.example.org/events",
+      "requiredAttributes": ["tenantid", "traceid", "principal"],
+      "dataClassificationRequired": true
+    },
+    "retention": { "logsDays": 365, "tracesDays": 30, "metricsDays": 400, "eventsDays": 1825 }
+  },
+  "policy": {
+    "pdp": {
+      "endpoint": "https://pdp.platform.example.org/v1/data/platform/ops/decision",
+      "protocol": "http-json",
+      "decisionTtlSeconds": 60
+    },
+    "bundle": {
+      "name": "platform",
+      "version": "1.0.0",
+      "sha256": "baeeeb11cb003454ccd12473856966c8769388870d74f30428dfc9bd20ba2d86"
+    },
+    "failMode": "closed",
+    "gatedVerbs": [
+      "restore",
+      "upgrade",
+      "migrate",
+      "rollback",
+      "drain",
+      "subject.erase",
+      "subject.export",
+      "subject.legal_hold"
+    ],
+    "decisionCacheSeconds": 30,
+    "evidence": {
+      "kind": "fixture",
+      "ref": "conformance/evidence/policy-decision.json",
+      "capturedAt": "2025-09-01T07:55:00Z"
+    }
+  },
+  "verbs": {
+    "backup": {
+      "conformance": "unsupported",
+      "reason": "Keycloaks backup er en database- og konfigurationsdump på driftniveau; adapteren har ingen API-adgang til at tage den."
+    },
+    "restore": {
+      "conformance": "unsupported",
+      "reason": "Gendannelse af Keycloak sker ved at genskabe databasen og konfigurationen og kan ikke udføres gennem Admin API'et."
+    },
+    "verify-restore": {
+      "conformance": "unsupported",
+      "reason": "Der findes ingen API til at verificere en gendannelse; det kræver adgang til backup- og databaselaget."
+    },
+    "drain": {
+      "conformance": "partial",
+      "reason": "Adapteren kan afvise nye login ved at deaktivere realm-adgang, men kan ikke afbryde aktive sessioner i andre klienter."
+    },
+    "upgrade.dry-run": {
+      "conformance": "partial",
+      "reason": "Adapteren kan rapportere nuværende Keycloak-version og ønsket version, men Keycloak tilbyder ikke en egentlig dry-run."
+    },
+    "upgrade": {
+      "conformance": "unsupported",
+      "reason": "Keycloak opgraderes ved at udskifte containeren og migrere databasen; det ligger uden for adapterens verbkontrakt."
+    },
+    "migrate": {
+      "conformance": "unsupported",
+      "reason": "Keycloak kører sine egne database-migrationer ved opstart; adapteren kan ikke styre eller rulle dem tilbage."
+    },
+    "rollback": {
+      "conformance": "unsupported",
+      "reason": "Rollback af en IAM-ændring kræver gendannelse fra backup og er derfor ikke mulig gennem adapteren."
+    },
+    "health": {
+      "conformance": "full",
+      "endpoint": "https://keycloak-adapter.example.org/healthz",
+      "evidence": { "kind": "fixture", "ref": "conformance/evidence/health.json" }
+    },
+    "slo": {
+      "conformance": "partial",
+      "reason": "Adapteren måler sin egen svartid, men Keycloaks oppetid og fejlbudget ligger hos upstream-drift."
+    }
+  },
+  "privacy": {
+    "subject.locate": {
+      "conformance": "full",
+      "endpoint": "https://keycloak-adapter.example.org/v1/privacy/locate",
+      "evidence": { "kind": "fixture", "ref": "conformance/evidence/subject.locate.json" }
+    },
+    "subject.export": {
+      "conformance": "full",
+      "endpoint": "https://keycloak-adapter.example.org/v1/privacy/export",
+      "evidence": { "kind": "fixture", "ref": "conformance/evidence/subject.export.json" }
+    },
+    "subject.erase": {
+      "conformance": "partial",
+      "reason": "Adapteren kan slette brugeren gennem Admin API'et, men ikke event-store, backups eller cachede tokens; det skal håndteres af upstream-drift.",
+      "endpoint": "https://keycloak-adapter.example.org/v1/privacy/erase",
+      "evidence": {
+        "kind": "declared",
+        "ref": "docs/spec/iam-adapter.md",
+        "notes": "Begrænsningen er dokumenteret og afspejlet i API-svaret."
+      }
+    },
+    "subject.legal_hold": {
+      "conformance": "partial",
+      "reason": "Adapteren kan deaktivere kontoen for at forhindre ændringer, men kan ikke garantere at en administrator ikke sletter brugeren alligevel."
+    },
+    "retention.policy": {
+      "conformance": "partial",
+      "reason": "Keycloak har globale opbevaringsindstillinger for hændelser, men de kan ikke sættes eller rapporteres pr. subjekt gennem adapteren."
+    },
+    "dataCategories": ["operational", "pseudonymised", "personal"],
+    "dsarEndpoint": "https://keycloak-adapter.example.org/v1/privacy"
+  },
+  "slo": { "availability": 99.9, "latencyP95Ms": 200, "errorBudgetRef": "docs/slo/keycloak-adapter.md" },
+  "compliance": {
+    "controlRefs": ["ac-2", "au-2", "si-12"],
+    "dpiaRef": "docs/dpia/keycloak-adapter.md",
+    "dataProcessingRole": "processor"
+  }
+}

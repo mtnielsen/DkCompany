@@ -22,5 +22,6 @@ De fire planer og den suite, der bevogter dem. Hver spec svarer til et punkt i `
 - [Ops-dashboards: Prometheus, Grafana og Loki](observability.md) — 3.3
 - [Sikkerhedsplan: Trivy, Falco og Wazuh](security-plan.md) — 3.4
 - [Ejer-curriculum](curriculum.md) — 4.1
+- [IAM-adapter: Keycloak / Authentik](iam-adapter.md) — 4.2
 
 Arkitekturvalgene bag findes i [`docs/adr`](../adr/).
