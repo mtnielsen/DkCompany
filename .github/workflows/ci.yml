@@ -24,6 +24,8 @@ jobs:
       - run: make lint
       - run: make compliance-test
       - run: make compliance-check
+      - run: make pitch-test
+      - run: make pitch-check
 
   test:
     name: Suitens egne tests

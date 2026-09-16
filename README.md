@@ -35,8 +35,9 @@ Bølge 0 er implementeret:
 | 3.4 Security-plan (Trivy/Falco/Wazuh) | ✅ | [`security/`](security), check `SEC-*` i OSCAL-pakken, [ADR-0011](docs/adr/0011-sikkerhedsfund-i-evidensplanen.md) |
 | 4.1 Ejer-curriculum | ✅ | [`curriculum/`](curriculum), `make curriculum-check` / `curriculum-test`, kontrol `at-2`, [ADR-0012](docs/adr/0012-ejer-curriculum.md) |
 | 4.2 Yderligere adaptere (IAM) | ✅ | [`modules/keycloak-adapter`](modules/keycloak-adapter), `make iam-adapter-test` / `iam-adapter-evidence`, [`docs/spec/iam-adapter.md`](docs/spec/iam-adapter.md) |
+| 4.3 Pitch / LinkedIn | ✅ | [`docs/pitch`](docs/pitch), `make pitch-check` / `pitch-test` |
 
-Bølge 1 og bølge 2 er komplette: agenten kører et A1-verbum end-to-end, stopper ved utilgængelig PDP/audit-log, eskalerer ved budget- og loop-brud, afviser udeklarerede verber, A4-handlinger og prompt injection. De seks agent-konformanstests er grønne, og reviewer-effekten måles. Bølge 3 er komplet: OSCAL-evidens emitteres automatisk, kontrolmappingen mod NIS2/GDPR/AI Act er maskinlæsbar og håndhævet, SLO-dashboards og agenthandlinger genereres fra manifesterne, og Trivy/Falco/Wazuh-fund indgår i evidensplanen. Bølge 4 er i gang: ejer-curriculumet er bygget på rigtige approval-payloads, og IAM-adapteren (Keycloak/Authentik) er den første nye adapter.
+Bølge 1 og bølge 2 er komplette: agenten kører et A1-verbum end-to-end, stopper ved utilgængelig PDP/audit-log, eskalerer ved budget- og loop-brud, afviser udeklarerede verber, A4-handlinger og prompt injection. De seks agent-konformanstests er grønne, og reviewer-effekten måles. Bølge 3 er komplet: OSCAL-evidens emitteres automatisk, kontrolmappingen mod NIS2/GDPR/AI Act er maskinlæsbar og håndhævet, SLO-dashboards og agenthandlinger genereres fra manifesterne, og Trivy/Falco/Wazuh-fund indgår i evidensplanen. Bølge 4 er komplet: ejer-curriculumet er bygget på rigtige approval-payloads, IAM-adapteren (Keycloak/Authentik) er den første nye adapter, og pitch-deckets beviser efterprøves i CI.
 
 ## Kom i gang
 
@@ -154,6 +155,13 @@ make iam-adapter-evidence    # fremkald konformansbevis og partial-erkendelse
 make conform MODULE=keycloak-adapter
 ```
 
+Pitch:
+
+```bash
+make pitch-check              # hvert bevis i decket skal findes
+make pitch-test               # checkerens tests (4 tests)
+```
+
 ## Struktur
 
 ```
@@ -170,6 +178,7 @@ compliance/    kontrolmapping mod NIS2, GDPR og AI Act (kanonisk registry + gene
 observability/ Prometheus-regler og Grafana-dashboards genereret fra modulets SLO
 security/      Trivy, Falco og Wazuh normaliseret ind i OSCAL-evidensplanen
 curriculum/    ejer-curriculum bygget på rigtige approval-payloads
+pitch/         pitch-deck og LinkedIn-udkast med efterprøvede beviser
 gitops/        ønsket tilstand, Argo CD-apps og reconcile (det, der ruller ud)
 docs/adr/      beslutningslog i MADR-format
 docs/spec/     planerne i prosa
