@@ -22,6 +22,8 @@ jobs:
       - run: make install
       - run: make validate
       - run: make lint
+      - run: make compliance-test
+      - run: make compliance-check
 
   test:
     name: Suitens egne tests

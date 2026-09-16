@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/control-mapping.schema.json",
+  "title": "Control Mapping",
+  "description": "Kortlægger platformens tekniske kontroller mod regulatoriske krav (NIS2, GDPR, AI Act) og angiver for hvert krav, hvem der bærer handlingen: platformen som udgiver eller organisationen der deployer. Kortlægningen er en påstand om mekanismer, ikke en påstand om juridisk compliance.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "roleStatement", "frameworks", "controls"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "ControlMapping" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "lastReviewed"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{3,63}$" },
+        "version": { "type": "string" },
+        "description": { "type": "string", "minLength": 10 },
+        "lastReviewed": { "type": "string", "format": "date" }
+      }
+    },
+    "roleStatement": {
+      "type": "object",
+      "required": ["issuer", "deployer", "shared"],
+      "additionalProperties": false,
+      "properties": {
+        "issuer": { "type": "string", "minLength": 10 },
+        "deployer": { "type": "string", "minLength": 10 },
+        "shared": { "type": "string", "minLength": 10 }
+      }
+    },
+    "frameworks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "requirements"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "enum": ["nis2", "gdpr", "ai-act"] },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "requirements": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["id", "title", "role"],
+              "additionalProperties": false,
+              "properties": {
+                "id": { "type": "string", "pattern": "^[a-z0-9.-]+$" },
+                "title": { "type": "string" },
+                "summary": { "type": "string" },
+                "role": { "enum": ["issuer", "deployer", "shared"] }
+              }
+            }
+          }
+        }
+      }
+    },
+    "controls": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "role", "satisfies", "evidence"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z]{2}-[0-9]+$" },
+          "title": { "type": "string" },
+          "role": { "enum": ["issuer", "deployer", "shared"] },
+          "satisfies": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+          "evidence": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+          "notes": { "type": "string" }
+        }
+      }
+    }
+  }
+}

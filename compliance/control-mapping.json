@@ -1,0 +1,119 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ControlMapping",
+  "metadata": {
+    "name": "platform-control-mapping",
+    "version": "1.0.0",
+    "description": "Kortlægger platformens tekniske kontroller mod NIS2 (art. 21 og 23), GDPR (art. 5–35) og AI Act (art. 9–15). Kortlægningen er den maskinlæsbare kilde; docs/compliance/mapping.md genereres herfra.",
+    "lastReviewed": "2025-09-01"
+  },
+  "roleStatement": {
+    "issuer": "Stiller mekanismen til rådighed og beviser den i CI: kontrakter, konformanstests, signerede policy-bundles og OSCAL-evidens.",
+    "deployer": "Konfigurerer, driver og overvåger mekanismen for sine egne systemer og bærer det juridiske ansvar.",
+    "shared": "Platformen leverer mekanismen, men den virker kun, hvis deployeren aktiverer den, fører tilsyn og reagerer på signalerne."
+  },
+  "frameworks": [
+    {
+      "id": "nis2",
+      "name": "NIS2 (direktiv (EU) 2022/2555)",
+      "description": "Krav til cyber- og informationssikkerhed for væsentlige og vigtige enheder.",
+      "requirements": [
+        { "id": "nis2-art21-2a", "title": "Risikoanalyse og sikkerhedspolitik", "summary": "Politikker for risikoanalyse og informationssikkerhed.", "role": "shared" },
+        { "id": "nis2-art21-2b", "title": "Håndtering af sikkerhedshændelser", "summary": "Evne til at opdage, håndtere og rapportere hændelser.", "role": "deployer" },
+        { "id": "nis2-art21-2c", "title": "Forretningskontinuitet og backup", "summary": "Backup, gendannelse og kriseberedskab.", "role": "shared" },
+        { "id": "nis2-art21-2d", "title": "Sikkerhed i forsyningskæden", "summary": "Sikkerhed hos leverandører og tjenesteudbydere.", "role": "issuer" },
+        { "id": "nis2-art21-2e", "title": "Sårbarhedshåndtering", "summary": "Find, vurdér og afhjælp sårbarheder.", "role": "shared" },
+        { "id": "nis2-art21-2f", "title": "Effektivitetsvurdering", "summary": "Vurdér om foranstaltningerne virker.", "role": "issuer" },
+        { "id": "nis2-art21-2g", "title": "Cyberhygiejne og træning", "summary": "Grundlæggende hygiejne og sikkerhedstræning.", "role": "deployer" },
+        { "id": "nis2-art21-2h", "title": "Kryptografi", "summary": "Kryptering og beskyttelse af data i hvile og transit.", "role": "issuer" },
+        { "id": "nis2-art21-2i", "title": "Adgangskontrol", "summary": "Styring af identiteter, rettigheder og adgang.", "role": "shared" },
+        { "id": "nis2-art21-2j", "title": "Multifaktorautentificering", "summary": "MFA og sikker kommunikation.", "role": "deployer" },
+        { "id": "nis2-art23", "title": "Indberetning af hændelser", "summary": "Underretning af myndigheder inden for fristerne.", "role": "deployer" }
+      ]
+    },
+    {
+      "id": "gdpr",
+      "name": "GDPR (forordning (EU) 2016/679)",
+      "description": "Krav til behandling af personoplysninger og den registreredes rettigheder.",
+      "requirements": [
+        { "id": "gdpr-art5", "title": "Principper for behandling", "summary": "Lovlighed, formålsbegrænsning, dataminimering, opbevaringsbegrænsning.", "role": "shared" },
+        { "id": "gdpr-art15-17", "title": "Den registreredes rettigheder", "summary": "Indsigt, berigtigelse og sletning.", "role": "deployer" },
+        { "id": "gdpr-art25", "title": "Indbygget databeskyttelse", "summary": "Privacy by design og by default.", "role": "issuer" },
+        { "id": "gdpr-art30", "title": "Fortegnelse over behandlinger", "summary": "Dokumentation af behandlingsaktiviteter.", "role": "deployer" },
+        { "id": "gdpr-art32", "title": "Sikkerhed i behandlingen", "summary": "Passende tekniske og organisatoriske foranstaltninger.", "role": "shared" },
+        { "id": "gdpr-art33", "title": "Anmeldelse af brud", "summary": "Underretning ved brud på persondatasikkerheden.", "role": "deployer" },
+        { "id": "gdpr-art35", "title": "Konsekvensanalyse (DPIA)", "summary": "Vurdering ved høj risiko for den registrerede.", "role": "deployer" }
+      ]
+    },
+    {
+      "id": "ai-act",
+      "name": "AI Act (forordning (EU) 2024/1689)",
+      "description": "Forpligtelser for udbydere og deployere af AI-systemer med relevans for agentlaget.",
+      "requirements": [
+        { "id": "ai-act-art9", "title": "Risikostyringssystem", "summary": "Løbende risikostyring gennem systemets levetid.", "role": "shared" },
+        { "id": "ai-act-art12", "title": "Logning", "summary": "Automatisk registrering af hændelser gennem systemets levetid.", "role": "issuer" },
+        { "id": "ai-act-art13", "title": "Transparens", "summary": "Deployer skal kunne forstå systemets formål og grænser.", "role": "issuer" },
+        { "id": "ai-act-art14", "title": "Menneskeligt tilsyn", "summary": "Effektivt menneskeligt tilsyn med systemet.", "role": "issuer" },
+        { "id": "ai-act-art15", "title": "Nøjagtighed, robusthed og cybersikkerhed", "summary": "Modstandsdygtighed over for fejl og angreb.", "role": "shared" }
+      ]
+    }
+  ],
+  "controls": [
+    {
+      "id": "ac-2",
+      "title": "Account management (identitet og adgang)",
+      "role": "shared",
+      "satisfies": ["nis2-art21-2i", "gdpr-art32", "ai-act-art14"],
+      "evidence": ["C-005", "A-002"],
+      "notes": "Ingen lokal brugerdatabase; OIDC/SCIM/SPIFFE og navngivet ansvarlig for agenter."
+    },
+    {
+      "id": "au-2",
+      "title": "Audit events (sporbarhed)",
+      "role": "issuer",
+      "satisfies": ["nis2-art21-2b", "gdpr-art30", "ai-act-art12"],
+      "evidence": ["C-006", "C-007"],
+      "notes": "Én CloudEvents-envelope for menneske- og agenthandlinger med tenantid, traceid og principal."
+    },
+    {
+      "id": "au-9",
+      "title": "Protection of audit information (integritet)",
+      "role": "issuer",
+      "satisfies": ["nis2-art21-2h", "gdpr-art32", "ai-act-art15"],
+      "evidence": ["C-009", "C-010", "modules/audit-service/service/test/store.test.mjs"],
+      "notes": "Hash-kædet append-only log i audit-service; signerede og verifierede policy-bundles; fail-closed PDP."
+    },
+    {
+      "id": "cp-9",
+      "title": "System backup (kontinuitet)",
+      "role": "shared",
+      "satisfies": ["nis2-art21-2c"],
+      "evidence": ["C-004"],
+      "notes": "Backup, restore og verify-restore er deklarerede verber med deterministiske beviser; upstream-adaptere erklærer ærligt partial/unsupported."
+    },
+    {
+      "id": "si-12",
+      "title": "Information handling and retention (datastyring)",
+      "role": "shared",
+      "satisfies": ["gdpr-art5", "gdpr-art15-17", "ai-act-art12"],
+      "evidence": ["C-008", "modules/audit-service/conformance/evidence/subject.erase.json"],
+      "notes": "Privacy-verber og datakategorier hænger sammen; sletning og opbevaring er deklarerede og evidensbelagte."
+    },
+    {
+      "id": "cm-2",
+      "title": "Baseline configuration (git som ændringskanal)",
+      "role": "issuer",
+      "satisfies": ["nis2-art21-2d", "nis2-art21-2f"],
+      "evidence": ["G-001", "G-002", "G-004", "gitops/src/verify.mjs"],
+      "notes": "Alle ændringer gennem git; Argo CD selfHeal + prune; images pinnet på digest; drift opdages og føres tilbage."
+    },
+    {
+      "id": "ra-5",
+      "title": "Vulnerability monitoring and scanning",
+      "role": "shared",
+      "satisfies": ["nis2-art21-2e"],
+      "evidence": ["G-002", "gitops/src/verify.mjs"],
+      "notes": "Image-digests og hardening gates nu; Trivy/Falco/Wazuh kobles på i 3.4 og emitteres gennem evidensplanen."
+    }
+  ]
+}

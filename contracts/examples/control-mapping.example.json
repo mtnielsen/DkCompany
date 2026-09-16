@@ -1,0 +1,40 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ControlMapping",
+  "metadata": {
+    "name": "example-control-mapping",
+    "version": "1.0.0",
+    "description": "Eksempel på en kontrolmapping. Den kanoniske mapping ligger i compliance/control-mapping.json.",
+    "lastReviewed": "2025-09-01"
+  },
+  "roleStatement": {
+    "issuer": "Udgiveren stiller mekanismen til rådighed og beviser den i CI.",
+    "deployer": "Deployeren konfigurerer, driver og overvåger mekanismen og bærer ansvaret.",
+    "shared": "Delt: mekanismen virker kun, hvis deployer aktiverer og følger den."
+  },
+  "frameworks": [
+    {
+      "id": "nis2",
+      "name": "NIS2",
+      "description": "Eksempelframework.",
+      "requirements": [
+        {
+          "id": "nis2-art21-2i",
+          "title": "Adgangskontrol",
+          "summary": "Styring af identiteter, rettigheder og adgang.",
+          "role": "shared"
+        }
+      ]
+    }
+  ],
+  "controls": [
+    {
+      "id": "ac-2",
+      "title": "Account management",
+      "role": "shared",
+      "satisfies": ["nis2-art21-2i"],
+      "evidence": ["C-005"],
+      "notes": "Ingen lokal brugerdatabase."
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "@platform/compliance",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Kontrolmapping mod NIS2, GDPR og AI Act. Kanonisk kilde er control-mapping.json; docs/compliance/mapping.md genereres herfra.",
+  "bin": {
+    "control-mapping": "./src/cli.mjs"
+  },
+  "scripts": {
+    "test": "node --test"
+  }
+}

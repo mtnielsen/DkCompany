@@ -24,6 +24,7 @@ export const SCHEMA_IDS = {
   policyDecision: "https://example.org/contracts/policy-decision.schema.json",
   policyBundle: "https://example.org/contracts/policy-bundle.schema.json",
   oscalAssessmentResults: "https://example.org/contracts/oscal-assessment-results.schema.json",
+  controlMapping: "https://example.org/contracts/control-mapping.schema.json",
 };
 
 /** Læs alle kontraktskemaer fra /contracts. */

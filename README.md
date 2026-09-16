@@ -4,6 +4,8 @@ Et monorepo for de kontrakter, der gør en fler-modul-platform styrbar og bevise
 
 Udgangspunktet er [BACKLOG.md](BACKLOG.md). Princippet er **kontrakt før implementering, test før moduler, to beviste adaptere før skalering, agenter før dashboards.**
 
+> **Dette repo er ikke «compliant software».** Det er kontrakter, tests og evidensmaskineri. Det gør en organisation i stand til at dokumentere og håndhæve sine kontroller — ikke til at være compliant. Ansvaret ligger hos den, der deployer og driver platformen. Læs mere i [`docs/compliance`](docs/compliance).
+
 ## Status
 
 Bølge 0 er implementeret:
@@ -28,8 +30,9 @@ Bølge 0 er implementeret:
 | 2.6 Agent-konformanstests (seks) | ✅ | [`conformance/test/agent-conformance.test.mjs`](conformance/test/agent-conformance.test.mjs) |
 | 2.7 Reviewer-effektmåling | ✅ | [`reviewer/src/metrics.mjs`](reviewer/src/metrics.mjs), `make reviewer-metrics` |
 | 3.1 Compliance-evidens-emitter (OSCAL) | ✅ | [`evidence/`](evidence), [`contracts/oscal-assessment-results.schema.json`](contracts/oscal-assessment-results.schema.json), `make oscal-evidence` / `make evidence-test`, [ADR-0008](docs/adr/0008-oscal-evidensprofil.md) |
+| 3.2 Kontrolmapping NIS2 / GDPR / AI Act | ✅ | [`compliance/`](compliance), [`docs/compliance/mapping.md`](docs/compliance/mapping.md), check `C-012`, [ADR-0009](docs/adr/0009-kontrolmapping-roller.md) |
 
-Bølge 1 og bølge 2 er komplette: agenten kører et A1-verbum end-to-end, stopper ved utilgængelig PDP/audit-log, eskalerer ved budget- og loop-brud, afviser udeklarerede verber, A4-handlinger og prompt injection. De seks agent-konformanstests er grønne, og reviewer-effekten måles. Bølge 3 er i gang: OSCAL-evidens emitteres nu automatisk fra konformanskørsler. Næste er kontrolmapping, dashboards og sikkerhedsplan.
+Bølge 1 og bølge 2 er komplette: agenten kører et A1-verbum end-to-end, stopper ved utilgængelig PDP/audit-log, eskalerer ved budget- og loop-brud, afviser udeklarerede verber, A4-handlinger og prompt injection. De seks agent-konformanstests er grønne, og reviewer-effekten måles. Bølge 3 er i gang: OSCAL-evidens emitteres automatisk fra konformanskørsler, og kontrolmappingen mod NIS2/GDPR/AI Act er maskinlæsbar og håndhævet i CI. Næste er dashboards og sikkerhedsplan.
 
 ## Kom i gang
 
@@ -107,6 +110,14 @@ make oscal-evidence           # OSCAL-assessment-results fra konformans, policy,
 make evidence-test            # validerer evidenspakken mod kontrakten (4 tests)
 ```
 
+Compliance:
+
+```bash
+make compliance-mapping       # genskab docs/compliance/mapping.md fra registry
+make compliance-check         # fejl hvis docs er ude af trit med registry
+make compliance-test          # validering og krydsreferencer (4 tests)
+```
+
 ## Struktur
 
 ```
@@ -119,6 +130,7 @@ runtime/       agent-runtime: SPIFFE, JIT-credentials, budgetter, dødemandsgreb
 approvals/     approval-service: godkendelser, træningskrav, evidens/prosa-visning
 reviewer/      adversarial reviewer-agent (kan kun flagge/afvise) + effektmåling
 evidence/      OSCAL-evidens-emitter: maskinlæsbar compliance-evidens fra platformens artefakter
+compliance/    kontrolmapping mod NIS2, GDPR og AI Act (kanonisk registry + generator)
 gitops/        ønsket tilstand, Argo CD-apps og reconcile (det, der ruller ud)
 docs/adr/      beslutningslog i MADR-format
 docs/spec/     planerne i prosa

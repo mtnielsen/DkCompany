@@ -21,6 +21,7 @@ const EXAMPLE_SCHEMA = {
   "agent-task": "https://example.org/contracts/agent-task.schema.json",
   "gateway-route": "https://example.org/contracts/gateway-route.schema.json",
   "oscal-assessment-results": "https://example.org/contracts/oscal-assessment-results.schema.json",
+  "control-mapping": "https://example.org/contracts/control-mapping.schema.json",
 };
 
 function main() {
