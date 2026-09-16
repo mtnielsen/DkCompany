@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/security-findings.schema.json",
+  "title": "Security Findings",
+  "description": "Normaliserede sikkerhedsfund fra Trivy (CI), Falco (runtime) og Wazuh (SIEM). Formatet er scanneruafhængigt, så fundene kan indgå i OSCAL-evidenspakken som observationer i stedet for at ligge i en separat silo. 'pass' betyder ingen fund; 'partial' betyder kun medium/low; 'fail' betyder mindst ét critical/high.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "generatedAt", "reports"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "SecurityFindings" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "reports": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/report" }
+    }
+  },
+  "$defs": {
+    "report": {
+      "type": "object",
+      "required": ["scanner", "target", "capturedAt", "status", "summary", "findings"],
+      "additionalProperties": false,
+      "properties": {
+        "scanner": { "enum": ["trivy", "falco", "wazuh"] },
+        "scannerVersion": { "type": "string" },
+        "target": { "type": "string", "minLength": 1 },
+        "capturedAt": { "type": "string", "format": "date-time" },
+        "status": { "enum": ["pass", "partial", "fail"] },
+        "summary": {
+          "type": "object",
+          "required": ["critical", "high", "medium", "low", "total"],
+          "additionalProperties": false,
+          "properties": {
+            "critical": { "type": "integer", "minimum": 0 },
+            "high": { "type": "integer", "minimum": 0 },
+            "medium": { "type": "integer", "minimum": 0 },
+            "low": { "type": "integer", "minimum": 0 },
+            "total": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "findings": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/finding" }
+        },
+        "artifact": {
+          "type": "object",
+          "required": ["uri", "sha256"],
+          "additionalProperties": false,
+          "properties": {
+            "uri": { "type": "string" },
+            "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+          }
+        }
+      }
+    },
+    "finding": {
+      "type": "object",
+      "required": ["id", "title", "severity", "resource"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "severity": { "enum": ["critical", "high", "medium", "low"] },
+        "resource": { "type": "string" },
+        "detail": { "type": "string" },
+        "remediation": { "type": "string" }
+      }
+    }
+  }
+}

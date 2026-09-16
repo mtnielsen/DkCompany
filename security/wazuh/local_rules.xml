@@ -1,0 +1,32 @@
+<!--
+  Wazuh-regler for platformen (3.4).
+
+  Wazuh læser CloudEvent-linjer og OTel-eksporterede hændelser, korrelerer dem
+  og alarmerer. Alarmerne normaliseres af security/src/normalize.mjs og indgår i
+  OSCAL-evidensplanen sammen med Trivy- og Falco-fund.
+-->
+<group name="platform,">
+  <rule id="100100" level="3">
+    <decoded_as>json</decoded_as>
+    <field name="principal.kind">agent</field>
+    <description>Agenthandling registreret</description>
+  </rule>
+
+  <rule id="100101" level="10">
+    <if_sid>100100</if_sid>
+    <field name="data.decision">deny</field>
+    <description>Agenthandling nægtet af PDP</description>
+  </rule>
+
+  <rule id="100102" level="12">
+    <decoded_as>json</decoded_as>
+    <field name="type">dk.platform.agent.budget_exceeded</field>
+    <description>Agent overskred sit budget</description>
+  </rule>
+
+  <rule id="100103" level="12">
+    <decoded_as>json</decoded_as>
+    <field name="type">dk.platform.agent.gateway_bypass</field>
+    <description>Modelkald uden om AI-gatewayen</description>
+  </rule>
+</group>

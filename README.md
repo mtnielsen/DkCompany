@@ -32,8 +32,9 @@ Bølge 0 er implementeret:
 | 3.1 Compliance-evidens-emitter (OSCAL) | ✅ | [`evidence/`](evidence), [`contracts/oscal-assessment-results.schema.json`](contracts/oscal-assessment-results.schema.json), `make oscal-evidence` / `make evidence-test`, [ADR-0008](docs/adr/0008-oscal-evidensprofil.md) |
 | 3.2 Kontrolmapping NIS2 / GDPR / AI Act | ✅ | [`compliance/`](compliance), [`docs/compliance/mapping.md`](docs/compliance/mapping.md), check `C-012`, [ADR-0009](docs/adr/0009-kontrolmapping-roller.md) |
 | 3.3 Ops-dashboards (Prometheus/Grafana/Loki) | ✅ | [`observability/`](observability), `make observability-dashboards` / `observability-check`, [ADR-0010](docs/adr/0010-dashboards-fra-manifest.md) |
+| 3.4 Security-plan (Trivy/Falco/Wazuh) | ✅ | [`security/`](security), check `SEC-*` i OSCAL-pakken, [ADR-0011](docs/adr/0011-sikkerhedsfund-i-evidensplanen.md) |
 
-Bølge 1 og bølge 2 er komplette: agenten kører et A1-verbum end-to-end, stopper ved utilgængelig PDP/audit-log, eskalerer ved budget- og loop-brud, afviser udeklarerede verber, A4-handlinger og prompt injection. De seks agent-konformanstests er grønne, og reviewer-effekten måles. Bølge 3 er i gang: OSCAL-evidens emitteres automatisk fra konformanskørsler, kontrolmappingen mod NIS2/GDPR/AI Act er maskinlæsbar og håndhævet i CI, og SLO-dashboards samt agenthandlinger genereres fra manifesterne. Næste er sikkerhedsplanen.
+Bølge 1 og bølge 2 er komplette: agenten kører et A1-verbum end-to-end, stopper ved utilgængelig PDP/audit-log, eskalerer ved budget- og loop-brud, afviser udeklarerede verber, A4-handlinger og prompt injection. De seks agent-konformanstests er grønne, og reviewer-effekten måles. Bølge 3 er komplet: OSCAL-evidens emitteres automatisk, kontrolmappingen mod NIS2/GDPR/AI Act er maskinlæsbar og håndhævet, SLO-dashboards og agenthandlinger genereres fra manifesterne, og Trivy/Falco/Wazuh-fund indgår i evidensplanen. Næste er bølge 4 (ejer-curriculum, flere adaptere og pitch).
 
 ## Kom i gang
 
@@ -127,6 +128,14 @@ make observability-check      # fejl hvis dashboards er ude af trit med manifest
 make observability-test       # generator + configmap-synkronisering (5 tests)
 ```
 
+Sikkerhed:
+
+```bash
+make security-ingest          # normalisér Trivy/Falco/Wazuh-fund
+make security-check           # validér og fejl ved drift mod rådata
+make security-test            # normaliseringens tests (4 tests)
+```
+
 ## Struktur
 
 ```
@@ -141,6 +150,7 @@ reviewer/      adversarial reviewer-agent (kan kun flagge/afvise) + effektmålin
 evidence/      OSCAL-evidens-emitter: maskinlæsbar compliance-evidens fra platformens artefakter
 compliance/    kontrolmapping mod NIS2, GDPR og AI Act (kanonisk registry + generator)
 observability/ Prometheus-regler og Grafana-dashboards genereret fra modulets SLO
+security/      Trivy, Falco og Wazuh normaliseret ind i OSCAL-evidensplanen
 gitops/        ønsket tilstand, Argo CD-apps og reconcile (det, der ruller ud)
 docs/adr/      beslutningslog i MADR-format
 docs/spec/     planerne i prosa

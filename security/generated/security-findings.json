@@ -1,0 +1,87 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "SecurityFindings",
+  "generatedAt": "2025-09-01T10:10:00Z",
+  "reports": [
+    {
+      "scanner": "trivy",
+      "target": "platform-repo",
+      "capturedAt": "2025-09-01T10:00:00Z",
+      "status": "partial",
+      "summary": {
+        "critical": 0,
+        "high": 0,
+        "medium": 1,
+        "low": 1,
+        "total": 2
+      },
+      "findings": [
+        {
+          "id": "CVE-2024-21538",
+          "title": "ReDoS i cross-spawn",
+          "severity": "medium",
+          "resource": "conformance/package-lock.json:cross-spawn@7.0.3",
+          "detail": "Et regulært udtryk med katastrofal backtracking kan lamme processen.",
+          "remediation": "Opgrader til 7.0.5."
+        },
+        {
+          "id": "AVD-KSV-0016",
+          "title": "Manglende seccomp-profil",
+          "severity": "low",
+          "resource": "Deployment/example-legacy",
+          "detail": "Containeren kører uden en seccomp-profil.",
+          "remediation": "Sæt securityContext.seccompProfile.type til RuntimeDefault."
+        }
+      ],
+      "artifact": {
+        "uri": "security/raw/trivy-app.json",
+        "sha256": "54828c61aae91146a98ec0b203550c66f5d545170c67f68468b838fbe2b2a3c0"
+      }
+    },
+    {
+      "scanner": "falco",
+      "target": "runtime:platform",
+      "capturedAt": "2025-09-01T10:05:00Z",
+      "status": "partial",
+      "summary": {
+        "critical": 0,
+        "high": 0,
+        "medium": 1,
+        "low": 0,
+        "total": 1
+      },
+      "findings": [
+        {
+          "id": "Skrivning til audit-log-mappen#1",
+          "title": "Skrivning til audit-log-mappen",
+          "severity": "medium",
+          "resource": "audit-service-7c9d",
+          "detail": "En container skrev til /var/log/audit uden for den forventede proces.",
+          "remediation": "Undersøg hændelsen, luk den, og verificér at den ikke gentages."
+        }
+      ],
+      "artifact": {
+        "uri": "security/raw/falco-events.json",
+        "sha256": "4c1f4fc4b05d21ceae5f2b04f38e0281dad43fb40b3df61016773194ff219ecc"
+      }
+    },
+    {
+      "scanner": "wazuh",
+      "target": "siem:platform",
+      "capturedAt": "2025-09-01T10:10:00Z",
+      "status": "pass",
+      "summary": {
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "total": 0
+      },
+      "findings": [],
+      "artifact": {
+        "uri": "security/raw/wazuh-alerts.json",
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      }
+    }
+  ]
+}

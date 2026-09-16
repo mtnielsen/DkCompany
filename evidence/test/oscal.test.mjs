@@ -88,6 +88,19 @@ function syntheticArtifacts() {
       { hash: "a", signedOff: true },
       { hash: "b", signedOff: false },
     ],
+    security: {
+      reports: [
+        {
+          scanner: "trivy",
+          target: "platform-repo",
+          capturedAt: "2025-09-01T12:00:08Z",
+          status: "partial",
+          summary: { critical: 0, high: 0, medium: 1, low: 0, total: 1 },
+          findings: [{ id: "CVE-1", title: "t", severity: "medium", resource: "pkg" }],
+          artifact: { uri: "security/raw/trivy-app.json", sha256: "a".repeat(64) },
+        },
+      ],
+    },
   };
 }
 
@@ -99,7 +112,7 @@ test("buildAssessmentResults giver et skemagyldigt dokument og ærlige findings"
 
   assert.equal(doc["assessment-results"].metadata["oscal-version"], OSCAL_VERSION);
   const results = doc["assessment-results"].results;
-  assert.equal(results.length, 2, "ét modulresultat + change control");
+  assert.equal(results.length, 3, "ét modulresultat + change control + sikkerhed");
 
   // Link mellem finding og observation for C-004.
   const demo = results.find((r) => r.title.startsWith("demo"));
@@ -117,6 +130,13 @@ test("buildAssessmentResults giver et skemagyldigt dokument og ærlige findings"
   const dco = change.findings.find((f) => f.target["target-id"] === "DCO");
   assert.equal(dco.target.status.state, "not-satisfied");
   assert.match(dco.target.status.reason, /1 commits uden/);
+
+  // Sikkerhedsfundene skal være koblet ind som finding + observation.
+  const security = results.find((r) => r.title.startsWith("Sikkerhed"));
+  const secFinding = security.findings.find((f) => f.target["target-id"] === "SEC-trivy");
+  assert.equal(secFinding.target.status.state, "not-satisfied");
+  assert.equal(security.observations.length, 1);
+  assert.equal(security.observations[0]["relevant-evidence"][0].href, "security/raw/trivy-app.json");
 });
 
 test("integration: emitteren bygger en gyldig pakke fra repoets artefakter", (t) => {

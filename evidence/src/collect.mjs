@@ -29,6 +29,12 @@ export function loadConformanceReport(root = repoRoot, path = ".conformance-out/
   return readJson(full);
 }
 
+/** 3.4 — Den normaliserede sikkerhedspakke, hvis den findes. */
+export function loadSecurityFindings(root = repoRoot) {
+  const path = join(root, "security", "generated", "security-findings.json");
+  return existsSync(path) ? readJson(path) : null;
+}
+
 function readEvents(dir) {
   if (!existsSync(dir) || !statSync(dir).isDirectory()) return [];
   return readdirSync(dir)
@@ -84,5 +90,5 @@ export function collect({ root = repoRoot, generatedAt = new Date().toISOString(
   const modules = conformance.reports.map((report) => collectModule(root, report));
   const gitops = runVerify(root, { excludeModules: ["dummy-broken"] });
   const changelog = generateChangelog({ cwd: root });
-  return { modules, gitops, changelog, generatedAt, conformance };
+  return { modules, gitops, changelog, security: loadSecurityFindings(root), generatedAt, conformance };
 }

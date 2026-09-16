@@ -1,0 +1,13 @@
+{
+  "name": "@platform/security",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Sikkerhedsplan: Trivy (CI), Falco (runtime) og Wazuh (SIEM) normaliseret og koblet ind i OSCAL-evidensplanen.",
+  "bin": {
+    "security-findings": "./src/cli.mjs"
+  },
+  "scripts": {
+    "test": "node --test"
+  }
+}

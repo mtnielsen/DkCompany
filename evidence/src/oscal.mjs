@@ -212,10 +212,66 @@ function changeControlResult({ gitops, changelog, generatedAt }) {
   };
 }
 
-export function buildAssessmentResults({ modules = [], gitops = null, changelog = [], generatedAt = new Date().toISOString() }) {
+/**
+ * 3.4 — Sikkerhedsfundene bæres af den samme OSCAL-pakke som resten. Hvert
+ * scanningsresultat bliver en observation med rårapporten som relevant-evidence
+ * og et finding, så Trivy/Falco/Wazuh ikke er en separat silo.
+ */
+function securityResult({ security, generatedAt }) {
+  const reports = security?.reports ?? [];
+  const observations = [];
+  const findings = [];
+  for (const report of reports) {
+    const obsUuid = uuidFor(`obs:security:${report.scanner}:${report.target}`);
+    observations.push({
+      uuid: obsUuid,
+      title: `Sikkerhedsscan: ${report.scanner}`,
+      description:
+        `${report.scanner} mod ${report.target}: ${report.status} ` +
+        `(${report.summary.total} fund; critical ${report.summary.critical}, high ${report.summary.high}).`,
+      methods: ["EXAMINE", "TEST"],
+      "relevant-evidence": [
+        {
+          href: report.artifact?.uri ?? "security/generated/security-findings.json",
+          description: `${report.scanner}-rapport (${(report.artifact?.sha256 ?? "uden hash").slice(0, 12)}…)`,
+        },
+      ],
+      collected: iso(report.capturedAt, generatedAt),
+    });
+    const satisfied = report.status === "pass";
+    findings.push({
+      uuid: uuidFor(`finding:security:${report.scanner}:${report.target}`),
+      title: `${report.scanner}: ${report.target}`,
+      description: `${report.summary.total} fund (critical ${report.summary.critical}, high ${report.summary.high}, medium ${report.summary.medium}, low ${report.summary.low}).`,
+      target: {
+        type: "objective-id",
+        "target-id": `SEC-${report.scanner}`,
+        title: `Sikkerhedsscan ${report.scanner}`,
+        status: satisfied
+          ? { state: "satisfied" }
+          : { state: "not-satisfied", reason: `${report.status}: ${report.summary.total} fund` },
+      },
+      "related-observations": [{ "observation-uuid": obsUuid }],
+    });
+  }
+  return {
+    uuid: uuidFor("result:security"),
+    title: "Sikkerhed (Trivy/Falco/Wazuh)",
+    description: "Sikkerhedsfund fra CI, runtime og SIEM, koblet ind i evidensplanen.",
+    start: generatedAt,
+    end: generatedAt,
+    "reviewed-controls": reviewedControls(["ra-5"]),
+    observations,
+    findings,
+    remarks: "Ikke en separat silo: fundene bæres af OSCAL-evidenspakken.",
+  };
+}
+
+export function buildAssessmentResults({ modules = [], gitops = null, changelog = [], security = null, generatedAt = new Date().toISOString() }) {
   const partyUuid = uuidFor("party:platform");
   const results = modules.map((m) => moduleResult(m, generatedAt));
   results.push(changeControlResult({ gitops, changelog, generatedAt }));
+  if (security?.reports?.length) results.push(securityResult({ security, generatedAt }));
 
   return {
     "assessment-results": {

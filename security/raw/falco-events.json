@@ -1,0 +1,13 @@
+[
+  {
+    "uuid": "e0c1a7b2-3d4e-4f5a-8b6c-7d8e9f0a1b2c",
+    "time": "2025-09-01T10:05:00Z",
+    "rule": "Skrivning til audit-log-mappen",
+    "priority": "Warning",
+    "output": "En container skrev til /var/log/audit uden for den forventede proces.",
+    "output_fields": {
+      "k8s.pod.name": "audit-service-7c9d",
+      "container.name": "audit-service"
+    }
+  }
+]

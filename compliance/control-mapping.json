@@ -112,8 +112,16 @@
       "title": "Vulnerability monitoring and scanning",
       "role": "shared",
       "satisfies": ["nis2-art21-2e"],
-      "evidence": ["G-002", "gitops/src/verify.mjs"],
-      "notes": "Image-digests og hardening gates nu; Trivy/Falco/Wazuh kobles på i 3.4 og emitteres gennem evidensplanen."
+      "evidence": ["SEC-trivy", "G-002", "security/generated/security-findings.json"],
+      "notes": "Trivy scanner i CI og emitteres gennem OSCAL-evidensplanen; image-digests pinnes i GitOps."
+    },
+    {
+      "id": "si-4",
+      "title": "Information system monitoring (runtime og SIEM)",
+      "role": "shared",
+      "satisfies": ["nis2-art21-2b", "nis2-art23", "ai-act-art15"],
+      "evidence": ["SEC-falco", "SEC-wazuh", "security/falco/platform-rules.yaml", "security/wazuh/local_rules.xml"],
+      "notes": "Falco opdager runtime-afvigelser; Wazuh korrelerer og alarmerer. Begge emitteres gennem OSCAL-evidensplanen."
     }
   ]
 }

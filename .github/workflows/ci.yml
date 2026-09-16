@@ -50,6 +50,32 @@ jobs:
       - run: make policy-verify
       - run: make policy-decide
 
+  security:
+    name: Sikkerhedsplan (Trivy/Falco/Wazuh)
+    runs-on: ubuntu-latest
+    needs: [contracts]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: make install
+      - run: make security-test
+      - run: make security-check
+      - name: Trivy filesystem-scan
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: json
+          output: security/raw/trivy-ci.json
+          severity: CRITICAL,HIGH
+          exit-code: "0"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: trivy-report
+          path: security/raw/trivy-ci.json
+
   gitops:
     name: GitOps-gates og drift
     runs-on: ubuntu-latest

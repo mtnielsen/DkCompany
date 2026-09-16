@@ -1,0 +1,37 @@
+{
+  "SchemaVersion": 2,
+  "ArtifactName": "platform-repo",
+  "Results": [
+    {
+      "Target": "conformance/package-lock.json",
+      "Class": "lang-pkgs",
+      "Type": "npm",
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2024-21538",
+          "PkgName": "cross-spawn",
+          "InstalledVersion": "7.0.3",
+          "FixedVersion": "7.0.5",
+          "Title": "ReDoS i cross-spawn",
+          "Description": "Et regulært udtryk med katastrofal backtracking kan lamme processen.",
+          "Severity": "MEDIUM"
+        }
+      ]
+    },
+    {
+      "Target": "gitops/manifests/dev",
+      "Class": "config",
+      "Type": "json",
+      "Misconfigurations": [
+        {
+          "ID": "AVD-KSV-0016",
+          "Title": "Manglende seccomp-profil",
+          "Severity": "LOW",
+          "Description": "Containeren kører uden en seccomp-profil.",
+          "Resolution": "Sæt securityContext.seccompProfile.type til RuntimeDefault.",
+          "CauseMetadata": { "Resource": "Deployment/example-legacy" }
+        }
+      ]
+    }
+  ]
+}

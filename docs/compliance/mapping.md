@@ -24,7 +24,8 @@ Kortlægningen er en påstand om mekanismer, ikke om juridisk compliance. Repoet
 | `cp-9` | System backup (kontinuitet) | shared | nis2-art21-2c | C-004 |
 | `si-12` | Information handling and retention (datastyring) | shared | gdpr-art5, gdpr-art15-17, ai-act-art12 | C-008, modules/audit-service/conformance/evidence/subject.erase.json |
 | `cm-2` | Baseline configuration (git som ændringskanal) | issuer | nis2-art21-2d, nis2-art21-2f | G-001, G-002, G-004, gitops/src/verify.mjs |
-| `ra-5` | Vulnerability monitoring and scanning | shared | nis2-art21-2e | G-002, gitops/src/verify.mjs |
+| `ra-5` | Vulnerability monitoring and scanning | shared | nis2-art21-2e | SEC-trivy, G-002, security/generated/security-findings.json |
+| `si-4` | Information system monitoring (runtime og SIEM) | shared | nis2-art21-2b, nis2-art23, ai-act-art15 | SEC-falco, SEC-wazuh, security/falco/platform-rules.yaml, security/wazuh/local_rules.xml |
 
 ## Krav pr. framework
 
