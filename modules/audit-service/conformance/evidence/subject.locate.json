@@ -1,0 +1,21 @@
+{
+  "verb": "subject.locate",
+  "module": "audit-service",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-16T21:11:53.914Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 3
+  },
+  "artifact": {
+    "uri": "s3://evidence/audit-service/subject.locate.json",
+    "sha256": "43bf369f9357e13732e2b173e7831c84d806a2db46f69b23e147354cd7440a35"
+  }
+}

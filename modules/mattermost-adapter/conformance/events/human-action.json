@@ -1,0 +1,20 @@
+{
+  "specversion": "1.0",
+  "id": "6f930f8c-1bad-41b6-a876-3ec870623eed",
+  "source": "urn:platform:module:mattermost-adapter",
+  "type": "dk.platform.mattermost-adapter.subject-locate.completed",
+  "time": "2026-09-16T21:14:18.972Z",
+  "datacontenttype": "application/json",
+  "tenantid": "acme",
+  "traceid": "86da4b176fa142ab4cd5af8b219160cc",
+  "spanid": "576c2abb0037aa65",
+  "principal": {
+    "kind": "human",
+    "id": "oidc|dpo@example.org"
+  },
+  "dataclassification": "personal",
+  "data": {
+    "verb": "subject.locate",
+    "decision": "allow"
+  }
+}

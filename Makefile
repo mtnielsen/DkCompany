@@ -5,7 +5,7 @@ CLI   := $(NODE) $(CONF)/src/cli.mjs
 
 .DEFAULT_GOAL := help
 
-.PHONY: help install validate lint test conform conform-all conform-negative dsar-demo telemetry-test policy-verify policy-test policy-decide gitops-verify gitops-test gitops-reconcile gitops-drift changelog changelog-check ci clean
+.PHONY: help install validate lint test conform conform-all conform-negative dsar-demo telemetry-test policy-verify policy-test policy-decide gitops-verify gitops-test gitops-reconcile gitops-drift changelog changelog-check audit-service-test audit-service-evidence audit-service-run adapter-test adapter-evidence adapter-run ci clean
 
 help: ## Vis denne hjælp
 	@echo "Platformens kontrakter — tilgængelige mål:"
@@ -68,7 +68,25 @@ changelog: ## Udled maskinlæsbar change log fra git (NIS2)
 changelog-check: ## Fejl hvis nogen commit mangler DCO sign-off
 	$(NODE) gitops/src/cli.mjs changelog --check
 
-ci: validate lint test policy-test policy-verify gitops-test gitops-verify gitops-reconcile gitops-drift changelog-check conform-all conform-negative ## Det fulde CI-løb lokalt
+audit-service-test: ## Kør referencemodulets (audit-service) tests
+	cd modules/audit-service/service && $(NODE) --test
+
+audit-service-evidence: ## Generér konformansbevis ved at køre verberne mod tjenesten
+	$(NODE) modules/audit-service/service/src/evidence.mjs
+
+audit-service-run: ## Start audit-service lokalt (kræver kørende PDP)
+	$(NODE) modules/audit-service/service/src/cli.mjs
+
+adapter-test: ## Kør referenceadapterens (mattermost) tests
+	cd modules/mattermost-adapter/service && $(NODE) --test
+
+adapter-evidence: ## Generér adapterbevis mod mock Mattermost + rigtig PDP
+	$(NODE) modules/mattermost-adapter/service/src/evidence.mjs
+
+adapter-run: ## Start Mattermost-adapteren lokalt
+	$(NODE) modules/mattermost-adapter/service/src/cli.mjs
+
+ci: validate lint test policy-test policy-verify gitops-test gitops-verify gitops-reconcile gitops-drift changelog-check audit-service-test adapter-test conform-all conform-negative ## Det fulde CI-løb lokalt
 
 clean: ## Ryd genereret output
 	rm -rf .conformance-out

@@ -1,0 +1,21 @@
+{
+  "verb": "slo",
+  "module": "audit-service",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-16T21:11:53.901Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 5
+  },
+  "artifact": {
+    "uri": "s3://evidence/audit-service/slo.json",
+    "sha256": "0f8693fdeb96ee26edc61c103713df0ad154763094db7d5bab646f669f1edd04"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "apiVersion": "v1",
+  "kind": "Service",
+  "metadata": {
+    "name": "mattermost-adapter",
+    "namespace": "platform",
+    "labels": {
+      "app.kubernetes.io/name": "mattermost-adapter",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "mattermost-adapter",
+      "platform.example.org/environment": "dev"
+    }
+  },
+  "spec": {
+    "selector": { "app.kubernetes.io/name": "mattermost-adapter" },
+    "ports": [{ "name": "http", "port": 443, "targetPort": 8090 }]
+  }
+}

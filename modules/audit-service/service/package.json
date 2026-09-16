@@ -1,0 +1,14 @@
+{
+  "name": "@platform/audit-service",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Referencemodul A: evidens-/audit-service. Implementerer identitet, telemetri, ops- og privacy-planerne, spørger central PDP og skriver hash-kædet audit-log.",
+  "bin": {
+    "audit-service": "./src/cli.mjs"
+  },
+  "scripts": {
+    "test": "node --test",
+    "start": "node src/cli.mjs"
+  }
+}

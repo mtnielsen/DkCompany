@@ -1,0 +1,21 @@
+{
+  "verb": "drain",
+  "module": "audit-service",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-16T21:11:53.865Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 3
+  },
+  "artifact": {
+    "uri": "s3://evidence/audit-service/drain.json",
+    "sha256": "be6e12976a79f2d208dd371395bb6e5f738a4725e6e68ab7a70edd7fb04720e2"
+  }
+}

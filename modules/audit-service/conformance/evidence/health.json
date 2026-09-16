@@ -1,0 +1,21 @@
+{
+  "verb": "health",
+  "module": "audit-service",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-16T21:11:53.908Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 3
+  },
+  "artifact": {
+    "uri": "s3://evidence/audit-service/health.json",
+    "sha256": "8f7876b038037d3fa2c8265e72fb8d2f5a144b08ce0b0dd0e678865669c1a142"
+  }
+}

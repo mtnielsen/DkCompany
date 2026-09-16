@@ -1,0 +1,21 @@
+{
+  "specversion": "1.0",
+  "id": "0593414c-8e9e-4ea3-ac37-9841b068e458",
+  "source": "urn:platform:module:audit-service",
+  "type": "dk.platform.audit-service.subject-locate.completed",
+  "time": "2026-09-16T21:11:53.941Z",
+  "datacontenttype": "application/json",
+  "tenantid": "acme",
+  "traceid": "955ac9fb234b17516a1a8898260e7e38",
+  "spanid": "99471f47a03302da",
+  "principal": {
+    "kind": "human",
+    "id": "oidc|dpo@example.org"
+  },
+  "dataclassification": "personal",
+  "data": {
+    "verb": "subject.locate",
+    "decision": "allow",
+    "auditEventId": "fd27f797-856b-4b95-979d-0efc6203e6e9"
+  }
+}

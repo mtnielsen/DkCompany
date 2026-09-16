@@ -1,0 +1,21 @@
+{
+  "verb": "health",
+  "module": "mattermost-adapter",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-16T21:14:18.928Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 27
+  },
+  "artifact": {
+    "uri": "s3://evidence/mattermost-adapter/health.json",
+    "sha256": "11dd3c15ba238378e42589eb16a62adbec6da1006e455add5da041a98d194c4b"
+  }
+}

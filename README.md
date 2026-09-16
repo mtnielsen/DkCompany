@@ -18,8 +18,10 @@ Bølge 0 er implementeret:
 | 0.6 Konformanssuite | ✅ | [`conformance/`](conformance), `make conform MODULE=dummy-ok` |
 | 1.1 Policy-plan (PDP) | ✅ | [`policy/pdp`](policy/pdp), checks `C-009`/`C-010`, [ADR-0004](docs/adr/0004-letvaegts-pdp.md) |
 | 1.2 GitOps-skelet | ✅ | [`gitops/`](gitops), `make gitops-verify`/`gitops-drift`, [ADR-0005](docs/adr/0005-git-eneste-aendringskanal.md) |
+| 1.3 Referencemodul A (audit-service) | ✅ | [`modules/audit-service`](modules/audit-service), `make conform MODULE=audit-service` |
+| 1.4 Referenceadapter B (mattermost) | ✅ | [`modules/mattermost-adapter`](modules/mattermost-adapter), `make conform MODULE=mattermost-adapter` |
 
-Bølge 1 er påbegyndt: policy-laget (1.1) og GitOps-skelettet (1.2) kører og håndhæves i CI. Referencemodul (1.3), adapter (1.4) og resten mangler. Se backloggens kritiske vej.
+Bølge 1 er komplet: policy (1.1), GitOps (1.2), referencemodul (1.3) og adapter mod en stædig upstream (1.4). Adapteren erklærer ærligt `partial` på `subject.erase`, og suiten accepterer det. Næste på den kritiske vej er bølge 2 (agenter).
 
 ## Kom i gang
 
@@ -62,6 +64,22 @@ GitOps:
 make gitops-verify   # policy-gates: digests, labels, hardening, fail-closed
 make gitops-drift    # bevis at ændringer uden om git opdages og føres tilbage
 make changelog       # maskinlæsbar change log fra git (NIS2)
+```
+
+Referencemodul (audit-service):
+
+```bash
+make audit-service-test       # 19 tests: identitet, hash-kæde, PDP, fail-closed
+make audit-service-evidence   # fremkald konformansbevis ved at køre verberne
+make conform MODULE=audit-service
+```
+
+Referenceadapter (mattermost):
+
+```bash
+make adapter-test             # 7 tests mod mock Mattermost
+make adapter-evidence         # bevis at partial-erklæringen holder
+make conform MODULE=mattermost-adapter
 ```
 
 ## Struktur

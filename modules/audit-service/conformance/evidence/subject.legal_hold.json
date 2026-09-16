@@ -1,0 +1,21 @@
+{
+  "verb": "subject.legal_hold",
+  "module": "audit-service",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-16T21:11:53.931Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 2
+  },
+  "artifact": {
+    "uri": "s3://evidence/audit-service/subject.legal_hold.json",
+    "sha256": "a9aa4da216c1dd467ffac80d60ff675c0c63401d37ff8b20aa6c79dea22ee18a"
+  }
+}

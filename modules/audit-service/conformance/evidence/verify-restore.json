@@ -1,0 +1,21 @@
+{
+  "verb": "verify-restore",
+  "module": "audit-service",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-16T21:11:53.859Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 4
+  },
+  "artifact": {
+    "uri": "s3://evidence/audit-service/verify-restore.json",
+    "sha256": "796d0cb1ffcb4ef5a25a6b238764a2c884a5016a360160af282f34cfad47d9b2"
+  }
+}

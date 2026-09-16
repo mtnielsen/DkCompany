@@ -1,0 +1,132 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ModuleManifest",
+  "metadata": {
+    "name": "mattermost-adapter",
+    "version": "1.0.0",
+    "description": "Referenceadapter B. Wrapper Mattermost uændret og oversætter platformens verber til Mattermost REST API v4. Erkender ærligt partial conformance — især subject.erase, hvor backups, søgeindeks og revisionsspor ikke kan røres gennem API'et.",
+    "owner": { "team": "platform", "contact": "platform@example.org" },
+    "accountableHuman": { "subject": "oidc|anna.andersen", "role": "Platform Owner" },
+    "labels": { "tier": "adapter", "wave": "1", "upstream": "mattermost" }
+  },
+  "identity": {
+    "userStore": "none",
+    "oidc": {
+      "issuer": "https://id.example.org/realms/platform",
+      "clientId": "mattermost-adapter",
+      "scopes": ["openid", "profile", "email", "groups"],
+      "claimMapping": { "subject": "sub", "email": "email", "groups": "groups", "tenant": "tenant_id" },
+      "pkceRequired": true,
+      "tokenAudience": "mattermost-adapter"
+    },
+    "scim": {
+      "version": "2.0",
+      "endpoint": "https://id.example.org/scim/v2",
+      "mode": "consumer",
+      "supportsPatch": true,
+      "supportsBulk": false
+    },
+    "spiffe": {
+      "spiffeId": "spiffe://platform.example.org/modules/mattermost-adapter",
+      "trustDomain": "platform.example.org",
+      "credentialMode": "just-in-time",
+      "maxCredentialTtlSeconds": 900
+    },
+    "audit": { "authenticationEventsTo": "dk.platform.identity.authn.", "retainDays": 365 }
+  },
+  "telemetry": {
+    "serviceName": "mattermost-adapter",
+    "otel": {
+      "exporter": "otlp-grpc",
+      "endpoint": "https://otel-collector.platform.example.org:4317",
+      "signals": ["traces", "metrics", "logs"],
+      "resourceAttributes": {
+        "service.name": "mattermost-adapter",
+        "service.version": "1.0.0",
+        "deployment.environment": "dev"
+      },
+      "sampling": { "strategy": "parentbased-traceidratio", "ratio": 0.2 }
+    },
+    "cloudEvents": {
+      "source": "urn:platform:module:mattermost-adapter",
+      "typePrefix": "dk.platform.mattermost-adapter.",
+      "sink": "https://events.platform.example.org/events",
+      "requiredAttributes": ["tenantid", "traceid", "principal"],
+      "dataClassificationRequired": true
+    },
+    "retention": { "logsDays": 90, "tracesDays": 30, "metricsDays": 400, "eventsDays": 400 }
+  },
+  "policy": {
+    "pdp": {
+      "endpoint": "https://pdp.platform.example.org/v1/data/platform/ops/decision",
+      "protocol": "http-json",
+      "decisionTtlSeconds": 60
+    },
+    "bundle": {
+      "name": "platform",
+      "version": "1.0.0",
+      "sha256": "baeeeb11cb003454ccd12473856966c8769388870d74f30428dfc9bd20ba2d86"
+    },
+    "failMode": "closed",
+    "gatedVerbs": [
+      "restore",
+      "upgrade",
+      "migrate",
+      "rollback",
+      "drain",
+      "subject.erase",
+      "subject.export",
+      "subject.legal_hold"
+    ],
+    "decisionCacheSeconds": 30,
+    "evidence": {
+      "kind": "fixture",
+      "ref": "conformance/evidence/policy-decision.json",
+      "capturedAt": "2025-09-01T07:55:00Z"
+    }
+  },
+  "verbs": {
+    "backup": { "conformance": "unsupported", "reason": "Mattermosts backup er database- og fillag på driftniveau; adapteren har ingen API-adgang til at tage den." },
+    "restore": { "conformance": "unsupported", "reason": "Gendannelse sker på database- og fillag og kan ikke udføres gennem Mattermost API." },
+    "verify-restore": { "conformance": "unsupported", "reason": "Der findes ingen API til at verificere en gendannelse; det kræver adgang til backup-lagret." },
+    "drain": { "conformance": "partial", "reason": "Adapteren kan sætte Mattermost i læs-tilstand via config, men kan ikke dræne aktive websocket-forbindelser." },
+    "upgrade.dry-run": { "conformance": "partial", "reason": "Adapteren kan rapportere nuværende og ønsket version, men Mattermost tilbyder ikke en egentlig dry-run." },
+    "upgrade": { "conformance": "unsupported", "reason": "Mattermost opgraderes ved at udskifte containeren; det ligger uden for adapterens verbkontrakt." },
+    "migrate": { "conformance": "unsupported", "reason": "Mattermost kører sine egne database-migrationer ved opstart; adapteren kan ikke styre dem." },
+    "rollback": { "conformance": "unsupported", "reason": "Rollback kræver gendannelse fra backup og er derfor ikke mulig gennem adapteren." },
+    "health": {
+      "conformance": "full",
+      "endpoint": "https://mattermost-adapter.example.org/healthz",
+      "evidence": { "kind": "fixture", "ref": "conformance/evidence/health.json" }
+    },
+    "slo": { "conformance": "partial", "reason": "Adapteren måler sin egen svartid, men Mattermosts SLO og fejlbudget ligger hos upstream-drift." }
+  },
+  "privacy": {
+    "subject.locate": {
+      "conformance": "full",
+      "endpoint": "https://mattermost-adapter.example.org/v1/privacy/locate",
+      "evidence": { "kind": "fixture", "ref": "conformance/evidence/subject.locate.json" }
+    },
+    "subject.export": {
+      "conformance": "full",
+      "endpoint": "https://mattermost-adapter.example.org/v1/privacy/export",
+      "evidence": { "kind": "fixture", "ref": "conformance/evidence/subject.export.json" }
+    },
+    "subject.erase": {
+      "conformance": "partial",
+      "reason": "Adapteren kan slette brugerens opslag gennem API'et, men ikke kopier i backups, søgeindeks og revisionsspor; de skal håndteres af upstream-drift.",
+      "endpoint": "https://mattermost-adapter.example.org/v1/privacy/erase",
+      "evidence": { "kind": "declared", "ref": "docs/spec/adapter.md", "notes": "Begrænsningen er dokumenteret og afspejlet i API-svaret." }
+    },
+    "subject.legal_hold": { "conformance": "unsupported", "reason": "Mattermost har ingen API til legal hold; et hold kræver manuel indgriben i upstream." },
+    "retention.policy": { "conformance": "partial", "reason": "Mattermost har globale opbevaringsindstillinger, men de kan ikke sættes eller rapporteres pr. subjekt gennem adapteren." },
+    "dataCategories": ["operational", "pseudonymised", "personal"],
+    "dsarEndpoint": "https://mattermost-adapter.example.org/v1/privacy"
+  },
+  "slo": { "availability": 99.9, "latencyP95Ms": 300, "errorBudgetRef": "docs/slo/mattermost-adapter.md" },
+  "compliance": {
+    "controlRefs": ["ac-2", "au-2", "si-12"],
+    "dpiaRef": "docs/dpia/mattermost-adapter.md",
+    "dataProcessingRole": "processor"
+  }
+}

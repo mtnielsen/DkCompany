@@ -1,0 +1,21 @@
+{
+  "verb": "subject.export",
+  "module": "mattermost-adapter",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-16T21:14:18.958Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 5
+  },
+  "artifact": {
+    "uri": "s3://evidence/mattermost-adapter/subject.export.json",
+    "sha256": "97b0d42c5e92e76386cdd366f427377fec7f8ee4094bc1909ddf2026a0b1f17c"
+  }
+}

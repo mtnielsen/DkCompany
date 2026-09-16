@@ -1,0 +1,27 @@
+{
+  "specversion": "1.0",
+  "id": "8a8503f3-4a3e-47e7-abcc-07b52452b1ed",
+  "source": "urn:platform:module:audit-service",
+  "type": "dk.platform.audit-service.backup.completed",
+  "time": "2026-09-16T21:11:53.835Z",
+  "datacontenttype": "application/json",
+  "tenantid": "acme",
+  "traceid": "c4fa324a9f793f3ff42b7aaca7813da6",
+  "spanid": "c2950e527c678fa1",
+  "principal": {
+    "kind": "agent",
+    "id": "spiffe://platform.example.org/agents/audit-service-operator",
+    "spiffeId": "spiffe://platform.example.org/agents/audit-service-operator",
+    "autonomyClass": "A3",
+    "onBehalfOf": {
+      "kind": "group",
+      "id": "oidc-group:platform-approvers"
+    }
+  },
+  "dataclassification": "operational",
+  "data": {
+    "verb": "backup",
+    "decision": "allow",
+    "auditEventId": "f93bd14b-a719-4fa6-90a5-ab0af9516a3d"
+  }
+}

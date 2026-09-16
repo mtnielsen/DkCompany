@@ -1,0 +1,13 @@
+{
+  "name": "@platform/mattermost-adapter",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Referenceadapter B: wrapper Mattermost uændret og erklærer ærligt partial conformance, fx på subject.erase.",
+  "bin": {
+    "mattermost-adapter": "./src/cli.mjs"
+  },
+  "scripts": {
+    "test": "node --test"
+  }
+}
