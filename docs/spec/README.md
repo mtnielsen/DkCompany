@@ -8,5 +8,6 @@ De fire planer og den suite, der bevogter dem. Hver spec svarer til et punkt i `
 - [Privacy-verberne](privacy-verbs.md) — 0.5
 - [Konformanssuiten](conformance-suite.md) — 0.6
 - [Policy-planen (PDP)](policy-plan.md) — 1.1
+- [GitOps-skelettet](gitops.md) — 1.2
 
 Arkitekturvalgene bag findes i [`docs/adr`](../adr/).

@@ -48,11 +48,32 @@ jobs:
       - run: make policy-verify
       - run: make policy-decide
 
+  gitops:
+    name: GitOps-gates og drift
+    runs-on: ubuntu-latest
+    needs: [contracts, policy]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: make gitops-test
+      - run: make gitops-verify
+      - run: make gitops-reconcile
+      - run: make gitops-drift
+      - run: make changelog-check
+      - run: make changelog
+      - uses: actions/upload-artifact@v4
+        with:
+          name: change-log
+          path: .conformance-out/CHANGELOG.jsonl
+
   conformance:
     name: Konformans (positiv + negativ)
     runs-on: ubuntu-latest
-    needs: [contracts, test, policy]
-    steps:
+    needs: [contracts, test, policy]    steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:

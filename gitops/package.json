@@ -1,0 +1,14 @@
+{
+  "name": "@platform/gitops",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "GitOps-skelet: ønsket tilstand i git, Argo CD-manifester og et reconcile-værktøj der beviser at drift uden om git føres tilbage.",
+  "bin": {
+    "gitops": "./src/cli.mjs"
+  },
+  "scripts": {
+    "test": "node --test",
+    "verify": "node src/cli.mjs verify"
+  }
+}

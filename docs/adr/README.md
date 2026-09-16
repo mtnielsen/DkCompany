@@ -6,5 +6,6 @@ Arkitekturvalg dokumenteres som ADR'er i [MADR-format](https://adr.github.io/mad
 - [ADR-0002 — Monorepo og rækkefølgen kontrakt → test → modul](0002-monorepo-og-raekkefoelge.md)
 - [ADR-0003 — Partial conformance frem for binær](0003-partial-conformance.md)
 - [ADR-0004 — Egen letvægts-PDP bag en OPA-kompatibel kontrakt](0004-letvaegts-pdp.md)
+- [ADR-0005 — Git er den eneste ændringskanal](0005-git-eneste-aendringskanal.md)
 
 Ny ADR: kopiér [template.md](template.md), giv næste ledige nummer, og tilføj den til listen ovenfor. En ADR kan ikke ændres, når den er accepteret — den erstattes af en ny.

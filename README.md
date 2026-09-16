@@ -17,8 +17,9 @@ Bølge 0 er implementeret:
 | 0.5 Privacy-verber | ✅ | [`contracts/privacy-request.schema.json`](contracts/privacy-request.schema.json), `make dsar-demo` |
 | 0.6 Konformanssuite | ✅ | [`conformance/`](conformance), `make conform MODULE=dummy-ok` |
 | 1.1 Policy-plan (PDP) | ✅ | [`policy/pdp`](policy/pdp), checks `C-009`/`C-010`, [ADR-0004](docs/adr/0004-letvaegts-pdp.md) |
+| 1.2 GitOps-skelet | ✅ | [`gitops/`](gitops), `make gitops-verify`/`gitops-drift`, [ADR-0005](docs/adr/0005-git-eneste-aendringskanal.md) |
 
-Bølge 1 er påbegyndt: policy-laget (1.1) kører og håndhæves i konformansen. GitOps (1.2), referencemodul (1.3) og adapter (1.4) mangler. Se backloggens kritiske vej.
+Bølge 1 er påbegyndt: policy-laget (1.1) og GitOps-skelettet (1.2) kører og håndhæves i CI. Referencemodul (1.3), adapter (1.4) og resten mangler. Se backloggens kritiske vej.
 
 ## Kom i gang
 
@@ -55,6 +56,14 @@ make policy-test     # kør PDP'ens tests
 make policy-decide   # træf en eksempelbeslutning
 ```
 
+GitOps:
+
+```bash
+make gitops-verify   # policy-gates: digests, labels, hardening, fail-closed
+make gitops-drift    # bevis at ændringer uden om git opdages og føres tilbage
+make changelog       # maskinlæsbar change log fra git (NIS2)
+```
+
 ## Struktur
 
 ```
@@ -62,6 +71,7 @@ contracts/     JSON Schema-kontrakter + eksempler (det, der skal testes)
 conformance/   kørbar testsuite og orkestratorer (det, der tester)
 modules/       reference- og adaptermoduler med module-manifest.json
 policy/        signerede policy-bundles og PDP (det, der beslutter)
+gitops/        ønsket tilstand, Argo CD-apps og reconcile (det, der ruller ud)
 docs/adr/      beslutningslog i MADR-format
 docs/spec/     planerne i prosa
 ```
