@@ -1,0 +1,13 @@
+{
+  "name": "@platform/curriculum",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Ejer-curriculum bygget på rigtige approval-payloads, inkl. forslag der skal afvises. Gennemførelse logges som CloudEvent og håndhæves af approval-servicen.",
+  "bin": {
+    "curriculum": "./src/cli.mjs"
+  },
+  "scripts": {
+    "test": "node --test"
+  }
+}

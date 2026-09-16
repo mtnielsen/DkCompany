@@ -21,5 +21,6 @@ De fire planer og den suite, der bevogter dem. Hver spec svarer til et punkt i `
 - [Kontrolmapping: NIS2, GDPR og AI Act](control-mapping.md) — 3.2
 - [Ops-dashboards: Prometheus, Grafana og Loki](observability.md) — 3.3
 - [Sikkerhedsplan: Trivy, Falco og Wazuh](security-plan.md) — 3.4
+- [Ejer-curriculum](curriculum.md) — 4.1
 
 Arkitekturvalgene bag findes i [`docs/adr`](../adr/).

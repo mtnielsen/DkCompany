@@ -26,6 +26,7 @@ Kortlægningen er en påstand om mekanismer, ikke om juridisk compliance. Repoet
 | `cm-2` | Baseline configuration (git som ændringskanal) | issuer | nis2-art21-2d, nis2-art21-2f | G-001, G-002, G-004, gitops/src/verify.mjs |
 | `ra-5` | Vulnerability monitoring and scanning | shared | nis2-art21-2e | SEC-trivy, G-002, security/generated/security-findings.json |
 | `si-4` | Information system monitoring (runtime og SIEM) | shared | nis2-art21-2b, nis2-art23, ai-act-art15 | SEC-falco, SEC-wazuh, security/falco/platform-rules.yaml, security/wazuh/local_rules.xml |
+| `at-2` | Awareness and training (ejer-curriculum) | deployer | nis2-art21-2g, ai-act-art4 | curriculum/curriculum.json, dk.platform.curriculum.module.completed |
 
 ## Krav pr. framework
 
@@ -67,6 +68,7 @@ Forpligtelser for udbydere og deployere af AI-systemer med relevans for agentlag
 
 | Krav | Titel | Rolle |
 | --- | --- | --- |
+| `ai-act-art4` | AI-kompetence (AI literacy) | deployer |
 | `ai-act-art9` | Risikostyringssystem | shared |
 | `ai-act-art12` | Logning | issuer |
 | `ai-act-art13` | Transparens | issuer |

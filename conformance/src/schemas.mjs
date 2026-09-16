@@ -26,6 +26,7 @@ export const SCHEMA_IDS = {
   oscalAssessmentResults: "https://example.org/contracts/oscal-assessment-results.schema.json",
   controlMapping: "https://example.org/contracts/control-mapping.schema.json",
   securityFindings: "https://example.org/contracts/security-findings.schema.json",
+  curriculum: "https://example.org/contracts/curriculum.schema.json",
 };
 
 /** Læs alle kontraktskemaer fra /contracts. */

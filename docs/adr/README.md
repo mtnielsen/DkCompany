@@ -13,5 +13,6 @@ Arkitekturvalg dokumenteres som ADR'er i [MADR-format](https://adr.github.io/mad
 - [ADR-0009 — Kontrolmapping som maskinlæsbar registry med udgiver/deployer-roller](0009-kontrolmapping-roller.md)
 - [ADR-0010 — Dashboards og SLO-regler genereres fra modulmanifestet](0010-dashboards-fra-manifest.md)
 - [ADR-0011 — Sikkerhedsfund normaliseres ind i OSCAL-evidensplanen](0011-sikkerhedsfund-i-evidensplanen.md)
+- [ADR-0012 — Ejer-curriculum som versioneret scenariedata bygget på rigtige approval-payloads](0012-ejer-curriculum.md)
 
 Ny ADR: kopiér [template.md](template.md), giv næste ledige nummer, og tilføj den til listen ovenfor. En ADR kan ikke ændres, når den er accepteret — den erstattes af en ny.

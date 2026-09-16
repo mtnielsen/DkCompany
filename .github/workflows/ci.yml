@@ -133,10 +133,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+          cache: npm
+          cache-dependency-path: conformance/package-lock.json
+      - run: make install
       - run: make gateway-test
       - run: make runtime-test
       - run: make agent-conformance-test
       - run: make reviewer-test
+      - run: make curriculum-test
+      - run: make curriculum-check
 
   conformance:
     name: Konformans (positiv + negativ)

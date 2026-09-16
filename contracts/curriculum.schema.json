@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/curriculum.schema.json",
+  "title": "Owner Curriculum",
+  "description": "Ejer-curriculum bygget på rigtige approval-payloads. Hvert scenarie tager udgangspunkt i en committet approval-request og muterer den via sti-overrides, så forslag der skal afvises er deterministiske og kan tjekkes. Gennemførelse logges som CloudEvent og håndhæves af approval-servicen (2.4).",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "basePayloads", "modules"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "Curriculum" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "owner"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{3,63}$" },
+        "version": { "type": "string" },
+        "description": { "type": "string", "minLength": 10 },
+        "owner": { "type": "string" },
+        "lastReviewed": { "type": "string", "format": "date" }
+      }
+    },
+    "basePayloads": {
+      "type": "object",
+      "description": "Navngivne, rigtige approval-payloads som scenarierne bygger på.",
+      "additionalProperties": { "type": "string" },
+      "minProperties": 1
+    },
+    "modules": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/module" }
+    }
+  },
+  "$defs": {
+    "module": {
+      "type": "object",
+      "required": ["id", "title", "objective", "topics", "scenarios"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "title": { "type": "string" },
+        "objective": { "type": "string", "minLength": 10 },
+        "topics": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "scenarios": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/scenario" } }
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "required": ["id", "title", "base", "expectedVerdict", "teachingPoint"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "title": { "type": "string" },
+        "base": { "type": "string" },
+        "overrides": { "type": "object", "additionalProperties": { "type": ["string", "number", "boolean", "null"] } },
+        "expectedVerdict": { "enum": ["approve", "reject"] },
+        "mustReject": { "type": "boolean" },
+        "teachingPoint": { "type": "string", "minLength": 10 },
+        "rejectionCriteria": { "type": "array", "items": { "$ref": "#/$defs/criterion" } }
+      },
+      "allOf": [
+        {
+          "if": { "required": ["expectedVerdict"], "properties": { "expectedVerdict": { "const": "reject" } } },
+          "then": {
+            "required": ["mustReject", "rejectionCriteria"],
+            "properties": {
+              "mustReject": { "const": true },
+              "rejectionCriteria": { "type": "array", "minItems": 1 }
+            }
+          }
+        }
+      ]
+    },
+    "criterion": {
+      "type": "object",
+      "required": ["path", "operator", "value", "reason"],
+      "additionalProperties": false,
+      "properties": {
+        "path": { "type": "string" },
+        "operator": { "enum": ["eq", "neq", "lt", "lte", "gt", "gte"] },
+        "value": {},
+        "reason": { "type": "string", "minLength": 10 }
+      }
+    }
+  }
+}

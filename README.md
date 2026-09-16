@@ -33,8 +33,9 @@ Bølge 0 er implementeret:
 | 3.2 Kontrolmapping NIS2 / GDPR / AI Act | ✅ | [`compliance/`](compliance), [`docs/compliance/mapping.md`](docs/compliance/mapping.md), check `C-012`, [ADR-0009](docs/adr/0009-kontrolmapping-roller.md) |
 | 3.3 Ops-dashboards (Prometheus/Grafana/Loki) | ✅ | [`observability/`](observability), `make observability-dashboards` / `observability-check`, [ADR-0010](docs/adr/0010-dashboards-fra-manifest.md) |
 | 3.4 Security-plan (Trivy/Falco/Wazuh) | ✅ | [`security/`](security), check `SEC-*` i OSCAL-pakken, [ADR-0011](docs/adr/0011-sikkerhedsfund-i-evidensplanen.md) |
+| 4.1 Ejer-curriculum | ✅ | [`curriculum/`](curriculum), `make curriculum-check` / `curriculum-test`, kontrol `at-2`, [ADR-0012](docs/adr/0012-ejer-curriculum.md) |
 
-Bølge 1 og bølge 2 er komplette: agenten kører et A1-verbum end-to-end, stopper ved utilgængelig PDP/audit-log, eskalerer ved budget- og loop-brud, afviser udeklarerede verber, A4-handlinger og prompt injection. De seks agent-konformanstests er grønne, og reviewer-effekten måles. Bølge 3 er komplet: OSCAL-evidens emitteres automatisk, kontrolmappingen mod NIS2/GDPR/AI Act er maskinlæsbar og håndhævet, SLO-dashboards og agenthandlinger genereres fra manifesterne, og Trivy/Falco/Wazuh-fund indgår i evidensplanen. Næste er bølge 4 (ejer-curriculum, flere adaptere og pitch).
+Bølge 1 og bølge 2 er komplette: agenten kører et A1-verbum end-to-end, stopper ved utilgængelig PDP/audit-log, eskalerer ved budget- og loop-brud, afviser udeklarerede verber, A4-handlinger og prompt injection. De seks agent-konformanstests er grønne, og reviewer-effekten måles. Bølge 3 er komplet: OSCAL-evidens emitteres automatisk, kontrolmappingen mod NIS2/GDPR/AI Act er maskinlæsbar og håndhævet, SLO-dashboards og agenthandlinger genereres fra manifesterne, og Trivy/Falco/Wazuh-fund indgår i evidensplanen. Bølge 4 er i gang med ejer-curriculumet.
 
 ## Kom i gang
 
@@ -136,6 +137,14 @@ make security-check           # validér og fejl ved drift mod rådata
 make security-test            # normaliseringens tests (4 tests)
 ```
 
+Ejer-curriculum:
+
+```bash
+make curriculum-check         # validér curriculum og afvisningsscenarier
+make curriculum-render        # vis moduler og scenarier
+make curriculum-test          # 5 tests, inkl. håndhævelse i approval-servicen
+```
+
 ## Struktur
 
 ```
@@ -151,6 +160,7 @@ evidence/      OSCAL-evidens-emitter: maskinlæsbar compliance-evidens fra platf
 compliance/    kontrolmapping mod NIS2, GDPR og AI Act (kanonisk registry + generator)
 observability/ Prometheus-regler og Grafana-dashboards genereret fra modulets SLO
 security/      Trivy, Falco og Wazuh normaliseret ind i OSCAL-evidensplanen
+curriculum/    ejer-curriculum bygget på rigtige approval-payloads
 gitops/        ønsket tilstand, Argo CD-apps og reconcile (det, der ruller ud)
 docs/adr/      beslutningslog i MADR-format
 docs/spec/     planerne i prosa

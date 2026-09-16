@@ -23,6 +23,7 @@ const EXAMPLE_SCHEMA = {
   "oscal-assessment-results": "https://example.org/contracts/oscal-assessment-results.schema.json",
   "control-mapping": "https://example.org/contracts/control-mapping.schema.json",
   "security-findings": "https://example.org/contracts/security-findings.schema.json",
+  "curriculum": "https://example.org/contracts/curriculum.schema.json",
 };
 
 function main() {

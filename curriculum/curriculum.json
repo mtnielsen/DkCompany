@@ -1,0 +1,186 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "Curriculum",
+  "metadata": {
+    "name": "platform-owner-curriculum",
+    "version": "1.0.0",
+    "description": "Ejer-curriculum for godkendere. Bygget på den rigtige approval-payload og forslag, der skal afvises. Versioneres med platformen og gennemførelse logges som CloudEvent.",
+    "owner": "platform@example.org",
+    "lastReviewed": "2025-09-01"
+  },
+  "basePayloads": {
+    "default": "contracts/examples/approval-request.example.json"
+  },
+  "modules": [
+    {
+      "id": "legal-responsibility",
+      "title": "Juridisk ansvar",
+      "objective": "Godkenderen skal vide, at ansvaret ligger hos et navngivet menneske — ikke hos agenten eller platformen.",
+      "topics": ["ansvarlig person", "AI Act art. 14", "NIS2-ledelsesansvar"],
+      "scenarios": [
+        {
+          "id": "accountable-human-is-named",
+          "title": "Et navngivet menneske bærer ansvaret",
+          "base": "default",
+          "expectedVerdict": "approve",
+          "teachingPoint": "Spørg altid, hvem der står på mål, hvis ændringen går galt. Er svaret 'agenten' eller 'platformen', er svaret forkert."
+        }
+      ]
+    },
+    {
+      "id": "evidence-over-prose",
+      "title": "Læs evidens frem for prosa",
+      "objective": "Godkenderen skal møde den maskinproducerede evidens først og bruge agentens prosa som det sidste, ikke det første.",
+      "topics": ["påstand mod diff", "tests og dry-run", "scan-resultater"],
+      "scenarios": [
+        {
+          "id": "claim-mismatch",
+          "title": "Agentens påstand matcher ikke diffen",
+          "base": "default",
+          "overrides": { "change.diff.summaryStats.filesChanged": 99 },
+          "expectedVerdict": "reject",
+          "mustReject": true,
+          "teachingPoint": "Prosaen siger tre filer, diffen viser 99. Når en struktureret påstand afviger fra evidensen, skal forslaget afvises.",
+          "rejectionCriteria": [
+            {
+              "path": "change.diff.summaryStats.filesChanged",
+              "operator": "neq",
+              "value": 3,
+              "reason": "Agentens påstand om 3 filer matcher ikke den faktiske diff."
+            }
+          ]
+        },
+        {
+          "id": "tests-not-run",
+          "title": "Evidensen er ikke indsamlet",
+          "base": "default",
+          "overrides": { "evidence.tests.status": "not-run" },
+          "expectedVerdict": "reject",
+          "mustReject": true,
+          "teachingPoint": "Manglende tests er ikke et grønt lys. Afvis, indtil testresultatet foreligger.",
+          "rejectionCriteria": [
+            {
+              "path": "evidence.tests.status",
+              "operator": "eq",
+              "value": "not-run",
+              "reason": "Teststatus er 'not-run'; der er ingen maskinevidens for ændringen."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "when-to-reject",
+      "title": "Hvornår afvises",
+      "objective": "Godkenderen skal kunne afvise et forslag, der ser pænt ud, men ikke er underbygget eller er drevet af utroværdig input.",
+      "topics": ["utestet rollback", "prompt injection", "fejlende tests"],
+      "scenarios": [
+        {
+          "id": "untested-rollback",
+          "title": "Utestet rollback",
+          "base": "default",
+          "overrides": { "rollback.tested": false },
+          "expectedVerdict": "reject",
+          "mustReject": true,
+          "teachingPoint": "Utestet rollback er ikke rollback. Afvis, indtil gendannelsen er bevist.",
+          "rejectionCriteria": [
+            {
+              "path": "rollback.tested",
+              "operator": "eq",
+              "value": false,
+              "reason": "Rollback er ikke testet, så vi ved ikke om vi kan komme tilbage."
+            }
+          ]
+        },
+        {
+          "id": "untrusted-trigger",
+          "title": "Triggeren kommer fra data agenten ikke kontrollerer",
+          "base": "default",
+          "overrides": { "trigger.untrustedInput": true },
+          "expectedVerdict": "reject",
+          "mustReject": true,
+          "teachingPoint": "Når triggeren stammer fra logs, issues eller changelogs, kan en angriber have skrevet instruktionen. Afvis og undersøg kilden.",
+          "rejectionCriteria": [
+            {
+              "path": "trigger.untrustedInput",
+              "operator": "eq",
+              "value": true,
+              "reason": "Triggeren er markeret som utroværdig; prompt-injection-risiko."
+            }
+          ]
+        },
+        {
+          "id": "failed-tests",
+          "title": "Tests fejler",
+          "base": "default",
+          "overrides": { "evidence.tests.status": "fail" },
+          "expectedVerdict": "reject",
+          "mustReject": true,
+          "teachingPoint": "En fejlende testsuite er et stop, ikke en detalje. Afvis uden undtagelse.",
+          "rejectionCriteria": [
+            {
+              "path": "evidence.tests.status",
+              "operator": "eq",
+              "value": "fail",
+              "reason": "Testsuiten fejler."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "kill-switch",
+      "title": "Kill switch",
+      "objective": "Godkenderen skal vide, hvordan handlingen stoppes, og afvise forslag uden en fungerende udvej.",
+      "topics": ["stopmekanisme", "auto-rollback", "nødprocedure"],
+      "scenarios": [
+        {
+          "id": "no-kill-switch",
+          "title": "Ingen måde at stoppe på",
+          "base": "default",
+          "overrides": { "rollback.method": "none" },
+          "expectedVerdict": "reject",
+          "mustReject": true,
+          "teachingPoint": "Hvis du ikke kan stoppe eller rulle handlingen tilbage, må den ikke starte. Afvis og kræv en kill switch.",
+          "rejectionCriteria": [
+            {
+              "path": "rollback.method",
+              "operator": "eq",
+              "value": "none",
+              "reason": "Der er ingen rollback-metode og dermed ingen kill switch."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "first-24-hours",
+      "title": "Første 24 timer ved hændelse",
+      "objective": "Godkenderen skal kunne handle under pres uden at sænke evidenskravet.",
+      "topics": ["inddæmning", "kommunikation", "indberetning"],
+      "scenarios": [
+        {
+          "id": "urgent-prod-change",
+          "title": "Hasteændring i produktion uden evidens",
+          "base": "default",
+          "overrides": {
+            "change.environment": "prod",
+            "blastRadius.personalDataAffected": true,
+            "evidence.dryRun.status": "not-supported"
+          },
+          "expectedVerdict": "reject",
+          "mustReject": true,
+          "teachingPoint": "Hastegrad er ikke en grund til at springe evidensen over. Afvis, inddæm først, og kommunikér inden for de frister, loven kræver.",
+          "rejectionCriteria": [
+            {
+              "path": "evidence.dryRun.status",
+              "operator": "eq",
+              "value": "not-supported",
+              "reason": "Ændringen rammer produktion og persondata uden en dry-run."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

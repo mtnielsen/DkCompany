@@ -5,7 +5,7 @@ CLI   := $(NODE) $(CONF)/src/cli.mjs
 
 .DEFAULT_GOAL := help
 
-.PHONY: help install validate lint test conform conform-all conform-negative dsar-demo telemetry-test policy-verify policy-test policy-decide gitops-verify gitops-test gitops-reconcile gitops-drift changelog changelog-check audit-service-test audit-service-evidence audit-service-run adapter-test adapter-evidence adapter-run gateway-test gateway-run runtime-test runtime-demo agent-conformance-test reviewer-test reviewer-metrics oscal-evidence evidence-test compliance-mapping compliance-check compliance-test observability-dashboards observability-check observability-test security-ingest security-check security-test ci clean
+.PHONY: help install validate lint test conform conform-all conform-negative dsar-demo telemetry-test policy-verify policy-test policy-decide gitops-verify gitops-test gitops-reconcile gitops-drift changelog changelog-check audit-service-test audit-service-evidence audit-service-run adapter-test adapter-evidence adapter-run gateway-test gateway-run runtime-test runtime-demo agent-conformance-test reviewer-test reviewer-metrics oscal-evidence evidence-test compliance-mapping compliance-check compliance-test observability-dashboards observability-check observability-test security-ingest security-check security-test curriculum-check curriculum-render curriculum-test ci clean
 
 help: ## Vis denne hjælp
 	@echo "Platformens kontrakter — tilgængelige mål:"
@@ -66,6 +66,15 @@ security-check: ## Validér sikkerhedsfundene og fejl hvis de er ude af trit med
 
 security-test: ## Kør sikkerhedsnormaliseringens tests
 	cd security && $(NODE) --test
+
+curriculum-check: ## Validér ejer-curriculumet og dets afvisningsscenarier
+	$(NODE) curriculum/src/cli.mjs check
+
+curriculum-render: ## Vis curriculumets moduler og scenarier
+	$(NODE) curriculum/src/cli.mjs render
+
+curriculum-test: ## Kør curriculumets tests (inkl. håndhævelse i 2.4)
+	cd curriculum && $(NODE) --test
 
 dsar-demo: ## Demonstrér DSAR-fan-out mod alle dummy-moduler
 	$(NODE) $(CONF)/src/dsar.mjs --verb subject.erase --tenant acme --identifier email=kunde@example.org
@@ -140,7 +149,7 @@ reviewer-test: ## Kør reviewer-agentens tests (inkl. effektmåling)
 reviewer-metrics: ## Kør effektmålings-dashboardet lokalt
 	$(NODE) reviewer/src/metrics-cli.mjs
 
-ci: validate lint test policy-test policy-verify gitops-test gitops-verify gitops-reconcile gitops-drift changelog-check audit-service-test adapter-test gateway-test runtime-test agent-conformance-test reviewer-test compliance-test compliance-check observability-test observability-check security-test security-check conform-all oscal-evidence evidence-test conform-negative ## Det fulde CI-løb lokalt
+ci: validate lint test policy-test policy-verify gitops-test gitops-verify gitops-reconcile gitops-drift changelog-check audit-service-test adapter-test gateway-test runtime-test agent-conformance-test reviewer-test curriculum-test curriculum-check compliance-test compliance-check observability-test observability-check security-test security-check conform-all oscal-evidence evidence-test conform-negative ## Det fulde CI-løb lokalt
 
 clean: ## Ryd genereret output
 	rm -rf .conformance-out

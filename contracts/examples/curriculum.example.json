@@ -1,0 +1,41 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "Curriculum",
+  "metadata": {
+    "name": "example-curriculum",
+    "version": "1.0.0",
+    "description": "Eksempel på et ejer-curriculum. Det rigtige curriculum ligger i curriculum/curriculum.json.",
+    "owner": "platform@example.org",
+    "lastReviewed": "2025-09-01"
+  },
+  "basePayloads": {
+    "default": "contracts/examples/approval-request.example.json"
+  },
+  "modules": [
+    {
+      "id": "when-to-reject",
+      "title": "Hvornår afvises",
+      "objective": "Godkenderen skal kunne afvise et forslag, der ser pænt ud, men ikke er underbygget.",
+      "topics": ["utestet rollback", "fejlende tests"],
+      "scenarios": [
+        {
+          "id": "untested-rollback",
+          "title": "Utestet rollback",
+          "base": "default",
+          "overrides": { "rollback.tested": false },
+          "expectedVerdict": "reject",
+          "mustReject": true,
+          "teachingPoint": "Utestet rollback er ikke rollback. Afvis, indtil gendannelsen er bevist.",
+          "rejectionCriteria": [
+            {
+              "path": "rollback.tested",
+              "operator": "eq",
+              "value": false,
+              "reason": "Rollback er ikke testet, så vi ved ikke om vi kan komme tilbage."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

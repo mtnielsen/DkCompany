@@ -50,6 +50,7 @@
       "name": "AI Act (forordning (EU) 2024/1689)",
       "description": "Forpligtelser for udbydere og deployere af AI-systemer med relevans for agentlaget.",
       "requirements": [
+        { "id": "ai-act-art4", "title": "AI-kompetence (AI literacy)", "summary": "Personale og deployere skal have tilstrækkelig AI-kompetence.", "role": "deployer" },
         { "id": "ai-act-art9", "title": "Risikostyringssystem", "summary": "Løbende risikostyring gennem systemets levetid.", "role": "shared" },
         { "id": "ai-act-art12", "title": "Logning", "summary": "Automatisk registrering af hændelser gennem systemets levetid.", "role": "issuer" },
         { "id": "ai-act-art13", "title": "Transparens", "summary": "Deployer skal kunne forstå systemets formål og grænser.", "role": "issuer" },
@@ -122,6 +123,14 @@
       "satisfies": ["nis2-art21-2b", "nis2-art23", "ai-act-art15"],
       "evidence": ["SEC-falco", "SEC-wazuh", "security/falco/platform-rules.yaml", "security/wazuh/local_rules.xml"],
       "notes": "Falco opdager runtime-afvigelser; Wazuh korrelerer og alarmerer. Begge emitteres gennem OSCAL-evidensplanen."
+    },
+    {
+      "id": "at-2",
+      "title": "Awareness and training (ejer-curriculum)",
+      "role": "deployer",
+      "satisfies": ["nis2-art21-2g", "ai-act-art4"],
+      "evidence": ["curriculum/curriculum.json", "dk.platform.curriculum.module.completed"],
+      "notes": "Godkendere gennemfører curriculumet, inkl. forslag der skal afvises; gennemførelse logges som CloudEvent og håndhæves af approval-servicen."
     }
   ]
 }
