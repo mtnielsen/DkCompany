@@ -260,7 +260,10 @@ function securityResult({ security, generatedAt }) {
     description: "Sikkerhedsfund fra CI, runtime og SIEM, koblet ind i evidensplanen.",
     start: generatedAt,
     end: generatedAt,
-    "reviewed-controls": reviewedControls(["ra-5"]),
+    // 3.2 kortlægger både ra-5 (sårbarhedsscanning) og si-4 (runtime/SIEM-overvågning)
+    // til SEC-* -fundene. Begge skal derfor stå i reviewed-controls, ellers peger
+    // mappingen på evidens, pakken ikke erklærer at dække.
+    "reviewed-controls": reviewedControls(["ra-5", "si-4"]),
     observations,
     findings,
     remarks: "Ikke en separat silo: fundene bæres af OSCAL-evidenspakken.",

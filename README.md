@@ -8,7 +8,7 @@ Udgangspunktet er [BACKLOG.md](BACKLOG.md). Princippet er **kontrakt før implem
 
 ## Status
 
-Bølge 0 er implementeret:
+Bølgerne 0–4 er implementeret:
 
 | Punkt | Status | Bevis |
 | --- | --- | --- |
@@ -112,7 +112,7 @@ Evidens (OSCAL):
 ```bash
 make conform-all              # skriver .conformance-out/report.json
 make oscal-evidence           # OSCAL-assessment-results fra konformans, policy, audit, git og GitOps
-make evidence-test            # validerer evidenspakken mod kontrakten (4 tests)
+make evidence-test            # validerer evidenspakken mod kontrakten (5 tests)
 ```
 
 Compliance:

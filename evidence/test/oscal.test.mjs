@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { buildAjv, validate, SCHEMA_IDS } from "../../conformance/src/schemas.mjs";
 import { uuidFor, findingFromCheck, buildAssessmentResults, OSCAL_VERSION } from "../src/oscal.mjs";
@@ -137,6 +137,26 @@ test("buildAssessmentResults giver et skemagyldigt dokument og ærlige findings"
   assert.equal(secFinding.target.status.state, "not-satisfied");
   assert.equal(security.observations.length, 1);
   assert.equal(security.observations[0]["relevant-evidence"][0].href, "security/raw/trivy-app.json");
+});
+
+test("sikkerhedsresultatets reviewed-controls dækker alle kontroller med SEC-evidens", () => {
+  // Drift-værn: OSCAL-pakken og kontrolmappingen (3.2) skal pege på de samme
+  // kontroller. Kortlægningen er kilden; pakken må ikke undlade en kontrol,
+  // hvis evidens den selv bærer.
+  const mapping = JSON.parse(readFileSync(join(repoRoot, "compliance", "control-mapping.json"), "utf8"));
+  const expected = mapping.controls
+    .filter((control) => (control.evidence ?? []).some((ref) => ref.startsWith("SEC-")))
+    .map((control) => control.id)
+    .sort();
+
+  const security = buildAssessmentResults(syntheticArtifacts())["assessment-results"].results.find((r) =>
+    r.title.startsWith("Sikkerhed")
+  );
+  const actual = security["reviewed-controls"]["control-selections"][0]["include-controls"]
+    .map((entry) => entry["control-id"])
+    .sort();
+
+  assert.deepEqual(actual, expected, "reviewed-controls skal matche kontrolmappingens SEC-evidens");
 });
 
 test("integration: emitteren bygger en gyldig pakke fra repoets artefakter", (t) => {
