@@ -67,6 +67,8 @@ jobs:
       - run: make gitops-drift
       - run: make changelog-check
       - run: make changelog
+      - run: make observability-test
+      - run: make observability-check
       - uses: actions/upload-artifact@v4
         with:
           name: change-log

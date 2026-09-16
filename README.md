@@ -31,8 +31,9 @@ Bølge 0 er implementeret:
 | 2.7 Reviewer-effektmåling | ✅ | [`reviewer/src/metrics.mjs`](reviewer/src/metrics.mjs), `make reviewer-metrics` |
 | 3.1 Compliance-evidens-emitter (OSCAL) | ✅ | [`evidence/`](evidence), [`contracts/oscal-assessment-results.schema.json`](contracts/oscal-assessment-results.schema.json), `make oscal-evidence` / `make evidence-test`, [ADR-0008](docs/adr/0008-oscal-evidensprofil.md) |
 | 3.2 Kontrolmapping NIS2 / GDPR / AI Act | ✅ | [`compliance/`](compliance), [`docs/compliance/mapping.md`](docs/compliance/mapping.md), check `C-012`, [ADR-0009](docs/adr/0009-kontrolmapping-roller.md) |
+| 3.3 Ops-dashboards (Prometheus/Grafana/Loki) | ✅ | [`observability/`](observability), `make observability-dashboards` / `observability-check`, [ADR-0010](docs/adr/0010-dashboards-fra-manifest.md) |
 
-Bølge 1 og bølge 2 er komplette: agenten kører et A1-verbum end-to-end, stopper ved utilgængelig PDP/audit-log, eskalerer ved budget- og loop-brud, afviser udeklarerede verber, A4-handlinger og prompt injection. De seks agent-konformanstests er grønne, og reviewer-effekten måles. Bølge 3 er i gang: OSCAL-evidens emitteres automatisk fra konformanskørsler, og kontrolmappingen mod NIS2/GDPR/AI Act er maskinlæsbar og håndhævet i CI. Næste er dashboards og sikkerhedsplan.
+Bølge 1 og bølge 2 er komplette: agenten kører et A1-verbum end-to-end, stopper ved utilgængelig PDP/audit-log, eskalerer ved budget- og loop-brud, afviser udeklarerede verber, A4-handlinger og prompt injection. De seks agent-konformanstests er grønne, og reviewer-effekten måles. Bølge 3 er i gang: OSCAL-evidens emitteres automatisk fra konformanskørsler, kontrolmappingen mod NIS2/GDPR/AI Act er maskinlæsbar og håndhævet i CI, og SLO-dashboards samt agenthandlinger genereres fra manifesterne. Næste er sikkerhedsplanen.
 
 ## Kom i gang
 
@@ -118,6 +119,14 @@ make compliance-check         # fejl hvis docs er ude af trit med registry
 make compliance-test          # validering og krydsreferencer (4 tests)
 ```
 
+Observability:
+
+```bash
+make observability-dashboards # genskab Prometheus-regler og Grafana-dashboards fra SLO
+make observability-check      # fejl hvis dashboards er ude af trit med manifestet
+make observability-test       # generator + configmap-synkronisering (5 tests)
+```
+
 ## Struktur
 
 ```
@@ -131,6 +140,7 @@ approvals/     approval-service: godkendelser, træningskrav, evidens/prosa-visn
 reviewer/      adversarial reviewer-agent (kan kun flagge/afvise) + effektmåling
 evidence/      OSCAL-evidens-emitter: maskinlæsbar compliance-evidens fra platformens artefakter
 compliance/    kontrolmapping mod NIS2, GDPR og AI Act (kanonisk registry + generator)
+observability/ Prometheus-regler og Grafana-dashboards genereret fra modulets SLO
 gitops/        ønsket tilstand, Argo CD-apps og reconcile (det, der ruller ud)
 docs/adr/      beslutningslog i MADR-format
 docs/spec/     planerne i prosa

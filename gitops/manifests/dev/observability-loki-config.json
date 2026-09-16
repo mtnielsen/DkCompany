@@ -1,0 +1,17 @@
+{
+  "apiVersion": "v1",
+  "kind": "ConfigMap",
+  "metadata": {
+    "name": "observability-loki-config",
+    "namespace": "platform",
+    "labels": {
+      "app.kubernetes.io/name": "observability-loki-config",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "observability",
+      "platform.example.org/environment": "dev"
+    }
+  },
+  "data": {
+    "loki.yml": "auth_enabled: false\nserver:\n  http_listen_port: 3100\ncommon:\n  path_prefix: /loki\n  storage:\n    filesystem:\n      chunks_directory: /loki/chunks\n      rules_directory: /loki/rules\n  replication_factor: 1\n  ring:\n    kvstore:\n      store: inmemory\nschema_config:\n  configs:\n    - from: 2024-01-01\n      store: tsdb\n      object_store: filesystem\n      schema: v13\n      index:\n        prefix: index_\n        period: 24h\n"
+  }
+}

@@ -19,5 +19,6 @@ De fire planer og den suite, der bevogter dem. Hver spec svarer til et punkt i `
 - [Reviewer-effektmåling](reviewer-metrics.md) — 2.7
 - [OSCAL-evidens-emitteren](oscal-evidence.md) — 3.1
 - [Kontrolmapping: NIS2, GDPR og AI Act](control-mapping.md) — 3.2
+- [Ops-dashboards: Prometheus, Grafana og Loki](observability.md) — 3.3
 
 Arkitekturvalgene bag findes i [`docs/adr`](../adr/).

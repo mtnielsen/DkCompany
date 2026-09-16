@@ -1,0 +1,18 @@
+{
+  "apiVersion": "v1",
+  "kind": "ConfigMap",
+  "metadata": {
+    "name": "observability-grafana-provisioning",
+    "namespace": "platform",
+    "labels": {
+      "app.kubernetes.io/name": "observability-grafana-provisioning",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "observability",
+      "platform.example.org/environment": "dev"
+    }
+  },
+  "data": {
+    "datasources.yaml": "apiVersion: 1\ndatasources:\n  - name: Prometheus\n    type: prometheus\n    uid: prometheus\n    url: http://observability-prometheus:9090\n    isDefault: true\n  - name: Loki\n    type: loki\n    uid: loki\n    url: http://observability-loki:3100\n",
+    "dashboards.yaml": "apiVersion: 1\nproviders:\n  - name: platform\n    orgId: 1\n    folder: Platform\n    type: file\n    disableDeletion: false\n    updateIntervalSeconds: 30\n    options:\n      path: /etc/grafana/dashboards\n"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "@platform/observability",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Ops-dashboards: Prometheus-regler og Grafana-dashboards genereret fra modulets SLO. Ingen runtime-afhængigheder.",
+  "bin": {
+    "observability": "./src/cli.mjs"
+  },
+  "scripts": {
+    "test": "node --test"
+  }
+}

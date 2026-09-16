@@ -5,7 +5,7 @@ CLI   := $(NODE) $(CONF)/src/cli.mjs
 
 .DEFAULT_GOAL := help
 
-.PHONY: help install validate lint test conform conform-all conform-negative dsar-demo telemetry-test policy-verify policy-test policy-decide gitops-verify gitops-test gitops-reconcile gitops-drift changelog changelog-check audit-service-test audit-service-evidence audit-service-run adapter-test adapter-evidence adapter-run gateway-test gateway-run runtime-test runtime-demo agent-conformance-test reviewer-test reviewer-metrics oscal-evidence evidence-test compliance-mapping compliance-check compliance-test ci clean
+.PHONY: help install validate lint test conform conform-all conform-negative dsar-demo telemetry-test policy-verify policy-test policy-decide gitops-verify gitops-test gitops-reconcile gitops-drift changelog changelog-check audit-service-test audit-service-evidence audit-service-run adapter-test adapter-evidence adapter-run gateway-test gateway-run runtime-test runtime-demo agent-conformance-test reviewer-test reviewer-metrics oscal-evidence evidence-test compliance-mapping compliance-check compliance-test observability-dashboards observability-check observability-test ci clean
 
 help: ## Vis denne hjælp
 	@echo "Platformens kontrakter — tilgængelige mål:"
@@ -48,6 +48,15 @@ compliance-check: ## Fejl hvis docs/compliance/mapping.md er ude af trit med reg
 
 compliance-test: ## Kør kontrolmappingens tests (validering + krydsreferencer)
 	cd compliance && $(NODE) --test
+
+observability-dashboards: ## Genskab Prometheus-regler og Grafana-dashboards fra modulets SLO
+	$(NODE) observability/src/cli.mjs write
+
+observability-check: ## Fejl hvis dashboards/regler er ude af trit med modulets SLO
+	$(NODE) observability/src/cli.mjs check
+
+observability-test: ## Kør observability-generatorens tests
+	cd observability && $(NODE) --test
 
 dsar-demo: ## Demonstrér DSAR-fan-out mod alle dummy-moduler
 	$(NODE) $(CONF)/src/dsar.mjs --verb subject.erase --tenant acme --identifier email=kunde@example.org
@@ -122,7 +131,7 @@ reviewer-test: ## Kør reviewer-agentens tests (inkl. effektmåling)
 reviewer-metrics: ## Kør effektmålings-dashboardet lokalt
 	$(NODE) reviewer/src/metrics-cli.mjs
 
-ci: validate lint test policy-test policy-verify gitops-test gitops-verify gitops-reconcile gitops-drift changelog-check audit-service-test adapter-test gateway-test runtime-test agent-conformance-test reviewer-test compliance-test compliance-check conform-all oscal-evidence evidence-test conform-negative ## Det fulde CI-løb lokalt
+ci: validate lint test policy-test policy-verify gitops-test gitops-verify gitops-reconcile gitops-drift changelog-check audit-service-test adapter-test gateway-test runtime-test agent-conformance-test reviewer-test compliance-test compliance-check observability-test observability-check conform-all oscal-evidence evidence-test conform-negative ## Det fulde CI-løb lokalt
 
 clean: ## Ryd genereret output
 	rm -rf .conformance-out
