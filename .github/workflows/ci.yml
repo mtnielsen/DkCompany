@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  contracts:
+    name: Kontrakter og lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: conformance/package-lock.json
+      - run: make install
+      - run: make validate
+      - run: make lint
+
+  test:
+    name: Suitens egne tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: conformance/package-lock.json
+      - run: make install
+      - run: make test
+
+  conformance:
+    name: Konformans (positiv + negativ)
+    runs-on: ubuntu-latest
+    needs: [contracts, test]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: conformance/package-lock.json
+      - run: make install
+      - name: Moduler skal bestå
+        run: make conform-all
+      - name: Bevidst brudt modul skal fejle
+        run: make conform-negative
+      - name: DSAR-fan-out
+        run: make dsar-demo
+      - name: CloudEvent gennem collector
+        run: make telemetry-test
+      - uses: actions/upload-artifact@v4
+        with:
+          name: conformance-badge
+          path: .conformance-out/badge.json
+
+  dco:
+    name: DCO sign-off
+    if: github.event_name == 'pull_request' || github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Tjek Signed-off-by
+        env:
+          EVENT: ${{ github.event_name }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          PUSH_BEFORE: ${{ github.event.before }}
+          PUSH_AFTER: ${{ github.event.after }}
+        run: |
+          if [ "$EVENT" = "pull_request" ]; then
+            RANGE="$PR_BASE..$PR_HEAD"
+          else
+            RANGE="$PUSH_BEFORE..$PUSH_AFTER"
+          fi
+          bash .github/scripts/check-dco.sh "$RANGE"

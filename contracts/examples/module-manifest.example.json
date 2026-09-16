@@ -1,0 +1,54 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ModuleManifest",
+  "metadata": {
+    "name": "example-module",
+    "version": "0.1.0",
+    "description": "Minimalt ærligt manifest: de fleste verber er unsupported med begrundelse, ét er full med bevis.",
+    "owner": { "team": "example" }
+  },
+  "identity": {
+    "userStore": "none",
+    "oidc": { "issuer": "https://id.example.org/realms/platform", "clientId": "example-module" },
+    "scim": { "version": "2.0", "endpoint": "https://id.example.org/scim/v2", "mode": "consumer" },
+    "spiffe": { "spiffeId": "spiffe://platform.example.org/modules/example-module", "trustDomain": "platform.example.org", "credentialMode": "just-in-time" }
+  },
+  "telemetry": {
+    "serviceName": "example-module",
+    "otel": {
+      "exporter": "otlp-grpc",
+      "signals": ["traces", "metrics", "logs"],
+      "resourceAttributes": { "service.name": "example-module", "service.version": "0.1.0", "deployment.environment": "dev" }
+    },
+    "cloudEvents": {
+      "source": "urn:platform:module:example-module",
+      "typePrefix": "dk.platform.example-module.",
+      "sink": "https://events.platform.example.org/events",
+      "requiredAttributes": ["tenantid", "traceid", "principal"]
+    }
+  },
+  "verbs": {
+    "backup": { "conformance": "unsupported", "reason": "modulet holder ingen tilstand der skal sikkerhedskopieres" },
+    "restore": { "conformance": "unsupported", "reason": "modulet holder ingen tilstand der skal gendannes" },
+    "verify-restore": { "conformance": "unsupported", "reason": "ingen backup at verificere" },
+    "drain": { "conformance": "unsupported", "reason": "modulet har ingen langvarige forbindelser at dræne" },
+    "upgrade.dry-run": { "conformance": "unsupported", "reason": "deployes som statisk artefakt uden upgrade-proces" },
+    "upgrade": { "conformance": "unsupported", "reason": "deployes som statisk artefakt uden upgrade-proces" },
+    "migrate": { "conformance": "unsupported", "reason": "modulet har ingen database og dermed ingen migrationer" },
+    "rollback": { "conformance": "unsupported", "reason": "rollback sker via git-revert af deploy-manifestet" },
+    "health": {
+      "conformance": "full",
+      "endpoint": "https://example-module.example.org/healthz",
+      "evidence": { "kind": "fixture", "ref": "conformance/evidence/health.json" }
+    },
+    "slo": { "conformance": "unsupported", "reason": "SLO defineres først når modulet har trafik" }
+  },
+  "privacy": {
+    "subject.locate": { "conformance": "unsupported", "reason": "modulet behandler ingen personoplysninger" },
+    "subject.export": { "conformance": "unsupported", "reason": "modulet behandler ingen personoplysninger" },
+    "subject.erase": { "conformance": "unsupported", "reason": "modulet behandler ingen personoplysninger" },
+    "subject.legal_hold": { "conformance": "unsupported", "reason": "modulet behandler ingen personoplysninger" },
+    "retention.policy": { "conformance": "unsupported", "reason": "modulet opbevarer ingen data" },
+    "dataCategories": ["none"]
+  }
+}

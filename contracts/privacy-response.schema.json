@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/privacy-response.schema.json",
+  "title": "Privacy Subject Response",
+  "description": "Samlet resultat af en DSAR fan-out. Per-modul status er obligatorisk, så partial og unsupported handlinger er synlige i stedet for at forsvinde i et aggregat.",
+  "type": "object",
+  "required": ["requestId", "verb", "completedAt", "status", "results", "summary"],
+  "additionalProperties": false,
+  "properties": {
+    "requestId": { "type": "string", "format": "uuid" },
+    "verb": { "type": "string" },
+    "completedAt": { "type": "string", "format": "date-time" },
+    "status": {
+      "enum": ["completed", "partially-completed", "failed"],
+      "description": "partially-completed når mindst ét modul er partial/unsupported/failed."
+    },
+    "results": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["module", "verb", "status"],
+        "additionalProperties": false,
+        "properties": {
+          "module": { "type": "string" },
+          "moduleVersion": { "type": "string" },
+          "verb": { "type": "string" },
+          "status": {
+            "enum": ["full", "partial", "unsupported", "failed"],
+            "description": "Spejler modulets deklarerede conformance for verbet."
+          },
+          "recordsAffected": { "type": "integer", "minimum": 0 },
+          "artifactRef": { "type": "string", "description": "Eksportfil, slettebevis eller lignende." },
+          "artifactSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "reason": { "type": "string", "description": "Påkrævet for partial/unsupported." },
+          "durationMs": { "type": "integer", "minimum": 0 },
+          "error": { "type": "string" }
+        },
+        "allOf": [
+          {
+            "if": { "required": ["status"], "properties": { "status": { "enum": ["partial", "unsupported"] } } },
+            "then": { "required": ["reason"], "properties": { "reason": { "type": "string" } } }
+          },
+          {
+            "if": { "required": ["status"], "properties": { "status": { "const": "failed" } } },
+            "then": { "required": ["error"], "properties": { "error": { "type": "string" } } }
+          }
+        ]
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": ["modulesQueried", "full", "partial", "unsupported", "failed"],
+      "additionalProperties": false,
+      "properties": {
+        "modulesQueried": { "type": "integer", "minimum": 0 },
+        "full": { "type": "integer", "minimum": 0 },
+        "partial": { "type": "integer", "minimum": 0 },
+        "unsupported": { "type": "integer", "minimum": 0 },
+        "failed": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

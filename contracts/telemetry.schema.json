@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/telemetry.schema.json",
+  "title": "Telemetry Plan",
+  "description": "Telemetri-blok for et modul: OTel til traces/metrics/logs og CloudEvents-envelope til forretnings- og governancehændelser. Én envelope for både menneske- og agenthandlinger. tenantid, traceid og principal er obligatoriske på hver hændelse.",
+  "type": "object",
+  "required": ["serviceName", "otel", "cloudEvents"],
+  "additionalProperties": false,
+  "properties": {
+    "serviceName": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{1,62}$",
+      "description": "Skal matche OTel service.name og modul-ID."
+    },
+    "otel": {
+      "type": "object",
+      "required": ["exporter", "signals"],
+      "additionalProperties": false,
+      "properties": {
+        "exporter": { "enum": ["otlp-grpc", "otlp-http"] },
+        "endpoint": { "type": "string", "format": "uri" },
+        "signals": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": { "enum": ["traces", "metrics", "logs"] },
+          "allOf": [
+            { "contains": { "const": "traces" } },
+            { "contains": { "const": "metrics" } },
+            { "contains": { "const": "logs" } }
+          ]
+        },
+        "resourceAttributes": {
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "description": "Skal mindst indeholde service.name, service.version og deployment.environment."
+        },
+        "sampling": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "strategy": { "enum": ["always-on", "always-off", "traceidratio", "parentbased-traceidratio"] },
+            "ratio": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        }
+      }
+    },
+    "cloudEvents": {
+      "type": "object",
+      "required": ["source", "typePrefix", "requiredAttributes", "sink"],
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "type": "string",
+          "format": "uri-reference",
+          "description": "CloudEvents source. Identificerer modulet entydigt."
+        },
+        "typePrefix": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*(\\.[a-z0-9][a-z0-9-]*)*\\.$",
+          "description": "Præfiks for alle modulets hændelsestyper, fx 'dk.platform.billing.'"
+        },
+        "sink": { "type": "string", "format": "uri", "description": "Collector/broker hvor hændelser afleveres." },
+        "requiredAttributes": {
+          "type": "array",
+          "description": "Attributter der SKAL være til stede på hver hændelse. tenantid, traceid og principal er platformskrav og kan ikke fravælges.",
+          "allOf": [
+            { "contains": { "const": "tenantid" } },
+            { "contains": { "const": "traceid" } },
+            { "contains": { "const": "principal" } }
+          ],
+          "items": { "type": "string" }
+        },
+        "dataClassificationRequired": { "const": true, "default": true }
+      }
+    },
+    "retention": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "logsDays": { "type": "integer", "minimum": 1 },
+        "tracesDays": { "type": "integer", "minimum": 1 },
+        "metricsDays": { "type": "integer", "minimum": 1 },
+        "eventsDays": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}

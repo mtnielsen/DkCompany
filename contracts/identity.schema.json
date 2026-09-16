@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/identity.schema.json",
+  "title": "Identity Plan",
+  "description": "Identitetsblok for et modul. OIDC til autentifikation, SCIM 2.0 til provisionering, SPIFFE til workload-identitet. Hård regel: intet modul har egen brugerdatabase — identitet kommer udelukkende fra OIDC.",
+  "type": "object",
+  "required": ["userStore", "oidc", "scim", "spiffe"],
+  "additionalProperties": false,
+  "properties": {
+    "userStore": {
+      "const": "none",
+      "description": "Reglen der ikke kan forhandles: et modul har ingen lokal brugerdatabase. Kun 'none' er gyldig. Enhver modul-manifest med en anden værdi afvises af CI."
+    },
+    "oidc": {
+      "type": "object",
+      "required": ["issuer", "clientId"],
+      "additionalProperties": false,
+      "properties": {
+        "issuer": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://",
+          "description": "OIDC issuer URL. Skal være HTTPS."
+        },
+        "clientId": { "type": "string", "minLength": 1 },
+        "scopes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["openid", "profile", "email", "groups"]
+        },
+        "claimMapping": {
+          "type": "object",
+          "description": "Hvilke claims bærer identitet. Skal matche IAM-planen, så moduler ikke får hver sin fortolkning.",
+          "additionalProperties": false,
+          "properties": {
+            "subject": { "type": "string", "default": "sub" },
+            "email": { "type": "string", "default": "email" },
+            "groups": { "type": "string", "default": "groups" },
+            "tenant": { "type": "string", "default": "tenant_id" }
+          }
+        },
+        "pkceRequired": { "const": true, "default": true },
+        "tokenAudience": { "type": "string" }
+      }
+    },
+    "scim": {
+      "type": "object",
+      "description": "SCIM 2.0 er den eneste tilladte provisioneringsvej. Modulet må ikke opfinde sit eget bruger-API.",
+      "required": ["version", "endpoint", "mode"],
+      "additionalProperties": false,
+      "properties": {
+        "version": { "const": "2.0" },
+        "endpoint": { "type": "string", "format": "uri" },
+        "mode": {
+          "enum": ["provider", "consumer"],
+          "description": "consumer = modulet modtager brugere fra central IAM. provider = modulet er selv IAM-kilde (kun IAM-moduler)."
+        },
+        "supportsPatch": { "type": "boolean", "default": true },
+        "supportsBulk": { "type": "boolean", "default": false },
+        "groupMapping": { "type": "string", "description": "Reference til OIDC-gruppe-mapping." }
+      }
+    },
+    "spiffe": {
+      "type": "object",
+      "description": "Workload-identitet. Ingen delte servicekonti.",
+      "required": ["spiffeId", "trustDomain"],
+      "additionalProperties": false,
+      "properties": {
+        "spiffeId": { "type": "string", "pattern": "^spiffe://" },
+        "trustDomain": { "type": "string", "minLength": 1 },
+        "credentialMode": {
+          "const": "just-in-time",
+          "description": "Stående rettigheder er forbudt. Credentials udstedes pr. opgave og udløber."
+        },
+        "maxCredentialTtlSeconds": { "type": "integer", "minimum": 60, "maximum": 3600, "default": 900 }
+      }
+    },
+    "audit": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "authenticationEventsTo": { "type": "string", "description": "CloudEvents-type for auth-hændelser." },
+        "retainDays": { "type": "integer", "minimum": 30 }
+      }
+    }
+  }
+}

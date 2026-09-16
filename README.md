@@ -1,0 +1,71 @@
+# Platformskontrakter
+
+Et monorepo for de kontrakter, der gør en fler-modul-platform styrbar og beviselig — og den konformanssuite, der afgør, om et modul må kalde sig kompatibelt.
+
+Udgangspunktet er [BACKLOG.md](BACKLOG.md). Princippet er **kontrakt før implementering, test før moduler, to beviste adaptere før skalering, agenter før dashboards.**
+
+## Status
+
+Bølge 0 er implementeret:
+
+| Punkt | Status | Bevis |
+| --- | --- | --- |
+| 0.1 Repo-skelet og beslutningslog | ✅ | [`docs/adr`](docs/adr), `make validate`/`make lint`, CI |
+| 0.2 Identitetsplan | ✅ | [`contracts/identity.schema.json`](contracts/identity.schema.json), check `C-005` |
+| 0.3 Telemetriplan | ✅ | [`contracts/cloud-event.schema.json`](contracts/cloud-event.schema.json), `make telemetry-test` |
+| 0.4 Ops-kontrakt (manifest + verber) | ✅ | [`contracts/module-manifest.schema.json`](contracts/module-manifest.schema.json) |
+| 0.5 Privacy-verber | ✅ | [`contracts/privacy-request.schema.json`](contracts/privacy-request.schema.json), `make dsar-demo` |
+| 0.6 Konformanssuite | ✅ | [`conformance/`](conformance), `make conform MODULE=dummy-ok` |
+
+Bølge 1 (policy, GitOps, referencemoduler) og fremefter er ikke påbegyndt. Se backloggens kritiske vej.
+
+## Kom i gang
+
+```bash
+make install                 # npm ci i conformance/
+make ci                      # validate + lint + test + conform-all + conform-negative
+```
+
+Kør mod ét modul:
+
+```bash
+make conform MODULE=dummy-ok
+```
+
+```
+  ✔ C-001  module-manifest.json validerer mod kontrakten
+  ✔ C-005  Ingen lokal brugerdatabase; OIDC/SCIM/SPIFFE erklæret
+  ...
+RESULTAT: PASS  (10 pass, 0 skip, 0 fail)
+```
+
+Bevis at suiten faktisk fanger fejl:
+
+```bash
+make conform-negative
+# ✔ Negativ fixture fejlede som forventet
+```
+
+## Struktur
+
+```
+contracts/     JSON Schema-kontrakter + eksempler (det, der skal testes)
+conformance/   kørbar testsuite og orkestratorer (det, der tester)
+modules/       reference- og adaptermoduler med module-manifest.json
+policy/        policy-bundles (tomt i bølge 0; fyldes i bølge 1)
+docs/adr/      beslutningslog i MADR-format
+docs/spec/     de fire planer i prosa
+```
+
+## De fire planer
+
+1. **Identitet** — OIDC, SCIM 2.0, SPIFFE. Intet modul har egen brugerdatabase.
+2. **Telemetri** — OTel + én CloudEvents-envelope for menneske- og agenthandlinger.
+3. **Ops** — ti verber, hver med et conformance-niveau: `full` / `partial` / `unsupported`.
+4. **Privacy** — ét DSAR-fan-out med per-modul status.
+
+Læs mere i [`docs/spec`](docs/spec) og baggrunden i [`docs/adr`](docs/adr).
+
+## Bidrag
+
+Se [CONTRIBUTING.md](CONTRIBUTING.md). Alle commits skal være DCO-signeret (`git commit -s`).

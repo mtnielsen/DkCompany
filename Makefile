@@ -1,0 +1,46 @@
+SHELL := bash
+NODE  := node
+CONF  := conformance
+CLI   := $(NODE) $(CONF)/src/cli.mjs
+
+.DEFAULT_GOAL := help
+
+.PHONY: help install validate lint test conform conform-all conform-negative dsar-demo telemetry-test ci clean
+
+help: ## Vis denne hjælp
+	@echo "Platformens kontrakter — tilgængelige mål:"
+	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN{FS=":.*?## "}{printf "  \033[36m%-16s\033[0m %s\n", $$1, $$2}'
+
+install: ## Installér conformance-suitens afhængigheder
+	cd $(CONF) && npm ci --no-audit --no-fund
+
+validate: ## Metavalidér kontraktskemaer og eksempler
+	$(NODE) $(CONF)/src/validate-schemas.mjs
+
+lint: ## Lint JSON og tekstfiler
+	$(NODE) $(CONF)/src/lint.mjs
+
+test: ## Kør conformance-suitens egne tests
+	cd $(CONF) && $(NODE) --test
+
+conform: ## Kør konformans mod ét modul: make conform MODULE=dummy-ok
+	@test -n "$(MODULE)" || (echo "Brug: make conform MODULE=<navn>"; exit 2)
+	$(CLI) --module $(MODULE)
+
+conform-all: ## Kør konformans mod alle rigtige moduler og skriv rapport + badge
+	@mkdir -p .conformance-out
+	$(CLI) --all --exclude dummy-broken --report .conformance-out/report.json --badge .conformance-out/badge.json
+
+conform-negative: ## Bevis at den bevidst brudte fixture faktisk fejler
+	$(CLI) --module dummy-broken --expect-fail
+
+dsar-demo: ## Demonstrér DSAR-fan-out mod alle dummy-moduler
+	$(NODE) $(CONF)/src/dsar.mjs --verb subject.erase --tenant acme --identifier email=kunde@example.org
+
+telemetry-test: ## Validér et CloudEvent end-to-end gennem collectoren
+	cd $(CONF) && $(NODE) --test test/telemetry.test.mjs
+
+ci: validate lint test conform-all conform-negative ## Det fulde CI-løb lokalt
+
+clean: ## Ryd genereret output
+	rm -rf .conformance-out
