@@ -105,6 +105,7 @@ jobs:
           node-version: "22"
       - run: make gateway-test
       - run: make runtime-test
+      - run: make agent-conformance-test
 
   conformance:
     name: Konformans (positiv + negativ)

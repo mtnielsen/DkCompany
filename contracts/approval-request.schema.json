@@ -185,6 +185,21 @@
         "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
         "uncertainties": { "type": "array", "minItems": 1, "items": { "type": "string" } },
         "notChecked": { "type": "array", "minItems": 1, "items": { "type": "string" }, "description": "Hvad agenten IKKE har undersøgt." },
+        "claims": {
+          "type": "array",
+          "description": "Strukturerede påstande der kan verificeres deterministisk mod evidensen. Prosa alene kan ikke tjekkes; disse kan. Konformanstesten 'forklaring matcher faktisk diff' bruger dem.",
+          "items": {
+            "type": "object",
+            "required": ["statement", "evidenceRef", "operator", "value"],
+            "additionalProperties": false,
+            "properties": {
+              "statement": { "type": "string" },
+              "evidenceRef": { "type": "string", "description": "Sti i approval-request, fx change.diff.summaryStats.filesChanged" },
+              "operator": { "enum": ["eq", "lte", "gte"] },
+              "value": {}
+            }
+          }
+        },
         "explanations": {
           "type": "object",
           "description": "Samme ændring forklaret på forskellige niveauer, så godkenderen kan møde den hvor de er.",
@@ -221,6 +236,11 @@
         "state": { "enum": ["pending", "approved", "rejected", "expired", "withdrawn"] },
         "requiredApprovals": { "type": "integer", "minimum": 1 },
         "eligibleGroups": { "type": "array", "items": { "type": "string" } },
+        "requiredTrainingModules": {
+          "type": "array",
+          "description": "AI Act art. 4: godkendere skal have gennemført disse moduler. Håndhæves af approval-servicen.",
+          "items": { "type": "string" }
+        },
         "expiresAt": { "type": "string", "format": "date-time", "description": "Gamle anmodninger bygger på forældet evidens og skal udløbe." },
         "approvals": {
           "type": "array",

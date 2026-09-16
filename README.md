@@ -23,8 +23,11 @@ Bølge 0 er implementeret:
 | 2.1 Agent-manifest + approval-payload | ✅ | [`contracts/agent-manifest.schema.json`](contracts/agent-manifest.schema.json), [`approval-request.schema.json`](contracts/approval-request.schema.json), checks `A-001`/`A-002` |
 | 2.2 AI-gateway | ✅ | [`gateway/`](gateway), check `A-003`, [ADR-0006](docs/adr/0006-alle-modelkald-gennem-gateway.md) |
 | 2.3 Agent-runtime | ✅ | [`runtime/`](runtime), 10 tests |
+| 2.4 Approval-service + UI | ✅ | [`approvals/`](approvals), adskilt evidens/prosa-visning |
+| 2.5 Adversarial reviewer-agent | ✅ | [`reviewer/`](reviewer), [ADR-0007](docs/adr/0007-evidens-og-prosa-adskilt.md) |
+| 2.6 Agent-konformanstests (seks) | ✅ | [`conformance/test/agent-conformance.test.mjs`](conformance/test/agent-conformance.test.mjs) |
 
-Bølge 1 er komplet. Fra bølge 2 er agent-kontrakterne (2.1), AI-gatewayen (2.2) og agent-runtimen (2.3) på plads: agenten kører et A1-verbum end-to-end, stopper ved utilgængelig PDP/audit-log, eskalerer ved budget- og loop-brud, og afviser udeklarerede verber og A4-handlinger. Næste på den kritiske vej er approval-service (2.4) og de seks agent-konformanstests (2.6).
+Bølge 1 og bølge 2 er dermed stort set komplette: agenten kører et A1-verbum end-to-end, stopper ved utilgængelig PDP/audit-log, eskalerer ved budget- og loop-brud, afviser udeklarerede verber og A4-handlinger, og de seks agent-konformanstests er grønne. Tilbage i bølge 2 er 2.7 (reviewer-effektmåling).
 
 ## Kom i gang
 
@@ -90,6 +93,7 @@ Agenter:
 ```bash
 make gateway-test             # 7 tests: routing, budget, modelversion
 make runtime-test             # 10 tests: A1, fail-closed, A4, budget, loop, JIT
+make agent-conformance-test   # de seks agent-konformanstests (10 tests)
 ```
 
 ## Struktur
@@ -100,8 +104,10 @@ conformance/   kørbar testsuite og orkestratorer (det, der tester)
 modules/       reference- og adaptermoduler med module-manifest.json
 policy/        signerede policy-bundles og PDP (det, der beslutter)
 gateway/       AI-gateway: alle modelkald gennem én tjeneste
-gitops/        ønsket tilstand, Argo CD-apps og reconcile (det, der ruller ud)
 runtime/       agent-runtime: SPIFFE, JIT-credentials, budgetter, dødemandsgreb
+approvals/     approval-service: godkendelser, træningskrav, evidens/prosa-visning
+reviewer/      adversarial reviewer-agent (kan kun flagge/afvise)
+gitops/        ønsket tilstand, Argo CD-apps og reconcile (det, der ruller ud)
 docs/adr/      beslutningslog i MADR-format
 docs/spec/     planerne i prosa
 ```

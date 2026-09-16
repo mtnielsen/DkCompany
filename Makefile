@@ -5,7 +5,7 @@ CLI   := $(NODE) $(CONF)/src/cli.mjs
 
 .DEFAULT_GOAL := help
 
-.PHONY: help install validate lint test conform conform-all conform-negative dsar-demo telemetry-test policy-verify policy-test policy-decide gitops-verify gitops-test gitops-reconcile gitops-drift changelog changelog-check audit-service-test audit-service-evidence audit-service-run adapter-test adapter-evidence adapter-run gateway-test gateway-run runtime-test runtime-demo ci clean
+.PHONY: help install validate lint test conform conform-all conform-negative dsar-demo telemetry-test policy-verify policy-test policy-decide gitops-verify gitops-test gitops-reconcile gitops-drift changelog changelog-check audit-service-test audit-service-evidence audit-service-run adapter-test adapter-evidence adapter-run gateway-test gateway-run runtime-test runtime-demo agent-conformance-test ci clean
 
 help: ## Vis denne hjælp
 	@echo "Platformens kontrakter — tilgængelige mål:"
@@ -98,7 +98,10 @@ runtime-test: ## Kør agent-runtimens tests
 runtime-demo: ## Kør en agent-task (kræver kørende PDP + gateway)
 	$(NODE) runtime/src/cli.mjs --manifest modules/dummy-ok/agents/backup-agent.json --task contracts/examples/agent-task.example.json
 
-ci: validate lint test policy-test policy-verify gitops-test gitops-verify gitops-reconcile gitops-drift changelog-check audit-service-test adapter-test gateway-test runtime-test conform-all conform-negative ## Det fulde CI-løb lokalt
+agent-conformance-test: ## Kør de seks agent-konformanstests
+	cd $(CONF) && $(NODE) --test test/agent-conformance.test.mjs
+
+ci: validate lint test policy-test policy-verify gitops-test gitops-verify gitops-reconcile gitops-drift changelog-check audit-service-test adapter-test gateway-test runtime-test agent-conformance-test conform-all conform-negative ## Det fulde CI-løb lokalt
 
 clean: ## Ryd genereret output
 	rm -rf .conformance-out

@@ -13,5 +13,8 @@ De fire planer og den suite, der bevogter dem. Hver spec svarer til et punkt i `
 - [Referenceadapter B: Mattermost](adapter.md) — 1.4
 - [AI-gatewayen](ai-gateway.md) — 2.2
 - [Agent-runtimen](agent-runtime.md) — 2.3
+- [Approval-service](approval-service.md) — 2.4
+- [Adversarial reviewer-agent](reviewer.md) — 2.5
+- [Agent-konformanstests](agent-conformance.md) — 2.6
 
 Arkitekturvalgene bag findes i [`docs/adr`](../adr/).

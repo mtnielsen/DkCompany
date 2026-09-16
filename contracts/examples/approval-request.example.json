@@ -64,6 +64,11 @@
     "confidence": 0.82,
     "uncertainties": ["transitiv afhængighed kan ændre adfærd", "rollerback er testet mod forrige patch, ikke denne"],
     "notChecked": ["belastningstest under peak", "compatibility med tredjeparts-integration"],
+    "claims": [
+      { "statement": "Ændringen rører 3 filer", "evidenceRef": "change.diff.summaryStats.filesChanged", "operator": "eq", "value": 3 },
+      { "statement": "Der tilføjes 21 linjer", "evidenceRef": "change.diff.summaryStats.linesAdded", "operator": "eq", "value": 21 },
+      { "statement": "Ingen personoplysninger berøres", "evidenceRef": "blastRadius.personalDataAffected", "operator": "eq", "value": false }
+    ],
     "explanations": {
       "owner": "Vi opdaterer et bibliotek for at lukke et sikkerhedshul. Kræver din godkendelse.",
       "operator": "Bump libfoo 1.1.0 -> 1.2.0, dry-run ren, trivy ren, git-revert som rollback."
@@ -82,6 +87,7 @@
     "state": "pending",
     "requiredApprovals": 2,
     "eligibleGroups": ["platform-approvers"],
+    "requiredTrainingModules": ["evidence-over-prose", "when-to-reject"],
     "expiresAt": "2025-09-03T08:40:00Z",
     "approvals": []
   },

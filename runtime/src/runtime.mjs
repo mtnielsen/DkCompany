@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { scanUntrusted } from "./injection.mjs";
 
 export class BudgetExceeded extends Error {
   constructor(message) {
@@ -101,7 +102,7 @@ export function createAgentRuntime({
         tenantId: task.tenantId ?? null,
         evidence: action.evidence ?? [],
         ...(action.blastRadius ? { blastRadius: action.blastRadius } : {}),
-        ...(action.untrustedInput !== undefined ? { untrustedInput: action.untrustedInput } : {}),
+        ...(action.untrustedInput !== undefined ? { untrustedInput: action.untrustedInput } : action.untrustedContent ? { untrustedInput: true } : {}),
         ...(action.changeUri ? { changeUri: action.changeUri } : {}),
       },
     };
@@ -158,6 +159,15 @@ export function createAgentRuntime({
       if (count > (manifest.escalation?.repeatFailureLimit ?? 3)) {
         await tryAudit({ type: "agent.escalated", verb: action.verb, payload: { reason: "loop", key, count } });
         return finish("escalated", { reason: `loop detekteret: '${key}' gentaget ${count} gange`, action });
+      }
+
+      // Prompt injection: instruktioner indlejret i utroværdigt input ignoreres.
+      if (action.untrustedContent) {
+        const scan = scanUntrusted(action.untrustedContent);
+        if (scan.flagged) {
+          await tryAudit({ type: "agent.injection.detected", verb: action.verb, payload: { findings: scan.findings } });
+          return finish("escalated", { reason: `prompt injection i utroværdigt input: ${scan.findings.join(", ")}`, injectionFindings: scan.findings, action });
+        }
       }
 
       // Policy — fail-closed.
