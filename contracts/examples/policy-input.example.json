@@ -1,0 +1,23 @@
+{
+  "principal": {
+    "kind": "agent",
+    "id": "spiffe://platform.example.org/agents/dummy-ok-upgrader",
+    "spiffeId": "spiffe://platform.example.org/agents/dummy-ok-upgrader",
+    "autonomyClass": "A3",
+    "onBehalfOf": "oidc-group:platform-approvers"
+  },
+  "action": {
+    "verb": "upgrade",
+    "target": "dummy-ok",
+    "environment": "staging",
+    "autonomyClass": "A3"
+  },
+  "context": {
+    "tenantId": "acme",
+    "blastRadius": { "tenants": 1, "services": 1, "personalDataRecords": 0 },
+    "evidence": ["policy-allow", "tests-pass", "dry-run-clean", "rollback-tested"],
+    "changeUri": "https://git.example.org/platform/dummy-ok/-/merge_requests/42",
+    "changeSha256": "3333333333333333333333333333333333333333333333333333333333333333",
+    "untrustedInput": false
+  }
+}

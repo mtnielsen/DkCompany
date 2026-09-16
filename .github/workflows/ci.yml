@@ -36,10 +36,22 @@ jobs:
       - run: make install
       - run: make test
 
+  policy:
+    name: Policy (PDP + bundle-signatur)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: make policy-test
+      - run: make policy-verify
+      - run: make policy-decide
+
   conformance:
     name: Konformans (positiv + negativ)
     runs-on: ubuntu-latest
-    needs: [contracts, test]
+    needs: [contracts, test, policy]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

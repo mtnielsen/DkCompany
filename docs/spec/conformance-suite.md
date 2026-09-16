@@ -37,6 +37,8 @@ node conformance/src/cli.mjs --module dummy-ok --json
 | C-006 | OTel-signaler og obligatoriske CloudEvent-attributter |
 | C-007 | CloudEvent-eksempler validerer mod envelopen |
 | C-008 | Privacy-verber og datakategorier hænger sammen |
+| C-009 | Modulet er bundet til central PDP (fail-closed) |
+| C-010 | Aktiv policy-bundle er skemagyldig og signeret |
 | A-001 | Agent-manifester validerer mod agent-kontrakten |
 | A-002 | Agent-capabilities ligger inden for scope; navngivet ansvarlig |
 

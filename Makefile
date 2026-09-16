@@ -5,7 +5,7 @@ CLI   := $(NODE) $(CONF)/src/cli.mjs
 
 .DEFAULT_GOAL := help
 
-.PHONY: help install validate lint test conform conform-all conform-negative dsar-demo telemetry-test ci clean
+.PHONY: help install validate lint test conform conform-all conform-negative dsar-demo telemetry-test policy-verify policy-test policy-decide ci clean
 
 help: ## Vis denne hjælp
 	@echo "Platformens kontrakter — tilgængelige mål:"
@@ -40,7 +40,16 @@ dsar-demo: ## Demonstrér DSAR-fan-out mod alle dummy-moduler
 telemetry-test: ## Validér et CloudEvent end-to-end gennem collectoren
 	cd $(CONF) && $(NODE) --test test/telemetry.test.mjs
 
-ci: validate lint test conform-all conform-negative ## Det fulde CI-løb lokalt
+policy-verify: ## Verificér den signerede policy-bundle mod betroede nøgler
+	$(NODE) policy/pdp/src/cli.mjs verify
+
+policy-test: ## Kør PDP'ens tests
+	cd policy/pdp && $(NODE) --test
+
+policy-decide: ## Træf en eksempelbeslutning (upgrade i staging)
+	$(NODE) policy/pdp/src/cli.mjs decide --input contracts/examples/policy-input.example.json
+
+ci: validate lint test policy-test policy-verify conform-all conform-negative ## Det fulde CI-løb lokalt
 
 clean: ## Ryd genereret output
 	rm -rf .conformance-out

@@ -1,0 +1,30 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "PolicyBundle",
+  "metadata": {
+    "name": "platform",
+    "version": "1.0.0",
+    "createdAt": "2025-09-01T00:00:00Z",
+    "description": "Eksempel på et minimalt fail-closed regelsæt."
+  },
+  "default": "deny",
+  "policies": [
+    {
+      "id": "ops.low-risk.allow",
+      "priority": 200,
+      "effect": "allow",
+      "reason": "Læsende verber må udføres med et policy-allow-bevis.",
+      "requiredEvidence": ["policy-allow"],
+      "when": { "field": "action.verb", "in": ["observe.read", "health", "slo"] }
+    },
+    {
+      "id": "ops.upgrade.requires-approval",
+      "priority": 600,
+      "effect": "allow-with-approval",
+      "requiredApprovals": 2,
+      "reason": "Opgradering kræver to godkendelser.",
+      "requiredEvidence": ["policy-allow", "tests-pass", "dry-run-clean"],
+      "when": { "field": "action.verb", "in": ["upgrade", "migrate"] }
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/policy-input.schema.json",
+  "title": "Policy Input",
+  "description": "Det input en principal (modul eller agent) sender til PDP'en. Moduler og agenter spørger; de beslutter ikke selv. Inputtet beskriver principal, handling og den kontekst beslutningen må bygges på.",
+  "type": "object",
+  "required": ["principal", "action"],
+  "additionalProperties": false,
+  "properties": {
+    "principal": {
+      "type": "object",
+      "required": ["kind", "id"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "enum": ["human", "agent", "service"] },
+        "id": { "type": "string", "minLength": 1 },
+        "spiffeId": { "type": "string", "pattern": "^spiffe://" },
+        "autonomyClass": { "enum": ["A0", "A1", "A2", "A3"] },
+        "onBehalfOf": { "type": "string" }
+      }
+    },
+    "action": {
+      "type": "object",
+      "required": ["verb", "target", "environment"],
+      "additionalProperties": false,
+      "properties": {
+        "verb": {
+          "type": "string",
+          "description": "Verbum fra ops- eller privacy-kontrakten. Fri shell er ikke et verbum."
+        },
+        "target": { "type": "string", "minLength": 1 },
+        "environment": { "enum": ["dev", "staging", "prod"] },
+        "autonomyClass": { "enum": ["A0", "A1", "A2", "A3"] }
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tenantId": { "type": "string" },
+        "blastRadius": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "tenants": { "type": "integer", "minimum": 0 },
+            "services": { "type": "integer", "minimum": 0 },
+            "personalDataRecords": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "evidence": {
+          "type": "array",
+          "items": { "enum": ["policy-allow", "tests-pass", "dry-run-clean", "rollback-tested", "restore-verified", "scan-clean"] }
+        },
+        "changeUri": { "type": "string" },
+        "changeSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "untrustedInput": {
+          "type": "boolean",
+          "description": "true hvis beslutningen bygger på data principalen ikke kontrollerer (logs, issues, changelogs)."
+        },
+        "requestedApprovals": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

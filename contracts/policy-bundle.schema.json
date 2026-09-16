@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/policy-bundle.schema.json",
+  "title": "Policy Bundle",
+  "description": "Et versionsstyret og signeret regelsæt. Signaturen ligger i en separat fil (bundle.sig.json), så indholdet kan hashes uden cirkularitet. PDP'en nægter at indlæse en bundle, hvis signaturen ikke kan verificeres mod en betroet nøgle.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "default", "policies"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "PolicyBundle" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "createdAt", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{3,63}$" },
+        "version": { "type": "string", "description": "SemVer. Enhver regelændring kræver ny version." },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "description": { "type": "string" },
+        "supersedes": { "type": "string" }
+      }
+    },
+    "default": {
+      "const": "deny",
+      "description": "Fail-closed. Hvis ingen regel matcher, afvises handlingen."
+    },
+    "policies": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "priority", "effect", "when"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{2,80}$" },
+          "priority": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000,
+            "description": "Højest prioritet vinder. Guardrails har høj prioritet og kan ikke overrules af lavere allow-regler."
+          },
+          "effect": { "enum": ["allow", "allow-with-approval", "deny"] },
+          "when": {
+            "type": "object",
+            "description": "Betingelses-DSL. Se docs/spec/policy-plan.md. Evaluator er deterministisk og sideeffektfri."
+          },
+          "reason": { "type": "string" },
+          "requiredApprovals": { "type": "integer", "minimum": 1 },
+          "requiredEvidence": {
+            "type": "array",
+            "items": { "enum": ["policy-allow", "tests-pass", "dry-run-clean", "rollback-tested", "restore-verified", "scan-clean"] }
+          },
+          "obligations": {
+            "type": "array",
+            "items": { "enum": ["audit-event", "dual-control", "auto-rollback", "notify", "manual-review"] }
+          }
+        },
+        "allOf": [
+          {
+            "if": { "required": ["effect"], "properties": { "effect": { "const": "allow-with-approval" } } },
+            "then": { "required": ["requiredApprovals"], "properties": { "requiredApprovals": { "type": "integer", "minimum": 1 } } }
+          }
+        ]
+      }
+    }
+  }
+}

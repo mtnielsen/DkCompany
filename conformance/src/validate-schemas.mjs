@@ -15,6 +15,9 @@ const EXAMPLE_SCHEMA = {
   "privacy-request": "https://example.org/contracts/privacy-request.schema.json",
   "privacy-response": "https://example.org/contracts/privacy-response.schema.json",
   "verb-evidence": "https://example.org/contracts/verb-evidence.schema.json",
+  "policy-input": "https://example.org/contracts/policy-input.schema.json",
+  "policy-decision": "https://example.org/contracts/policy-decision.schema.json",
+  "policy-bundle": "https://example.org/contracts/policy-bundle.schema.json",
 };
 
 function main() {

@@ -38,6 +38,13 @@ test("module-manifest afviser full uden fixture/probe-bevis", () => {
       otel: { exporter: "otlp-grpc", signals: ["traces", "metrics", "logs"] },
       cloudEvents: { source: "urn:x", typePrefix: "dk.x.", sink: "https://s", requiredAttributes: ["tenantid", "traceid", "principal"] },
     },
+    policy: {
+      pdp: { endpoint: "https://pdp.example.org/v1/data/platform/ops/decision", protocol: "http-json", decisionTtlSeconds: 60 },
+      bundle: { name: "platform", version: "1.0.0", sha256: "baeeeb11cb003454ccd12473856966c8769388870d74f30428dfc9bd20ba2d86" },
+      failMode: "closed",
+      gatedVerbs: ["restore", "upgrade", "migrate", "rollback", "drain", "subject.erase", "subject.export", "subject.legal_hold"],
+      evidence: { kind: "fixture", ref: "conformance/evidence/policy-decision.json" },
+    },
     verbs: Object.fromEntries(
       ["backup", "restore", "verify-restore", "drain", "upgrade.dry-run", "upgrade", "migrate", "rollback", "health", "slo"].map((v) => [
         v,
@@ -57,4 +64,31 @@ test("module-manifest afviser full uden fixture/probe-bevis", () => {
   const { ok, errors } = validate(ajv, SCHEMA_IDS.moduleManifest, manifest);
   assert.equal(ok, false);
   assert.ok(errors.some((e) => e.path.includes("/verbs/health/evidence/kind")));
+});
+
+test("policy-decision kræver requiredApprovals ved allow-with-approval", () => {
+  const { ajv } = buildAjv();
+  const decision = {
+    decision: "allow-with-approval",
+    pdp: { name: "platform-pdp", version: "1.0.0", bundleVersion: "1.0.0" },
+    matchedRules: ["r"],
+    evaluatedAt: "2025-09-01T00:00:00Z",
+    inputSha256: "0".repeat(64),
+  };
+  const { ok, errors } = validate(ajv, SCHEMA_IDS.policyDecision, decision);
+  assert.equal(ok, false);
+  assert.ok(errors.some((e) => e.message.includes("requiredApprovals")));
+});
+
+test("policy-decision kræver begrundelse ved deny", () => {
+  const { ajv } = buildAjv();
+  const decision = {
+    decision: "deny",
+    pdp: { name: "platform-pdp", version: "1.0.0", bundleVersion: "1.0.0" },
+    matchedRules: [],
+    evaluatedAt: "2025-09-01T00:00:00Z",
+    inputSha256: "0".repeat(64),
+  };
+  const { ok } = validate(ajv, SCHEMA_IDS.policyDecision, decision);
+  assert.equal(ok, false);
 });

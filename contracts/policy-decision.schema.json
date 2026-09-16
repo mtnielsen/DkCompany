@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/policy-decision.schema.json",
+  "title": "Policy Decision",
+  "description": "PDP'ens svar. Beslutningen er bindende og bærer den bundle-version, den blev truffet med, så den kan rekonstrueres senere. 'allow-with-approval' kræver et antal godkendelser.",
+  "type": "object",
+  "required": ["decision", "pdp", "matchedRules", "evaluatedAt", "inputSha256"],
+  "additionalProperties": false,
+  "properties": {
+    "decision": { "enum": ["allow", "allow-with-approval", "deny"] },
+    "pdp": {
+      "type": "object",
+      "required": ["name", "version", "bundleVersion"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": "string" },
+        "bundleName": { "type": "string" },
+        "bundleVersion": { "type": "string" },
+        "bundleSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "matchedRules": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Regler der matchede, i den rækkefølge de blev evalueret. Tom betyder default."
+    },
+    "reasons": { "type": "array", "items": { "type": "string" } },
+    "requiredApprovals": { "type": "integer", "minimum": 1 },
+    "requiredEvidence": {
+      "type": "array",
+      "items": { "enum": ["policy-allow", "tests-pass", "dry-run-clean", "rollback-tested", "restore-verified", "scan-clean"] }
+    },
+    "obligations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type"],
+        "additionalProperties": false,
+        "properties": {
+          "type": { "enum": ["audit-event", "dual-control", "auto-rollback", "notify", "manual-review"] },
+          "detail": { "type": "string" }
+        }
+      }
+    },
+    "evaluatedAt": { "type": "string", "format": "date-time" },
+    "inputSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "expiresAt": { "type": "string", "format": "date-time" }
+  },
+  "allOf": [
+    {
+      "if": { "required": ["decision"], "properties": { "decision": { "const": "allow-with-approval" } } },
+      "then": { "required": ["requiredApprovals"], "properties": { "requiredApprovals": { "type": "integer", "minimum": 1 } } }
+    },
+    {
+      "if": { "required": ["decision"], "properties": { "decision": { "const": "deny" } } },
+      "then": { "required": ["reasons"], "properties": { "reasons": { "type": "array", "minItems": 1 } } }
+    }
+  ]
+}

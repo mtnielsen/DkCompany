@@ -20,6 +20,9 @@ export const SCHEMA_IDS = {
   privacyRequest: "https://example.org/contracts/privacy-request.schema.json",
   privacyResponse: "https://example.org/contracts/privacy-response.schema.json",
   verbEvidence: "https://example.org/contracts/verb-evidence.schema.json",
+  policyInput: "https://example.org/contracts/policy-input.schema.json",
+  policyDecision: "https://example.org/contracts/policy-decision.schema.json",
+  policyBundle: "https://example.org/contracts/policy-bundle.schema.json",
 };
 
 /** Læs alle kontraktskemaer fra /contracts. */

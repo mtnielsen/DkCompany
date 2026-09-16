@@ -4,7 +4,7 @@
   "title": "Module Manifest",
   "description": "Ops-kontrakten: hvert modul deklarerer understøttelse pr. verbum med et conformance-niveau (full/partial/unsupported). Partial og unsupported kræver en begrundelse, så et manifest kan være ærligt i stedet for at lyve. Identitet og telemetri er indlejrede planer.",
   "type": "object",
-  "required": ["apiVersion", "kind", "metadata", "identity", "telemetry", "verbs", "privacy"],
+  "required": ["apiVersion", "kind", "metadata", "identity", "telemetry", "policy", "verbs", "privacy"],
   "additionalProperties": false,
   "properties": {
     "apiVersion": { "const": "contracts.platform/v1alpha1" },
@@ -32,6 +32,7 @@
 
     "identity": { "$ref": "https://example.org/contracts/identity.schema.json" },
     "telemetry": { "$ref": "https://example.org/contracts/telemetry.schema.json" },
+    "policy": { "$ref": "https://example.org/contracts/policy.schema.json" },
 
     "verbs": {
       "type": "object",

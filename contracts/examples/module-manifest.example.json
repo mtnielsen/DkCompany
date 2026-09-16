@@ -27,6 +27,25 @@
       "requiredAttributes": ["tenantid", "traceid", "principal"]
     }
   },
+  "policy": {
+    "pdp": {
+      "endpoint": "https://pdp.platform.example.org/v1/data/platform/ops/decision",
+      "protocol": "http-json",
+      "decisionTtlSeconds": 60
+    },
+    "bundle": {
+      "name": "platform",
+      "version": "1.0.0",
+      "sha256": "baeeeb11cb003454ccd12473856966c8769388870d74f30428dfc9bd20ba2d86"
+    },
+    "failMode": "closed",
+    "gatedVerbs": ["restore", "upgrade", "migrate", "rollback", "drain", "subject.erase", "subject.export", "subject.legal_hold"],
+    "evidence": {
+      "kind": "fixture",
+      "ref": "conformance/evidence/policy-decision.json",
+      "capturedAt": "2025-09-01T07:55:00Z"
+    }
+  },
   "verbs": {
     "backup": { "conformance": "unsupported", "reason": "modulet holder ingen tilstand der skal sikkerhedskopieres" },
     "restore": { "conformance": "unsupported", "reason": "modulet holder ingen tilstand der skal gendannes" },

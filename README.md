@@ -16,8 +16,9 @@ Bølge 0 er implementeret:
 | 0.4 Ops-kontrakt (manifest + verber) | ✅ | [`contracts/module-manifest.schema.json`](contracts/module-manifest.schema.json) |
 | 0.5 Privacy-verber | ✅ | [`contracts/privacy-request.schema.json`](contracts/privacy-request.schema.json), `make dsar-demo` |
 | 0.6 Konformanssuite | ✅ | [`conformance/`](conformance), `make conform MODULE=dummy-ok` |
+| 1.1 Policy-plan (PDP) | ✅ | [`policy/pdp`](policy/pdp), checks `C-009`/`C-010`, [ADR-0004](docs/adr/0004-letvaegts-pdp.md) |
 
-Bølge 1 (policy, GitOps, referencemoduler) og fremefter er ikke påbegyndt. Se backloggens kritiske vej.
+Bølge 1 er påbegyndt: policy-laget (1.1) kører og håndhæves i konformansen. GitOps (1.2), referencemodul (1.3) og adapter (1.4) mangler. Se backloggens kritiske vej.
 
 ## Kom i gang
 
@@ -46,15 +47,23 @@ make conform-negative
 # ✔ Negativ fixture fejlede som forventet
 ```
 
+Policy-laget:
+
+```bash
+make policy-verify   # verificér den signerede bundle
+make policy-test     # kør PDP'ens tests
+make policy-decide   # træf en eksempelbeslutning
+```
+
 ## Struktur
 
 ```
 contracts/     JSON Schema-kontrakter + eksempler (det, der skal testes)
 conformance/   kørbar testsuite og orkestratorer (det, der tester)
 modules/       reference- og adaptermoduler med module-manifest.json
-policy/        policy-bundles (tomt i bølge 0; fyldes i bølge 1)
+policy/        signerede policy-bundles og PDP (det, der beslutter)
 docs/adr/      beslutningslog i MADR-format
-docs/spec/     de fire planer i prosa
+docs/spec/     planerne i prosa
 ```
 
 ## De fire planer
@@ -63,6 +72,7 @@ docs/spec/     de fire planer i prosa
 2. **Telemetri** — OTel + én CloudEvents-envelope for menneske- og agenthandlinger.
 3. **Ops** — ti verber, hver med et conformance-niveau: `full` / `partial` / `unsupported`.
 4. **Privacy** — ét DSAR-fan-out med per-modul status.
+5. **Policy** — én central PDP; moduler og agenter spørger, de beslutter ikke selv. (Bølge 1.)
 
 Læs mere i [`docs/spec`](docs/spec) og baggrunden i [`docs/adr`](docs/adr).
 

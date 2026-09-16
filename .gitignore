@@ -5,3 +5,4 @@ conformance/node_modules/
 .DS_Store
 dist/
 coverage/
+policy/keys/signing-key.json

@@ -16,7 +16,7 @@ test("bevidst brudt modul fejler — og fejler på de rigtige checks", () => {
   const report = runModule("dummy-broken", { offline: true, ajv });
   assert.equal(report.status, "fail");
   const failed = new Set(report.checks.filter((c) => c.status === "fail").map((c) => c.id));
-  for (const id of ["C-001", "C-002", "C-003", "C-004", "C-005", "C-006"]) {
+  for (const id of ["C-001", "C-002", "C-003", "C-004", "C-005", "C-006", "C-009"]) {
     assert.ok(failed.has(id), `forventede at ${id} fejlede`);
   }
 });
