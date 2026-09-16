@@ -20,8 +20,9 @@ Bølge 0 er implementeret:
 | 1.2 GitOps-skelet | ✅ | [`gitops/`](gitops), `make gitops-verify`/`gitops-drift`, [ADR-0005](docs/adr/0005-git-eneste-aendringskanal.md) |
 | 1.3 Referencemodul A (audit-service) | ✅ | [`modules/audit-service`](modules/audit-service), `make conform MODULE=audit-service` |
 | 1.4 Referenceadapter B (mattermost) | ✅ | [`modules/mattermost-adapter`](modules/mattermost-adapter), `make conform MODULE=mattermost-adapter` |
+| 2.1 Agent-manifest + approval-payload | ✅ | [`contracts/agent-manifest.schema.json`](contracts/agent-manifest.schema.json), [`approval-request.schema.json`](contracts/approval-request.schema.json), checks `A-001`/`A-002` |
 
-Bølge 1 er komplet: policy (1.1), GitOps (1.2), referencemodul (1.3) og adapter mod en stædig upstream (1.4). Adapteren erklærer ærligt `partial` på `subject.erase`, og suiten accepterer det. Næste på den kritiske vej er bølge 2 (agenter).
+Bølge 1 er komplet: policy (1.1), GitOps (1.2), referencemodul (1.3) og adapter mod en stædig upstream (1.4). Adapteren erklærer ærligt `partial` på `subject.erase`, og suiten accepterer det. Fra bølge 2 er agent-kontrakterne (2.1) på plads; næste på den kritiske vej er agent-runtime (2.3).
 
 ## Kom i gang
 
