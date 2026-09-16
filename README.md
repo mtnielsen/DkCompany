@@ -26,8 +26,9 @@ Bølge 0 er implementeret:
 | 2.4 Approval-service + UI | ✅ | [`approvals/`](approvals), adskilt evidens/prosa-visning |
 | 2.5 Adversarial reviewer-agent | ✅ | [`reviewer/`](reviewer), [ADR-0007](docs/adr/0007-evidens-og-prosa-adskilt.md) |
 | 2.6 Agent-konformanstests (seks) | ✅ | [`conformance/test/agent-conformance.test.mjs`](conformance/test/agent-conformance.test.mjs) |
+| 2.7 Reviewer-effektmåling | ✅ | [`reviewer/src/metrics.mjs`](reviewer/src/metrics.mjs), `make reviewer-metrics` |
 
-Bølge 1 og bølge 2 er dermed stort set komplette: agenten kører et A1-verbum end-to-end, stopper ved utilgængelig PDP/audit-log, eskalerer ved budget- og loop-brud, afviser udeklarerede verber og A4-handlinger, og de seks agent-konformanstests er grønne. Tilbage i bølge 2 er 2.7 (reviewer-effektmåling).
+Bølge 1 og bølge 2 er komplette: agenten kører et A1-verbum end-to-end, stopper ved utilgængelig PDP/audit-log, eskalerer ved budget- og loop-brud, afviser udeklarerede verber, A4-handlinger og prompt injection. De seks agent-konformanstests er grønne, og reviewer-effekten måles. Næste er bølge 3 (OSCAL-evidens, compliance-mapping, dashboards, sikkerhed).
 
 ## Kom i gang
 
@@ -94,6 +95,7 @@ Agenter:
 make gateway-test             # 7 tests: routing, budget, modelversion
 make runtime-test             # 10 tests: A1, fail-closed, A4, budget, loop, JIT
 make agent-conformance-test   # de seks agent-konformanstests (10 tests)
+make reviewer-test            # reviewer + effektmåling (3 tests)
 ```
 
 ## Struktur
@@ -106,7 +108,7 @@ policy/        signerede policy-bundles og PDP (det, der beslutter)
 gateway/       AI-gateway: alle modelkald gennem én tjeneste
 runtime/       agent-runtime: SPIFFE, JIT-credentials, budgetter, dødemandsgreb
 approvals/     approval-service: godkendelser, træningskrav, evidens/prosa-visning
-reviewer/      adversarial reviewer-agent (kan kun flagge/afvise)
+reviewer/      adversarial reviewer-agent (kan kun flagge/afvise) + effektmåling
 gitops/        ønsket tilstand, Argo CD-apps og reconcile (det, der ruller ud)
 docs/adr/      beslutningslog i MADR-format
 docs/spec/     planerne i prosa
