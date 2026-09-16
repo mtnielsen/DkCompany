@@ -1,0 +1,26 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "GatewayRoutes",
+  "routes": [
+    {
+      "id": "dummy-ok-upgrader-sonnet",
+      "agentRef": "dummy-ok-upgrader",
+      "provider": "anthropic",
+      "model": "claude-sonnet",
+      "modelVersion": "2025-01",
+      "maxTokens": 200000,
+      "maxCostEur": 25,
+      "enabled": true
+    },
+    {
+      "id": "audit-service-operator-sonnet",
+      "agentRef": "audit-service-operator",
+      "provider": "anthropic",
+      "model": "claude-sonnet",
+      "modelVersion": "2025-01",
+      "maxTokens": 200000,
+      "maxCostEur": 25,
+      "enabled": true
+    }
+  ]
+}

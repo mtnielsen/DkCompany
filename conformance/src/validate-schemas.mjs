@@ -18,6 +18,8 @@ const EXAMPLE_SCHEMA = {
   "policy-input": "https://example.org/contracts/policy-input.schema.json",
   "policy-decision": "https://example.org/contracts/policy-decision.schema.json",
   "policy-bundle": "https://example.org/contracts/policy-bundle.schema.json",
+  "agent-task": "https://example.org/contracts/agent-task.schema.json",
+  "gateway-route": "https://example.org/contracts/gateway-route.schema.json",
 };
 
 function main() {

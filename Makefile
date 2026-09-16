@@ -5,7 +5,7 @@ CLI   := $(NODE) $(CONF)/src/cli.mjs
 
 .DEFAULT_GOAL := help
 
-.PHONY: help install validate lint test conform conform-all conform-negative dsar-demo telemetry-test policy-verify policy-test policy-decide gitops-verify gitops-test gitops-reconcile gitops-drift changelog changelog-check audit-service-test audit-service-evidence audit-service-run adapter-test adapter-evidence adapter-run ci clean
+.PHONY: help install validate lint test conform conform-all conform-negative dsar-demo telemetry-test policy-verify policy-test policy-decide gitops-verify gitops-test gitops-reconcile gitops-drift changelog changelog-check audit-service-test audit-service-evidence audit-service-run adapter-test adapter-evidence adapter-run gateway-test gateway-run runtime-test runtime-demo ci clean
 
 help: ## Vis denne hjælp
 	@echo "Platformens kontrakter — tilgængelige mål:"
@@ -86,7 +86,19 @@ adapter-evidence: ## Generér adapterbevis mod mock Mattermost + rigtig PDP
 adapter-run: ## Start Mattermost-adapteren lokalt
 	$(NODE) modules/mattermost-adapter/service/src/cli.mjs
 
-ci: validate lint test policy-test policy-verify gitops-test gitops-verify gitops-reconcile gitops-drift changelog-check audit-service-test adapter-test conform-all conform-negative ## Det fulde CI-løb lokalt
+gateway-test: ## Kør AI-gatewayens tests
+	cd gateway && $(NODE) --test
+
+gateway-run: ## Start AI-gatewayen lokalt (echo-leverandør)
+	$(NODE) gateway/src/cli.mjs
+
+runtime-test: ## Kør agent-runtimens tests
+	cd runtime && $(NODE) --test
+
+runtime-demo: ## Kør en agent-task (kræver kørende PDP + gateway)
+	$(NODE) runtime/src/cli.mjs --manifest modules/dummy-ok/agents/backup-agent.json --task contracts/examples/agent-task.example.json
+
+ci: validate lint test policy-test policy-verify gitops-test gitops-verify gitops-reconcile gitops-drift changelog-check audit-service-test adapter-test gateway-test runtime-test conform-all conform-negative ## Det fulde CI-løb lokalt
 
 clean: ## Ryd genereret output
 	rm -rf .conformance-out

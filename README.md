@@ -21,8 +21,10 @@ Bølge 0 er implementeret:
 | 1.3 Referencemodul A (audit-service) | ✅ | [`modules/audit-service`](modules/audit-service), `make conform MODULE=audit-service` |
 | 1.4 Referenceadapter B (mattermost) | ✅ | [`modules/mattermost-adapter`](modules/mattermost-adapter), `make conform MODULE=mattermost-adapter` |
 | 2.1 Agent-manifest + approval-payload | ✅ | [`contracts/agent-manifest.schema.json`](contracts/agent-manifest.schema.json), [`approval-request.schema.json`](contracts/approval-request.schema.json), checks `A-001`/`A-002` |
+| 2.2 AI-gateway | ✅ | [`gateway/`](gateway), check `A-003`, [ADR-0006](docs/adr/0006-alle-modelkald-gennem-gateway.md) |
+| 2.3 Agent-runtime | ✅ | [`runtime/`](runtime), 10 tests |
 
-Bølge 1 er komplet: policy (1.1), GitOps (1.2), referencemodul (1.3) og adapter mod en stædig upstream (1.4). Adapteren erklærer ærligt `partial` på `subject.erase`, og suiten accepterer det. Fra bølge 2 er agent-kontrakterne (2.1) på plads; næste på den kritiske vej er agent-runtime (2.3).
+Bølge 1 er komplet. Fra bølge 2 er agent-kontrakterne (2.1), AI-gatewayen (2.2) og agent-runtimen (2.3) på plads: agenten kører et A1-verbum end-to-end, stopper ved utilgængelig PDP/audit-log, eskalerer ved budget- og loop-brud, og afviser udeklarerede verber og A4-handlinger. Næste på den kritiske vej er approval-service (2.4) og de seks agent-konformanstests (2.6).
 
 ## Kom i gang
 
@@ -83,6 +85,13 @@ make adapter-evidence         # bevis at partial-erklæringen holder
 make conform MODULE=mattermost-adapter
 ```
 
+Agenter:
+
+```bash
+make gateway-test             # 7 tests: routing, budget, modelversion
+make runtime-test             # 10 tests: A1, fail-closed, A4, budget, loop, JIT
+```
+
 ## Struktur
 
 ```
@@ -90,7 +99,9 @@ contracts/     JSON Schema-kontrakter + eksempler (det, der skal testes)
 conformance/   kørbar testsuite og orkestratorer (det, der tester)
 modules/       reference- og adaptermoduler med module-manifest.json
 policy/        signerede policy-bundles og PDP (det, der beslutter)
+gateway/       AI-gateway: alle modelkald gennem én tjeneste
 gitops/        ønsket tilstand, Argo CD-apps og reconcile (det, der ruller ud)
+runtime/       agent-runtime: SPIFFE, JIT-credentials, budgetter, dødemandsgreb
 docs/adr/      beslutningslog i MADR-format
 docs/spec/     planerne i prosa
 ```

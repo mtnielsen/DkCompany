@@ -94,6 +94,18 @@ jobs:
       - run: make adapter-test
       - run: make adapter-evidence
 
+  agents:
+    name: AI-gateway og agent-runtime
+    runs-on: ubuntu-latest
+    needs: [contracts, policy]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: make gateway-test
+      - run: make runtime-test
+
   conformance:
     name: Konformans (positiv + negativ)
     runs-on: ubuntu-latest

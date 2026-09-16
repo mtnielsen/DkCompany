@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/gateway-route.schema.json",
+  "title": "AI Gateway Routes",
+  "description": "Routing-tabellen for AI-gatewayen. En agent kan kun nå en model gennem en route, der peger på agentens manifest. Manglende route = ingen modeladgang. Direkte leverandørkald er forbudt.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "routes"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "GatewayRoutes" },
+    "routes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "agentRef", "provider", "model", "modelVersion", "enabled"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$" },
+          "agentRef": { "type": "string", "description": "Agent-manifestets metadata.name." },
+          "provider": { "type": "string" },
+          "model": { "type": "string" },
+          "modelVersion": { "type": "string", "description": "AI Act transparens: versionen skal kunne rekonstrueres." },
+          "maxTokens": { "type": "integer", "minimum": 1 },
+          "maxCostEur": { "type": "number", "minimum": 0 },
+          "enabled": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "@platform/agent-runtime",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Agent-runtime: SPIFFE-identitet, JIT-credentials, kun deklarerede verber, budgetter, loop-detektion og dødemandsgreb ved utilgængelig governance.",
+  "bin": {
+    "agent-runtime": "./src/cli.mjs"
+  },
+  "scripts": {
+    "test": "node --test",
+    "start": "node src/cli.mjs"
+  }
+}

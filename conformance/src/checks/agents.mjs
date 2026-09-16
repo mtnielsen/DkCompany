@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { findAgentManifests, readJson } from "../manifest.mjs";
 
 /**
@@ -64,6 +66,37 @@ export const agentScope = {
 };
 
 /** Simpel scope-matchning: eksakt, præfiks eller '*'/'?'-glob. */
+/**
+ * A-003 — Agenten skal være bundet til AI-gatewayen.
+ * Uden model.gatewayRef og en aktiv route kan agenten ikke nå en model.
+ */
+export const agentGatewayBinding = {
+  id: "A-003",
+  title: "Agenten er bundet til AI-gateway (ingen direkte leverandørkald)",
+  run(ctx) {
+    const agents = findAgentManifests(ctx.moduleDir);
+    if (agents.length === 0) return { status: "skip", detail: "modulet har ingen agents/*.json" };
+    const routesPath = join(ctx.repoRoot, "gateway", "routes.json");
+    const routes = existsSync(routesPath) ? readJson(routesPath).routes ?? [] : null;
+    const messages = [];
+    for (const a of agents) {
+      let data;
+      try {
+        data = readJson(a.path);
+      } catch {
+        continue; // A-001 rapporterer parsefejlen
+      }
+      if (!data.model?.gatewayRef) messages.push(`${a.name}: model.gatewayRef mangler — direkte leverandørkald er forbudt`);
+      if (routes) {
+        const route = routes.find((r) => r.agentRef === data.metadata?.name && r.enabled !== false);
+        if (!route) messages.push(`${a.name}: ingen aktiv gateway-route — agenten kan ikke nå en model`);
+      }
+    }
+    if (messages.length) return { status: "fail", detail: `${messages.length} gateway-brud`, messages };
+    return { status: "pass", detail: `${agents.length} agenter bundet til gateway` };
+  },
+};
+
 function matchesScope(target, component) {
   if (target === component) return true;
   if (!target.includes("*") && !target.includes("?")) {

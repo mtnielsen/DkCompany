@@ -11,5 +11,7 @@ De fire planer og den suite, der bevogter dem. Hver spec svarer til et punkt i `
 - [GitOps-skelettet](gitops.md) — 1.2
 - [Referencemodul A: audit-service](reference-module.md) — 1.3
 - [Referenceadapter B: Mattermost](adapter.md) — 1.4
+- [AI-gatewayen](ai-gateway.md) — 2.2
+- [Agent-runtimen](agent-runtime.md) — 2.3
 
 Arkitekturvalgene bag findes i [`docs/adr`](../adr/).

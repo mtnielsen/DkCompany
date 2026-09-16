@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/agent-task.schema.json",
+  "title": "Agent Task",
+  "description": "En opgave til agent-runtimen: en sekvens af foreslåede handlinger. Runtimen udfører kun verber, der er deklareret i agentens manifest, og spørger PDP før hver handling. Der findes ingen fri shell.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "taskId", "agentRef", "objective", "actions"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "AgentTask" },
+    "taskId": { "type": "string", "format": "uuid" },
+    "agentRef": { "type": "string" },
+    "objective": { "type": "string" },
+    "requestedBy": {
+      "type": "object",
+      "required": ["kind", "id"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "enum": ["human", "agent", "service"] },
+        "id": { "type": "string" },
+        "onBehalfOf": { "type": "string" }
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "maxTokens": { "type": "integer", "minimum": 1 },
+        "maxCostEur": { "type": "number", "minimum": 0 },
+        "maxWallClockSeconds": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "actions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["verb", "target", "environment"],
+        "additionalProperties": false,
+        "properties": {
+          "verb": { "type": "string", "description": "Skal være deklareret i agentens capabilities." },
+          "target": { "type": "string" },
+          "environment": { "enum": ["dev", "staging", "prod"] },
+          "evidence": {
+            "type": "array",
+            "items": { "enum": ["policy-allow", "tests-pass", "dry-run-clean", "rollback-tested", "restore-verified", "scan-clean"] }
+          },
+          "approvals": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["subject", "verdict"],
+              "additionalProperties": false,
+              "properties": {
+                "subject": { "type": "string" },
+                "verdict": { "enum": ["approve", "reject"] },
+                "at": { "type": "string", "format": "date-time" }
+              }
+            }
+          },
+          "blastRadius": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "tenants": { "type": "integer", "minimum": 0 },
+              "services": { "type": "integer", "minimum": 0 },
+              "personalDataRecords": { "type": "integer", "minimum": 0 }
+            }
+          },
+          "untrustedInput": {
+            "type": "boolean",
+            "description": "true når handlingen bygger på data agenten ikke kontrollerer (logs, issues, changelogs)."
+          },
+          "changeUri": { "type": "string" }
+        }
+      }
+    }
+  }
+}

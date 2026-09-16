@@ -1,0 +1,29 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "AgentTask",
+  "taskId": "018f3c2a-1b2c-7def-8a01-777777777777",
+  "agentRef": "dummy-ok-upgrader",
+  "objective": "Luk CVE-2025-0001 i dummy-ok ved at foreslå en patch-opgradering.",
+  "requestedBy": { "kind": "human", "id": "oidc|anna.andersen" },
+  "budget": { "maxTokens": 200000, "maxCostEur": 25, "maxWallClockSeconds": 3600 },
+  "actions": [
+    {
+      "verb": "upgrade.dry-run",
+      "target": "dummy-ok",
+      "environment": "staging",
+      "evidence": ["tests-pass"],
+      "changeUri": "https://git.example.org/platform/dummy-ok/-/merge_requests/42"
+    },
+    {
+      "verb": "upgrade.patch",
+      "target": "dummy-ok",
+      "environment": "staging",
+      "evidence": ["tests-pass", "dry-run-clean", "rollback-tested"],
+      "approvals": [
+        { "subject": "oidc|anna.andersen", "verdict": "approve" },
+        { "subject": "oidc|bo.bertelsen", "verdict": "approve" }
+      ],
+      "blastRadius": { "tenants": 1, "services": 1, "personalDataRecords": 0 }
+    }
+  ]
+}
