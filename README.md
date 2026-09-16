@@ -27,8 +27,9 @@ Bølge 0 er implementeret:
 | 2.5 Adversarial reviewer-agent | ✅ | [`reviewer/`](reviewer), [ADR-0007](docs/adr/0007-evidens-og-prosa-adskilt.md) |
 | 2.6 Agent-konformanstests (seks) | ✅ | [`conformance/test/agent-conformance.test.mjs`](conformance/test/agent-conformance.test.mjs) |
 | 2.7 Reviewer-effektmåling | ✅ | [`reviewer/src/metrics.mjs`](reviewer/src/metrics.mjs), `make reviewer-metrics` |
+| 3.1 Compliance-evidens-emitter (OSCAL) | ✅ | [`evidence/`](evidence), [`contracts/oscal-assessment-results.schema.json`](contracts/oscal-assessment-results.schema.json), `make oscal-evidence` / `make evidence-test`, [ADR-0008](docs/adr/0008-oscal-evidensprofil.md) |
 
-Bølge 1 og bølge 2 er komplette: agenten kører et A1-verbum end-to-end, stopper ved utilgængelig PDP/audit-log, eskalerer ved budget- og loop-brud, afviser udeklarerede verber, A4-handlinger og prompt injection. De seks agent-konformanstests er grønne, og reviewer-effekten måles. Næste er bølge 3 (OSCAL-evidens, compliance-mapping, dashboards, sikkerhed).
+Bølge 1 og bølge 2 er komplette: agenten kører et A1-verbum end-to-end, stopper ved utilgængelig PDP/audit-log, eskalerer ved budget- og loop-brud, afviser udeklarerede verber, A4-handlinger og prompt injection. De seks agent-konformanstests er grønne, og reviewer-effekten måles. Bølge 3 er i gang: OSCAL-evidens emitteres nu automatisk fra konformanskørsler. Næste er kontrolmapping, dashboards og sikkerhedsplan.
 
 ## Kom i gang
 
@@ -98,6 +99,14 @@ make agent-conformance-test   # de seks agent-konformanstests (10 tests)
 make reviewer-test            # reviewer + effektmåling (3 tests)
 ```
 
+Evidens (OSCAL):
+
+```bash
+make conform-all              # skriver .conformance-out/report.json
+make oscal-evidence           # OSCAL-assessment-results fra konformans, policy, audit, git og GitOps
+make evidence-test            # validerer evidenspakken mod kontrakten (4 tests)
+```
+
 ## Struktur
 
 ```
@@ -109,6 +118,7 @@ gateway/       AI-gateway: alle modelkald gennem én tjeneste
 runtime/       agent-runtime: SPIFFE, JIT-credentials, budgetter, dødemandsgreb
 approvals/     approval-service: godkendelser, træningskrav, evidens/prosa-visning
 reviewer/      adversarial reviewer-agent (kan kun flagge/afvise) + effektmåling
+evidence/      OSCAL-evidens-emitter: maskinlæsbar compliance-evidens fra platformens artefakter
 gitops/        ønsket tilstand, Argo CD-apps og reconcile (det, der ruller ud)
 docs/adr/      beslutningslog i MADR-format
 docs/spec/     planerne i prosa

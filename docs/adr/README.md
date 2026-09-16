@@ -9,5 +9,6 @@ Arkitekturvalg dokumenteres som ADR'er i [MADR-format](https://adr.github.io/mad
 - [ADR-0005 — Git er den eneste ændringskanal](0005-git-eneste-aendringskanal.md)
 - [ADR-0006 — Alle modelkald gennem én gateway](0006-alle-modelkald-gennem-gateway.md)
 - [ADR-0007 — Evidens og prosa adskilles; revieweren kan ikke godkende](0007-evidens-og-prosa-adskilt.md)
+- [ADR-0008 — OSCAL-assessment-results som evidensformat](0008-oscal-evidensprofil.md)
 
 Ny ADR: kopiér [template.md](template.md), giv næste ledige nummer, og tilføj den til listen ovenfor. En ADR kan ikke ændres, når den er accepteret — den erstattes af en ny.

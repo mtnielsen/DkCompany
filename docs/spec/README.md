@@ -17,5 +17,6 @@ De fire planer og den suite, der bevogter dem. Hver spec svarer til et punkt i `
 - [Adversarial reviewer-agent](reviewer.md) — 2.5
 - [Agent-konformanstests](agent-conformance.md) — 2.6
 - [Reviewer-effektmåling](reviewer-metrics.md) — 2.7
+- [OSCAL-evidens-emitteren](oscal-evidence.md) — 3.1
 
 Arkitekturvalgene bag findes i [`docs/adr`](../adr/).

@@ -23,6 +23,7 @@ export const SCHEMA_IDS = {
   policyInput: "https://example.org/contracts/policy-input.schema.json",
   policyDecision: "https://example.org/contracts/policy-decision.schema.json",
   policyBundle: "https://example.org/contracts/policy-bundle.schema.json",
+  oscalAssessmentResults: "https://example.org/contracts/oscal-assessment-results.schema.json",
 };
 
 /** Læs alle kontraktskemaer fra /contracts. */

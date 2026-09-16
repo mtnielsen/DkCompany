@@ -20,6 +20,7 @@ const EXAMPLE_SCHEMA = {
   "policy-bundle": "https://example.org/contracts/policy-bundle.schema.json",
   "agent-task": "https://example.org/contracts/agent-task.schema.json",
   "gateway-route": "https://example.org/contracts/gateway-route.schema.json",
+  "oscal-assessment-results": "https://example.org/contracts/oscal-assessment-results.schema.json",
 };
 
 function main() {
