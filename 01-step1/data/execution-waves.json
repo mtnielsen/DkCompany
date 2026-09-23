@@ -1,0 +1,192 @@
+{
+  "plan_revision": 5,
+  "note": "Dependency order for assigning coding tasks. Not a request for an agent to write a plan; not proof prerequisites are implemented. Shared code still needs coordination.",
+  "waves": [
+    {
+      "wave": 0,
+      "tasks": [
+        "DKC-001"
+      ]
+    },
+    {
+      "wave": 1,
+      "tasks": [
+        "DKC-002"
+      ]
+    },
+    {
+      "wave": 2,
+      "tasks": [
+        "DKC-003",
+        "DKC-037",
+        "DKC-063"
+      ]
+    },
+    {
+      "wave": 3,
+      "tasks": [
+        "DKC-004",
+        "DKC-006",
+        "DKC-014",
+        "DKC-053"
+      ]
+    },
+    {
+      "wave": 4,
+      "tasks": [
+        "DKC-007",
+        "DKC-008"
+      ]
+    },
+    {
+      "wave": 5,
+      "tasks": [
+        "DKC-009",
+        "DKC-055"
+      ]
+    },
+    {
+      "wave": 6,
+      "tasks": [
+        "DKC-005",
+        "DKC-010"
+      ]
+    },
+    {
+      "wave": 7,
+      "tasks": [
+        "DKC-011",
+        "DKC-013",
+        "DKC-015"
+      ]
+    },
+    {
+      "wave": 8,
+      "tasks": [
+        "DKC-012",
+        "DKC-016",
+        "DKC-017",
+        "DKC-018",
+        "DKC-038"
+      ]
+    },
+    {
+      "wave": 9,
+      "tasks": [
+        "DKC-019",
+        "DKC-039",
+        "DKC-040",
+        "DKC-041",
+        "DKC-064",
+        "DKC-066"
+      ]
+    },
+    {
+      "wave": 10,
+      "tasks": [
+        "DKC-042",
+        "DKC-047",
+        "DKC-056"
+      ]
+    },
+    {
+      "wave": 11,
+      "tasks": [
+        "DKC-023",
+        "DKC-043",
+        "DKC-048",
+        "DKC-057"
+      ]
+    },
+    {
+      "wave": 12,
+      "tasks": [
+        "DKC-024",
+        "DKC-025",
+        "DKC-049",
+        "DKC-060"
+      ]
+    },
+    {
+      "wave": 13,
+      "tasks": [
+        "DKC-020",
+        "DKC-034",
+        "DKC-044",
+        "DKC-054"
+      ]
+    },
+    {
+      "wave": 14,
+      "tasks": [
+        "DKC-021",
+        "DKC-045"
+      ]
+    },
+    {
+      "wave": 15,
+      "tasks": [
+        "DKC-022",
+        "DKC-026",
+        "DKC-027",
+        "DKC-028",
+        "DKC-029",
+        "DKC-030",
+        "DKC-046",
+        "DKC-058"
+      ]
+    },
+    {
+      "wave": 16,
+      "tasks": [
+        "DKC-031",
+        "DKC-032",
+        "DKC-050"
+      ]
+    },
+    {
+      "wave": 17,
+      "tasks": [
+        "DKC-051",
+        "DKC-059"
+      ]
+    },
+    {
+      "wave": 18,
+      "tasks": [
+        "DKC-052",
+        "DKC-061"
+      ]
+    },
+    {
+      "wave": 19,
+      "tasks": [
+        "DKC-062"
+      ]
+    },
+    {
+      "wave": 20,
+      "tasks": [
+        "DKC-065"
+      ]
+    },
+    {
+      "wave": 21,
+      "tasks": [
+        "DKC-033"
+      ]
+    },
+    {
+      "wave": 22,
+      "tasks": [
+        "DKC-035"
+      ]
+    },
+    {
+      "wave": 23,
+      "tasks": [
+        "DKC-036"
+      ]
+    }
+  ]
+}

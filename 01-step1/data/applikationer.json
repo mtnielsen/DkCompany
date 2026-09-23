@@ -1,0 +1,2393 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-22",
+  "scope": "Alle tre virksomhedsprofiler; modulære pakker",
+  "count": 169,
+  "apps": [
+    {
+      "id": "APP-001",
+      "category": "Fælles platform og AI-styring",
+      "name": "Virksomhedsportal",
+      "purpose": "Samle apps, status og godkendelser ét sted",
+      "wave": "Kerne",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Rettigheder håndhæves også i backend",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-002",
+      "category": "Fælles platform og AI-styring",
+      "name": "Kunde- og organisationsregister",
+      "purpose": "Styre virksomheder, afdelinger og installationer",
+      "wave": "Kerne",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Tenant må ikke vælges frit af klienten",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-003",
+      "category": "Fælles platform og AI-styring",
+      "name": "Login og identitet",
+      "purpose": "Fælles login, MFA og brugerlivscyklus",
+      "wave": "Kerne",
+      "strategy": "Integrér",
+      "candidates": [
+        "Keycloak",
+        "authentik"
+      ],
+      "source_urls": [
+        "https://www.keycloak.org/",
+        "https://goauthentik.io/"
+      ],
+      "gate": "Edition, SSO og provisioning skal verificeres",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-004",
+      "category": "Fælles platform og AI-styring",
+      "name": "Rolle- og adgangsstyring",
+      "purpose": "Bestemme hvem der må læse og handle",
+      "wave": "Kerne",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Ressource-, tenant- og miljøscope",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-005",
+      "category": "Fælles platform og AI-styring",
+      "name": "Policy-motor",
+      "purpose": "Afgøre om en handling er tilladt",
+      "wave": "Kerne",
+      "strategy": "Udbyg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Signerede regler og default-deny",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-006",
+      "category": "Fælles platform og AI-styring",
+      "name": "Godkendelsescenter",
+      "purpose": "Indhente verificerede menneskelige beslutninger",
+      "wave": "Kerne",
+      "strategy": "Udbyg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Bind godkendelse til præcis ændring",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-007",
+      "category": "Fælles platform og AI-styring",
+      "name": "Agentregister og runtime",
+      "purpose": "Registrere agenter og udføre tilladte opgaver",
+      "wave": "Kerne",
+      "strategy": "Udbyg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Ingen fri shell eller selvudvidede rettigheder",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-008",
+      "category": "Fælles platform og AI-styring",
+      "name": "AI-gateway",
+      "purpose": "Styre modeller, dataruter og forbrug",
+      "wave": "Kerne",
+      "strategy": "Udbyg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Virkelig provider, dataaftale og budgetreservation",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-009",
+      "category": "Fælles platform og AI-styring",
+      "name": "Agentkontrol og nødstop",
+      "purpose": "Standse, tilbagekalde og begrænse agenter",
+      "wave": "Kerne",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Skal virke hos executor",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-010",
+      "category": "Fælles platform og AI-styring",
+      "name": "Revisionslog og evidens",
+      "purpose": "Dokumentere handlinger og tekniske kontroller",
+      "wave": "Kerne",
+      "strategy": "Udbyg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Holdbar lagring og eksterne checkpoints",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-011",
+      "category": "Fælles platform og AI-styring",
+      "name": "Privacy-center",
+      "purpose": "Samle indsigt, eksport, sletning og retention",
+      "wave": "Kerne",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Identitetskontrol og ærlig partial-status",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-012",
+      "category": "Fælles platform og AI-styring",
+      "name": "Modulkatalog og provisioning",
+      "purpose": "Installere godkendte apps med kendte versioner",
+      "wave": "Kerne",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "DKC-053/054/061: dependency graph, installer, lifecycle and separate data deletion",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-013",
+      "category": "Fælles platform og AI-styring",
+      "name": "Job- og workflowmotor",
+      "purpose": "Genoptage længere processer sikkert",
+      "wave": "Kerne",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Idempotency, leases og unknown outcomes",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-014",
+      "category": "Fælles platform og AI-styring",
+      "name": "Secrets og nøgleforvaltning",
+      "purpose": "Udstede og rotere begrænset adgang",
+      "wave": "Kerne",
+      "strategy": "Integrér",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Vælg gennemprøvet broker/KMS i arkitektur-ADR",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-015",
+      "category": "Fælles platform og AI-styring",
+      "name": "Backup- og restorecenter",
+      "purpose": "Gendanne kundens data og konfiguration",
+      "wave": "Kerne",
+      "strategy": "Integrér",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "DKC-016 og DKC-042: separat recoverydomæne, PITR og målte RPO/RTO",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-016",
+      "category": "Fælles platform og AI-styring",
+      "name": "Drifts- og sikkerhedscenter",
+      "purpose": "Overvåge fejl, belastning og sikkerhedshændelser",
+      "wave": "Kerne",
+      "strategy": "Udbyg",
+      "candidates": [
+        "Wazuh"
+      ],
+      "source_urls": [
+        "https://wazuh.com/"
+      ],
+      "gate": "Eksisterende observability og faktiske sensorer",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-017",
+      "category": "Fælles platform og AI-styring",
+      "name": "Forbrug og omkostninger",
+      "purpose": "Vise pris pr. kunde, app og AI-opgave",
+      "wave": "Kerne",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Afstem måling med faktiske udgifter",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-018",
+      "category": "Fælles platform og AI-styring",
+      "name": "Migration og exit",
+      "purpose": "Flytte indhold og rettigheder ind og ud",
+      "wave": "Kerne",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Dokumenterede eksportformater",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-019",
+      "category": "Fælles platform og AI-styring",
+      "name": "Fælles søgning og AI-viden",
+      "purpose": "Finde tilladt viden på tværs af apps",
+      "wave": "Basis",
+      "strategy": "Byg",
+      "candidates": [
+        "OpenSearch"
+      ],
+      "source_urls": [
+        "https://opensearch.org/"
+      ],
+      "gate": "ACL før retrieval og ved kildeadgang",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-020",
+      "category": "Fælles platform og AI-styring",
+      "name": "Integrationer og webhooks",
+      "purpose": "Udveksle hændelser mellem godkendte apps",
+      "wave": "Basis",
+      "strategy": "Byg",
+      "candidates": [
+        "Activepieces"
+      ],
+      "source_urls": [
+        "https://www.activepieces.com/"
+      ],
+      "gate": "DKC-056/059: capability contract, scoped credentials and tested provider migration",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-021",
+      "category": "Kommunikation og kontor",
+      "name": "Teamchat",
+      "purpose": "Kanaler og direkte intern kommunikation",
+      "wave": "Basis",
+      "strategy": "Integrér",
+      "candidates": [
+        "Mattermost"
+      ],
+      "source_urls": [
+        "https://docs.mattermost.com/"
+      ],
+      "gate": "Eksisterende adapter skal testes live",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-022",
+      "category": "Kommunikation og kontor",
+      "name": "Videomøder",
+      "purpose": "Afholde interne og eksterne møder",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "Nextcloud Hub"
+      ],
+      "source_urls": [
+        "https://nextcloud.com/hub/"
+      ],
+      "gate": "Kapacitet, TURN og mødegæster",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-023",
+      "category": "Kommunikation og kontor",
+      "name": "Virksomhedsmail",
+      "purpose": "Sende, modtage og administrere postkasser",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "mailcow"
+      ],
+      "source_urls": [
+        "https://docs.mailcow.email/"
+      ],
+      "gate": "Leveringssikkerhed, DNS og misbrugsberedskab",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-024",
+      "category": "Kommunikation og kontor",
+      "name": "Webmail",
+      "purpose": "Læse mail fra browser",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "Nextcloud Hub",
+        "mailcow"
+      ],
+      "source_urls": [
+        "https://nextcloud.com/hub/",
+        "https://docs.mailcow.email/"
+      ],
+      "gate": "Mailklient kræver mailserver",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-025",
+      "category": "Kommunikation og kontor",
+      "name": "Fælles kalender",
+      "purpose": "Planlægge møder og delte kalendere",
+      "wave": "Basis",
+      "strategy": "Integrér",
+      "candidates": [
+        "Nextcloud Hub"
+      ],
+      "source_urls": [
+        "https://nextcloud.com/hub/"
+      ],
+      "gate": "Invitations- og delingsrettigheder",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-026",
+      "category": "Kommunikation og kontor",
+      "name": "Kontaktbog",
+      "purpose": "Dele kontaktoplysninger i organisationen",
+      "wave": "Basis",
+      "strategy": "Integrér",
+      "candidates": [
+        "Nextcloud Hub"
+      ],
+      "source_urls": [
+        "https://nextcloud.com/hub/"
+      ],
+      "gate": "Hold CRM-masterdata adskilt fra personlige kontakter",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-027",
+      "category": "Kommunikation og kontor",
+      "name": "Filbibliotek og deling",
+      "purpose": "Opbevare og dele arbejdsfiler",
+      "wave": "Basis",
+      "strategy": "Integrér",
+      "candidates": [
+        "Nextcloud Hub"
+      ],
+      "source_urls": [
+        "https://nextcloud.com/hub/"
+      ],
+      "gate": "Eksterne links, malwarekontrol og retention",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-028",
+      "category": "Kommunikation og kontor",
+      "name": "Dokumentredigering",
+      "purpose": "Samarbejde om tekst, ark og præsentationer",
+      "wave": "Basis",
+      "strategy": "Integrér",
+      "candidates": [
+        "Nextcloud Hub"
+      ],
+      "source_urls": [
+        "https://nextcloud.com/hub/"
+      ],
+      "gate": "Valgt editor, edition og formatkompatibilitet",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-029",
+      "category": "Kommunikation og kontor",
+      "name": "Personlige noter",
+      "purpose": "Gemme kladder og mødenoter med adgangskontrol",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "Nextcloud Hub"
+      ],
+      "source_urls": [
+        "https://nextcloud.com/hub/"
+      ],
+      "gate": "Noter er ikke automatisk fælles viden",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-030",
+      "category": "Kommunikation og kontor",
+      "name": "Whiteboard",
+      "purpose": "Tegne og udvikle ideer sammen",
+      "wave": "Udvidelse",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Vælg komponent med eksport og adgangskontrol",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-031",
+      "category": "Kommunikation og kontor",
+      "name": "Mødebooking",
+      "purpose": "Lade kunder reservere ledige tider",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "Cal.com"
+      ],
+      "source_urls": [
+        "https://cal.com/"
+      ],
+      "gate": "Edition, SSO og kalenderadgang",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-032",
+      "category": "Kommunikation og kontor",
+      "name": "Telefonisystem",
+      "purpose": "Ringe, viderestille og håndtere køer",
+      "wave": "Senere",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "SIP-udbyder, nødopkald og optagelsesregler",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-033",
+      "category": "Kommunikation og kontor",
+      "name": "Transskription og referater",
+      "purpose": "Lave søgbare referater og opgaveforslag",
+      "wave": "Udvidelse",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Oplysning, behandlingsgrundlag og slettepolitik",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-034",
+      "category": "Kommunikation og kontor",
+      "name": "Intranet og nyheder",
+      "purpose": "Dele interne beskeder og virksomhedsindhold",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "WordPress"
+      ],
+      "source_urls": [
+        "https://wordpress.org/"
+      ],
+      "gate": "Privat adgang og redaktionelle roller",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-035",
+      "category": "Kommunikation og kontor",
+      "name": "Intern vidensbase",
+      "purpose": "Vedligeholde procedurer og vejledninger",
+      "wave": "Basis",
+      "strategy": "Integrér",
+      "candidates": [
+        "BookStack"
+      ],
+      "source_urls": [
+        "https://www.bookstackapp.com/"
+      ],
+      "gate": "Dokument-ACL og versionshistorik",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-036",
+      "category": "Kommunikation og kontor",
+      "name": "Dokumentarkiv og OCR",
+      "purpose": "Indlæse og finde scannede dokumenter",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "Paperless-ngx"
+      ],
+      "source_urls": [
+        "https://github.com/paperless-ngx/paperless-ngx"
+      ],
+      "gate": "OCR-lagring, filadgang og retention",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-037",
+      "category": "Kommunikation og kontor",
+      "name": "Elektronisk underskrift",
+      "purpose": "Indhente underskrifter på dokumenter",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "Documenso"
+      ],
+      "source_urls": [
+        "https://documenso.com/"
+      ],
+      "gate": "Underskriftsniveau og juridisk anvendelse afklares",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-038",
+      "category": "Kommunikation og kontor",
+      "name": "Formularer og undersøgelser",
+      "purpose": "Indsamle strukturerede svar",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "LimeSurvey"
+      ],
+      "source_urls": [
+        "https://www.limesurvey.org/"
+      ],
+      "gate": "Formål, adgang, anonymitet og dataminimering",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-039",
+      "category": "Projekter, ressourcer og konsulentarbejde",
+      "name": "Projektstyring",
+      "purpose": "Planlægge leverancer, milepæle og ansvar",
+      "wave": "Basis",
+      "strategy": "Integrér",
+      "candidates": [
+        "OpenProject"
+      ],
+      "source_urls": [
+        "https://www.openproject.org/docs/getting-started/openproject-introduction/"
+      ],
+      "gate": "Community versus betalte funktioner",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-040",
+      "category": "Projekter, ressourcer og konsulentarbejde",
+      "name": "Opgaver og Kanban",
+      "purpose": "Følge det daglige arbejde",
+      "wave": "Basis",
+      "strategy": "Integrér",
+      "candidates": [
+        "OpenProject"
+      ],
+      "source_urls": [
+        "https://www.openproject.org/docs/getting-started/openproject-introduction/"
+      ],
+      "gate": "Kan leveres i samme installation som projektstyring",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-041",
+      "category": "Projekter, ressourcer og konsulentarbejde",
+      "name": "Porteføljestyring",
+      "purpose": "Prioritere projekter på tværs af afdelinger",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "OpenProject"
+      ],
+      "source_urls": [
+        "https://www.openproject.org/docs/getting-started/openproject-introduction/"
+      ],
+      "gate": "Funktionsdækning pr. edition skal bevises",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-042",
+      "category": "Projekter, ressourcer og konsulentarbejde",
+      "name": "Tidsregistrering",
+      "purpose": "Registrere timer på kunder og projekter",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "Kimai"
+      ],
+      "source_urls": [
+        "https://www.kimai.org/en/"
+      ],
+      "gate": "Godkendelse, eksport og lokal praksis",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-043",
+      "category": "Projekter, ressourcer og konsulentarbejde",
+      "name": "Ressourceplanlægning",
+      "purpose": "Fordele medarbejderkapacitet og opgaver",
+      "wave": "Udvidelse",
+      "strategy": "Undersøg",
+      "candidates": [
+        "OpenProject"
+      ],
+      "source_urls": [
+        "https://www.openproject.org/docs/getting-started/openproject-introduction/"
+      ],
+      "gate": "Afklar planlægningsfunktioner og edition",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-044",
+      "category": "Projekter, ressourcer og konsulentarbejde",
+      "name": "Projektøkonomi",
+      "purpose": "Sammenholde timer, budget og omkostninger",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "OpenProject"
+      ],
+      "source_urls": [
+        "https://www.openproject.org/docs/getting-started/openproject-introduction/"
+      ],
+      "gate": "Autoritative tal kommer fra økonomisystemet",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-045",
+      "category": "Projekter, ressourcer og konsulentarbejde",
+      "name": "Risici og projektbeslutninger",
+      "purpose": "Følge risici, ejere og beslutningshistorik",
+      "wave": "Udvidelse",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Udvid eksisterende projektmodul før ny app",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-046",
+      "category": "Projekter, ressourcer og konsulentarbejde",
+      "name": "Kundeportal",
+      "purpose": "Give kunden adgang til aftalte leverancer",
+      "wave": "Udvidelse",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Ekstern adgang pr. projekt og organisation",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-047",
+      "category": "Projekter, ressourcer og konsulentarbejde",
+      "name": "Kvalitetsgodkendelse af leverancer",
+      "purpose": "Indsamle kundens accept og ændringsønsker",
+      "wave": "Udvidelse",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Dokumentversion og godkenderidentitet",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-048",
+      "category": "Projekter, ressourcer og konsulentarbejde",
+      "name": "OKR og mål",
+      "purpose": "Følge mål og fælles fremdrift",
+      "wave": "Senere",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Undgå automatisk individuel medarbejderscoring",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-049",
+      "category": "Salg, CRM og kundeservice",
+      "name": "CRM",
+      "purpose": "Holde styr på kunder, kontakter og relationer",
+      "wave": "Basis",
+      "strategy": "Integrér",
+      "candidates": [
+        "EspoCRM"
+      ],
+      "source_urls": [
+        "https://www.espocrm.com/"
+      ],
+      "gate": "Valg af masterdata og dubletregler",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-050",
+      "category": "Salg, CRM og kundeservice",
+      "name": "Salgspipeline",
+      "purpose": "Følge muligheder og næste salgsaktivitet",
+      "wave": "Basis",
+      "strategy": "Integrér",
+      "candidates": [
+        "EspoCRM"
+      ],
+      "source_urls": [
+        "https://www.espocrm.com/"
+      ],
+      "gate": "Samme CRM-installation",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-051",
+      "category": "Salg, CRM og kundeservice",
+      "name": "Tilbud og salgsordrer",
+      "purpose": "Oprette tilbud og omdanne accepterede tilbud til ordrer",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "ERPNext"
+      ],
+      "source_urls": [
+        "https://docs.frappe.io/erpnext/introduction"
+      ],
+      "gate": "Pris, rabat og godkendelsesgrænser",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-052",
+      "category": "Salg, CRM og kundeservice",
+      "name": "Produktkonfiguration og CPQ",
+      "purpose": "Beregne tilbud på sammensatte produkter",
+      "wave": "Senere",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Domæneregler og prisberegning skal verificeres",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-053",
+      "category": "Salg, CRM og kundeservice",
+      "name": "Supporttickets",
+      "purpose": "Håndtere kundesager og svartider",
+      "wave": "Basis",
+      "strategy": "Integrér",
+      "candidates": [
+        "Zammad"
+      ],
+      "source_urls": [
+        "https://zammad.org/"
+      ],
+      "gate": "Rettigheder til mails og vedhæftninger",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-054",
+      "category": "Salg, CRM og kundeservice",
+      "name": "Livechat og fælles indbakke",
+      "purpose": "Samle kundedialog fra flere kanaler",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "Chatwoot"
+      ],
+      "source_urls": [
+        "https://www.chatwoot.com/"
+      ],
+      "gate": "Sociale kanaler kan kræve aftaler og betaling",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-055",
+      "category": "Salg, CRM og kundeservice",
+      "name": "Kundeselvbetjening",
+      "purpose": "Lade kunder finde svar og følge egne sager",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "Zammad",
+        "Chatwoot"
+      ],
+      "source_urls": [
+        "https://zammad.org/",
+        "https://www.chatwoot.com/"
+      ],
+      "gate": "Afprøv den valgte editions portal",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-056",
+      "category": "Salg, CRM og kundeservice",
+      "name": "Serviceaftaler og SLA",
+      "purpose": "Følge aftalt responstid og ansvar",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "Zammad"
+      ],
+      "source_urls": [
+        "https://zammad.org/"
+      ],
+      "gate": "Kalendere, eskalation og måledefinitioner",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-057",
+      "category": "Salg, CRM og kundeservice",
+      "name": "Customer success",
+      "purpose": "Følge onboarding, behov og opfølgning hos kunder",
+      "wave": "Senere",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Samles oven på CRM og supportdata",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-058",
+      "category": "Salg, CRM og kundeservice",
+      "name": "Kundetilfredshed",
+      "purpose": "Indsamle evalueringer efter leverancer",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "LimeSurvey"
+      ],
+      "source_urls": [
+        "https://www.limesurvey.org/"
+      ],
+      "gate": "Frivillighed og korrekt anonymitetsbeskrivelse",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-059",
+      "category": "Salg, CRM og kundeservice",
+      "name": "Reklamationer og returvarer",
+      "purpose": "Behandle mangler, retur og kompensation",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "Medusa"
+      ],
+      "source_urls": [
+        "https://medusajs.com/"
+      ],
+      "gate": "Refusion kræver økonomi- og betalingsintegration",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-060",
+      "category": "Salg, CRM og kundeservice",
+      "name": "Partner- og forhandlerportal",
+      "purpose": "Dele relevante kunder, ordrer og materialer",
+      "wave": "Senere",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Organisationer og data skal være adskilt",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-061",
+      "category": "Marketing og digitalt indhold",
+      "name": "Hjemmeside og CMS",
+      "purpose": "Udgive sider og redaktionelt indhold",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "WordPress"
+      ],
+      "source_urls": [
+        "https://wordpress.org/"
+      ],
+      "gate": "Pluginudvælgelse og sikker patchning",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-062",
+      "category": "Marketing og digitalt indhold",
+      "name": "Landing pages",
+      "purpose": "Lave kampagnesider med formularer",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "WordPress"
+      ],
+      "source_urls": [
+        "https://wordpress.org/"
+      ],
+      "gate": "Samtykke og godkendt publicering",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-063",
+      "category": "Marketing og digitalt indhold",
+      "name": "Nyhedsbreve",
+      "purpose": "Udsende til tilmeldte modtagere",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "listmonk"
+      ],
+      "source_urls": [
+        "https://listmonk.app/"
+      ],
+      "gate": "Dokumenteret tilmelding og effektiv afmelding",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-064",
+      "category": "Marketing og digitalt indhold",
+      "name": "Marketingautomation",
+      "purpose": "Planlægge kunderejser og opfølgning",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "Mautic"
+      ],
+      "source_urls": [
+        "https://docs.mautic.org/en/7.2/"
+      ],
+      "gate": "Lovligt datagrundlag og kanalregler",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-065",
+      "category": "Marketing og digitalt indhold",
+      "name": "Webanalyse",
+      "purpose": "Måle brug af hjemmesider",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "Matomo"
+      ],
+      "source_urls": [
+        "https://matomo.org/"
+      ],
+      "gate": "Konfiguration og samtykke vurderes konkret",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-066",
+      "category": "Marketing og digitalt indhold",
+      "name": "Kampagneplanlægning",
+      "purpose": "Koordinere indhold, deadlines og kanaler",
+      "wave": "Udvidelse",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Genbrug projektmodulet",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-067",
+      "category": "Marketing og digitalt indhold",
+      "name": "Social publicering",
+      "purpose": "Planlægge og sende godkendte opslag",
+      "wave": "Senere",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "API-adgang, priser og platformvilkår",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-068",
+      "category": "Marketing og digitalt indhold",
+      "name": "SEO-arbejdsrum",
+      "purpose": "Følge tekniske fejl og forbedringsopgaver",
+      "wave": "Senere",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Crawling og datakilders vilkår",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-069",
+      "category": "Marketing og digitalt indhold",
+      "name": "Digitalt mediebibliotek",
+      "purpose": "Styre billeder, videoer og brugsrettigheder",
+      "wave": "Udvidelse",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "DAM-krav, metadata og rettighedsudløb",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-070",
+      "category": "Marketing og digitalt indhold",
+      "name": "Design og prototyper",
+      "purpose": "Designe skærmbilleder og komponenter",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "Penpot"
+      ],
+      "source_urls": [
+        "https://penpot.app/"
+      ],
+      "gate": "Eksport, SSO og edition",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-071",
+      "category": "Marketing og digitalt indhold",
+      "name": "Brand- og skabelonbibliotek",
+      "purpose": "Dele godkendte logoer og skabeloner",
+      "wave": "Udvidelse",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Genbrug filbibliotek og designværktøj",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-072",
+      "category": "Marketing og digitalt indhold",
+      "name": "Events og billetsalg",
+      "purpose": "Håndtere tilmelding, billetter og adgang",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "pretix"
+      ],
+      "source_urls": [
+        "https://pretix.eu/about/en/"
+      ],
+      "gate": "Betalingsudbyder og billetdata",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-073",
+      "category": "Økonomi, indkøb og administration",
+      "name": "Finansbogføring",
+      "purpose": "Registrere posteringer og regnskabsperioder",
+      "wave": "Reguleret",
+      "strategy": "Integrér",
+      "candidates": [
+        "ERPNext"
+      ],
+      "source_urls": [
+        "https://docs.frappe.io/erpnext/introduction"
+      ],
+      "gate": "Dansk bogføringsvurdering før anvendelse",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-074",
+      "category": "Økonomi, indkøb og administration",
+      "name": "Fakturering",
+      "purpose": "Oprette fakturaer og kreditnotaer",
+      "wave": "Reguleret",
+      "strategy": "Integrér",
+      "candidates": [
+        "ERPNext"
+      ],
+      "source_urls": [
+        "https://docs.frappe.io/erpnext/introduction"
+      ],
+      "gate": "Nummerering, moms og opbevaring",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-075",
+      "category": "Økonomi, indkøb og administration",
+      "name": "E-faktura og Nemhandel",
+      "purpose": "Udveksle strukturerede fakturaer",
+      "wave": "Reguleret",
+      "strategy": "Integrér",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Vælg access point og valider danske formater",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-076",
+      "category": "Økonomi, indkøb og administration",
+      "name": "Kreditor og bilagsgodkendelse",
+      "purpose": "Kontrollere leverandørbilag før bogføring",
+      "wave": "Reguleret",
+      "strategy": "Integrér",
+      "candidates": [
+        "ERPNext"
+      ],
+      "source_urls": [
+        "https://docs.frappe.io/erpnext/introduction"
+      ],
+      "gate": "Godkendelse og kontrol mod indkøbsordre",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-077",
+      "category": "Økonomi, indkøb og administration",
+      "name": "Udlæg og rejseafregning",
+      "purpose": "Registrere kvitteringer og godtgørelser",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "Frappe HR"
+      ],
+      "source_urls": [
+        "https://github.com/frappe/hrms"
+      ],
+      "gate": "Danske regler og økonomiintegration",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-078",
+      "category": "Økonomi, indkøb og administration",
+      "name": "Bankafstemning",
+      "purpose": "Matche bankbevægelser og posteringer",
+      "wave": "Reguleret",
+      "strategy": "Integrér",
+      "candidates": [
+        "ERPNext"
+      ],
+      "source_urls": [
+        "https://docs.frappe.io/erpnext/introduction"
+      ],
+      "gate": "Bankdata via godkendt integration",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-079",
+      "category": "Økonomi, indkøb og administration",
+      "name": "Budget og prognose",
+      "purpose": "Planlægge indtægter og omkostninger",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "ERPNext"
+      ],
+      "source_urls": [
+        "https://docs.frappe.io/erpnext/introduction"
+      ],
+      "gate": "Versionshistorik og autoritative tal",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-080",
+      "category": "Økonomi, indkøb og administration",
+      "name": "Likviditetsplan",
+      "purpose": "Forudsige ind- og udbetalinger",
+      "wave": "Udvidelse",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Beregningsmodel oven på økonomidata",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-081",
+      "category": "Økonomi, indkøb og administration",
+      "name": "Abonnementsafregning",
+      "purpose": "Beregne abonnementer og forbrugsbetaling",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "Lago"
+      ],
+      "source_urls": [
+        "https://getlago.com/"
+      ],
+      "gate": "Afregning er ikke betalingsafvikling",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-082",
+      "category": "Økonomi, indkøb og administration",
+      "name": "Rykkerhåndtering",
+      "purpose": "Følge forfaldne fakturaer og opfølgning",
+      "wave": "Reguleret",
+      "strategy": "Integrér",
+      "candidates": [
+        "ERPNext"
+      ],
+      "source_urls": [
+        "https://docs.frappe.io/erpnext/introduction"
+      ],
+      "gate": "Renter, gebyrer og kommunikation vurderes",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-083",
+      "category": "Økonomi, indkøb og administration",
+      "name": "Anlægskartotek",
+      "purpose": "Følge aktiver og afskrivninger",
+      "wave": "Reguleret",
+      "strategy": "Integrér",
+      "candidates": [
+        "ERPNext"
+      ],
+      "source_urls": [
+        "https://docs.frappe.io/erpnext/introduction"
+      ],
+      "gate": "Regnskabsregler og historik",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-084",
+      "category": "Økonomi, indkøb og administration",
+      "name": "Indkøbsrekvisitioner",
+      "purpose": "Indhente intern tilladelse til indkøb",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "ERPNext"
+      ],
+      "source_urls": [
+        "https://docs.frappe.io/erpnext/introduction"
+      ],
+      "gate": "Beløbsgrænser og funktionsadskillelse",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-085",
+      "category": "Økonomi, indkøb og administration",
+      "name": "Leverandørregister",
+      "purpose": "Samle leverandører, aftaler og kontaktdata",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "ERPNext"
+      ],
+      "source_urls": [
+        "https://docs.frappe.io/erpnext/introduction"
+      ],
+      "gate": "Verifikation af betalingsoplysninger",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-086",
+      "category": "Økonomi, indkøb og administration",
+      "name": "Indkøbsordrer",
+      "purpose": "Bestille og følge leverancer",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "ERPNext"
+      ],
+      "source_urls": [
+        "https://docs.frappe.io/erpnext/introduction"
+      ],
+      "gate": "Ordre, modtagelse og faktura skal kunne afstemmes",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-087",
+      "category": "Økonomi, indkøb og administration",
+      "name": "Kontraktstyring",
+      "purpose": "Følge aftaler, frister og fornyelser",
+      "wave": "Udvidelse",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Dokumentarkiv, signatur og påmindelser genbruges",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-088",
+      "category": "Økonomi, indkøb og administration",
+      "name": "Betalingsintegration",
+      "purpose": "Gennemføre autoriseret betaling via udbyder",
+      "wave": "Reguleret",
+      "strategy": "Integrér",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Ingen egen opbevaring af kortdata; scopes og bekræftelse",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-089",
+      "category": "Økonomi, indkøb og administration",
+      "name": "Koncernrapportering",
+      "purpose": "Samle tal fra flere selskaber",
+      "wave": "Senere",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Valuta, eliminering og revisionsspor",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-090",
+      "category": "Økonomi, indkøb og administration",
+      "name": "Skat og momsrapportering",
+      "purpose": "Forberede oplysninger til indberetning",
+      "wave": "Reguleret",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Landespecifik validering og faglig godkendelse",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-091",
+      "category": "HR, tid og læring",
+      "name": "Medarbejderregister",
+      "purpose": "Vedligeholde ansættelsesoplysninger",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "Frappe HR"
+      ],
+      "source_urls": [
+        "https://github.com/frappe/hrms"
+      ],
+      "gate": "Særligt begrænset adgang og dataminimering",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-092",
+      "category": "HR, tid og læring",
+      "name": "Onboarding og offboarding",
+      "purpose": "Koordinere udstyr, adgang og introduktion",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "Frappe HR"
+      ],
+      "source_urls": [
+        "https://github.com/frappe/hrms"
+      ],
+      "gate": "Koble til IAM og verificér tilbagekaldelse",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-093",
+      "category": "HR, tid og læring",
+      "name": "Ferie og fravær",
+      "purpose": "Ansøge, godkende og følge fravær",
+      "wave": "Reguleret",
+      "strategy": "Integrér",
+      "candidates": [
+        "Frappe HR"
+      ],
+      "source_urls": [
+        "https://github.com/frappe/hrms"
+      ],
+      "gate": "Lokale regler og begrænset sygdomsinformation",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-094",
+      "category": "HR, tid og læring",
+      "name": "Arbejdstidsregistrering",
+      "purpose": "Registrere arbejdstid og relevante afvigelser",
+      "wave": "Reguleret",
+      "strategy": "Integrér",
+      "candidates": [
+        "Frappe HR",
+        "Kimai"
+      ],
+      "source_urls": [
+        "https://github.com/frappe/hrms",
+        "https://www.kimai.org/en/"
+      ],
+      "gate": "Krav og medarbejderinformation afklares",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-095",
+      "category": "HR, tid og læring",
+      "name": "Vagtplanlægning",
+      "purpose": "Planlægge bemanding og vagtskifte",
+      "wave": "Reguleret",
+      "strategy": "Undersøg",
+      "candidates": [
+        "Frappe HR"
+      ],
+      "source_urls": [
+        "https://github.com/frappe/hrms"
+      ],
+      "gate": "Kompetencer, hviletid og overenskomster",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-096",
+      "category": "HR, tid og læring",
+      "name": "Løn",
+      "purpose": "Beregne løn og sende lønoplysninger",
+      "wave": "Reguleret",
+      "strategy": "Integrér",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Brug dansk lønintegration før eventuel egen motor",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-097",
+      "category": "HR, tid og læring",
+      "name": "Rekruttering og ATS",
+      "purpose": "Organisere ansøgninger og samtaler",
+      "wave": "Reguleret",
+      "strategy": "Undersøg",
+      "candidates": [
+        "Frappe HR"
+      ],
+      "source_urls": [
+        "https://github.com/frappe/hrms"
+      ],
+      "gate": "Ingen automatisk kandidatrangering i basispakken",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-098",
+      "category": "HR, tid og læring",
+      "name": "Medarbejdersamtaler",
+      "purpose": "Dokumentere mål og samtaler",
+      "wave": "Reguleret",
+      "strategy": "Integrér",
+      "candidates": [
+        "Frappe HR"
+      ],
+      "source_urls": [
+        "https://github.com/frappe/hrms"
+      ],
+      "gate": "Følsom kontekst og ingen skjult scoring",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-099",
+      "category": "HR, tid og læring",
+      "name": "Læringsplatform",
+      "purpose": "Udgive kurser og følge gennemførelse",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "Moodle"
+      ],
+      "source_urls": [
+        "https://moodle.org/"
+      ],
+      "gate": "Dokumentér identitet og gennemført træning",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-100",
+      "category": "HR, tid og læring",
+      "name": "Kompetencer og certifikater",
+      "purpose": "Følge nødvendige kvalifikationer og udløb",
+      "wave": "Udvidelse",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Genbrug læringsdata og medarbejderregister",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-101",
+      "category": "HR, tid og læring",
+      "name": "Personalehåndbog",
+      "purpose": "Dele gældende regler og dokumentere modtagelse",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "BookStack"
+      ],
+      "source_urls": [
+        "https://www.bookstackapp.com/"
+      ],
+      "gate": "Versionsbinding og tilgangskvittering",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-102",
+      "category": "HR, tid og læring",
+      "name": "Trivselsmålinger",
+      "purpose": "Indsamle medarbejderfeedback",
+      "wave": "Reguleret",
+      "strategy": "Integrér",
+      "candidates": [
+        "LimeSurvey"
+      ],
+      "source_urls": [
+        "https://www.limesurvey.org/"
+      ],
+      "gate": "Små grupper kan afsløre identiteter",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-103",
+      "category": "Handel, lager og produktion",
+      "name": "Webshop",
+      "purpose": "Sælge produkter og modtage ordrer",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "Medusa"
+      ],
+      "source_urls": [
+        "https://medusajs.com/"
+      ],
+      "gate": "Betaling, forbrugerflow og driftsansvar",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-104",
+      "category": "Handel, lager og produktion",
+      "name": "Produktinformation PIM",
+      "purpose": "Vedligeholde produktdata på tværs af kanaler",
+      "wave": "Senere",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Vælg PIM efter datamodel og kanaler",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-105",
+      "category": "Handel, lager og produktion",
+      "name": "Ordrestyring",
+      "purpose": "Koordinere ordrestatus og levering",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "Medusa"
+      ],
+      "source_urls": [
+        "https://medusajs.com/"
+      ],
+      "gate": "Entydig master for ordre og lager",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-106",
+      "category": "Handel, lager og produktion",
+      "name": "Lagerstyring",
+      "purpose": "Følge beholdning og bevægelser",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "ERPNext Stock"
+      ],
+      "source_urls": [
+        "https://docs.frappe.io/erpnext/stock"
+      ],
+      "gate": "Lagertransaktioner og rollbackbegrænsninger",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-107",
+      "category": "Handel, lager og produktion",
+      "name": "Pluk og pak",
+      "purpose": "Styre lageropgaver og pakkeforløb",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "ERPNext Stock"
+      ],
+      "source_urls": [
+        "https://docs.frappe.io/erpnext/stock"
+      ],
+      "gate": "Scannerflow og sporbarhed skal testes",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-108",
+      "category": "Handel, lager og produktion",
+      "name": "Fragtintegration",
+      "purpose": "Bestille fragt og udskrive labels",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Transportør-APIer og eksterne omkostninger",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-109",
+      "category": "Handel, lager og produktion",
+      "name": "Kassesystem POS",
+      "purpose": "Registrere salg ved fysisk kasse",
+      "wave": "Reguleret",
+      "strategy": "Undersøg",
+      "candidates": [
+        "ERPNext"
+      ],
+      "source_urls": [
+        "https://docs.frappe.io/erpnext/introduction"
+      ],
+      "gate": "Landekrav, hardware og offlinehåndtering",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-110",
+      "category": "Handel, lager og produktion",
+      "name": "Stregkoder og sporbarhed",
+      "purpose": "Følge varer via batch og serienummer",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "ERPNext Stock"
+      ],
+      "source_urls": [
+        "https://docs.frappe.io/erpnext/stock"
+      ],
+      "gate": "Test datadækning i alle bevægelser",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-111",
+      "category": "Handel, lager og produktion",
+      "name": "Produktionsplanlægning",
+      "purpose": "Planlægge materialer, kapacitet og ordrer",
+      "wave": "Senere",
+      "strategy": "Undersøg",
+      "candidates": [
+        "ERPNext"
+      ],
+      "source_urls": [
+        "https://docs.frappe.io/erpnext/introduction"
+      ],
+      "gate": "Fabriksspecifik validering",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-112",
+      "category": "Handel, lager og produktion",
+      "name": "Styklister og revisioner",
+      "purpose": "Beskrive komponenter og versioner",
+      "wave": "Senere",
+      "strategy": "Undersøg",
+      "candidates": [
+        "ERPNext"
+      ],
+      "source_urls": [
+        "https://docs.frappe.io/erpnext/introduction"
+      ],
+      "gate": "Ændringskontrol og korrekt revision",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-113",
+      "category": "Handel, lager og produktion",
+      "name": "Kvalitetskontrol",
+      "purpose": "Registrere målinger og afvigelser",
+      "wave": "Senere",
+      "strategy": "Undersøg",
+      "candidates": [
+        "ERPNext"
+      ],
+      "source_urls": [
+        "https://docs.frappe.io/erpnext/introduction"
+      ],
+      "gate": "Faglige krav og revisionsspor",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-114",
+      "category": "Handel, lager og produktion",
+      "name": "Vedligehold af maskiner",
+      "purpose": "Planlægge eftersyn og reparationer",
+      "wave": "Senere",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "CMMS og integration til udstyr",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-115",
+      "category": "Handel, lager og produktion",
+      "name": "Leverandørkvalitet",
+      "purpose": "Følge reklamationer og leverancekvalitet",
+      "wave": "Senere",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Genbrug indkøb og kvalitetsdata",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-116",
+      "category": "Handel, lager og produktion",
+      "name": "Efterspørgselsprognose",
+      "purpose": "Foreslå indkøb og lagerbehov",
+      "wave": "Senere",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Mål prognosefejl; ingen automatisk storordre",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-117",
+      "category": "IT, udvikling og sikkerhed",
+      "name": "IT-service desk",
+      "purpose": "Håndtere interne IT-henvendelser",
+      "wave": "Kerne",
+      "strategy": "Integrér",
+      "candidates": [
+        "GLPI"
+      ],
+      "source_urls": [
+        "https://www.glpi-project.org/en/"
+      ],
+      "gate": "Indgår i DKC-044 sammen med incident, request, CMDB og menneskelig eskalation",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-118",
+      "category": "IT, udvikling og sikkerhed",
+      "name": "IT-asset management",
+      "purpose": "Registrere udstyr, ejer og udlån",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "Snipe-IT"
+      ],
+      "source_urls": [
+        "https://snipeitapp.com/"
+      ],
+      "gate": "Offboarding, inventur og eksport",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-119",
+      "category": "IT, udvikling og sikkerhed",
+      "name": "CMDB",
+      "purpose": "Beskrive IT-komponenter og afhængigheder",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "GLPI"
+      ],
+      "source_urls": [
+        "https://www.glpi-project.org/en/"
+      ],
+      "gate": "Automatisk opdagelse kræver begrænsede rettigheder",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-120",
+      "category": "IT, udvikling og sikkerhed",
+      "name": "Password manager",
+      "purpose": "Dele menneskers adgangshemmeligheder sikkert",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "Passbolt"
+      ],
+      "source_urls": [
+        "https://www.passbolt.com/"
+      ],
+      "gate": "Adskilles fra agenternes secrets-broker",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-121",
+      "category": "IT, udvikling og sikkerhed",
+      "name": "Enhedsadministration MDM",
+      "purpose": "Konfigurere og sikre arbejdsudstyr",
+      "wave": "Senere",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "OS-support, enterprisefeatures og slettebeføjelser",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-122",
+      "category": "IT, udvikling og sikkerhed",
+      "name": "Patch management",
+      "purpose": "Planlægge og rulle softwareopdateringer ud",
+      "wave": "Udvidelse",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Genbrug GitOps; endpoints kræver egen kandidat",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-123",
+      "category": "IT, udvikling og sikkerhed",
+      "name": "Sikkerhedsovervågning SIEM",
+      "purpose": "Samle og undersøge sikkerhedshændelser",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "Wazuh"
+      ],
+      "source_urls": [
+        "https://wazuh.com/"
+      ],
+      "gate": "Sensorer, alarmansvar og logretention",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-124",
+      "category": "IT, udvikling og sikkerhed",
+      "name": "Sårbarhedsstyring",
+      "purpose": "Prioritere og følge sikkerhedsrettelser",
+      "wave": "Udvidelse",
+      "strategy": "Udbyg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Genbrug eksisterende security-plan og scannerdata",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-125",
+      "category": "IT, udvikling og sikkerhed",
+      "name": "Git og kodereview",
+      "purpose": "Versionere kode og behandle ændringer",
+      "wave": "Senere",
+      "strategy": "Integrér",
+      "candidates": [
+        "Forgejo"
+      ],
+      "source_urls": [
+        "https://forgejo.org/"
+      ],
+      "gate": "Platformens eget GitHub-repo flyttes ikke automatisk",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-126",
+      "category": "IT, udvikling og sikkerhed",
+      "name": "CI og release",
+      "purpose": "Bygge og teste software reproducerbart",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "Forgejo"
+      ],
+      "source_urls": [
+        "https://forgejo.org/"
+      ],
+      "gate": "Runnerisolering og supply-chain-kontrol",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-127",
+      "category": "IT, udvikling og sikkerhed",
+      "name": "Artefaktregister",
+      "purpose": "Opbevare images og releasepakker",
+      "wave": "Udvidelse",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Signaturkontrol, adgang og retention",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-128",
+      "category": "IT, udvikling og sikkerhed",
+      "name": "Udviklerportal",
+      "purpose": "Vise tjenester, ejere og dokumentation",
+      "wave": "Senere",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Hold den adskilt fra kundens appportal",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-129",
+      "category": "IT, udvikling og sikkerhed",
+      "name": "Fejlsporing i apps",
+      "purpose": "Indsamle fejl og relevant fejlkontekst",
+      "wave": "Udvidelse",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Maskér persondata i payloads",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-130",
+      "category": "IT, udvikling og sikkerhed",
+      "name": "API-administration",
+      "purpose": "Udstille dokumenterede APIer med kvoter",
+      "wave": "Udvidelse",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Fælles identitet, versioner og nøglerevokation",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-131",
+      "category": "Data og automatisering",
+      "name": "BI og dashboards",
+      "purpose": "Udforske virksomhedens nøgletal",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "Metabase",
+        "Apache Superset"
+      ],
+      "source_urls": [
+        "https://www.metabase.com/start/oss",
+        "https://superset.apache.org/"
+      ],
+      "gate": "Edition, dataroller og kundeadskillelse",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-132",
+      "category": "Data og automatisering",
+      "name": "Rapportplanlægning",
+      "purpose": "Distribuere tilbagevendende rapporter",
+      "wave": "Udvidelse",
+      "strategy": "Undersøg",
+      "candidates": [
+        "Metabase",
+        "Apache Superset"
+      ],
+      "source_urls": [
+        "https://www.metabase.com/start/oss",
+        "https://superset.apache.org/"
+      ],
+      "gate": "Rettigheder kontrolleres ved afsendelse",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-133",
+      "category": "Data og automatisering",
+      "name": "Dataintegration ETL",
+      "purpose": "Flytte og omforme data mellem systemer",
+      "wave": "Udvidelse",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Ingen uautoriserede kopier til fælles datalager",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-134",
+      "category": "Data og automatisering",
+      "name": "Datakatalog og lineage",
+      "purpose": "Vise definitioner, ejere og dataoprindelse",
+      "wave": "Senere",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Kobl til behandlingsregister",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-135",
+      "category": "Data og automatisering",
+      "name": "Masterdata og datakvalitet",
+      "purpose": "Finde dubletter og modstridende værdier",
+      "wave": "Udvidelse",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Ét autoritativt system pr. datatype",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-136",
+      "category": "Data og automatisering",
+      "name": "Automatisering af forretningsflows",
+      "purpose": "Koble hændelser til tilladte handlinger",
+      "wave": "Udvidelse",
+      "strategy": "Integrér",
+      "candidates": [
+        "Activepieces"
+      ],
+      "source_urls": [
+        "https://www.activepieces.com/"
+      ],
+      "gate": "Rå connectors må ikke omgå PDP",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-137",
+      "category": "Data og automatisering",
+      "name": "Interne formularapps",
+      "purpose": "Bygge mindre virksomhedsprocesser",
+      "wave": "Senere",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Formularer må ikke skabe skjulte datalagre",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-138",
+      "category": "Data og automatisering",
+      "name": "Dokumentudtræk med AI",
+      "purpose": "Foreslå strukturerede felter fra dokumenter",
+      "wave": "Udvidelse",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Usikkerhed og menneskelig kontrol før bogføring",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-139",
+      "category": "Data og automatisering",
+      "name": "AI-assistent til medarbejdere",
+      "purpose": "Besvare spørgsmål og foreslå arbejde",
+      "wave": "Udvidelse",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Samme adgangsrettigheder som brugeren",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-140",
+      "category": "Compliance, faciliteter og brancher",
+      "name": "Behandlingsfortegnelse",
+      "purpose": "Registrere behandlinger og ansvar",
+      "wave": "Kerne",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Del af privacy-center, ikke ny separat database",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-141",
+      "category": "Compliance, faciliteter og brancher",
+      "name": "Risikoregister og kontrolplan",
+      "purpose": "Følge risici, kontroller og ejere",
+      "wave": "Udvidelse",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Genbrug evidens og godkendelsescenter",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-142",
+      "category": "Compliance, faciliteter og brancher",
+      "name": "Leverandør- og databehandlerkontrol",
+      "purpose": "Følge aftaler og underleverandører",
+      "wave": "Udvidelse",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Beslutninger kræver ejer, kilder og dato",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-143",
+      "category": "Compliance, faciliteter og brancher",
+      "name": "Whistleblowerkanal",
+      "purpose": "Modtage og behandle beskyttede henvendelser",
+      "wave": "Reguleret",
+      "strategy": "Integrér",
+      "candidates": [
+        "GlobaLeaks"
+      ],
+      "source_urls": [
+        "https://globaleaks.org/"
+      ],
+      "gate": "Særskilt adgangsmodel; ingen fælles AI-indeksering",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-144",
+      "category": "Compliance, faciliteter og brancher",
+      "name": "Mødelokaler og desk booking",
+      "purpose": "Reservere arbejdspladser og lokaler",
+      "wave": "Udvidelse",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Genbrug kalender hvor muligt",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-145",
+      "category": "Compliance, faciliteter og brancher",
+      "name": "Besøgsregistrering",
+      "purpose": "Håndtere gæster og udløb af besøgsdata",
+      "wave": "Reguleret",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Ingen permanent gæstelog som standard",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-146",
+      "category": "Compliance, faciliteter og brancher",
+      "name": "Facility management",
+      "purpose": "Følge bygninger, opgaver og serviceaftaler",
+      "wave": "Senere",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Tilpas til ejendomsdata og serviceleverandører",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-147",
+      "category": "Compliance, faciliteter og brancher",
+      "name": "Feltservice",
+      "purpose": "Planlægge teknikere og dokumentere servicebesøg",
+      "wave": "Senere",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Mobil, offline og kundeadgang",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-148",
+      "category": "Compliance, faciliteter og brancher",
+      "name": "Flådestyring",
+      "purpose": "Følge køretøjer, vedligehold og udgifter",
+      "wave": "Reguleret",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Lokationsdata og medarbejderinformation",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-149",
+      "category": "Compliance, faciliteter og brancher",
+      "name": "Geodata og kort",
+      "purpose": "Arbejde med steder, arealer og infrastruktur",
+      "wave": "Senere",
+      "strategy": "Integrér",
+      "candidates": [
+        "QGIS"
+      ],
+      "source_urls": [
+        "https://qgis.org/"
+      ],
+      "gate": "Desktop/server-integration kræver egen driftsprofil",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-150",
+      "category": "Compliance, faciliteter og brancher",
+      "name": "Byggeri og BIM",
+      "purpose": "Koordinere byggesager og modelrelaterede opgaver",
+      "wave": "Senere",
+      "strategy": "Undersøg",
+      "candidates": [
+        "OpenProject"
+      ],
+      "source_urls": [
+        "https://www.openproject.org/docs/getting-started/openproject-introduction/"
+      ],
+      "gate": "BIM-dækning og faglige processer verificeres",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-151",
+      "category": "Compliance, faciliteter og brancher",
+      "name": "CAD og teknisk konstruktion",
+      "purpose": "Udarbejde tekniske tegninger og modeller",
+      "wave": "Senere",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Desktopsoftware, formater og GPU kan kræve særskilt løsning",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-152",
+      "category": "Compliance, faciliteter og brancher",
+      "name": "Laboratoriestyring LIMS",
+      "purpose": "Følge prøver, analyser og sporbarhed",
+      "wave": "Reguleret",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Validering og branchekrav før produktvalg",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-153",
+      "category": "Compliance, faciliteter og brancher",
+      "name": "Klinik- og journalsystem",
+      "purpose": "Håndtere kliniske forløb og journaler",
+      "wave": "Reguleret",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Helbredsdata, autorisation og sektorspecifik vurdering",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-154",
+      "category": "Compliance, faciliteter og brancher",
+      "name": "Hotel- og reservationssystem",
+      "purpose": "Styre værelser, ophold og bookingkanaler",
+      "wave": "Senere",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Channel manager og betalingsintegration",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-155",
+      "category": "Compliance, faciliteter og brancher",
+      "name": "Medlems- og foreningssystem",
+      "purpose": "Følge medlemmer, kontingenter og arrangementer",
+      "wave": "Senere",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Rettigheder, børnedata og betaling efter behov",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-156",
+      "category": "Compliance, faciliteter og brancher",
+      "name": "Transportplanlægning",
+      "purpose": "Planlægge ture, last og leveringer",
+      "wave": "Reguleret",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Rute-, køre-/hviletids- og telematikbehov",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-157",
+      "category": "Compliance, faciliteter og brancher",
+      "name": "ESG- og klimadata",
+      "purpose": "Samle aktivitetsdata og beregninger",
+      "wave": "Reguleret",
+      "strategy": "Undersøg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Versionsstyrede faktorer og gældende rapporteringskrav",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-158",
+      "category": "Skalering, kontinuitet og kontrolleret selvreparation",
+      "name": "Distribueret klyngedrift",
+      "purpose": "Fordele workloads over flere servere og fejldomæner",
+      "wave": "Kerne",
+      "strategy": "Integrér",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Quorum og N+1 skal bevises i DKC-038",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-159",
+      "category": "Skalering, kontinuitet og kontrolleret selvreparation",
+      "name": "Service discovery og intern trafik",
+      "purpose": "Finde tjenester og beskytte kommunikation mellem servere",
+      "wave": "Kerne",
+      "strategy": "Integrér",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Redundant ingress/DNS og faktiske netværkspolitikker",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-160",
+      "category": "Skalering, kontinuitet og kontrolleret selvreparation",
+      "name": "Database-HA og PITR",
+      "purpose": "Bevare transaktioner og gendanne til valgt tidspunkt",
+      "wave": "Kerne",
+      "strategy": "Integrér",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Fencing, consistency og RPO pr. fejltype",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-161",
+      "category": "Skalering, kontinuitet og kontrolleret selvreparation",
+      "name": "Replikeret fil- og objektlager",
+      "purpose": "Bevare filer ved host- eller diskfejl",
+      "wave": "Kerne",
+      "strategy": "Integrér",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Valideret storageprofil og checksums",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-162",
+      "category": "Skalering, kontinuitet og kontrolleret selvreparation",
+      "name": "Holdbar eventbus",
+      "purpose": "Udveksle hændelser og opgaver mellem tjenester",
+      "wave": "Kerne",
+      "strategy": "Integrér",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Bekræftelser, replay, outbox og idempotency",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-163",
+      "category": "Skalering, kontinuitet og kontrolleret selvreparation",
+      "name": "Deduplikering og backupkatalog",
+      "purpose": "Reducere kopier og bevare verificerbar gendannelse",
+      "wave": "Kerne",
+      "strategy": "Integrér",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Tenantgrænser, retention og sikker prune",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-164",
+      "category": "Skalering, kontinuitet og kontrolleret selvreparation",
+      "name": "AI-immutable datalager",
+      "purpose": "Beskytte udvalgte versioner mod AI-ændring og sletning",
+      "wave": "Kerne",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Storage- og KMS-kontrol uden for AI-rettigheder",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-165",
+      "category": "Skalering, kontinuitet og kontrolleret selvreparation",
+      "name": "Runbook- og healingcontroller",
+      "purpose": "Udføre begrænset selvreparation med fallback",
+      "wave": "Kerne",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Versionsbundet menneskelig godkendelse og fuldt auditspor",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-166",
+      "category": "Skalering, kontinuitet og kontrolleret selvreparation",
+      "name": "Change- og releasekalender",
+      "purpose": "Koordinere godkendte ændringer og vedligehold",
+      "wave": "Kerne",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Standard, normal og emergency change har tydelige autoriteter",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-167",
+      "category": "Skalering, kontinuitet og kontrolleret selvreparation",
+      "name": "Problem- og known-error-register",
+      "purpose": "Følge årsager og gentagne servicefejl",
+      "wave": "Kerne",
+      "strategy": "Integrér",
+      "candidates": [
+        "GLPI"
+      ],
+      "source_urls": [
+        "https://www.glpi-project.org/en/"
+      ],
+      "gate": "Kandidatens procesdækning verificeres før valg",
+      "selection_status": "candidate_not_approved"
+    },
+    {
+      "id": "APP-168",
+      "category": "Skalering, kontinuitet og kontrolleret selvreparation",
+      "name": "ITSC- og katastrofeberedskab",
+      "purpose": "Prioritere og øve genetablering af forretningsservices",
+      "wave": "Kerne",
+      "strategy": "Byg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Menneskelig ejer og uafhængig recoveryadgang",
+      "selection_status": "design_or_discovery_required"
+    },
+    {
+      "id": "APP-169",
+      "category": "Skalering, kontinuitet og kontrolleret selvreparation",
+      "name": "Kapacitet og servicelevels",
+      "purpose": "Måle belastning, vækst og leveret tilgængelighed",
+      "wave": "Kerne",
+      "strategy": "Udbyg",
+      "candidates": [],
+      "source_urls": [],
+      "gate": "Målte SLOer pr. kundepakke og fejlsituation",
+      "selection_status": "design_or_discovery_required"
+    }
+  ],
+  "plan_revision": 5
+}

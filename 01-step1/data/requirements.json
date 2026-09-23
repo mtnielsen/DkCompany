@@ -1,0 +1,175 @@
+{
+  "plan_revision": 5,
+  "requirements": [
+    {
+      "id": "REQ-01",
+      "requirement": "Identity, tenant isolation and authorization everywhere",
+      "tasks": [
+        "DKC-003",
+        "DKC-006",
+        "DKC-007",
+        "DKC-060"
+      ],
+      "implementation_status": "unverified"
+    },
+    {
+      "id": "REQ-02",
+      "requirement": "One immutable role per agent; separate human approval",
+      "tasks": [
+        "DKC-004",
+        "DKC-005",
+        "DKC-055"
+      ],
+      "implementation_status": "unverified"
+    },
+    {
+      "id": "REQ-03",
+      "requirement": "Easy installation and configuration",
+      "tasks": [
+        "DKC-053",
+        "DKC-054",
+        "DKC-062"
+      ],
+      "implementation_status": "unverified"
+    },
+    {
+      "id": "REQ-04",
+      "requirement": "Modularity and supported component replacement",
+      "tasks": [
+        "DKC-023",
+        "DKC-053",
+        "DKC-059",
+        "DKC-061"
+      ],
+      "implementation_status": "unverified"
+    },
+    {
+      "id": "REQ-05",
+      "requirement": "Built-in/BYO databases, source connectors and external backup",
+      "tasks": [
+        "DKC-008",
+        "DKC-016",
+        "DKC-056",
+        "DKC-057"
+      ],
+      "implementation_status": "unverified"
+    },
+    {
+      "id": "REQ-06",
+      "requirement": "HA, persistence, consistency, recovery and safe deduplication",
+      "tasks": [
+        "DKC-037",
+        "DKC-038",
+        "DKC-039",
+        "DKC-040",
+        "DKC-041",
+        "DKC-042",
+        "DKC-043",
+        "DKC-050",
+        "DKC-051",
+        "DKC-052"
+      ],
+      "implementation_status": "unverified"
+    },
+    {
+      "id": "REQ-07",
+      "requirement": "ITSM, bounded self-healing and human escalation",
+      "tasks": [
+        "DKC-044",
+        "DKC-045",
+        "DKC-046",
+        "DKC-052"
+      ],
+      "implementation_status": "unverified"
+    },
+    {
+      "id": "REQ-08",
+      "requirement": "AI-immutable data and protected audit",
+      "tasks": [
+        "DKC-009",
+        "DKC-047",
+        "DKC-048",
+        "DKC-049"
+      ],
+      "implementation_status": "unverified"
+    },
+    {
+      "id": "REQ-09",
+      "requirement": "Optional restricted host/OS management",
+      "tasks": [
+        "DKC-058"
+      ],
+      "implementation_status": "unverified"
+    },
+    {
+      "id": "REQ-10",
+      "requirement": "Privacy, data lifecycle and legal owner decisions",
+      "tasks": [
+        "DKC-019",
+        "DKC-020",
+        "DKC-021",
+        "DKC-022"
+      ],
+      "implementation_status": "unverified"
+    },
+    {
+      "id": "REQ-11",
+      "requirement": "Communications, HR, BI and Reporting with shared security",
+      "tasks": [
+        "DKC-023",
+        "DKC-035",
+        "DKC-060"
+      ],
+      "implementation_status": "unverified"
+    },
+    {
+      "id": "REQ-12",
+      "requirement": "Software testing and trustworthy release evidence",
+      "tasks": [
+        "DKC-018",
+        "DKC-063"
+      ],
+      "implementation_status": "unverified"
+    },
+    {
+      "id": "REQ-13",
+      "requirement": "Continuous security checks, inventory and vulnerability response",
+      "tasks": [
+        "DKC-014",
+        "DKC-064"
+      ],
+      "implementation_status": "unverified"
+    },
+    {
+      "id": "REQ-14",
+      "requirement": "Independent scoped penetration assessment",
+      "tasks": [
+        "DKC-065"
+      ],
+      "implementation_status": "unverified"
+    },
+    {
+      "id": "REQ-15",
+      "requirement": "Dashboard/API-consumable operations data",
+      "tasks": [
+        "DKC-017",
+        "DKC-049",
+        "DKC-066"
+      ],
+      "implementation_status": "unverified"
+    },
+    {
+      "id": "REQ-16",
+      "requirement": "One complete module, verified recovery and gradual expansion",
+      "tasks": [
+        "DKC-024",
+        "DKC-025",
+        "DKC-026",
+        "DKC-032",
+        "DKC-033",
+        "DKC-062"
+      ],
+      "implementation_status": "unverified"
+    }
+  ]
+}
