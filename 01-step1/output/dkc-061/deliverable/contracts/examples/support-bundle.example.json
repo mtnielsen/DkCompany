@@ -1,0 +1,82 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "SupportBundle",
+  "metadata": {
+    "name": "support-bundle-acme-prod",
+    "version": "1.0.0",
+    "generatedAt": "2026-03-01T00:00:00Z",
+    "description": "Redigeret supportbundle med diagnostik uden hemmeligheder eller ikke-godkendt HR-indhold.",
+    "installationId": "acme-prod"
+  },
+  "policyRef": "support/policy.json",
+  "redacted": true,
+  "secretScan": "pass",
+  "hrScan": "pass",
+  "collected": [
+    {
+      "id": "installer-status",
+      "source": "configuration/installer-state.json",
+      "dataClass": "configuration",
+      "digest": "39dee81be8c42626cdbdf952d8ea194e60e063933f87504f9a95cc3f9b6f52ff"
+    },
+    {
+      "id": "release-version",
+      "source": "catalog/releases.json",
+      "dataClass": "public",
+      "digest": "b0fea15ec745c3901f60b10748584c34bfedd064aa8a867b8bbbfa5e84c9d235"
+    },
+    {
+      "id": "component-versions",
+      "source": "catalog/components/",
+      "dataClass": "public",
+      "digest": "09fdfd028d2aebdb519c9ea1d50d60f463693f908dab1f4a49c195d6e73a5035"
+    },
+    {
+      "id": "preflight-checks",
+      "source": "installer preflight",
+      "dataClass": "operational",
+      "digest": "89150a4f0790399e329ef121046a1bfe04376afb27c2bbe96d1df4ccb749a5b6"
+    }
+  ],
+  "excluded": [
+    {
+      "id": "migration-status",
+      "reason": "ikke indsamlet i denne bundle"
+    },
+    {
+      "id": "lifecycle-report",
+      "reason": "ikke indsamlet i denne bundle"
+    }
+  ],
+  "remoteAccess": {
+    "enabled": false,
+    "hiddenAccess": false,
+    "consentRef": null,
+    "ttlMinutes": null
+  },
+  "diagnostics": {
+    "redacted": true,
+    "secretScan": "pass",
+    "artifactRef": "support://acme-prod/bundle"
+  },
+  "content": {
+    "installer-status": {
+      "status": "done",
+      "steps": 8,
+      "apiKey": "[REDACTED]"
+    },
+    "release-version": {
+      "release": "1.4.0",
+      "channel": "stable"
+    },
+    "component-versions": {
+      "platform-core": "1.4.0",
+      "identity-broker": "1.2.0"
+    },
+    "preflight-checks": {
+      "ok": true,
+      "checks": 24
+    }
+  },
+  "digest": "6b261c4a393e918f8ed7d90ec4701fa00554dfe91de2056249fe56bef341e3d0"
+}

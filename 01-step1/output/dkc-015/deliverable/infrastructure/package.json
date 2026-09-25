@@ -1,0 +1,10 @@
+{
+  "name": "dkcompany-infrastructure",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "DKC-015: infrastrukturplan, OpenTofu-IaC, miljøadskillelse, netværksisolering, secret-injektion, break-glass og rigtig drift foer staging.",
+  "scripts": {
+    "test": "node --test"
+  }
+}

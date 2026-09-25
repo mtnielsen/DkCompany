@@ -1,0 +1,10 @@
+{
+  "name": "dkcompany-chaos",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "DKC-051: automatiseret fejl- og katastrofematrix med hosttab, quorumtab, partition, databasefailover, diskfuld, korruption, kø-replay, kontroltjenestetab, site-restore, dedup-prune, KMS-utilgængelighed, immutable-bypass og healingstorm.",
+  "scripts": {
+    "test": "node --test"
+  }
+}

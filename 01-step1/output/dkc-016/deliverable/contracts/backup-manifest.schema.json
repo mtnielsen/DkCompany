@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/backup-manifest.schema.json",
+  "title": "Backup Manifest",
+  "description": "DKC-016: et krypteret backup af database, objekter og nødvendig konfiguration med separat nøgleadgang. Manifestet indeholder checksums og metadata — aldrig nøglen eller klartekst-persondata.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "backupId", "tenantId", "createdAt", "source", "encryption", "components", "checksums", "suppression", "objectives", "retentionDays", "auditRef"],
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "BackupManifest" },
+    "backupId": { "type": "string", "format": "uuid" },
+    "tenantId": { "type": "string", "minLength": 1 },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["moduleRef", "engine", "snapshotMethod", "schemaVersion"],
+      "properties": {
+        "moduleRef": { "type": "string", "minLength": 1 },
+        "serviceClassRef": { "type": ["string", "null"] },
+        "engine": { "type": "string", "minLength": 1 },
+        "schemaVersion": { "type": "string", "minLength": 1 },
+        "snapshotMethod": { "type": "string", "minLength": 1 }
+      }
+    },
+    "encryption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "keyId", "keySeparated", "storeContainsKey"],
+      "properties": {
+        "algorithm": { "enum": ["aes-256-gcm"] },
+        "keyId": { "type": "string", "minLength": 1 },
+        "keySeparated": { "const": true, "description": "Nøglen ligger i et andet magasin end backup-lageret." },
+        "storeContainsKey": { "const": false, "description": "Backup-lageret må ikke indeholde krypteringsnøglen." }
+      }
+    },
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "name", "uri", "sha256", "bytes", "ciphertextSha256", "bytesEncrypted", "encryption"],
+        "properties": {
+          "kind": { "enum": ["database", "objects", "config"] },
+          "name": { "type": "string", "minLength": 1 },
+          "uri": { "type": "string", "minLength": 1 },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "bytes": { "type": "integer", "minimum": 0 },
+          "ciphertextSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "bytesEncrypted": { "type": "integer", "minimum": 0 },
+          "encryption": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["algorithm", "keyId", "iv", "authTag"],
+            "properties": {
+              "algorithm": { "enum": ["aes-256-gcm"] },
+              "keyId": { "type": "string", "minLength": 1 },
+              "iv": { "type": "string", "pattern": "^[a-f0-9]{24}$" },
+              "authTag": { "type": "string", "pattern": "^[a-f0-9]{32}$" }
+            }
+          }
+        }
+      }
+    },
+    "checksums": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "manifestDigest"],
+      "properties": {
+        "algorithm": { "const": "sha256" },
+        "manifestDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "suppression": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ledgerRef", "ledgerDigest"],
+      "properties": {
+        "ledgerRef": { "type": "string", "minLength": 1, "description": "Reference til suppressionsjournalen uden for backup-lageret." },
+        "ledgerDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$", "description": "Journalens hash-hoved da backupen blev taget." }
+      }
+    },
+    "objectives": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rpoTargetMinutes", "rtoTargetMinutes", "restoreOrder"],
+      "properties": {
+        "rpoTargetMinutes": { "type": "number", "minimum": 0 },
+        "rtoTargetMinutes": { "type": "number", "minimum": 0 },
+        "restoreOrder": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "retentionDays": { "type": "integer", "minimum": 1 },
+    "auditRef": { "type": "string", "minLength": 1 }
+  }
+}

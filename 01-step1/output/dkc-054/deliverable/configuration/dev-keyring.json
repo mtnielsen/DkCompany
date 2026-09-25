@@ -1,0 +1,14 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ConfigurationKeyring",
+  "description": "Syntetisk udviklingsnøglesæt til den signerede installationsplan. Nøglerne er bevidst offentlige testfixtures og må aldrig bruges i produktion. I produktion leveres signeringsnøgler af KMS/HSM (ekstern integration).",
+  "usage": "development-fixture-only",
+  "keys": [
+    {
+      "keyId": "installer-example-key",
+      "secret": "dkc054-installer-example-key",
+      "usage": "development-fixture-only",
+      "createdAt": "2026-09-01T00:00:00Z"
+    }
+  ]
+}

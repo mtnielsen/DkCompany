@@ -1,0 +1,83 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "AcceptanceGatePolicy",
+  "metadata": {
+    "name": "acceptance-gate-policy-example",
+    "version": "1.0.0",
+    "description": "Eksempel på en profilbevidst gate-politik med fælles gates og en særskilt HA-gate.",
+    "accountableHuman": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" }
+  },
+  "freshnessDays": 30,
+  "gates": [
+    {
+      "id": "security",
+      "title": "Fælles sikkerhedsgate",
+      "kind": "common",
+      "appliesWhen": { "always": true },
+      "requiresCapabilities": ["identity-verification", "installer-configuration"],
+      "requirementRefs": ["REQ-IDENTITY-001", "REQ-INSTALL-001"],
+      "checks": ["identity-test", "installer-plan"],
+      "journeys": ["install", "configure", "add-remove", "upgrade", "provider-switch"],
+      "mandatory": true,
+      "owner": { "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer" }
+    },
+    {
+      "id": "privacy",
+      "title": "Fælles privacygate",
+      "kind": "common",
+      "appliesWhen": { "always": true },
+      "requiresCapabilities": ["privacy"],
+      "requirementRefs": ["REQ-PRIVACY-001"],
+      "checks": ["privacy-check"],
+      "journeys": ["exit"],
+      "mandatory": true,
+      "owner": { "subject": "oidc|ditte.dpo", "name": "Ditte DPO", "role": "Data Protection Officer" }
+    },
+    {
+      "id": "restore",
+      "title": "Fælles restoregate",
+      "kind": "common",
+      "appliesWhen": { "always": true },
+      "requiresCapabilities": ["backup"],
+      "requirementRefs": ["REQ-BACKUP-001"],
+      "checks": ["backup-check"],
+      "journeys": ["recovery"],
+      "mandatory": true,
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" }
+    },
+    {
+      "id": "role",
+      "title": "Fælles rollegate",
+      "kind": "common",
+      "appliesWhen": { "always": true },
+      "requiresCapabilities": ["agent-registry"],
+      "requirementRefs": ["REQ-AGENT-ROLE-001"],
+      "checks": ["agent-registry-check"],
+      "journeys": ["escalation"],
+      "mandatory": true,
+      "owner": { "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer" }
+    },
+    {
+      "id": "ha",
+      "title": "HA-gate",
+      "kind": "profile",
+      "appliesWhen": { "profileType": "multiple-servers" },
+      "requiresCapabilities": ["ha-cluster"],
+      "requirementRefs": ["REQ-HA-001"],
+      "checks": ["ha-check"],
+      "journeys": ["install"],
+      "mandatory": true,
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" }
+    }
+  ],
+  "roleSeparation": {
+    "checks": ["agent-registry-check"],
+    "rejections": ["role-rotation", "alias", "subagent"]
+  },
+  "ownerAcceptance": {
+    "registryRef": "distribution/acceptance/owner-acceptance.json",
+    "requireForEveryActiveGate": true,
+    "maxAgeDays": 30,
+    "acceptedByRoles": ["Platform Owner", "Security Officer", "Data Protection Officer"]
+  }
+}

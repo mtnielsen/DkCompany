@@ -1,0 +1,69 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "IdentityTrust",
+  "metadata": {
+    "name": "platform-identity-trust",
+    "version": "1.0.0",
+    "description": "Fælles identitets- og tillidsmodel: OIDC til mennesker, SPIFFE til tjenester og lokalt skygge-ID uden passwords hvor en upstream kræver det.",
+    "accountableHuman": {
+      "subject": "oidc|gitte.gundersen",
+      "name": "Gitte Gundersen",
+      "role": "Security Owner"
+    },
+    "labels": { "scope": "platform" }
+  },
+  "userAuthentication": {
+    "protocol": "oidc",
+    "issuer": "https://id.example.org/realms/platform",
+    "clientId": "dkcompany-portal",
+    "mfa": "required",
+    "pkceRequired": true,
+    "subjectClaim": "sub",
+    "groupsClaim": "groups"
+  },
+  "workloadIdentity": {
+    "protocol": "spiffe",
+    "trustDomain": "platform.example.org",
+    "credentialMode": "just-in-time",
+    "maxCredentialTtlSeconds": 900,
+    "audience": "platform-internal"
+  },
+  "shadowIdentity": {
+    "enabled": true,
+    "passwordMode": "none",
+    "localPasswordStore": false,
+    "upstreams": ["mattermost", "nextcloud"],
+    "justification": "Upstreams kræver en lokal brugerrække. Skygge-ID'et spejler OIDC-identiteten og har intet password.",
+    "lifecycle": "created-on-demand"
+  },
+  "trustRoots": [
+    {
+      "id": "platform-oidc",
+      "type": "oidc-issuer",
+      "uri": "https://id.example.org/realms/platform",
+      "owner": { "subject": "oidc|gitte.gundersen", "name": "Gitte Gundersen", "role": "Security Owner" },
+      "purpose": "Autentifikation af mennesker",
+      "revocationUrl": "https://id.example.org/realms/platform/protocol/openid-connect/logout"
+    },
+    {
+      "id": "platform-spiffe",
+      "type": "spiffe-trust-domain",
+      "uri": "platform.example.org",
+      "owner": { "subject": "oidc|gitte.gundersen", "name": "Gitte Gundersen", "role": "Security Owner" },
+      "purpose": "Workload-identitet for tjenester"
+    }
+  ],
+  "tenantBinding": {
+    "source": "oidc-claim",
+    "claim": "tenant_id",
+    "requireTenantClaim": true,
+    "clientSelectable": false
+  },
+  "ambiguityPolicy": "reject",
+  "breakGlass": {
+    "procedure": "Menneskelig nødadgang via offline administratornøgle og auditeret konsoladgang hos hostingleverandøren.",
+    "owner": { "subject": "oidc|gitte.gundersen", "name": "Gitte Gundersen", "role": "Security Owner" },
+    "audited": true,
+    "offlineInstructions": "Opbevares i fysisk safe; proceduren kræver to personer og efterfølgende hændelsesgennemgang."
+  }
+}

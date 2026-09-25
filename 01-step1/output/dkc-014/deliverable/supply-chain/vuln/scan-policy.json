@@ -1,0 +1,15 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "VulnerabilityPolicy",
+  "metadata": {
+    "name": "npm-afhaengigheder",
+    "version": "1.0.0",
+    "description": "DKC-014: hvilke alvorlighedsgrader der blokerer en release, og hvilke tidsbegrænsede undtagelser et navngivet menneske har godkendt.",
+    "accountableHuman": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Security Owner" }
+  },
+  "ecosystem": "npm",
+  "failOn": ["critical", "high"],
+  "maxCacheAgeDays": 30,
+  "maxExceptionDays": 90,
+  "exceptions": []
+}

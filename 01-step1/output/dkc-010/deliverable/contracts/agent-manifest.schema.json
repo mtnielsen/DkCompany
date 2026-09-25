@@ -1,0 +1,223 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/agent-manifest.schema.json",
+  "title": "Agent Manifest",
+  "description": "Deklarerer en AI-agent som principal i platformen: hvem den er, hvad den må, hvornår den skal eskalere, og hvilket menneske der bærer ansvaret. En agent uden gyldigt manifest må ikke starte.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "role", "metadata", "identity", "scope", "capabilities", "escalation", "model", "oversight"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "AgentManifest" },
+    "role": {
+      "enum": ["observer", "planner", "implementer", "verifier", "executor", "auditor"],
+      "description": "DKC-055: præcis én uforanderlig rolle pr. agentidentitet. En agent må ikke kombinere planlægning, implementering, uafhængig kontrol og eksekvering. En godkenderrolle kan ikke tildeles en AI; godkendelse er menneskelig."
+    },
+
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "accountableHuman", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{3,63}$" },
+        "version": { "type": "string", "description": "SemVer. Ændring af capabilities kræver major bump." },
+        "description": { "type": "string" },
+        "accountableHuman": {
+          "type": "object",
+          "description": "NIS2/AI Act art. 14: der skal være et navngivet menneske, ikke et team-alias.",
+          "required": ["subject", "role"],
+          "properties": {
+            "subject": { "type": "string", "description": "OIDC sub for den ansvarlige person" },
+            "role": { "type": "string" }
+          }
+        },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+
+    "identity": {
+      "type": "object",
+      "description": "Agenten er en principal i IAM, ikke en feature i en app. Ingen delte servicekonti.",
+      "required": ["spiffeId", "credentialMode"],
+      "additionalProperties": false,
+      "properties": {
+        "spiffeId": { "type": "string", "pattern": "^spiffe://" },
+        "credentialMode": {
+          "const": "just-in-time",
+          "description": "Stående rettigheder er forbudt. Credentials udstedes pr. opgave og udløber."
+        },
+        "maxCredentialTtlSeconds": { "type": "integer", "minimum": 60, "maximum": 3600, "default": 900 }
+      }
+    },
+
+    "scope": {
+      "type": "object",
+      "required": ["ownedComponents", "environments"],
+      "additionalProperties": false,
+      "properties": {
+        "ownedComponents": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "description": "Modul-ID fra module manifest" }
+        },
+        "environments": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "enum": ["dev", "staging", "prod"] }
+        },
+        "dataCategories": {
+          "type": "array",
+          "description": "Hvilke datakategorier agenten overhovedet kan komme i kontakt med. Bruges til DPIA-scoping.",
+          "items": { "enum": ["none", "operational", "pseudonymised", "personal", "special-category"] }
+        }
+      }
+    },
+
+    "capabilities": {
+      "type": "array",
+      "description": "Kun deklarative verber fra ops-kontrakten. Fri shell-adgang er ikke et verbum og kan ikke deklareres.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["verb", "target", "autonomyClass"],
+        "additionalProperties": false,
+        "properties": {
+          "verb": {
+            "type": "string",
+            "enum": [
+              "observe.read", "observe.correlate", "diagnose", "propose",
+              "restart", "scale", "rotate-credential", "drain",
+              "upgrade.dry-run", "upgrade.patch", "upgrade.minor", "upgrade.major",
+              "config.apply", "backup", "restore", "verify-restore",
+              "migrate.schema", "rollback",
+              "subject.locate", "subject.export", "subject.erase"
+            ]
+          },
+          "target": { "type": "string", "description": "Komponent eller glob. Skal være inden for scope.ownedComponents." },
+          "executor": { "type": "string", "description": "DKC-010: den tilsigtede executor-tjenestes audience (fx 'module:dummy-ok' eller en SPIFFE-ID). Credentialet bindes til denne audience, så et token kun virker hos den rigtige modtager. Uden feltet udledes audience fra target." },
+          "autonomyClass": {
+            "enum": ["A0", "A1", "A2", "A3"],
+            "description": "A0=fri, A1=auto m. bevis, A2=auto m. vindue og auto-rollback, A3=kræver menneskelig godkendelse. A4 kan IKKE deklareres — det er handlinger ingen agent må udføre (ændring af policy, audit-log, egne rettigheder eller gates)."
+          },
+          "maxBlastRadius": {
+            "type": "object",
+            "properties": {
+              "tenants": { "type": "integer", "minimum": 0 },
+              "services": { "type": "integer", "minimum": 0 },
+              "personalDataRecords": { "type": "integer", "minimum": 0 }
+            }
+          },
+          "requiredEvidence": {
+            "type": "array",
+            "description": "Deterministisk bevis der SKAL foreligge før verbet må udføres eller indsendes.",
+            "items": { "enum": ["policy-allow", "tests-pass", "dry-run-clean", "rollback-tested", "restore-verified", "scan-clean"] }
+          }
+        }
+      }
+    },
+
+    "escalation": {
+      "type": "object",
+      "description": "Hvornår agenten skal stoppe og aflevere til en anden agent eller et menneske.",
+      "required": ["confidenceThreshold", "repeatFailureLimit", "onGovernanceUnreachable"],
+      "additionalProperties": false,
+      "properties": {
+        "confidenceThreshold": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.8 },
+        "repeatFailureLimit": { "type": "integer", "minimum": 1, "default": 3, "description": "Loop-detektion: samme fix N gange = eskalér, symptomet er ikke årsagen." },
+        "onGovernanceUnreachable": {
+          "const": "halt",
+          "description": "Dødemandsgreb. Kan ikke nås PDP eller audit-log: agenten stopper. Den fortsætter aldrig uden governance."
+        },
+        "budget": {
+          "type": "object",
+          "properties": {
+            "maxTokens": { "type": "integer", "minimum": 1 },
+            "maxCostEur": { "type": "number", "minimum": 0 },
+            "maxWallClockSeconds": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "escalateTo": {
+          "type": "array",
+          "items": { "type": "string", "description": "Agent-ref eller OIDC-gruppe" }
+        }
+      }
+    },
+
+    "model": {
+      "type": "object",
+      "description": "AI Act transparens: beslutninger skal kunne rekonstrueres.",
+      "required": ["provider", "model", "promptRef"],
+      "additionalProperties": false,
+      "properties": {
+        "provider": { "type": "string" },
+        "model": { "type": "string" },
+        "modelVersion": { "type": "string" },
+        "promptRef": { "type": "string", "description": "Git-sti til system prompt" },
+        "promptSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "gatewayRef": { "type": "string", "description": "AI-gateway. Direkte leverandørkald udenom gateway er forbudt." }
+      }
+    },
+
+    "review": {
+      "type": "object",
+      "description": "Reviewer-agent forbedrer forslag FØR mennesket ser dem. Den er ikke en sikkerhedskontrol man kan læne sig på.",
+      "additionalProperties": false,
+      "properties": {
+        "reviewerAgentRef": { "type": "string" },
+        "requireDifferentVendor": {
+          "const": true,
+          "description": "Samme model i en anden prompt giver korrelerede fejl, ikke uafhængighed."
+        },
+        "withholdAuthorRationale": {
+          "const": true,
+          "description": "Reviewer ser ændring og rådata — ikke forfatterens begrundelse. Ellers ankrer den."
+        },
+        "reviewerMayApprove": {
+          "const": false,
+          "description": "Reviewer kan kun flagge eller afvise. At hæve autonomiklasse er A4-territorium."
+        }
+      }
+    },
+
+    "oversight": {
+      "type": "object",
+      "required": ["killSwitch", "approverGroups"],
+      "additionalProperties": false,
+      "properties": {
+        "killSwitch": {
+          "type": "object",
+          "required": ["perAgent", "global"],
+          "properties": {
+            "perAgent": { "const": true },
+            "global": { "const": true }
+          }
+        },
+        "approverGroups": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "description": "OIDC-grupper der må godkende A3 for denne agent" }
+        },
+        "requiredTrainingModules": {
+          "type": "array",
+          "description": "AI Act art. 4: godkendere skal have gennemført disse moduler. Håndhæves af approval-servicen.",
+          "items": { "type": "string" }
+        },
+        "dualControlRequired": { "type": "boolean", "default": false }
+      }
+    },
+
+    "compliance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "controlRefs": {
+          "type": "array",
+          "description": "OSCAL control-IDs som denne agents kontroller bidrager til.",
+          "items": { "type": "string" }
+        },
+        "dpiaRef": { "type": "string" },
+        "modelCardRef": { "type": "string" }
+      }
+    }
+  }
+}

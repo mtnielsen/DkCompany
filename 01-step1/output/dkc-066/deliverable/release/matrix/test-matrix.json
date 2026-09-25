@@ -1,0 +1,1804 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "TestMatrix",
+  "metadata": {
+    "name": "platform-test-matrix",
+    "version": "1.11.0",
+    "description": "Krav-til-test-matrix for platformen: hvert obligatoriske krav mapper til navngivne checks eller til en eksplicit udestående uafhængig vurdering.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen"
+      }
+    },
+    "labels": {
+      "wave": "0"
+    }
+  },
+  "matrixVersion": "1.11.0",
+  "supportedEnvironments": [
+    "linux-amd64-node22",
+    "linux-arm64-node22",
+    "windows-wsl2-amd64-node22"
+  ],
+  "freshnessPolicy": {
+    "defaultDays": 30,
+    "maxDays": 90,
+    "notes": "Evidens ældre end kravets frist tæller som stale og kan ikke bestå en release-gate."
+  },
+  "thresholds": {
+    "requireAllMandatoryPass": true,
+    "allowImplementerEvidenceForRelease": false,
+    "maxOpenExceptions": 0,
+    "maxExceptionDays": 90,
+    "acceptedBy": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen"
+      }
+    },
+    "acceptedAt": "2026-09-23T08:00:00Z",
+    "notes": "Tærsklerne er foreslået og accepteret af Platform Owner. Ændringer kræver en ny version af matrixen og en ny menneskelig accept."
+  },
+  "stages": [
+    {
+      "id": "contract",
+      "title": "Kontrakt og lint",
+      "description": "Skemaer, kontrakteksempler og lint kører før noget andet.",
+      "blocking": true,
+      "commands": [
+        "make validate",
+        "make lint",
+        "make release-check"
+      ]
+    },
+    {
+      "id": "unit",
+      "title": "Enheds- og konformanstests",
+      "description": "Førstepartskode efterprøves deterministisk.",
+      "blocking": true,
+      "commands": [
+        "make test",
+        "make boundary-test",
+        "make persistence-test"
+      ]
+    },
+    {
+      "id": "authorization",
+      "title": "Autorisation og identitet",
+      "description": "Tenant, identitet, policy, godkendelser, credentials og værktøjsgrænse.",
+      "blocking": true,
+      "commands": [
+        "make tenant-test",
+        "make identity-test",
+        "make approval-test",
+        "make credentials-test",
+        "make tool-boundary-test"
+      ]
+    },
+    {
+      "id": "integration",
+      "title": "Integration mod testdobbelt",
+      "description": "Gateway, adaptere og modelprovider mod mock/loopback.",
+      "blocking": true,
+      "commands": [
+        "make gateway-test",
+        "make model-gateway-test",
+        "make adapter-test",
+        "make iam-adapter-test"
+      ]
+    },
+    {
+      "id": "installation",
+      "title": "Installation og migration",
+      "description": "Produktprofiler, dependency-resolver og versionerede migrationer.",
+      "blocking": true,
+      "commands": [
+        "make distribution-check",
+        "make distribution-test",
+        "make persistence-check"
+      ]
+    },
+    {
+      "id": "recovery",
+      "title": "Recovery og holdbarhed",
+      "description": "Audit, jobs og serviceklasser.",
+      "blocking": true,
+      "commands": [
+        "make audit-durability-test",
+        "make jobs-test",
+        "make continuity-test"
+      ]
+    },
+    {
+      "id": "baseline",
+      "title": "Samlet baseline og release-gate",
+      "description": "Alle checks køres, og release-gaten evaluerer evidensen. En grøn enhedstest er ikke produktionsstatus.",
+      "blocking": true,
+      "commands": [
+        "make baseline",
+        "make release-gate"
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "id": "REQ-TENANT-001",
+      "title": "Tenant isolation gennem kontrolplanet",
+      "description": "Tenant udledes af verificeret kontekst og håndhæves i API, database, queue, storage og gateway; ingen ressource kan læses på tværs af tenants.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": false,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "ac-2",
+        "gdpr-art32"
+      ],
+      "independentAssessment": null,
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "authorization",
+        "unit",
+        "contract"
+      ],
+      "checks": [
+        {
+          "id": "tenant-test",
+          "testTypes": [
+            "authorization",
+            "unit"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "tenant-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-IDENTITY-001",
+      "title": "Verificerbar identitet",
+      "description": "Mennesker via OIDC, tjenester via verificeret workload-identitet, sessioner og ingress; ingen lokal password-skygge uden livscyklus.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": false,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "ac-2",
+        "nis2-art21-2i"
+      ],
+      "independentAssessment": null,
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "authorization",
+        "unit",
+        "contract"
+      ],
+      "checks": [
+        {
+          "id": "identity-test",
+          "testTypes": [
+            "authorization",
+            "unit"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "architecture-test",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-APPROVAL-001",
+      "title": "Autentiske, ændringsbundne godkendelser",
+      "description": "Godkendelser er bundet til den præcise ændring, har unikke godkendere og verificeres hos tjenesten; en svag godkendelse afvises.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": false,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "ai-act-art14",
+        "nis2-art21-2i"
+      ],
+      "independentAssessment": null,
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "authorization",
+        "unit",
+        "contract"
+      ],
+      "checks": [
+        {
+          "id": "approval-test",
+          "testTypes": [
+            "authorization",
+            "unit"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "approval-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-AGENT-ROLE-001",
+      "title": "Præcis én uforanderlig rolle pr. agent",
+      "description": "En agent har præcis én rolle; handoff ændrer ikke rollen, og scheduler/runtime håndhæver det.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": false,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "ai-act-art14"
+      ],
+      "independentAssessment": null,
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "authorization",
+        "unit",
+        "contract"
+      ],
+      "checks": [
+        {
+          "id": "agent-registry-test",
+          "testTypes": [
+            "authorization",
+            "unit"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "agent-registry-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-AGENT-HANDOFF-001",
+      "title": "Verificeret agent-handoff",
+      "description": "Handoff mellem agenter er bundet til en registreret single-role agent og kan ikke eskalere privilegier.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": false,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "ai-act-art14",
+        "ai-act-art15"
+      ],
+      "independentAssessment": null,
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "end-to-end"
+      ],
+      "checks": [
+        {
+          "id": "agent-conformance-test",
+          "testTypes": [
+            "end-to-end"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-POLICY-001",
+      "title": "Default-deny policygrænse",
+      "description": "Enhver privilegeret handling spørger PDP; ugyldigt eller tvetydigt input afvises før en executor kan køre.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": false,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "nis2-art21-2a",
+        "ai-act-art9"
+      ],
+      "independentAssessment": null,
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "authorization",
+        "unit",
+        "contract"
+      ],
+      "checks": [
+        {
+          "id": "policy-test",
+          "testTypes": [
+            "authorization",
+            "unit"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "boundary-test",
+          "testTypes": [
+            "authorization",
+            "unit"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "policy-verify",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-AUDIT-001",
+      "title": "Holdbar audit og fail-closed handlinger",
+      "description": "Intent registreres før handling, outcome efter; journalen er hash-kædet, checkpointet eksternt og kan ikke deaktiveres for at få grønt.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": true,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "au-2",
+        "au-9",
+        "ai-act-art12"
+      ],
+      "independentAssessment": null,
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "recovery",
+        "unit",
+        "contract"
+      ],
+      "checks": [
+        {
+          "id": "audit-durability-test",
+          "testTypes": [
+            "recovery",
+            "unit"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "audit-durability-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "audit-service-test",
+          "testTypes": [
+            "unit"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-CREDENTIALS-001",
+      "title": "Kortlivede, scope-bundne rettigheder og nødstop",
+      "description": "Rettigheder er signerede, kortlivede og scope-bundne; tilbagekaldelse og nødstop er holdbare og fail-closed.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": false,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "nis2-art21-2h",
+        "nis2-art21-2i"
+      ],
+      "independentAssessment": null,
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "authorization",
+        "unit",
+        "contract"
+      ],
+      "checks": [
+        {
+          "id": "credentials-test",
+          "testTypes": [
+            "authorization",
+            "unit"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "credentials-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-TOOL-001",
+      "title": "Servervalideret værktøjsgrænse og injection-forsvar",
+      "description": "Typede værktøjer valideres serverside; ubetroet indhold adskilles, og et flersproget injection-korpus afvises.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": false,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "ai-act-art15"
+      ],
+      "independentAssessment": null,
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "authorization",
+        "unit",
+        "contract"
+      ],
+      "checks": [
+        {
+          "id": "tool-boundary-test",
+          "testTypes": [
+            "authorization",
+            "unit"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "tool-boundary-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-JOBS-001",
+      "title": "Genoptagelig og idempotent eksekvering",
+      "description": "Jobs har leases, idempotency-keys, retry og dead-letter, og en afbrudt kørsel kan genoptages uden dobbelteffekt.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": false,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "nis2-art21-2c"
+      ],
+      "independentAssessment": null,
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "recovery",
+        "unit",
+        "contract"
+      ],
+      "checks": [
+        {
+          "id": "jobs-test",
+          "testTypes": [
+            "recovery",
+            "unit"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "jobs-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-GATEWAY-001",
+      "title": "Modelgateway med routing, egress og budget",
+      "description": "Alle modelkald går gennem gatewayen; serverstyret routing efter tenant/dataklasse, atomiske budgetter og default-deny model-egress.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": false,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "ai-act-art9",
+        "nis2-art21-2d"
+      ],
+      "independentAssessment": null,
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "integration",
+        "unit",
+        "contract"
+      ],
+      "checks": [
+        {
+          "id": "gateway-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "gateway-test",
+          "testTypes": [
+            "integration"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "model-gateway-test",
+          "testTypes": [
+            "integration"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "budget-test",
+          "testTypes": [
+            "unit"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "model-egress-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-PERSIST-001",
+      "title": "Holdbar tilstand og versionerede migrationer",
+      "description": "Tilstand overlever genstart, migrationer er versionerede og reversible hvor muligt, og tenantgrænser håndhæves i databasen.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": false,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "cp-9",
+        "gdpr-art32"
+      ],
+      "independentAssessment": null,
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "migration",
+        "unit",
+        "contract"
+      ],
+      "checks": [
+        {
+          "id": "persistence-test",
+          "testTypes": [
+            "migration",
+            "unit"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "persistence-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-INSTALL-001",
+      "title": "Installationsprofiler og dependency-resolver",
+      "description": "Single-server, HA og enterprise er understøttede profiler; resolveren opdager cyklus, version, konflikt og ressourceknaphed før mutation.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": false,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "cm-2"
+      ],
+      "independentAssessment": null,
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "installation",
+        "unit",
+        "contract"
+      ],
+      "checks": [
+        {
+          "id": "distribution-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "distribution-test",
+          "testTypes": [
+            "installation",
+            "unit"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "distribution-preview",
+          "testTypes": [
+            "installation"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-CONTINUITY-001",
+      "title": "Recoverymål og serviceklasser",
+      "description": "Holdbarheds-, RPO-, RTO- og HA-mål er kontraktvaliderede og vedtaget af et menneske. Et erklæret niveau er ikke et målt niveau.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": false,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "cp-9",
+        "nis2-art21-2c"
+      ],
+      "independentAssessment": {
+        "required": true,
+        "reason": "Et målt serviceniveau kræver friske prober og failover-målinger på en levende klynge; det kan ikke udledes af en konfigurationsfil.",
+        "evidenceKind": "live-measurement"
+      },
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "recovery",
+        "contract"
+      ],
+      "checks": [
+        {
+          "id": "continuity-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "continuity-test",
+          "testTypes": [
+            "recovery"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-BACKUP-001",
+      "title": "Krypteret backup og gennemført gendannelsesøvelse",
+      "description": "Backup af database, objekter og nødvendig konfiguration er krypteret med en nøgle i et separat magasin. Gendannelsen sker i et isoleret miljø, verificeres med checksums og funktionelle checks, og slettede persondata genindføres ikke. Tid og datatab måles, og afvigelser spærrer pilotrelease.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": true,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "cp-9",
+        "nis2-art21-2c",
+        "gdpr-art5"
+      ],
+      "independentAssessment": {
+        "required": true,
+        "reason": "En produktionsøvelse med tab af den primære database kræver en levende klynge og et navngivet menneskes godkendelse; den kan ikke udledes af en lokal kørsel.",
+        "evidenceKind": "live-measurement"
+      },
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "recovery",
+        "authorization",
+        "contract"
+      ],
+      "checks": [
+        {
+          "id": "backup-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "backup-test",
+          "testTypes": [
+            "recovery",
+            "authorization"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "integration-backup-production-drill",
+          "testTypes": [
+            "integration"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-BACKUP-002",
+      "title": "Eksterne backupmål og bevaret recoveryhistorik",
+      "description": "Kunden kan vælge et uafhængigt backupmål. Målet kræver en credentials-reference, verificeret WORM før det kaldes immutable, TLS-verifikation i produktion og et andet fejl-/adgangsdomæne end primæret. Preflight viser credentials-, certifikat-, plads- og retention-fejl før godkendelse, og et skift af mål bevarer den gamle recoveryhistorik indtil retentionen er opfyldt. En ekstern datakilde erklæres ikke beskyttet, blot fordi en connector virker.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": true,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "cp-9",
+        "nis2-art21-2c",
+        "gdpr-art5"
+      ],
+      "independentAssessment": null,
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "contract",
+        "recovery",
+        "integration"
+      ],
+      "checks": [
+        {
+          "id": "backup-target-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "backup-target-test",
+          "testTypes": [
+            "recovery"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "integration-backup-external-target",
+          "testTypes": [
+            "integration"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-PRIVACY-001",
+      "title": "Privacy-verber og DSAR-fan-out",
+      "description": "locate/export/erase/legal_hold og retention.policy kan kaldes på tværs af moduler med ærlig partial-conformance.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": false,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "gdpr-art15-17",
+        "gdpr-art5",
+        "si-12"
+      ],
+      "independentAssessment": null,
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "end-to-end",
+        "authorization"
+      ],
+      "checks": [
+        {
+          "id": "conform-all",
+          "testTypes": [
+            "end-to-end"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "dsar-demo",
+          "testTypes": [
+            "end-to-end",
+            "authorization"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-PRIVACY-002",
+      "title": "Holdbar DSAR-sag og sikret eksport",
+      "description": "En DSAR er en holdbar, autoriseret sag med per-modul status (found/partial/unsupported/failed/unknown), genoptagelig fan-out, timeout/nedetid som partial/failed — aldrig fuld succes — og en eksport der er bundet til tenant, modtager, udløb og digest og som udelader andre personers data.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": true,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "gdpr-art15-17",
+        "gdpr-art5",
+        "si-12"
+      ],
+      "independentAssessment": null,
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "authorization",
+        "end-to-end"
+      ],
+      "checks": [
+        {
+          "id": "privacy-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "privacy-test",
+          "testTypes": [
+            "authorization",
+            "end-to-end"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "integration-privacy-live",
+          "testTypes": [
+            "integration"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-COMPLIANCE-001",
+      "title": "Kontrolmapping og OSCAL-evidens",
+      "description": "Kontroller er kortlagt maskinlæsbart mod NIS2/GDPR/AI Act, og evidens emitteres som OSCAL-assessment-results.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": false,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "nis2-art21-2f",
+        "gdpr-art30"
+      ],
+      "independentAssessment": null,
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "contract",
+        "end-to-end"
+      ],
+      "checks": [
+        {
+          "id": "compliance-test",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "compliance-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "oscal-evidence",
+          "testTypes": [
+            "end-to-end"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "evidence-test",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-OBSERVABILITY-001",
+      "title": "Dashboards og SLO fra modulmanifestet",
+      "description": "Prometheus-regler, Grafana-dashboards og telemetri genereres fra modulets SLO og er i sync.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": false,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "si-4"
+      ],
+      "independentAssessment": null,
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "contract",
+        "unit"
+      ],
+      "checks": [
+        {
+          "id": "observability-test",
+          "testTypes": [
+            "unit"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "observability-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "telemetry-test",
+          "testTypes": [
+            "unit"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-SECURITY-001",
+      "title": "Sårbarheds- og runtime-håndtering",
+      "description": "Fund fra Trivy/Falco/Wazuh normaliseres til sikkerhedsfund og indgår i evidensplanen. Levende scanninger er en uafhængig vurdering.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": true,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "ra-5",
+        "nis2-art21-2e"
+      ],
+      "independentAssessment": {
+        "required": true,
+        "reason": "Rigtige Trivy-, Falco- og Wazuh-kørsler i CI/klynge og en uafhængig vurdering kan ikke erstattes af committede samples.",
+        "evidenceKind": "independent-assessment"
+      },
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "contract",
+        "unit",
+        "integration"
+      ],
+      "checks": [
+        {
+          "id": "security-test",
+          "testTypes": [
+            "unit"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "security-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-MONITORING-001",
+      "title": "Reel overvågning, tenantadskilt telemetri og handlingsdygtige alarmer",
+      "description": "Metrics, logs og traces indsamles minimeret og kan kun læses for den verificerede tenants egne data. Hver sensor har ejer, friskhedsgrænse og runbook; gamle eller manglende data er ikke grøn sikkerhedsstatus. En fremkaldt tjenestefejl eller backupfejl udløser en alarm med ejer, eskalation og runbook hos en modtager, og forløbet dokumenteres uden rå persondata.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": true,
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      },
+      "controlRefs": [
+        "si-4",
+        "ra-5"
+      ],
+      "independentAssessment": {
+        "required": true,
+        "reason": "En rigtig Prometheus/Loki/OTel-backend og en rigtig pager-/webhook-kanal findes ikke i dette miljø; de er registreret som NOT RUN og kræver uafhængig driftsverifikation.",
+        "evidenceKind": "live-measurement"
+      },
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "contract",
+        "unit",
+        "authorization",
+        "integration"
+      ],
+      "checks": [
+        {
+          "id": "monitoring-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "monitoring-test",
+          "testTypes": [
+            "unit",
+            "authorization"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "monitoring-drill",
+          "testTypes": [
+            "authorization"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "integration-monitoring-backend",
+          "testTypes": [
+            "integration"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-TELEMETRY-API-001",
+      "title": "Autoriseret telemetri-API og udskiftelige dashboards",
+      "description": "Metrics/logs/traces, fund, testkørsler, recovery og agenthandlinger indtages gennem en versioneret envelope med stabile ressource-ID'er, og scope udledes server-side af den verificerede principal. Autoriserede read-API'er og read-only dashboard-adaptere giver tenant-scopede views. Sene, dublerede, replayede, malformede og utroværdige hændelser kan ikke forfalske pass, godkendelse eller healthy status; collector-nedbrud følger dokumenterede grænser, og tab af drifts-telemetri deaktiverer ikke den obligatoriske audit.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": true,
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      },
+      "controlRefs": [
+        "si-4",
+        "ra-5"
+      ],
+      "independentAssessment": {
+        "required": true,
+        "reason": "En rigtig OTel-/Prometheus-backend og en rigtig Grafana-/Loki-instans findes ikke i dette miljø; de er registreret som NOT RUN og kræver uafhængig driftsverifikation.",
+        "evidenceKind": "live-measurement"
+      },
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "contract",
+        "unit",
+        "authorization",
+        "integration"
+      ],
+      "checks": [
+        {
+          "id": "telemetry-api-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "telemetry-api-test",
+          "testTypes": [
+            "unit",
+            "authorization"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "telemetry-api-demo",
+          "testTypes": [
+            "authorization"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "integration-telemetry-backend",
+          "testTypes": [
+            "integration"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "integration-dashboard-adapter",
+          "testTypes": [
+            "integration"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-GITOPS-001",
+      "title": "Git som eneste ændringskanal",
+      "description": "Ændringer sker gennem git med policy-gates, drift opdages og føres tilbage, og commits har DCO sign-off.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": false,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "cm-2"
+      ],
+      "independentAssessment": null,
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "contract",
+        "unit"
+      ],
+      "checks": [
+        {
+          "id": "gitops-test",
+          "testTypes": [
+            "unit"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "gitops-verify",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "changelog-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-CURRICULUM-001",
+      "title": "Ejer-curriculum og menneskeligt tilsyn",
+      "description": "Ejere trænes i at afvise farlige forslag; curriculumet indeholder rigtige approval-payloads og afvisningsscenarier.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": false,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "at-2",
+        "ai-act-art4"
+      ],
+      "independentAssessment": null,
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "unit",
+        "contract"
+      ],
+      "checks": [
+        {
+          "id": "curriculum-test",
+          "testTypes": [
+            "unit"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "curriculum-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-REVIEW-001",
+      "title": "Adversarielt reviewer-lag",
+      "description": "Revieweren kan ikke godkende; dens effekt måles, så den ikke kun er prosa.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": false,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "ai-act-art14"
+      ],
+      "independentAssessment": null,
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "unit",
+        "contract"
+      ],
+      "checks": [
+        {
+          "id": "reviewer-test",
+          "testTypes": [
+            "unit"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "compliance-test",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-PERFORMANCE-001",
+      "title": "Ydeevne og belastning",
+      "description": "Systemet yder forudsigeligt under den forventede belastning for hver produktprofil.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": false,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "nis2-art21-2c"
+      ],
+      "independentAssessment": {
+        "required": true,
+        "reason": "Der findes endnu ingen kørende lasttest i repoet; en performancevurdering kræver et representativt miljø og uafhængig måling.",
+        "evidenceKind": "independent-assessment"
+      },
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "performance"
+      ],
+      "checks": []
+    },
+    {
+      "id": "REQ-SUPPLY-001",
+      "title": "Reproducerbare artefakter og beskyttet releasevej",
+      "description": "SBOM er deterministisk og digest-bundet, Dockerfiles er pinnet og hærdet, signaturer verificeres før deployment, pladsholder- og usignerede images afvises, og branch protection kræver CODEOWNERS, DCO-sign-off og kendte checks.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": true,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "nis2-art21-2d",
+        "nis2-art21-2e",
+        "nis2-art21-2h",
+        "ra-5"
+      ],
+      "independentAssessment": null,
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "contract",
+        "unit",
+        "integration"
+      ],
+      "checks": [
+        {
+          "id": "supply-chain-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "supply-chain-test",
+          "testTypes": [
+            "unit"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "supply-chain-vuln-check",
+          "testTypes": [
+            "unit"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "integration-container-build",
+          "testTypes": [
+            "integration"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-STAGING-001",
+      "title": "Reproducerbar staging med miljøadskillelse og rigtig drift",
+      "description": "En tom staginginstallation kan oprettes fra dokumenteret IaC og nødvendige secrets; dev/staging/prod er adskilt, workloads kan ikke nå andre kunders databaser, og faktisk drift opdages og føres tilbage.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": true,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "nis2-art21-2c",
+        "nis2-art21-2i",
+        "gdpr-art32",
+        "cp-9"
+      ],
+      "independentAssessment": null,
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "contract",
+        "unit",
+        "integration"
+      ],
+      "checks": [
+        {
+          "id": "infrastructure-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "infrastructure-test",
+          "testTypes": [
+            "unit"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "infrastructure-verify",
+          "testTypes": [
+            "unit"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "integration-staging-drift",
+          "testTypes": [
+            "integration"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "integration-staging-provision",
+          "testTypes": [
+            "integration"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-EVIDENCE-001",
+      "title": "Adskillelse af kontraktchecks, integration og driftsbevis",
+      "description": "Evidens bærer mode, commit, image-digest, miljø, upstream-version, run-ID og udløb. Et fixture-pass kan ikke give et produktionsbadge, udløbet eller forkert-bundet evidens afvises, og en manuel redigering af resultatet bryder digesten.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": true,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "nis2-art21-2f"
+      ],
+      "independentAssessment": null,
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "contract",
+        "integration"
+      ],
+      "checks": [
+        {
+          "id": "evidence-mode-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "evidence-mode-test",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "evidence-probe-staging",
+          "testTypes": [
+            "integration"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-VULN-001",
+      "title": "Kontinuerlig sikkerhedskontrol og sårbarhedslivscyklus",
+      "description": "Kode-, afhængigheds-, secret-, image-, IaC- og dynamiske risici findes og følges med normaliserede fund, dedup, eksponeringsvægtet prioritet, navngivet ejer, frister, menneskeligt accepteret restriance og uafhængig verifikation.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": true,
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner"
+      },
+      "controlRefs": [
+        "nis2-art21-2f"
+      ],
+      "independentAssessment": null,
+      "evidenceFreshnessDays": 14,
+      "testTypes": [
+        "contract",
+        "integration"
+      ],
+      "checks": [
+        {
+          "id": "vulnerability-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "vulnerability-test",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "integration-vulnerability-scan",
+          "testTypes": [
+            "integration"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-ADAPTER-001",
+      "title": "Fælles adapter-SDK og godkendelsestest",
+      "description": "Nye adaptere arver auth, tenant, PDP, audit, idempotens, health, privacy og versionsforhandling. Godkendelse kræver en kandidatrapport pr. eksakt version/edition, ærlig conformance pr. verbum, beskyttelse mod native admin-omgåelse og at manglende obligatorisk SSO eller uafklaret licens blokerer.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": true,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "nis2-art21-2f"
+      ],
+      "independentAssessment": null,
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "contract"
+      ],
+      "checks": [
+        {
+          "id": "adapter-sdk-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "adapter-sdk-test",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-ADAPTER-002",
+      "title": "Live integration og opgradering af adaptere",
+      "description": "Mattermost- og Keycloak-adapterne er pinnet til en eksakt upstream-version/edition, har en live-kører der skriver not-run uden bindinger og aldrig et falsk pass, afviser demo-identiteter uden for testprofilen, rapporterer partial/unsupported ærligt, og en opgradering kræver frisk verificeret backup samt en navngiven rollback-strategi.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": true,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "nis2-art21-2f"
+      ],
+      "independentAssessment": null,
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "contract",
+        "integration"
+      ],
+      "checks": [
+        {
+          "id": "adapter-live-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "adapter-live-test",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "integration-adapter-live",
+          "testTypes": [
+            "integration"
+          ],
+          "mustPass": true
+        }
+      ]
+    },
+    {
+      "id": "REQ-GOVERNANCE-001",
+      "title": "Release-gate, tærskler og producent-adskillelse",
+      "description": "Tærskler er ejergodkendte, resultatstatusser er distinkte, og en implementør kan ikke levere uafhængig verifikation.",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": true,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      },
+      "controlRefs": [
+        "nis2-art21-2f"
+      ],
+      "independentAssessment": null,
+      "evidenceFreshnessDays": 30,
+      "testTypes": [
+        "contract"
+      ],
+      "checks": [
+        {
+          "id": "release-check",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        },
+        {
+          "id": "release-test",
+          "testTypes": [
+            "contract"
+          ],
+          "mustPass": true
+        }
+      ]
+    }
+  ]
+}

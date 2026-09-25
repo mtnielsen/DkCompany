@@ -1,0 +1,37 @@
+{
+  "source": "independent-assessor",
+  "metadata": {
+    "accountableHuman": {
+      "subject": "oidc|dorthe.damgaard",
+      "name": "Dorthe Damgaard",
+      "role": "Independent Assessor"
+    }
+  },
+  "findings": [
+    {
+      "ref": "PT-001",
+      "category": "telemetry-leaks",
+      "severity": "high",
+      "impact": "Et dashboard-view returnerede et følsomt felt til en principal uden den nødvendige rolle.",
+      "reproducible": true,
+      "evidence": "GET /v1/views/ai med et operator-token: Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhY21lIn0.abcdefghijklmnop",
+      "affectedArtifact": "telemetry-api",
+      "affectedArtifactDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "remediation": {
+        "owner": {
+          "subject": "oidc|cecilia.christensen",
+          "name": "Cecilia Christensen",
+          "role": "Security Owner"
+        },
+        "handoffRef": "CHG-9001",
+        "dueAt": "2026-04-01T00:00:00Z",
+        "status": "in-progress"
+      },
+      "status": "open",
+      "rawEvidence": {
+        "access_token": "DKC_FAKE_CANARY_NOT_A_REAL_SECRET_0000000000",
+        "endpoint": "/v1/views/ai"
+      }
+    }
+  ]
+}

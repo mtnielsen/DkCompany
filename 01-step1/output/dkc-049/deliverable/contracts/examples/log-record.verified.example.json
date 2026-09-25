@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "1.0",
+  "kind": "LogRecord",
+  "id": "4f1d2c3a-1111-4a2b-9c3d-000000000003",
+  "occurredAt": "2026-09-16T21:12:09.500Z",
+  "recordedAt": "2026-09-16T21:12:09.522Z",
+  "correlation": {
+    "correlationId": "corr-2026-09-16-0001",
+    "executionId": "exec-2026-09-16-0001",
+    "incidentId": "res://acme/incident/INC-0042",
+    "changeId": "res://acme/change/CHG-4711",
+    "traceId": "c4fa324a9f793f3ff42b7aaca7813da6",
+    "parentId": "4f1d2c3a-1111-4a2b-9c3d-000000000002"
+  },
+  "scope": {
+    "tenantId": "acme",
+    "environment": "dev",
+    "service": "runtime",
+    "resource": "res://acme/service/checkout-api"
+  },
+  "provenance": "verified",
+  "verification": {
+    "verifier": "platform.verifier",
+    "method": "http-health-and-slo",
+    "artifactDigest": "a93bd14ba7194fa690a5ab0af9516a3db93bd14ba7194fa690a5ab0af9516a3d",
+    "result": "pass",
+    "verifiedAt": "2026-09-16T21:12:09.500Z"
+  },
+  "action": { "mutating": false },
+  "dataClassification": "operational",
+  "retentionClass": "operational",
+  "minimized": true,
+  "redactions": []
+}

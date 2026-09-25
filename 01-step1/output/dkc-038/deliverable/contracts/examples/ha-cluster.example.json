@@ -1,0 +1,171 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "HACluster",
+  "metadata": {
+    "name": "ha-cluster-staging",
+    "version": "1.0.0",
+    "description": "Konkret HA-topologi for ha-cluster-profilen: tre quorum-medlemmer i adskilte fejldomæner, redundant ingress/DNS, replikerede stateless-tjenester med probes/spread/disruption budgets, mTLS med rotation, default-deny-netværk, N+1-kapacitet og en eksplicit plan for stateful workloads.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+    },
+    "labels": { "ha": "true", "segment": "service" }
+  },
+  "hostingProfileRef": "catalog/profiles/ha-cluster.profile.json",
+  "failureDomains": ["fsn1-dc14", "fsn1-dc15", "hel1-dc2"],
+  "controlPlane": {
+    "topology": "three-member-quorum",
+    "members": [
+      { "id": "cp-1", "failureDomain": "fsn1-dc14", "serverRef": "server-cp-1", "leaderEligible": true },
+      { "id": "cp-2", "failureDomain": "fsn1-dc15", "serverRef": "server-cp-2", "leaderEligible": true },
+      { "id": "cp-3", "failureDomain": "hel1-dc2", "serverRef": "server-cp-3", "leaderEligible": true }
+    ],
+    "datastore": {
+      "type": "etcd",
+      "quorum": 2,
+      "writeMode": "leader-elected",
+      "fencing": "majority-quorum",
+      "unsafeWritesOnQuorumLoss": false
+    },
+    "failoverTargetSeconds": 60
+  },
+  "ingress": {
+    "controller": "nginx-ingress",
+    "replicas": 2,
+    "failureDomains": 2,
+    "healthCheck": { "path": "/healthz", "port": 10254, "initialDelaySeconds": 5, "periodSeconds": 10, "failureThreshold": 3 },
+    "endpoints": [
+      { "id": "ingress-a", "ip": "203.0.113.41", "failureDomain": "fsn1-dc14", "healthy": true },
+      { "id": "ingress-b", "ip": "203.0.113.42", "failureDomain": "fsn1-dc15", "healthy": true },
+      { "id": "ingress-c", "ip": "203.0.113.43", "failureDomain": "hel1-dc2", "healthy": true }
+    ]
+  },
+  "dns": {
+    "zone": "platform.example.org",
+    "records": [
+      { "name": "ha", "type": "A", "targets": ["203.0.113.41", "203.0.113.42", "203.0.113.43"] }
+    ],
+    "minHealthyTargets": 2,
+    "failover": "health-checked"
+  },
+  "certificates": {
+    "mtlsRequired": true,
+    "issuer": "platform-internal-ca",
+    "rotationDays": 30,
+    "autoRotation": true,
+    "peerIdentity": "spiffe"
+  },
+  "network": {
+    "plugin": "cilium",
+    "defaultDeny": true,
+    "crossTenantDeny": true,
+    "policies": ["default-deny", "allow-internal", "allow-ingress", "allow-dns"]
+  },
+  "capacity": {
+    "baselineCpuMillicores": 8000,
+    "perMemberCpuMillicores": 8000,
+    "memberCount": 3,
+    "nPlusOne": true,
+    "reservePercent": 20
+  },
+  "workloads": [
+    {
+      "id": "pdp",
+      "kind": "deployment",
+      "stateless": true,
+      "replicas": 3,
+      "serviceDiscovery": true,
+      "mtls": true,
+      "port": 8181,
+      "moduleRef": "pdp",
+      "probes": {
+        "startup": { "path": "/healthz", "port": 8181, "initialDelaySeconds": 2, "periodSeconds": 5, "failureThreshold": 12 },
+        "readiness": { "path": "/readyz", "port": 8181, "initialDelaySeconds": 5, "periodSeconds": 10, "failureThreshold": 3 },
+        "liveness": { "path": "/healthz", "port": 8181, "initialDelaySeconds": 10, "periodSeconds": 20, "failureThreshold": 3 }
+      },
+      "topologySpread": { "domainLabel": "topology.kubernetes.io/zone", "maxSkew": 1, "whenUnsatisfiable": "DoNotSchedule" },
+      "disruptionBudget": { "minAvailable": 2, "maxUnavailable": 1 },
+      "resources": { "requests": { "cpu": "100m", "memory": "128Mi" }, "limits": { "cpu": "500m", "memory": "256Mi" } }
+    },
+    {
+      "id": "audit-service",
+      "kind": "deployment",
+      "stateless": true,
+      "replicas": 3,
+      "serviceDiscovery": true,
+      "mtls": true,
+      "port": 8284,
+      "moduleRef": "audit-service",
+      "probes": {
+        "startup": { "path": "/healthz", "port": 8284, "initialDelaySeconds": 2, "periodSeconds": 5, "failureThreshold": 12 },
+        "readiness": { "path": "/readyz", "port": 8284, "initialDelaySeconds": 5, "periodSeconds": 10, "failureThreshold": 3 },
+        "liveness": { "path": "/healthz", "port": 8284, "initialDelaySeconds": 10, "periodSeconds": 20, "failureThreshold": 3 }
+      },
+      "topologySpread": { "domainLabel": "topology.kubernetes.io/zone", "maxSkew": 1, "whenUnsatisfiable": "DoNotSchedule" },
+      "disruptionBudget": { "minAvailable": 2, "maxUnavailable": 1 },
+      "resources": { "requests": { "cpu": "100m", "memory": "128Mi" }, "limits": { "cpu": "500m", "memory": "256Mi" } }
+    },
+    {
+      "id": "approvals",
+      "kind": "deployment",
+      "stateless": true,
+      "replicas": 3,
+      "serviceDiscovery": true,
+      "mtls": true,
+      "port": 8285,
+      "moduleRef": "approvals",
+      "probes": {
+        "startup": { "path": "/healthz", "port": 8285, "initialDelaySeconds": 2, "periodSeconds": 5, "failureThreshold": 12 },
+        "readiness": { "path": "/readyz", "port": 8285, "initialDelaySeconds": 5, "periodSeconds": 10, "failureThreshold": 3 },
+        "liveness": { "path": "/healthz", "port": 8285, "initialDelaySeconds": 10, "periodSeconds": 20, "failureThreshold": 3 }
+      },
+      "topologySpread": { "domainLabel": "topology.kubernetes.io/zone", "maxSkew": 1, "whenUnsatisfiable": "DoNotSchedule" },
+      "disruptionBudget": { "minAvailable": 2, "maxUnavailable": 1 },
+      "resources": { "requests": { "cpu": "100m", "memory": "128Mi" }, "limits": { "cpu": "500m", "memory": "256Mi" } }
+    },
+    {
+      "id": "ai-gateway",
+      "kind": "deployment",
+      "stateless": true,
+      "replicas": 3,
+      "serviceDiscovery": true,
+      "mtls": true,
+      "port": 8283,
+      "moduleRef": "ai-gateway",
+      "probes": {
+        "startup": { "path": "/healthz", "port": 8283, "initialDelaySeconds": 2, "periodSeconds": 5, "failureThreshold": 12 },
+        "readiness": { "path": "/readyz", "port": 8283, "initialDelaySeconds": 5, "periodSeconds": 10, "failureThreshold": 3 },
+        "liveness": { "path": "/healthz", "port": 8283, "initialDelaySeconds": 10, "periodSeconds": 20, "failureThreshold": 3 }
+      },
+      "topologySpread": { "domainLabel": "topology.kubernetes.io/zone", "maxSkew": 1, "whenUnsatisfiable": "DoNotSchedule" },
+      "disruptionBudget": { "minAvailable": 2, "maxUnavailable": 1 },
+      "resources": { "requests": { "cpu": "100m", "memory": "128Mi" }, "limits": { "cpu": "500m", "memory": "256Mi" } }
+    },
+    {
+      "id": "primary-database",
+      "kind": "statefulset",
+      "stateless": false,
+      "replicas": 3,
+      "serviceDiscovery": true,
+      "mtls": true,
+      "port": 5432,
+      "moduleRef": "primary-database",
+      "probes": {
+        "startup": { "path": "/healthz", "port": 5432, "initialDelaySeconds": 5, "periodSeconds": 5, "failureThreshold": 24 },
+        "readiness": { "path": "/readyz", "port": 5432, "initialDelaySeconds": 10, "periodSeconds": 10, "failureThreshold": 3 },
+        "liveness": { "path": "/healthz", "port": 5432, "initialDelaySeconds": 20, "periodSeconds": 20, "failureThreshold": 3 }
+      },
+      "disruptionBudget": { "minAvailable": 2, "maxUnavailable": 1 },
+      "resources": { "requests": { "cpu": "500m", "memory": "1Gi" }, "limits": { "cpu": "2000m", "memory": "2Gi" } },
+      "statefulPlan": {
+        "writeMode": "leader-elected",
+        "activeWriters": 1,
+        "upstreamSupportsMultiWriter": false,
+        "recoveryLocation": "eu-central-2",
+        "nPlusOne": true
+      }
+    }
+  ]
+}

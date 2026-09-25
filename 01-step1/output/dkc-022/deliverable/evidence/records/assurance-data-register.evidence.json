@@ -1,0 +1,32 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "EvidenceRecord",
+  "id": "assurance-data-register",
+  "subject": {
+    "kind": "check",
+    "name": "data-register"
+  },
+  "mode": "contract",
+  "result": "pass",
+  "commit": "83ad91a963d8055f77c29fb4361455689df95acb",
+  "imageDigest": null,
+  "environment": "local",
+  "upstreamVersion": "platform@1.0.0",
+  "runId": "assurance-assurance-data-register",
+  "capturedAt": "2026-09-24T10:00:00Z",
+  "expiresAt": "2026-10-24T10:00:00Z",
+  "producer": {
+    "type": "ci",
+    "name": "compliance-suite",
+    "subject": "ci|compliance"
+  },
+  "command": [
+    "make",
+    "data-register-check"
+  ],
+  "artifact": {
+    "uri": "docs/compliance/data-register.md",
+    "sha256": "f61e6733b954362b4b315daf3cd3c67bd3dde829dd7b13868f07d65492d83dc2"
+  },
+  "digest": "efeb79f397ee4fa4a0c31b72e006777a1393ca9f1d90c9556ee6d164adca5617"
+}

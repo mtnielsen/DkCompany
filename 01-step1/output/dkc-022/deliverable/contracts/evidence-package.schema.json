@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/evidence-package.schema.json",
+  "title": "Evidence Package",
+  "description": "DKC-022: en samlet, dateret evidenspakke der knytter hvert krav til sin kontrollerklæring, ansvarlige og faktiske evidens. Pakken skelner mellem automatiseret evidens, manglende vurderinger og menneskelige beslutninger og afviser forældet eller artefakt-mismatchet evidens. Et badge eller en eksport er ikke en certificering: `notACertification` og `complianceStatus` forbliver sande, indtil et navngivet menneske eksplicit accepterer.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "packageId", "generatedAt", "registerVersion", "notACertification", "complianceStatus", "productionReady", "badge", "acceptedBy", "acceptedAt", "requirements", "humanDecisions", "missingAssessments", "rejectedEvidence", "pilotBlockers", "summary"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "EvidencePackage" },
+    "packageId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{2,127}$" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "registerVersion": { "type": "string", "minLength": 1 },
+    "registerCommit": { "oneOf": [{ "type": "string", "pattern": "^[a-f0-9]{7,40}$" }, { "type": "null" }] },
+    "notACertification": { "const": true },
+    "complianceStatus": { "const": "not-certified" },
+    "productionReady": { "type": "boolean" },
+    "badge": { "enum": ["none", "fixture-only", "missing", "rejected", "production"] },
+    "acceptedBy": { "oneOf": [{ "$ref": "#/$defs/humanDecision" }, { "type": "null" }] },
+    "acceptedAt": { "oneOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }] },
+    "requirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["requirementId", "title", "status", "owner", "controlRef", "coverage", "humanDecision", "blockers"],
+        "additionalProperties": false,
+        "properties": {
+          "requirementId": { "type": "string", "pattern": "^REQ-[A-Z0-9-]{2,40}$" },
+          "title": { "type": "string", "minLength": 5 },
+          "status": { "enum": ["open", "implemented", "verified", "accepted", "missing-evidence"] },
+          "owner": { "$ref": "#/$defs/human" },
+          "controlRef": { "type": "string", "minLength": 2 },
+          "coverage": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["ref", "status", "mode", "reason"],
+              "additionalProperties": false,
+              "properties": {
+                "ref": { "type": "string", "minLength": 2 },
+                "status": { "type": "string", "minLength": 2 },
+                "mode": { "oneOf": [{ "type": "string" }, { "type": "null" }] },
+                "reason": { "oneOf": [{ "type": "string" }, { "type": "null" }] }
+              }
+            }
+          },
+          "humanDecision": { "oneOf": [{ "$ref": "#/$defs/humanDecision" }, { "type": "null" }] },
+          "blockers": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "humanDecisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "kind", "status", "decidedBy", "date", "decisionRef"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "minLength": 2 },
+          "title": { "type": "string", "minLength": 5 },
+          "kind": { "enum": ["legal", "organisational"] },
+          "status": { "enum": ["open", "decided", "accepted"] },
+          "decidedBy": { "oneOf": [{ "$ref": "#/$defs/human" }, { "type": "null" }] },
+          "date": { "oneOf": [{ "type": "string", "format": "date" }, { "type": "null" }] },
+          "decisionRef": { "oneOf": [{ "type": "string", "minLength": 3 }, { "type": "null" }] }
+        }
+      }
+    },
+    "missingAssessments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kind", "id", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "kind": { "enum": ["decision", "dpia", "transfer", "evidence", "assessment"] },
+          "id": { "type": "string", "minLength": 2 },
+          "reason": { "type": "string", "minLength": 5 }
+        }
+      }
+    },
+    "rejectedEvidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ref", "status", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "ref": { "type": "string", "minLength": 2 },
+          "status": { "type": "string", "minLength": 2 },
+          "reason": { "type": "string", "minLength": 3 }
+        }
+      }
+    },
+    "pilotBlockers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kind", "id", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "kind": { "enum": ["dpia", "decision", "risk", "transfer", "evidence"] },
+          "id": { "type": "string", "minLength": 2 },
+          "reason": { "type": "string", "minLength": 5 }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": ["requirements", "verified", "missing", "humanDecisions", "rejectedEvidence", "pilotBlockers"],
+      "additionalProperties": false,
+      "properties": {
+        "requirements": { "type": "integer", "minimum": 0 },
+        "verified": { "type": "integer", "minimum": 0 },
+        "missing": { "type": "integer", "minimum": 0 },
+        "humanDecisions": { "type": "integer", "minimum": 0 },
+        "rejectedEvidence": { "type": "integer", "minimum": 0 },
+        "pilotBlockers": { "type": "integer", "minimum": 0 }
+      }
+    }
+  },
+  "$defs": {
+    "human": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 }
+      }
+    },
+    "humanDecision": {
+      "type": "object",
+      "required": ["subject", "name", "role", "date", "decisionRef"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "date": { "type": "string", "format": "date" },
+        "decisionRef": { "type": "string", "minLength": 3 }
+      }
+    }
+  }
+}

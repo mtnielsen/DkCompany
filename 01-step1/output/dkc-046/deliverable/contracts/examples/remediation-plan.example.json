@@ -1,0 +1,125 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "RemediationPlan",
+  "id": "rem-018f3c2a-1b2c-7def-8a01-818181818181",
+  "tenantId": "acme",
+  "target": "service/checkout",
+  "environment": "staging",
+  "runbook": {
+    "ref": "stateless-restart@1.0.0",
+    "digest": "deab1771bb4b70a60156bb9b571f66d232e66fb9310ab964bff4519b2df5b86a"
+  },
+  "parameters": {
+    "maxDurationSeconds": 60,
+    "reason": "user-flow latency høj"
+  },
+  "roles": {
+    "detector": {
+      "spiffeId": "spiffe://platform.example.org/agents/monitor",
+      "role": "observer"
+    },
+    "planner": {
+      "spiffeId": "spiffe://platform.example.org/agents/remediation-planner",
+      "role": "planner"
+    },
+    "executor": {
+      "spiffeId": "spiffe://platform.example.org/agents/remediation-executor",
+      "role": "executor"
+    },
+    "verifier": {
+      "spiffeId": "spiffe://platform.example.org/agents/remediation-verifier",
+      "role": "verifier"
+    }
+  },
+  "reversibility": {
+    "verb": "restart",
+    "reversible": true,
+    "classification": "reversible-write",
+    "compensation": "restart",
+    "fallback": "compensation"
+  },
+  "fallback": {
+    "actions": [
+      "pause",
+      "read-only"
+    ],
+    "authorizedBy": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen"
+    },
+    "ran": []
+  },
+  "states": [
+    {
+      "state": "detected",
+      "at": "2025-09-02T08:00:00Z",
+      "detail": {
+        "target": "service/checkout"
+      }
+    },
+    {
+      "state": "correlated",
+      "at": "2025-09-02T08:00:01Z",
+      "detail": {
+        "deduplicated": true
+      }
+    },
+    {
+      "state": "diagnosed",
+      "at": "2025-09-02T08:00:05Z",
+      "detail": {
+        "hypothesis": "hukommelseslæk i checkout"
+      }
+    },
+    {
+      "state": "proposed",
+      "at": "2025-09-02T08:00:06Z",
+      "detail": {
+        "runbookRef": "stateless-restart@1.0.0"
+      }
+    },
+    {
+      "state": "authorized",
+      "at": "2025-09-02T08:00:07Z",
+      "detail": {
+        "requiresApproval": false
+      }
+    },
+    {
+      "state": "intent",
+      "at": "2025-09-02T08:00:07Z",
+      "detail": {}
+    },
+    {
+      "state": "executing",
+      "at": "2025-09-02T08:00:08Z",
+      "detail": {}
+    },
+    {
+      "state": "verifying",
+      "at": "2025-09-02T08:00:40Z",
+      "detail": {}
+    },
+    {
+      "state": "recovered",
+      "at": "2025-09-02T08:01:00Z",
+      "detail": {}
+    }
+  ],
+  "budget": {
+    "maxAttempts": 5,
+    "maxFailures": 2,
+    "maxChanges": 3,
+    "windowSeconds": 3600
+  },
+  "lease": {
+    "resource": "service/checkout",
+    "owner": "remediation-executor",
+    "fencingToken": 1
+  },
+  "aiChangesStopped": false,
+  "outcome": {
+    "state": "recovered",
+    "reason": null
+  }
+}

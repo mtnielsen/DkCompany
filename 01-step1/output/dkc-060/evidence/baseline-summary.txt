@@ -1,0 +1,26 @@
+DKC-060 — baseline (make baseline) på den anvendte DKC-001..DKC-066-stak + DKC-060
+================================================================================
+
+Checkout: 83ad91a (reviewets base: 5f9fa73)
+Node: v22.22.1
+Komplett log: baseline.log
+Total checks i registeret: 130 (hvoraf 25 external/integration)
+
+Resultat:
+  PASS:    103
+  FAIL:      1  — changelog-check (forud eksisterende; commits mangler DCO sign-off,
+                 også 83ad91a). Aldrig "rettet" eller skjult.
+  NOT RUN:  26  — eksterne integrationer uden levende system i dette miljø,
+                 inkl. DKC-060's integration-reporting-delivery og
+                 integration-idp-offboarding.
+
+Nye DKC-060-checks i kørslen:
+  feature-access-check … PASS
+  feature-access-test  … PASS
+  feature-access-demo  … PASS
+  integration-reporting-delivery (integration) … NOT RUN
+  integration-idp-offboarding      (integration) … NOT RUN
+
+Bemærkning: `make baseline` muterer 30 sporede konformance-fixtures under
+modules/*/conformance (samme kendte adfærd som de øvrige tasks). De er
+nullestillet fra referenceklonen efter kørslen; se evidence/README.md.

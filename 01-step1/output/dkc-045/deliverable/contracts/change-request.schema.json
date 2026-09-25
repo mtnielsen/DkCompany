@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/change-request.schema.json",
+  "title": "ChangeRequest",
+  "description": "En menneskestyret change. Flowet er standard (forhåndsgodkendt runbookversion), normal (konkret godkendelse pr. mutation) eller emergency (særskilt, tidsbegrænset menneskelig autorisation). Runbook-digesten er den, der faktisk blev godkendt — ikke en klientpåstand. Change-kalenderen koordinerer konflikter og låse.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "id", "tenantId", "flow", "state", "runbook", "scope", "window", "approval", "requestedBy", "createdAt"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "ChangeRequest" },
+    "id": { "type": "string", "pattern": "^chg-[a-f0-9-]{8,}$" },
+    "tenantId": { "type": "string", "minLength": 1 },
+    "flow": { "enum": ["standard", "normal", "emergency"] },
+    "state": { "enum": ["draft", "approval", "scheduled", "implementing", "implemented", "rolled_back", "cancelled", "rejected"] },
+    "runbook": {
+      "type": "object",
+      "required": ["ref", "digest"],
+      "additionalProperties": false,
+      "properties": {
+        "ref": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}@\\d+\\.\\d+\\.\\d+$" },
+        "digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "required": ["verbs", "targets", "environments"],
+      "additionalProperties": false,
+      "properties": {
+        "verbs": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 2 } },
+        "targets": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "environments": { "type": "array", "minItems": 1, "items": { "enum": ["dev", "staging", "prod"] } }
+      }
+    },
+    "parameters": { "type": "object" },
+    "window": {
+      "type": "object",
+      "required": ["start", "end"],
+      "additionalProperties": false,
+      "properties": {
+        "start": { "type": "string", "format": "date-time" },
+        "end": { "type": "string", "format": "date-time" },
+        "maintenanceWindowId": { "type": "string" }
+      }
+    },
+    "approval": {
+      "type": "object",
+      "required": ["requiredApprovals", "eligibleGroups"],
+      "additionalProperties": false,
+      "properties": {
+        "requiredApprovals": { "type": "integer", "minimum": 1 },
+        "eligibleGroups": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 2 } },
+        "preApprovalId": { "type": "string" },
+        "preApprovalBindingDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "approvalId": { "type": "string" }
+      }
+    },
+    "authorization": {
+      "type": "object",
+      "required": ["kind", "humanSubject", "grantedAt", "expiresAt"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "enum": ["pre-approval", "approval", "emergency"] },
+        "humanSubject": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\|[a-z0-9][a-z0-9._-]{2,}$" },
+        "role": { "type": "string", "minLength": 2 },
+        "grantedAt": { "type": "string", "format": "date-time" },
+        "expiresAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "conflicts": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "lockOwner": { "type": ["string", "null"] },
+    "requestedBy": {
+      "type": "object",
+      "required": ["subject", "kind"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 2 },
+        "kind": { "enum": ["human", "agent", "service"] }
+      }
+    },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "postchecks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "check", "expect", "onFailure"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "minLength": 2 },
+          "check": { "type": "string", "minLength": 2 },
+          "expect": {},
+          "onFailure": { "enum": ["rollback", "escalate"] }
+        }
+      }
+    },
+    "auditId": { "type": "string" }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "@platform/baseline",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Reproducerbar baselinekontrol: kører repoets eksisterende checks, registrerer exitstatus/commit/miljø/evidens og genererer docs/status/implementation-matrix.md.",
+  "bin": {
+    "baseline": "./baseline.mjs"
+  },
+  "scripts": {
+    "test": "node --test",
+    "run": "node baseline.mjs run"
+  }
+}

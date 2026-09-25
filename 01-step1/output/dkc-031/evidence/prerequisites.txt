@@ -1,0 +1,20 @@
+Forudsætningskæde for DKC-031 (verificeret i den anvendte stak: stak-tip DKC-030)
+Checkout: 83ad91a  Base: 5f9fa73
+
+OK   DKC-020  ->  privacy/src conformance/src/dsar.mjs
+OK   DKC-025  ->  portal/src/lifecycle.mjs portal/service-packages
+OK   DKC-026  ->  modules/nextcloud-adapter/service/src/workspace.mjs modules/nextcloud-adapter/module-manifest.json
+OK   DKC-027  ->  modules/openproject-adapter/service/src/projects.mjs modules/openproject-adapter/module-manifest.json
+OK   DKC-028  ->  search/src/retrieval.mjs search/src/ingest.mjs
+OK   DKC-029  ->  helpdesk/src/intake.mjs helpdesk/src/retention.mjs
+OK   DKC-030  ->  crm/src/sync.mjs crm/src/references.mjs
+OK   DKC-043  ->  dedup/src/objects.mjs dedup/src/events.mjs
+OK   DKC-007  ->  runtime/src/digest.mjs
+
+Valgte kildeformater pr. pilotapp (migration/sources.json):
+  files (nextcloud): nextcloud-export-bundle@1
+  projects (openproject): openproject-api-v3-json@1
+  knowledge (bookstack): bookstack-content-export@1
+  support (zammad): zammad-ticket-archive@1
+  crm (espocrm): espocrm-rest-json@1
+  crm (espocrm): espocrm-rest-json@1

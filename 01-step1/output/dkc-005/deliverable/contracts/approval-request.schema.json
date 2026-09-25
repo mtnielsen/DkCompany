@@ -1,0 +1,318 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/approval-request.schema.json",
+  "title": "Approval Request",
+  "description": "Payload fra agent til menneskelig godkender. Kerneprincip: 'evidence' kommer fra deterministiske kilder (tests, policy, dry-run, diff). 'agentAssessment' er agentens prosa og er IKKE evidens. Approval-UI skal altid vise begge side om side, så uoverensstemmelser er synlige. Agenten producerer ikke evidens — den rammer den ind.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "id", "tenantId", "createdAt", "agent", "trigger", "change", "evidence", "blastRadius", "rollback", "agentAssessment", "decision"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "ApprovalRequest" },
+    "id": { "type": "string", "format": "uuid" },
+    "tenantId": { "type": "string", "description": "Kunden (tenanten) ændringen hører til. Indgår i beslutningens binding; en godkender fra en anden kunde kan ikke godkende." },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "correlationId": { "type": "string", "description": "Trace-ID, binder denne anmodning til telemetri og audit-log" },
+
+    "agent": {
+      "type": "object",
+      "required": ["ref", "spiffeId", "manifestVersion", "model"],
+      "additionalProperties": false,
+      "properties": {
+        "ref": { "type": "string" },
+        "spiffeId": { "type": "string" },
+        "manifestVersion": { "type": "string" },
+        "model": {
+          "type": "object",
+          "required": ["provider", "model", "promptSha256"],
+          "properties": {
+            "provider": { "type": "string" },
+            "model": { "type": "string" },
+            "modelVersion": { "type": "string" },
+            "promptSha256": { "type": "string" }
+          }
+        }
+      }
+    },
+
+    "trigger": {
+      "type": "object",
+      "description": "Den observation der udløste forslaget. Skal linke til en kilde — ikke være agentens genfortælling.",
+      "required": ["sourceEventId", "observedAt", "sourceType"],
+      "additionalProperties": false,
+      "properties": {
+        "sourceEventId": { "type": "string" },
+        "sourceType": { "enum": ["alert", "slo-breach", "cve-feed", "dependency-update", "scheduled", "human-request", "escalation-from-agent"] },
+        "sourceUri": { "type": "string", "format": "uri" },
+        "observedAt": { "type": "string", "format": "date-time" },
+        "untrustedInput": {
+          "type": "boolean",
+          "description": "true hvis triggeren stammer fra data agenten ikke kontrollerer (logs, issues, changelogs). Markerer prompt-injection-risiko for godkenderen."
+        }
+      }
+    },
+
+    "change": {
+      "type": "object",
+      "description": "Agenten foreslår en ændringsintent — den muterer ikke produktion direkte. GitOps applikerer.",
+      "required": ["verb", "autonomyClass", "environment", "targets", "diff"],
+      "additionalProperties": false,
+      "properties": {
+        "verb": { "type": "string" },
+        "autonomyClass": { "enum": ["A2", "A3"], "description": "Kun klasser der kan kræve godkendelse optræder her." },
+        "environment": { "enum": ["dev", "staging", "prod"] },
+        "targets": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "diff": {
+          "type": "object",
+          "required": ["uri", "sha256", "summaryStats"],
+          "description": "Den faktiske diff er sandheden. Konformanstest verificerer at agentens forklaring matcher den.",
+          "properties": {
+            "uri": { "type": "string" },
+            "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+            "summaryStats": {
+              "type": "object",
+              "properties": {
+                "filesChanged": { "type": "integer" },
+                "linesAdded": { "type": "integer" },
+                "linesRemoved": { "type": "integer" }
+              }
+            }
+          }
+        },
+        "parameters": {
+          "type": "object",
+          "description": "De konkrete parametre ændringen udfører (fx versioner, replika-tal, feature-toggles). Indgår i beslutningens parameter-digest; ændrede parametre ugyldiggør en godkendelse.",
+          "additionalProperties": true
+        },
+        "proposalRef": { "type": "string", "description": "PR- eller merge-request-URL" }
+      }
+    },
+
+    "evidence": {
+      "type": "object",
+      "description": "MASKINGENERERET. Ingen felter her må udfyldes af en LLM. Hallucinerer ikke.",
+      "required": ["policyEvaluation", "tests", "dryRun", "scans"],
+      "additionalProperties": false,
+      "properties": {
+        "policyEvaluation": {
+          "type": "object",
+          "required": ["pdp", "bundleVersion", "decision"],
+          "properties": {
+            "pdp": { "type": "string" },
+            "bundleVersion": { "type": "string" },
+            "decision": { "enum": ["allow", "allow-with-approval", "deny"] },
+            "matchedRules": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "tests": {
+          "type": "object",
+          "required": ["status"],
+          "properties": {
+            "status": { "enum": ["pass", "fail", "not-run"] },
+            "suiteRef": { "type": "string" },
+            "passed": { "type": "integer" },
+            "failed": { "type": "integer" },
+            "reportUri": { "type": "string" }
+          }
+        },
+        "dryRun": {
+          "type": "object",
+          "required": ["status"],
+          "properties": {
+            "status": { "enum": ["clean", "diverged", "error", "not-supported"] },
+            "outputUri": { "type": "string" },
+            "exitCode": { "type": "integer" }
+          }
+        },
+        "scans": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["tool", "status"],
+            "properties": {
+              "tool": { "type": "string" },
+              "status": { "enum": ["clean", "findings", "not-run"] },
+              "critical": { "type": "integer" },
+              "high": { "type": "integer" },
+              "reportUri": { "type": "string" }
+            }
+          }
+        },
+        "sbomDelta": {
+          "type": "object",
+          "properties": {
+            "added": { "type": "array", "items": { "type": "string" } },
+            "removed": { "type": "array", "items": { "type": "string" } },
+            "uri": { "type": "string" }
+          }
+        }
+      }
+    },
+
+    "blastRadius": {
+      "type": "object",
+      "description": "Maskinberegnet ud fra targets og topologi — ikke agentens skøn.",
+      "required": ["reversible", "personalDataAffected"],
+      "additionalProperties": false,
+      "properties": {
+        "tenants": { "type": "integer" },
+        "users": { "type": "integer" },
+        "services": { "type": "array", "items": { "type": "string" } },
+        "estimatedDowntimeSeconds": { "type": "integer" },
+        "reversible": { "type": "boolean" },
+        "personalDataAffected": { "type": "boolean" },
+        "dataCategories": { "type": "array", "items": { "enum": ["none", "operational", "pseudonymised", "personal", "special-category"] } }
+      }
+    },
+
+    "rollback": {
+      "type": "object",
+      "description": "Utestet rollback er ikke rollback.",
+      "required": ["method", "tested"],
+      "additionalProperties": false,
+      "properties": {
+        "method": { "enum": ["git-revert", "helm-rollback", "restore-from-backup", "manual", "none"] },
+        "tested": { "type": "boolean" },
+        "testedAt": { "type": "string", "format": "date-time" },
+        "restoreVerified": { "type": "boolean" },
+        "estimatedRecoverySeconds": { "type": "integer" },
+        "autoRollbackWindowSeconds": { "type": "integer", "description": "Kun A2: vindue hvor systemet selv ruller tilbage ved SLO-brud." }
+      }
+    },
+
+    "agentAssessment": {
+      "type": "object",
+      "description": "AGENT-PROSA. Ikke evidens. Skal renderes visuelt adskilt fra 'evidence'. En vurdering uden angivet usikkerhed er en salgstale — derfor er begge usikkerhedsfelter påkrævede.",
+      "required": ["rationale", "doNothingConsequence", "confidence", "uncertainties", "notChecked"],
+      "additionalProperties": false,
+      "properties": {
+        "rationale": { "type": "string", "description": "Hvorfor denne ændring, koblet til trigger." },
+        "doNothingConsequence": { "type": "string", "description": "Nulhypotesen. Agenter underspiller den systematisk — derfor eksplicit felt." },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "uncertainties": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "notChecked": { "type": "array", "minItems": 1, "items": { "type": "string" }, "description": "Hvad agenten IKKE har undersøgt." },
+        "claims": {
+          "type": "array",
+          "description": "Strukturerede påstande der kan verificeres deterministisk mod evidensen. Prosa alene kan ikke tjekkes; disse kan. Konformanstesten 'forklaring matcher faktisk diff' bruger dem.",
+          "items": {
+            "type": "object",
+            "required": ["statement", "evidenceRef", "operator", "value"],
+            "additionalProperties": false,
+            "properties": {
+              "statement": { "type": "string" },
+              "evidenceRef": { "type": "string", "description": "Sti i approval-request, fx change.diff.summaryStats.filesChanged" },
+              "operator": { "enum": ["eq", "lte", "gte"] },
+              "value": {}
+            }
+          }
+        },
+        "explanations": {
+          "type": "object",
+          "description": "Samme ændring forklaret på forskellige niveauer, så godkenderen kan møde den hvor de er.",
+          "properties": {
+            "owner": { "type": "string" },
+            "operator": { "type": "string" }
+          }
+        }
+      }
+    },
+
+    "reviewerFindings": {
+      "type": "array",
+      "description": "Adversarial review. Reviewer kan flagge eller afvise — aldrig godkende og aldrig ændre autonomiklasse.",
+      "items": {
+        "type": "object",
+        "required": ["reviewerRef", "provider", "verdict"],
+        "additionalProperties": false,
+        "properties": {
+          "reviewerRef": { "type": "string" },
+          "provider": { "type": "string", "description": "Skal afvige fra agent.model.provider" },
+          "verdict": { "enum": ["no-objection", "flag", "reject"] },
+          "findings": { "type": "array", "items": { "type": "string" } },
+          "sawAuthorRationale": { "const": false }
+        }
+      }
+    },
+
+    "decision": {
+      "type": "object",
+      "required": ["state", "requiredApprovals"],
+      "additionalProperties": false,
+      "properties": {
+        "state": { "enum": ["pending", "approved", "rejected", "expired", "withdrawn", "revoked"] },
+        "requiredApprovals": { "type": "integer", "minimum": 1 },
+        "eligibleGroups": { "type": "array", "items": { "type": "string" } },
+        "requiredTrainingModules": {
+          "type": "array",
+          "description": "AI Act art. 4: godkendere skal have gennemført disse moduler. Håndhæves af approval-servicen ud fra dens eget træningsopslag.",
+          "items": { "type": "string" }
+        },
+        "expiresAt": { "type": "string", "format": "date-time", "description": "Gamle anmodninger bygger på forældet evidens og skal udløbe." },
+        "requestedBy": { "type": "string", "description": "Serverstyret: den verificerede identitet der oprettede anmodningen. Bruges til at forbyde selv-godkendelse." },
+        "binding": {
+          "type": "object",
+          "description": "Serverstyret binding til kunde, miljø, verbum, mål, parameter-/diff-digest, policy-version og udløb. Klienten må ikke sætte den; enhver ændring af et bundet felt ændrer digesten og ugyldiggør godkendelser.",
+          "required": ["algorithm", "digest"],
+          "additionalProperties": false,
+          "properties": {
+            "algorithm": { "const": "sha256" },
+            "digest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+            "computedAt": { "type": "string", "format": "date-time" },
+            "fields": { "type": "object", "description": "Den kanoniske input til digesten (tenant, miljø, verbum, mål, digests, policy-version, udløb)." }
+          }
+        },
+        "decidedAt": { "type": "string", "format": "date-time" },
+        "decidedBy": { "type": "string" },
+        "invalidatedAt": { "type": "string", "format": "date-time" },
+        "invalidationReason": { "type": "string" },
+        "expiredAt": { "type": "string", "format": "date-time" },
+        "withdrawnAt": { "type": "string", "format": "date-time" },
+        "withdrawnBy": { "type": "string" },
+        "withdrawalReason": { "type": "string" },
+        "revokedAt": { "type": "string", "format": "date-time" },
+        "revokedBy": { "type": "string" },
+        "revocationReason": { "type": "string" },
+        "consumed": {
+          "type": "object",
+          "description": "DKC-005: atomisk forbrug af beslutningen. Når den er sat, kan godkendelsen ikke bruges igen (replay-beskyttelse).",
+          "required": ["approvalId", "at"],
+          "additionalProperties": false,
+          "properties": {
+            "approvalId": { "type": "string" },
+            "executionId": { "type": ["string", "null"] },
+            "tenantId": { "type": ["string", "null"] },
+            "at": { "type": "string", "format": "date-time" },
+            "bindingDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+          }
+        },
+        "approvals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["subject", "at", "verdict"],
+            "additionalProperties": false,
+            "properties": {
+              "subject": { "type": "string" },
+              "actorKind": { "enum": ["human", "agent"] },
+              "bindingDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$", "description": "Digesten for den ændring godkenderen faktisk så." },
+              "at": { "type": "string", "format": "date-time" },
+              "verdict": { "enum": ["approve", "reject"] },
+              "comment": { "type": "string" },
+              "trainingVerified": { "type": "boolean", "description": "AI Act art. 4: godkender har gennemført påkrævede moduler." }
+            }
+          }
+        }
+      }
+    },
+
+    "signature": {
+      "type": "object",
+      "description": "Anmodningen signeres af agentens workload-identitet, så den er tamper-evident i audit-loggen.",
+      "properties": {
+        "algorithm": { "type": "string" },
+        "value": { "type": "string" },
+        "signedFieldsSha256": { "type": "string" }
+      }
+    }
+  }
+}

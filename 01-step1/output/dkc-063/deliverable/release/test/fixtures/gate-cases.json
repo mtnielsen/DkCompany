@@ -1,0 +1,2820 @@
+{
+  "description": "Kritiske positive/negative fixtures for release-gaten (DKC-063).",
+  "cases": [
+    {
+      "id": "all-pass",
+      "description": "En bestået check giver passed og eligible.",
+      "matrix": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "TestMatrix",
+        "metadata": {
+          "name": "fixture-matrix",
+          "version": "1.0.0",
+          "description": "Minimal fixture-matrix til release-gate-testene med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "matrixVersion": "1.0.0",
+        "supportedEnvironments": [
+          "linux-amd64-node22"
+        ],
+        "freshnessPolicy": {
+          "defaultDays": 30,
+          "maxDays": 90
+        },
+        "thresholds": {
+          "requireAllMandatoryPass": true,
+          "allowImplementerEvidenceForRelease": false,
+          "maxOpenExceptions": 0,
+          "maxExceptionDays": 90,
+          "acceptedBy": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "acceptedAt": "2026-09-23T08:00:00Z"
+        },
+        "stages": [
+          {
+            "id": "fixture",
+            "title": "Fixtures",
+            "blocking": true,
+            "commands": [
+              "make release-test"
+            ]
+          }
+        ],
+        "requirements": [
+          {
+            "id": "REQ-FIX-PASS-001",
+            "title": "Krav REQ-FIX-PASS-001",
+            "description": "Et syntetisk testkrav med en gyldig beskrivelse.",
+            "mandatory": true,
+            "releaseBlocking": true,
+            "nonExcepted": false,
+            "owner": {
+              "subject": "oidc|anna.andersen",
+              "name": "Anna Andersen",
+              "role": "Platform Owner"
+            },
+            "controlRefs": [],
+            "testTypes": [
+              "unit"
+            ],
+            "checks": [
+              {
+                "id": "check-unit",
+                "testTypes": [
+                  "unit"
+                ],
+                "mustPass": true
+              }
+            ],
+            "evidenceFreshnessDays": 30,
+            "independentAssessment": null
+          }
+        ]
+      },
+      "baseline": {
+        "schemaVersion": 1,
+        "kind": "BaselineResult",
+        "generatedAt": "2026-09-23T12:00:00Z",
+        "status": "pass",
+        "summary": {
+          "total": 1,
+          "pass": 1,
+          "fail": 0,
+          "error": 0,
+          "notRun": 0
+        },
+        "environment": {
+          "capturedAt": "2026-09-23T12:00:00Z",
+          "node": "v22.22.1",
+          "npm": "9.2.0",
+          "platform": "linux",
+          "arch": "x64",
+          "osRelease": "6.18.33.2",
+          "ci": false,
+          "github": {},
+          "git": {
+            "commit": "83ad91a963d8055f77c29fb4361455689df95acb",
+            "shortCommit": "83ad91a",
+            "branch": "main"
+          }
+        },
+        "checks": [
+          {
+            "id": "check-unit",
+            "title": "check-unit",
+            "component": "fixture",
+            "level": "real",
+            "external": false,
+            "server": false,
+            "critical": true,
+            "command": [
+              "true"
+            ],
+            "evidence": [],
+            "gap": null,
+            "status": "pass",
+            "exitCode": 0,
+            "durationMs": 1,
+            "startedAt": "2026-09-23T12:00:00Z",
+            "finishedAt": "2026-09-23T12:00:00Z",
+            "log": "logs/check-unit.log",
+            "reason": null
+          }
+        ]
+      },
+      "assessments": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "IndependentAssessment",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Tomt fixture-register med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "assessments": []
+      },
+      "exceptions": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "RiskExceptions",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Tomt fixture-register med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "exceptions": []
+      },
+      "producer": {
+        "type": "implementer",
+        "name": "local-baseline",
+        "subject": "process|baseline"
+      },
+      "targetCommit": null,
+      "now": "2026-09-24T00:00:00Z",
+      "expect": {
+        "requirementId": "REQ-FIX-PASS-001",
+        "status": "passed",
+        "decision": "eligible"
+      }
+    },
+    {
+      "id": "failed",
+      "description": "En fejlende check kan ikke bestå gaten.",
+      "matrix": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "TestMatrix",
+        "metadata": {
+          "name": "fixture-matrix",
+          "version": "1.0.0",
+          "description": "Minimal fixture-matrix til release-gate-testene med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "matrixVersion": "1.0.0",
+        "supportedEnvironments": [
+          "linux-amd64-node22"
+        ],
+        "freshnessPolicy": {
+          "defaultDays": 30,
+          "maxDays": 90
+        },
+        "thresholds": {
+          "requireAllMandatoryPass": true,
+          "allowImplementerEvidenceForRelease": false,
+          "maxOpenExceptions": 0,
+          "maxExceptionDays": 90,
+          "acceptedBy": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "acceptedAt": "2026-09-23T08:00:00Z"
+        },
+        "stages": [
+          {
+            "id": "fixture",
+            "title": "Fixtures",
+            "blocking": true,
+            "commands": [
+              "make release-test"
+            ]
+          }
+        ],
+        "requirements": [
+          {
+            "id": "REQ-FIX-FAIL-001",
+            "title": "Krav REQ-FIX-FAIL-001",
+            "description": "Et syntetisk testkrav med en gyldig beskrivelse.",
+            "mandatory": true,
+            "releaseBlocking": true,
+            "nonExcepted": false,
+            "owner": {
+              "subject": "oidc|anna.andersen",
+              "name": "Anna Andersen",
+              "role": "Platform Owner"
+            },
+            "controlRefs": [],
+            "testTypes": [
+              "unit"
+            ],
+            "checks": [
+              {
+                "id": "check-unit",
+                "testTypes": [
+                  "unit"
+                ],
+                "mustPass": true
+              }
+            ],
+            "evidenceFreshnessDays": 30,
+            "independentAssessment": null
+          }
+        ]
+      },
+      "baseline": {
+        "schemaVersion": 1,
+        "kind": "BaselineResult",
+        "generatedAt": "2026-09-23T12:00:00Z",
+        "status": "pass",
+        "summary": {
+          "total": 1,
+          "pass": 0,
+          "fail": 1,
+          "error": 0,
+          "notRun": 0
+        },
+        "environment": {
+          "capturedAt": "2026-09-23T12:00:00Z",
+          "node": "v22.22.1",
+          "npm": "9.2.0",
+          "platform": "linux",
+          "arch": "x64",
+          "osRelease": "6.18.33.2",
+          "ci": false,
+          "github": {},
+          "git": {
+            "commit": "83ad91a963d8055f77c29fb4361455689df95acb",
+            "shortCommit": "83ad91a",
+            "branch": "main"
+          }
+        },
+        "checks": [
+          {
+            "id": "check-unit",
+            "title": "check-unit",
+            "component": "fixture",
+            "level": "real",
+            "external": false,
+            "server": false,
+            "critical": true,
+            "command": [
+              "true"
+            ],
+            "evidence": [],
+            "gap": null,
+            "status": "fail",
+            "exitCode": 1,
+            "durationMs": 1,
+            "startedAt": "2026-09-23T12:00:00Z",
+            "finishedAt": "2026-09-23T12:00:00Z",
+            "log": "logs/check-unit.log",
+            "reason": null
+          }
+        ]
+      },
+      "assessments": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "IndependentAssessment",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Tomt fixture-register med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "assessments": []
+      },
+      "exceptions": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "RiskExceptions",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Tomt fixture-register med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "exceptions": []
+      },
+      "producer": {
+        "type": "implementer",
+        "name": "local-baseline",
+        "subject": "process|baseline"
+      },
+      "targetCommit": null,
+      "now": "2026-09-24T00:00:00Z",
+      "expect": {
+        "requirementId": "REQ-FIX-FAIL-001",
+        "status": "failed",
+        "decision": "blocked"
+      }
+    },
+    {
+      "id": "skipped",
+      "description": "En sprunget check er ikke bestået.",
+      "matrix": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "TestMatrix",
+        "metadata": {
+          "name": "fixture-matrix",
+          "version": "1.0.0",
+          "description": "Minimal fixture-matrix til release-gate-testene med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "matrixVersion": "1.0.0",
+        "supportedEnvironments": [
+          "linux-amd64-node22"
+        ],
+        "freshnessPolicy": {
+          "defaultDays": 30,
+          "maxDays": 90
+        },
+        "thresholds": {
+          "requireAllMandatoryPass": true,
+          "allowImplementerEvidenceForRelease": false,
+          "maxOpenExceptions": 0,
+          "maxExceptionDays": 90,
+          "acceptedBy": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "acceptedAt": "2026-09-23T08:00:00Z"
+        },
+        "stages": [
+          {
+            "id": "fixture",
+            "title": "Fixtures",
+            "blocking": true,
+            "commands": [
+              "make release-test"
+            ]
+          }
+        ],
+        "requirements": [
+          {
+            "id": "REQ-FIX-SKIP-001",
+            "title": "Krav REQ-FIX-SKIP-001",
+            "description": "Et syntetisk testkrav med en gyldig beskrivelse.",
+            "mandatory": true,
+            "releaseBlocking": true,
+            "nonExcepted": false,
+            "owner": {
+              "subject": "oidc|anna.andersen",
+              "name": "Anna Andersen",
+              "role": "Platform Owner"
+            },
+            "controlRefs": [],
+            "testTypes": [
+              "unit"
+            ],
+            "checks": [
+              {
+                "id": "check-unit",
+                "testTypes": [
+                  "unit"
+                ],
+                "mustPass": true
+              }
+            ],
+            "evidenceFreshnessDays": 30,
+            "independentAssessment": null
+          }
+        ]
+      },
+      "baseline": {
+        "schemaVersion": 1,
+        "kind": "BaselineResult",
+        "generatedAt": "2026-09-23T12:00:00Z",
+        "status": "pass",
+        "summary": {
+          "total": 1,
+          "pass": 0,
+          "fail": 0,
+          "error": 0,
+          "notRun": 0
+        },
+        "environment": {
+          "capturedAt": "2026-09-23T12:00:00Z",
+          "node": "v22.22.1",
+          "npm": "9.2.0",
+          "platform": "linux",
+          "arch": "x64",
+          "osRelease": "6.18.33.2",
+          "ci": false,
+          "github": {},
+          "git": {
+            "commit": "83ad91a963d8055f77c29fb4361455689df95acb",
+            "shortCommit": "83ad91a",
+            "branch": "main"
+          }
+        },
+        "checks": [
+          {
+            "id": "check-unit",
+            "title": "check-unit",
+            "component": "fixture",
+            "level": "real",
+            "external": false,
+            "server": false,
+            "critical": true,
+            "command": [
+              "true"
+            ],
+            "evidence": [],
+            "gap": null,
+            "status": "skipped",
+            "exitCode": 1,
+            "durationMs": 1,
+            "startedAt": "2026-09-23T12:00:00Z",
+            "finishedAt": "2026-09-23T12:00:00Z",
+            "log": "logs/check-unit.log",
+            "reason": null
+          }
+        ]
+      },
+      "assessments": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "IndependentAssessment",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Tomt fixture-register med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "assessments": []
+      },
+      "exceptions": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "RiskExceptions",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Tomt fixture-register med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "exceptions": []
+      },
+      "producer": {
+        "type": "implementer",
+        "name": "local-baseline",
+        "subject": "process|baseline"
+      },
+      "targetCommit": null,
+      "now": "2026-09-24T00:00:00Z",
+      "expect": {
+        "requirementId": "REQ-FIX-SKIP-001",
+        "status": "skipped",
+        "decision": "blocked"
+      }
+    },
+    {
+      "id": "not-run",
+      "description": "En ikke-kørt ekstern check er ikke bestået.",
+      "matrix": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "TestMatrix",
+        "metadata": {
+          "name": "fixture-matrix",
+          "version": "1.0.0",
+          "description": "Minimal fixture-matrix til release-gate-testene med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "matrixVersion": "1.0.0",
+        "supportedEnvironments": [
+          "linux-amd64-node22"
+        ],
+        "freshnessPolicy": {
+          "defaultDays": 30,
+          "maxDays": 90
+        },
+        "thresholds": {
+          "requireAllMandatoryPass": true,
+          "allowImplementerEvidenceForRelease": false,
+          "maxOpenExceptions": 0,
+          "maxExceptionDays": 90,
+          "acceptedBy": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "acceptedAt": "2026-09-23T08:00:00Z"
+        },
+        "stages": [
+          {
+            "id": "fixture",
+            "title": "Fixtures",
+            "blocking": true,
+            "commands": [
+              "make release-test"
+            ]
+          }
+        ],
+        "requirements": [
+          {
+            "id": "REQ-FIX-NOTRUN-001",
+            "title": "Krav REQ-FIX-NOTRUN-001",
+            "description": "Et syntetisk testkrav med en gyldig beskrivelse.",
+            "mandatory": true,
+            "releaseBlocking": true,
+            "nonExcepted": false,
+            "owner": {
+              "subject": "oidc|anna.andersen",
+              "name": "Anna Andersen",
+              "role": "Platform Owner"
+            },
+            "controlRefs": [],
+            "testTypes": [
+              "integration"
+            ],
+            "checks": [
+              {
+                "id": "check-unit",
+                "testTypes": [
+                  "integration"
+                ],
+                "mustPass": true
+              }
+            ],
+            "evidenceFreshnessDays": 30,
+            "independentAssessment": null
+          }
+        ]
+      },
+      "baseline": {
+        "schemaVersion": 1,
+        "kind": "BaselineResult",
+        "generatedAt": "2026-09-23T12:00:00Z",
+        "status": "pass",
+        "summary": {
+          "total": 1,
+          "pass": 0,
+          "fail": 0,
+          "error": 0,
+          "notRun": 1
+        },
+        "environment": {
+          "capturedAt": "2026-09-23T12:00:00Z",
+          "node": "v22.22.1",
+          "npm": "9.2.0",
+          "platform": "linux",
+          "arch": "x64",
+          "osRelease": "6.18.33.2",
+          "ci": false,
+          "github": {},
+          "git": {
+            "commit": "83ad91a963d8055f77c29fb4361455689df95acb",
+            "shortCommit": "83ad91a",
+            "branch": "main"
+          }
+        },
+        "checks": [
+          {
+            "id": "check-unit",
+            "title": "check-unit",
+            "component": "fixture",
+            "level": "real",
+            "external": false,
+            "server": false,
+            "critical": true,
+            "command": [
+              "true"
+            ],
+            "evidence": [],
+            "gap": null,
+            "status": "not-run",
+            "exitCode": 1,
+            "durationMs": 1,
+            "startedAt": "2026-09-23T12:00:00Z",
+            "finishedAt": "2026-09-23T12:00:00Z",
+            "log": "logs/check-unit.log",
+            "reason": "kræver eksternt system"
+          }
+        ]
+      },
+      "assessments": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "IndependentAssessment",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Tomt fixture-register med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "assessments": []
+      },
+      "exceptions": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "RiskExceptions",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Tomt fixture-register med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "exceptions": []
+      },
+      "producer": {
+        "type": "implementer",
+        "name": "local-baseline",
+        "subject": "process|baseline"
+      },
+      "targetCommit": null,
+      "now": "2026-09-24T00:00:00Z",
+      "expect": {
+        "requirementId": "REQ-FIX-NOTRUN-001",
+        "status": "not-run",
+        "decision": "blocked"
+      }
+    },
+    {
+      "id": "unsupported",
+      "description": "En ikke-understøttet check er ikke bestået.",
+      "matrix": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "TestMatrix",
+        "metadata": {
+          "name": "fixture-matrix",
+          "version": "1.0.0",
+          "description": "Minimal fixture-matrix til release-gate-testene med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "matrixVersion": "1.0.0",
+        "supportedEnvironments": [
+          "linux-amd64-node22"
+        ],
+        "freshnessPolicy": {
+          "defaultDays": 30,
+          "maxDays": 90
+        },
+        "thresholds": {
+          "requireAllMandatoryPass": true,
+          "allowImplementerEvidenceForRelease": false,
+          "maxOpenExceptions": 0,
+          "maxExceptionDays": 90,
+          "acceptedBy": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "acceptedAt": "2026-09-23T08:00:00Z"
+        },
+        "stages": [
+          {
+            "id": "fixture",
+            "title": "Fixtures",
+            "blocking": true,
+            "commands": [
+              "make release-test"
+            ]
+          }
+        ],
+        "requirements": [
+          {
+            "id": "REQ-FIX-UNSUPPORTED-001",
+            "title": "Krav REQ-FIX-UNSUPPORTED-001",
+            "description": "Et syntetisk testkrav med en gyldig beskrivelse.",
+            "mandatory": true,
+            "releaseBlocking": true,
+            "nonExcepted": false,
+            "owner": {
+              "subject": "oidc|anna.andersen",
+              "name": "Anna Andersen",
+              "role": "Platform Owner"
+            },
+            "controlRefs": [],
+            "testTypes": [
+              "unit"
+            ],
+            "checks": [
+              {
+                "id": "check-unit",
+                "testTypes": [
+                  "unit"
+                ],
+                "mustPass": true
+              }
+            ],
+            "evidenceFreshnessDays": 30,
+            "independentAssessment": null
+          }
+        ]
+      },
+      "baseline": {
+        "schemaVersion": 1,
+        "kind": "BaselineResult",
+        "generatedAt": "2026-09-23T12:00:00Z",
+        "status": "pass",
+        "summary": {
+          "total": 1,
+          "pass": 0,
+          "fail": 0,
+          "error": 0,
+          "notRun": 0
+        },
+        "environment": {
+          "capturedAt": "2026-09-23T12:00:00Z",
+          "node": "v22.22.1",
+          "npm": "9.2.0",
+          "platform": "linux",
+          "arch": "x64",
+          "osRelease": "6.18.33.2",
+          "ci": false,
+          "github": {},
+          "git": {
+            "commit": "83ad91a963d8055f77c29fb4361455689df95acb",
+            "shortCommit": "83ad91a",
+            "branch": "main"
+          }
+        },
+        "checks": [
+          {
+            "id": "check-unit",
+            "title": "check-unit",
+            "component": "fixture",
+            "level": "real",
+            "external": false,
+            "server": false,
+            "critical": true,
+            "command": [
+              "true"
+            ],
+            "evidence": [],
+            "gap": null,
+            "status": "unsupported",
+            "exitCode": 1,
+            "durationMs": 1,
+            "startedAt": "2026-09-23T12:00:00Z",
+            "finishedAt": "2026-09-23T12:00:00Z",
+            "log": "logs/check-unit.log",
+            "reason": null
+          }
+        ]
+      },
+      "assessments": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "IndependentAssessment",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Tomt fixture-register med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "assessments": []
+      },
+      "exceptions": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "RiskExceptions",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Tomt fixture-register med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "exceptions": []
+      },
+      "producer": {
+        "type": "implementer",
+        "name": "local-baseline",
+        "subject": "process|baseline"
+      },
+      "targetCommit": null,
+      "now": "2026-09-24T00:00:00Z",
+      "expect": {
+        "requirementId": "REQ-FIX-UNSUPPORTED-001",
+        "status": "unsupported",
+        "decision": "blocked"
+      }
+    },
+    {
+      "id": "stale",
+      "description": "Evidens ældre end fristen er stale og ikke bestået.",
+      "matrix": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "TestMatrix",
+        "metadata": {
+          "name": "fixture-matrix",
+          "version": "1.0.0",
+          "description": "Minimal fixture-matrix til release-gate-testene med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "matrixVersion": "1.0.0",
+        "supportedEnvironments": [
+          "linux-amd64-node22"
+        ],
+        "freshnessPolicy": {
+          "defaultDays": 30,
+          "maxDays": 90
+        },
+        "thresholds": {
+          "requireAllMandatoryPass": true,
+          "allowImplementerEvidenceForRelease": false,
+          "maxOpenExceptions": 0,
+          "maxExceptionDays": 90,
+          "acceptedBy": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "acceptedAt": "2026-09-23T08:00:00Z"
+        },
+        "stages": [
+          {
+            "id": "fixture",
+            "title": "Fixtures",
+            "blocking": true,
+            "commands": [
+              "make release-test"
+            ]
+          }
+        ],
+        "requirements": [
+          {
+            "id": "REQ-FIX-STALE-001",
+            "title": "Krav REQ-FIX-STALE-001",
+            "description": "Et syntetisk testkrav med en gyldig beskrivelse.",
+            "mandatory": true,
+            "releaseBlocking": true,
+            "nonExcepted": false,
+            "owner": {
+              "subject": "oidc|anna.andersen",
+              "name": "Anna Andersen",
+              "role": "Platform Owner"
+            },
+            "controlRefs": [],
+            "testTypes": [
+              "unit"
+            ],
+            "checks": [
+              {
+                "id": "check-unit",
+                "testTypes": [
+                  "unit"
+                ],
+                "mustPass": true
+              }
+            ],
+            "evidenceFreshnessDays": 5,
+            "independentAssessment": null
+          }
+        ]
+      },
+      "baseline": {
+        "schemaVersion": 1,
+        "kind": "BaselineResult",
+        "generatedAt": "2026-09-01T00:00:00Z",
+        "status": "pass",
+        "summary": {
+          "total": 1,
+          "pass": 1,
+          "fail": 0,
+          "error": 0,
+          "notRun": 0
+        },
+        "environment": {
+          "capturedAt": "2026-09-01T00:00:00Z",
+          "node": "v22.22.1",
+          "npm": "9.2.0",
+          "platform": "linux",
+          "arch": "x64",
+          "osRelease": "6.18.33.2",
+          "ci": false,
+          "github": {},
+          "git": {
+            "commit": "83ad91a963d8055f77c29fb4361455689df95acb",
+            "shortCommit": "83ad91a",
+            "branch": "main"
+          }
+        },
+        "checks": [
+          {
+            "id": "check-unit",
+            "title": "check-unit",
+            "component": "fixture",
+            "level": "real",
+            "external": false,
+            "server": false,
+            "critical": true,
+            "command": [
+              "true"
+            ],
+            "evidence": [],
+            "gap": null,
+            "status": "pass",
+            "exitCode": 0,
+            "durationMs": 1,
+            "startedAt": "2026-09-01T00:00:00Z",
+            "finishedAt": "2026-09-01T00:00:00Z",
+            "log": "logs/check-unit.log",
+            "reason": null
+          }
+        ]
+      },
+      "assessments": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "IndependentAssessment",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Tomt fixture-register med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "assessments": []
+      },
+      "exceptions": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "RiskExceptions",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Tomt fixture-register med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "exceptions": []
+      },
+      "producer": {
+        "type": "implementer",
+        "name": "local-baseline",
+        "subject": "process|baseline"
+      },
+      "targetCommit": null,
+      "now": "2026-09-24T00:00:00Z",
+      "expect": {
+        "requirementId": "REQ-FIX-STALE-001",
+        "status": "stale",
+        "decision": "blocked"
+      }
+    },
+    {
+      "id": "wrong-artifact",
+      "description": "Evidens bundet til et andet commit er wrong-artifact.",
+      "matrix": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "TestMatrix",
+        "metadata": {
+          "name": "fixture-matrix",
+          "version": "1.0.0",
+          "description": "Minimal fixture-matrix til release-gate-testene med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "matrixVersion": "1.0.0",
+        "supportedEnvironments": [
+          "linux-amd64-node22"
+        ],
+        "freshnessPolicy": {
+          "defaultDays": 30,
+          "maxDays": 90
+        },
+        "thresholds": {
+          "requireAllMandatoryPass": true,
+          "allowImplementerEvidenceForRelease": false,
+          "maxOpenExceptions": 0,
+          "maxExceptionDays": 90,
+          "acceptedBy": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "acceptedAt": "2026-09-23T08:00:00Z"
+        },
+        "stages": [
+          {
+            "id": "fixture",
+            "title": "Fixtures",
+            "blocking": true,
+            "commands": [
+              "make release-test"
+            ]
+          }
+        ],
+        "requirements": [
+          {
+            "id": "REQ-FIX-WRONG-001",
+            "title": "Krav REQ-FIX-WRONG-001",
+            "description": "Et syntetisk testkrav med en gyldig beskrivelse.",
+            "mandatory": true,
+            "releaseBlocking": true,
+            "nonExcepted": false,
+            "owner": {
+              "subject": "oidc|anna.andersen",
+              "name": "Anna Andersen",
+              "role": "Platform Owner"
+            },
+            "controlRefs": [],
+            "testTypes": [
+              "unit"
+            ],
+            "checks": [
+              {
+                "id": "check-unit",
+                "testTypes": [
+                  "unit"
+                ],
+                "mustPass": true
+              }
+            ],
+            "evidenceFreshnessDays": 30,
+            "independentAssessment": null
+          }
+        ]
+      },
+      "baseline": {
+        "schemaVersion": 1,
+        "kind": "BaselineResult",
+        "generatedAt": "2026-09-23T12:00:00Z",
+        "status": "pass",
+        "summary": {
+          "total": 1,
+          "pass": 1,
+          "fail": 0,
+          "error": 0,
+          "notRun": 0
+        },
+        "environment": {
+          "capturedAt": "2026-09-23T12:00:00Z",
+          "node": "v22.22.1",
+          "npm": "9.2.0",
+          "platform": "linux",
+          "arch": "x64",
+          "osRelease": "6.18.33.2",
+          "ci": false,
+          "github": {},
+          "git": {
+            "commit": "0000000000000000000000000000000000000000",
+            "shortCommit": "0000000",
+            "branch": "main"
+          }
+        },
+        "checks": [
+          {
+            "id": "check-unit",
+            "title": "check-unit",
+            "component": "fixture",
+            "level": "real",
+            "external": false,
+            "server": false,
+            "critical": true,
+            "command": [
+              "true"
+            ],
+            "evidence": [],
+            "gap": null,
+            "status": "pass",
+            "exitCode": 0,
+            "durationMs": 1,
+            "startedAt": "2026-09-23T12:00:00Z",
+            "finishedAt": "2026-09-23T12:00:00Z",
+            "log": "logs/check-unit.log",
+            "reason": null
+          }
+        ]
+      },
+      "assessments": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "IndependentAssessment",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Tomt fixture-register med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "assessments": []
+      },
+      "exceptions": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "RiskExceptions",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Tomt fixture-register med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "exceptions": []
+      },
+      "producer": {
+        "type": "implementer",
+        "name": "local-baseline",
+        "subject": "process|baseline"
+      },
+      "targetCommit": "83ad91a963d8055f77c29fb4361455689df95acb",
+      "now": "2026-09-24T00:00:00Z",
+      "expect": {
+        "requirementId": "REQ-FIX-WRONG-001",
+        "status": "wrong-artifact",
+        "decision": "blocked"
+      }
+    },
+    {
+      "id": "missing",
+      "description": "En check der ikke findes i evidensen er missing og ikke bestået.",
+      "matrix": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "TestMatrix",
+        "metadata": {
+          "name": "fixture-matrix",
+          "version": "1.0.0",
+          "description": "Minimal fixture-matrix til release-gate-testene med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "matrixVersion": "1.0.0",
+        "supportedEnvironments": [
+          "linux-amd64-node22"
+        ],
+        "freshnessPolicy": {
+          "defaultDays": 30,
+          "maxDays": 90
+        },
+        "thresholds": {
+          "requireAllMandatoryPass": true,
+          "allowImplementerEvidenceForRelease": false,
+          "maxOpenExceptions": 0,
+          "maxExceptionDays": 90,
+          "acceptedBy": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "acceptedAt": "2026-09-23T08:00:00Z"
+        },
+        "stages": [
+          {
+            "id": "fixture",
+            "title": "Fixtures",
+            "blocking": true,
+            "commands": [
+              "make release-test"
+            ]
+          }
+        ],
+        "requirements": [
+          {
+            "id": "REQ-FIX-MISSING-001",
+            "title": "Krav REQ-FIX-MISSING-001",
+            "description": "Et syntetisk testkrav med en gyldig beskrivelse.",
+            "mandatory": true,
+            "releaseBlocking": true,
+            "nonExcepted": false,
+            "owner": {
+              "subject": "oidc|anna.andersen",
+              "name": "Anna Andersen",
+              "role": "Platform Owner"
+            },
+            "controlRefs": [],
+            "testTypes": [
+              "unit"
+            ],
+            "checks": [
+              {
+                "id": "check-absent",
+                "testTypes": [
+                  "unit"
+                ],
+                "mustPass": true
+              }
+            ],
+            "evidenceFreshnessDays": 30,
+            "independentAssessment": null
+          }
+        ]
+      },
+      "baseline": {
+        "schemaVersion": 1,
+        "kind": "BaselineResult",
+        "generatedAt": "2026-09-23T12:00:00Z",
+        "status": "pass",
+        "summary": {
+          "total": 1,
+          "pass": 1,
+          "fail": 0,
+          "error": 0,
+          "notRun": 0
+        },
+        "environment": {
+          "capturedAt": "2026-09-23T12:00:00Z",
+          "node": "v22.22.1",
+          "npm": "9.2.0",
+          "platform": "linux",
+          "arch": "x64",
+          "osRelease": "6.18.33.2",
+          "ci": false,
+          "github": {},
+          "git": {
+            "commit": "83ad91a963d8055f77c29fb4361455689df95acb",
+            "shortCommit": "83ad91a",
+            "branch": "main"
+          }
+        },
+        "checks": [
+          {
+            "id": "check-unit",
+            "title": "check-unit",
+            "component": "fixture",
+            "level": "real",
+            "external": false,
+            "server": false,
+            "critical": true,
+            "command": [
+              "true"
+            ],
+            "evidence": [],
+            "gap": null,
+            "status": "pass",
+            "exitCode": 0,
+            "durationMs": 1,
+            "startedAt": "2026-09-23T12:00:00Z",
+            "finishedAt": "2026-09-23T12:00:00Z",
+            "log": "logs/check-unit.log",
+            "reason": null
+          }
+        ]
+      },
+      "assessments": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "IndependentAssessment",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Tomt fixture-register med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "assessments": []
+      },
+      "exceptions": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "RiskExceptions",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Tomt fixture-register med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "exceptions": []
+      },
+      "producer": {
+        "type": "implementer",
+        "name": "local-baseline",
+        "subject": "process|baseline"
+      },
+      "targetCommit": null,
+      "now": "2026-09-24T00:00:00Z",
+      "expect": {
+        "requirementId": "REQ-FIX-MISSING-001",
+        "status": "missing",
+        "decision": "blocked"
+      }
+    },
+    {
+      "id": "missing-test-type",
+      "description": "En manglende testtype dækket af en bestået check blokerer.",
+      "matrix": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "TestMatrix",
+        "metadata": {
+          "name": "fixture-matrix",
+          "version": "1.0.0",
+          "description": "Minimal fixture-matrix til release-gate-testene med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "matrixVersion": "1.0.0",
+        "supportedEnvironments": [
+          "linux-amd64-node22"
+        ],
+        "freshnessPolicy": {
+          "defaultDays": 30,
+          "maxDays": 90
+        },
+        "thresholds": {
+          "requireAllMandatoryPass": true,
+          "allowImplementerEvidenceForRelease": false,
+          "maxOpenExceptions": 0,
+          "maxExceptionDays": 90,
+          "acceptedBy": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "acceptedAt": "2026-09-23T08:00:00Z"
+        },
+        "stages": [
+          {
+            "id": "fixture",
+            "title": "Fixtures",
+            "blocking": true,
+            "commands": [
+              "make release-test"
+            ]
+          }
+        ],
+        "requirements": [
+          {
+            "id": "REQ-FIX-COVERAGE-001",
+            "title": "Krav REQ-FIX-COVERAGE-001",
+            "description": "Et syntetisk testkrav med en gyldig beskrivelse.",
+            "mandatory": true,
+            "releaseBlocking": true,
+            "nonExcepted": false,
+            "owner": {
+              "subject": "oidc|anna.andersen",
+              "name": "Anna Andersen",
+              "role": "Platform Owner"
+            },
+            "controlRefs": [],
+            "testTypes": [
+              "unit",
+              "contract"
+            ],
+            "checks": [
+              {
+                "id": "check-unit",
+                "testTypes": [
+                  "unit"
+                ],
+                "mustPass": true
+              }
+            ],
+            "evidenceFreshnessDays": 30,
+            "independentAssessment": null
+          }
+        ]
+      },
+      "baseline": {
+        "schemaVersion": 1,
+        "kind": "BaselineResult",
+        "generatedAt": "2026-09-23T12:00:00Z",
+        "status": "pass",
+        "summary": {
+          "total": 1,
+          "pass": 1,
+          "fail": 0,
+          "error": 0,
+          "notRun": 0
+        },
+        "environment": {
+          "capturedAt": "2026-09-23T12:00:00Z",
+          "node": "v22.22.1",
+          "npm": "9.2.0",
+          "platform": "linux",
+          "arch": "x64",
+          "osRelease": "6.18.33.2",
+          "ci": false,
+          "github": {},
+          "git": {
+            "commit": "83ad91a963d8055f77c29fb4361455689df95acb",
+            "shortCommit": "83ad91a",
+            "branch": "main"
+          }
+        },
+        "checks": [
+          {
+            "id": "check-unit",
+            "title": "check-unit",
+            "component": "fixture",
+            "level": "real",
+            "external": false,
+            "server": false,
+            "critical": true,
+            "command": [
+              "true"
+            ],
+            "evidence": [],
+            "gap": null,
+            "status": "pass",
+            "exitCode": 0,
+            "durationMs": 1,
+            "startedAt": "2026-09-23T12:00:00Z",
+            "finishedAt": "2026-09-23T12:00:00Z",
+            "log": "logs/check-unit.log",
+            "reason": null
+          }
+        ]
+      },
+      "assessments": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "IndependentAssessment",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Tomt fixture-register med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "assessments": []
+      },
+      "exceptions": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "RiskExceptions",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Tomt fixture-register med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "exceptions": []
+      },
+      "producer": {
+        "type": "implementer",
+        "name": "local-baseline",
+        "subject": "process|baseline"
+      },
+      "targetCommit": null,
+      "now": "2026-09-24T00:00:00Z",
+      "expect": {
+        "requirementId": "REQ-FIX-COVERAGE-001",
+        "status": "missing",
+        "decision": "blocked"
+      }
+    },
+    {
+      "id": "inflated-green",
+      "description": "Et resumé der siger pass kan ikke overskrive en fejlende check.",
+      "matrix": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "TestMatrix",
+        "metadata": {
+          "name": "fixture-matrix",
+          "version": "1.0.0",
+          "description": "Minimal fixture-matrix til release-gate-testene med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "matrixVersion": "1.0.0",
+        "supportedEnvironments": [
+          "linux-amd64-node22"
+        ],
+        "freshnessPolicy": {
+          "defaultDays": 30,
+          "maxDays": 90
+        },
+        "thresholds": {
+          "requireAllMandatoryPass": true,
+          "allowImplementerEvidenceForRelease": false,
+          "maxOpenExceptions": 0,
+          "maxExceptionDays": 90,
+          "acceptedBy": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "acceptedAt": "2026-09-23T08:00:00Z"
+        },
+        "stages": [
+          {
+            "id": "fixture",
+            "title": "Fixtures",
+            "blocking": true,
+            "commands": [
+              "make release-test"
+            ]
+          }
+        ],
+        "requirements": [
+          {
+            "id": "REQ-FIX-INFLATE-001",
+            "title": "Krav REQ-FIX-INFLATE-001",
+            "description": "Et syntetisk testkrav med en gyldig beskrivelse.",
+            "mandatory": true,
+            "releaseBlocking": true,
+            "nonExcepted": false,
+            "owner": {
+              "subject": "oidc|anna.andersen",
+              "name": "Anna Andersen",
+              "role": "Platform Owner"
+            },
+            "controlRefs": [],
+            "testTypes": [
+              "unit"
+            ],
+            "checks": [
+              {
+                "id": "check-unit",
+                "testTypes": [
+                  "unit"
+                ],
+                "mustPass": true
+              }
+            ],
+            "evidenceFreshnessDays": 30,
+            "independentAssessment": null
+          }
+        ]
+      },
+      "baseline": {
+        "schemaVersion": 1,
+        "kind": "BaselineResult",
+        "generatedAt": "2026-09-23T12:00:00Z",
+        "status": "pass",
+        "summary": {
+          "total": 1,
+          "pass": 0,
+          "fail": 1,
+          "error": 0,
+          "notRun": 0
+        },
+        "environment": {
+          "capturedAt": "2026-09-23T12:00:00Z",
+          "node": "v22.22.1",
+          "npm": "9.2.0",
+          "platform": "linux",
+          "arch": "x64",
+          "osRelease": "6.18.33.2",
+          "ci": false,
+          "github": {},
+          "git": {
+            "commit": "83ad91a963d8055f77c29fb4361455689df95acb",
+            "shortCommit": "83ad91a",
+            "branch": "main"
+          }
+        },
+        "checks": [
+          {
+            "id": "check-unit",
+            "title": "check-unit",
+            "component": "fixture",
+            "level": "real",
+            "external": false,
+            "server": false,
+            "critical": true,
+            "command": [
+              "true"
+            ],
+            "evidence": [],
+            "gap": null,
+            "status": "fail",
+            "exitCode": 1,
+            "durationMs": 1,
+            "startedAt": "2026-09-23T12:00:00Z",
+            "finishedAt": "2026-09-23T12:00:00Z",
+            "log": "logs/check-unit.log",
+            "reason": null
+          }
+        ]
+      },
+      "assessments": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "IndependentAssessment",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Tomt fixture-register med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "assessments": []
+      },
+      "exceptions": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "RiskExceptions",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Tomt fixture-register med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "exceptions": []
+      },
+      "producer": {
+        "type": "implementer",
+        "name": "local-baseline",
+        "subject": "process|baseline"
+      },
+      "targetCommit": null,
+      "now": "2026-09-24T00:00:00Z",
+      "expect": {
+        "requirementId": "REQ-FIX-INFLATE-001",
+        "status": "failed",
+        "decision": "blocked"
+      }
+    },
+    {
+      "id": "pending-independent",
+      "description": "En implementørkørsel kan ikke opfylde et uafhængigt vurderingskrav.",
+      "matrix": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "TestMatrix",
+        "metadata": {
+          "name": "fixture-matrix",
+          "version": "1.0.0",
+          "description": "Minimal fixture-matrix til release-gate-testene med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "matrixVersion": "1.0.0",
+        "supportedEnvironments": [
+          "linux-amd64-node22"
+        ],
+        "freshnessPolicy": {
+          "defaultDays": 30,
+          "maxDays": 90
+        },
+        "thresholds": {
+          "requireAllMandatoryPass": true,
+          "allowImplementerEvidenceForRelease": false,
+          "maxOpenExceptions": 0,
+          "maxExceptionDays": 90,
+          "acceptedBy": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "acceptedAt": "2026-09-23T08:00:00Z"
+        },
+        "stages": [
+          {
+            "id": "fixture",
+            "title": "Fixtures",
+            "blocking": true,
+            "commands": [
+              "make release-test"
+            ]
+          }
+        ],
+        "requirements": [
+          {
+            "id": "REQ-FIX-INDEP-001",
+            "title": "Krav REQ-FIX-INDEP-001",
+            "description": "Et syntetisk testkrav med en gyldig beskrivelse.",
+            "mandatory": true,
+            "releaseBlocking": true,
+            "nonExcepted": false,
+            "owner": {
+              "subject": "oidc|anna.andersen",
+              "name": "Anna Andersen",
+              "role": "Platform Owner"
+            },
+            "controlRefs": [],
+            "testTypes": [
+              "recovery"
+            ],
+            "checks": [
+              {
+                "id": "check-unit",
+                "testTypes": [
+                  "recovery"
+                ],
+                "mustPass": true
+              }
+            ],
+            "evidenceFreshnessDays": 30,
+            "independentAssessment": {
+              "required": true,
+              "reason": "Kræver en levende måling udført af et uafhængigt menneske.",
+              "evidenceKind": "live-measurement"
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "schemaVersion": 1,
+        "kind": "BaselineResult",
+        "generatedAt": "2026-09-23T12:00:00Z",
+        "status": "pass",
+        "summary": {
+          "total": 1,
+          "pass": 1,
+          "fail": 0,
+          "error": 0,
+          "notRun": 0
+        },
+        "environment": {
+          "capturedAt": "2026-09-23T12:00:00Z",
+          "node": "v22.22.1",
+          "npm": "9.2.0",
+          "platform": "linux",
+          "arch": "x64",
+          "osRelease": "6.18.33.2",
+          "ci": false,
+          "github": {},
+          "git": {
+            "commit": "83ad91a963d8055f77c29fb4361455689df95acb",
+            "shortCommit": "83ad91a",
+            "branch": "main"
+          }
+        },
+        "checks": [
+          {
+            "id": "check-unit",
+            "title": "check-unit",
+            "component": "fixture",
+            "level": "real",
+            "external": false,
+            "server": false,
+            "critical": true,
+            "command": [
+              "true"
+            ],
+            "evidence": [],
+            "gap": null,
+            "status": "pass",
+            "exitCode": 0,
+            "durationMs": 1,
+            "startedAt": "2026-09-23T12:00:00Z",
+            "finishedAt": "2026-09-23T12:00:00Z",
+            "log": "logs/check-unit.log",
+            "reason": null
+          }
+        ]
+      },
+      "assessments": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "IndependentAssessment",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Tomt fixture-register med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "assessments": []
+      },
+      "exceptions": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "RiskExceptions",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Tomt fixture-register med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "exceptions": []
+      },
+      "producer": {
+        "type": "implementer",
+        "name": "local-baseline",
+        "subject": "process|baseline"
+      },
+      "targetCommit": null,
+      "now": "2026-09-24T00:00:00Z",
+      "expect": {
+        "requirementId": "REQ-FIX-INDEP-001",
+        "status": "pending-independent-assessment",
+        "decision": "blocked"
+      }
+    },
+    {
+      "id": "independent-accepted",
+      "description": "En gyldig uafhængig vurdering fra en uafhængig producent gør kravet bestået.",
+      "matrix": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "TestMatrix",
+        "metadata": {
+          "name": "fixture-matrix",
+          "version": "1.0.0",
+          "description": "Minimal fixture-matrix til release-gate-testene med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "matrixVersion": "1.0.0",
+        "supportedEnvironments": [
+          "linux-amd64-node22"
+        ],
+        "freshnessPolicy": {
+          "defaultDays": 30,
+          "maxDays": 90
+        },
+        "thresholds": {
+          "requireAllMandatoryPass": true,
+          "allowImplementerEvidenceForRelease": false,
+          "maxOpenExceptions": 0,
+          "maxExceptionDays": 90,
+          "acceptedBy": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "acceptedAt": "2026-09-23T08:00:00Z"
+        },
+        "stages": [
+          {
+            "id": "fixture",
+            "title": "Fixtures",
+            "blocking": true,
+            "commands": [
+              "make release-test"
+            ]
+          }
+        ],
+        "requirements": [
+          {
+            "id": "REQ-FIX-INDEP-002",
+            "title": "Krav REQ-FIX-INDEP-002",
+            "description": "Et syntetisk testkrav med en gyldig beskrivelse.",
+            "mandatory": true,
+            "releaseBlocking": true,
+            "nonExcepted": false,
+            "owner": {
+              "subject": "oidc|anna.andersen",
+              "name": "Anna Andersen",
+              "role": "Platform Owner"
+            },
+            "controlRefs": [],
+            "testTypes": [
+              "recovery"
+            ],
+            "checks": [
+              {
+                "id": "check-unit",
+                "testTypes": [
+                  "recovery"
+                ],
+                "mustPass": true
+              }
+            ],
+            "evidenceFreshnessDays": 30,
+            "independentAssessment": {
+              "required": true,
+              "reason": "Kræver en levende måling udført af et uafhængigt menneske.",
+              "evidenceKind": "live-measurement"
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "schemaVersion": 1,
+        "kind": "BaselineResult",
+        "generatedAt": "2026-09-23T12:00:00Z",
+        "status": "pass",
+        "summary": {
+          "total": 1,
+          "pass": 1,
+          "fail": 0,
+          "error": 0,
+          "notRun": 0
+        },
+        "environment": {
+          "capturedAt": "2026-09-23T12:00:00Z",
+          "node": "v22.22.1",
+          "npm": "9.2.0",
+          "platform": "linux",
+          "arch": "x64",
+          "osRelease": "6.18.33.2",
+          "ci": false,
+          "github": {},
+          "git": {
+            "commit": "83ad91a963d8055f77c29fb4361455689df95acb",
+            "shortCommit": "83ad91a",
+            "branch": "main"
+          }
+        },
+        "checks": [
+          {
+            "id": "check-unit",
+            "title": "check-unit",
+            "component": "fixture",
+            "level": "real",
+            "external": false,
+            "server": false,
+            "critical": true,
+            "command": [
+              "true"
+            ],
+            "evidence": [],
+            "gap": null,
+            "status": "pass",
+            "exitCode": 0,
+            "durationMs": 1,
+            "startedAt": "2026-09-23T12:00:00Z",
+            "finishedAt": "2026-09-23T12:00:00Z",
+            "log": "logs/check-unit.log",
+            "reason": null
+          }
+        ]
+      },
+      "assessments": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "IndependentAssessment",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Fixture med en gyldig uafhængig vurdering.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "assessments": [
+          {
+            "id": "ASM-FIX-001",
+            "requirementId": "REQ-FIX-INDEP-002",
+            "kind": "live-measurement",
+            "performedBy": {
+              "subject": "oidc|external.auditor",
+              "name": "External Auditor",
+              "role": "Independent Verifier"
+            },
+            "performedAt": "2026-09-20T00:00:00Z",
+            "expiresAt": "2026-12-20T00:00:00Z",
+            "evidenceRef": "docs/security/assessments/fixture.md",
+            "scope": "Levende failover-måling på fixture-klyngen.",
+            "targetCommit": "83ad91a963d8055f77c29fb4361455689df95acb"
+          }
+        ]
+      },
+      "exceptions": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "RiskExceptions",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Tomt fixture-register med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "exceptions": []
+      },
+      "producer": {
+        "type": "independent-verifier",
+        "name": "external-auditor",
+        "subject": "human|external.auditor"
+      },
+      "targetCommit": null,
+      "now": "2026-09-24T00:00:00Z",
+      "expect": {
+        "requirementId": "REQ-FIX-INDEP-002",
+        "status": "passed",
+        "decision": "eligible"
+      }
+    },
+    {
+      "id": "exception-valid",
+      "description": "En gyldig, tidsbegrænset undtagelse giver eligible-with-exceptions.",
+      "matrix": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "TestMatrix",
+        "metadata": {
+          "name": "fixture-matrix",
+          "version": "1.0.0",
+          "description": "Minimal fixture-matrix til release-gate-testene med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "matrixVersion": "1.0.0",
+        "supportedEnvironments": [
+          "linux-amd64-node22"
+        ],
+        "freshnessPolicy": {
+          "defaultDays": 30,
+          "maxDays": 90
+        },
+        "thresholds": {
+          "requireAllMandatoryPass": true,
+          "allowImplementerEvidenceForRelease": false,
+          "maxOpenExceptions": 1,
+          "maxExceptionDays": 90,
+          "acceptedBy": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "acceptedAt": "2026-09-23T08:00:00Z"
+        },
+        "stages": [
+          {
+            "id": "fixture",
+            "title": "Fixtures",
+            "blocking": true,
+            "commands": [
+              "make release-test"
+            ]
+          }
+        ],
+        "requirements": [
+          {
+            "id": "REQ-FIX-EXC-001",
+            "title": "Krav REQ-FIX-EXC-001",
+            "description": "Et syntetisk testkrav med en gyldig beskrivelse.",
+            "mandatory": true,
+            "releaseBlocking": true,
+            "nonExcepted": false,
+            "owner": {
+              "subject": "oidc|anna.andersen",
+              "name": "Anna Andersen",
+              "role": "Platform Owner"
+            },
+            "controlRefs": [],
+            "testTypes": [
+              "unit"
+            ],
+            "checks": [
+              {
+                "id": "check-unit",
+                "testTypes": [
+                  "unit"
+                ],
+                "mustPass": true
+              }
+            ],
+            "evidenceFreshnessDays": 30,
+            "independentAssessment": null
+          }
+        ]
+      },
+      "baseline": {
+        "schemaVersion": 1,
+        "kind": "BaselineResult",
+        "generatedAt": "2026-09-23T12:00:00Z",
+        "status": "pass",
+        "summary": {
+          "total": 1,
+          "pass": 0,
+          "fail": 1,
+          "error": 0,
+          "notRun": 0
+        },
+        "environment": {
+          "capturedAt": "2026-09-23T12:00:00Z",
+          "node": "v22.22.1",
+          "npm": "9.2.0",
+          "platform": "linux",
+          "arch": "x64",
+          "osRelease": "6.18.33.2",
+          "ci": false,
+          "github": {},
+          "git": {
+            "commit": "83ad91a963d8055f77c29fb4361455689df95acb",
+            "shortCommit": "83ad91a",
+            "branch": "main"
+          }
+        },
+        "checks": [
+          {
+            "id": "check-unit",
+            "title": "check-unit",
+            "component": "fixture",
+            "level": "real",
+            "external": false,
+            "server": false,
+            "critical": true,
+            "command": [
+              "true"
+            ],
+            "evidence": [],
+            "gap": null,
+            "status": "fail",
+            "exitCode": 1,
+            "durationMs": 1,
+            "startedAt": "2026-09-23T12:00:00Z",
+            "finishedAt": "2026-09-23T12:00:00Z",
+            "log": "logs/check-unit.log",
+            "reason": null
+          }
+        ]
+      },
+      "assessments": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "IndependentAssessment",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Tomt fixture-register med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "assessments": []
+      },
+      "exceptions": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "RiskExceptions",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Fixture med en gyldig undtagelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "exceptions": [
+          {
+            "id": "EXC-FIX-001",
+            "requirementId": "REQ-FIX-EXC-001",
+            "reason": "Midlertidig fejl i testværktøjet er accepteret i et afgrænset tidsrum.",
+            "owner": {
+              "subject": "oidc|anna.andersen",
+              "name": "Anna Andersen",
+              "role": "Platform Owner"
+            },
+            "approvedAt": "2026-09-20T00:00:00Z",
+            "expiresAt": "2026-10-20T00:00:00Z",
+            "scope": "Kun dette krav i dette tidsrum.",
+            "compensatingControls": [
+              "Manuel gennemgang af checkens output."
+            ],
+            "status": "open"
+          }
+        ]
+      },
+      "producer": {
+        "type": "implementer",
+        "name": "local-baseline",
+        "subject": "process|baseline"
+      },
+      "targetCommit": null,
+      "now": "2026-09-24T00:00:00Z",
+      "expect": {
+        "requirementId": "REQ-FIX-EXC-001",
+        "status": "excepted",
+        "decision": "eligible-with-exceptions"
+      }
+    },
+    {
+      "id": "exception-nonexcepted",
+      "description": "En undtagelse kan ikke dække et nonExcepted sikkerhedskrav.",
+      "matrix": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "TestMatrix",
+        "metadata": {
+          "name": "fixture-matrix",
+          "version": "1.0.0",
+          "description": "Minimal fixture-matrix til release-gate-testene med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "matrixVersion": "1.0.0",
+        "supportedEnvironments": [
+          "linux-amd64-node22"
+        ],
+        "freshnessPolicy": {
+          "defaultDays": 30,
+          "maxDays": 90
+        },
+        "thresholds": {
+          "requireAllMandatoryPass": true,
+          "allowImplementerEvidenceForRelease": false,
+          "maxOpenExceptions": 1,
+          "maxExceptionDays": 90,
+          "acceptedBy": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "acceptedAt": "2026-09-23T08:00:00Z"
+        },
+        "stages": [
+          {
+            "id": "fixture",
+            "title": "Fixtures",
+            "blocking": true,
+            "commands": [
+              "make release-test"
+            ]
+          }
+        ],
+        "requirements": [
+          {
+            "id": "REQ-FIX-EXC-002",
+            "title": "Krav REQ-FIX-EXC-002",
+            "description": "Et syntetisk testkrav med en gyldig beskrivelse.",
+            "mandatory": true,
+            "releaseBlocking": true,
+            "nonExcepted": true,
+            "owner": {
+              "subject": "oidc|anna.andersen",
+              "name": "Anna Andersen",
+              "role": "Platform Owner"
+            },
+            "controlRefs": [],
+            "testTypes": [
+              "unit"
+            ],
+            "checks": [
+              {
+                "id": "check-unit",
+                "testTypes": [
+                  "unit"
+                ],
+                "mustPass": true
+              }
+            ],
+            "evidenceFreshnessDays": 30,
+            "independentAssessment": null
+          }
+        ]
+      },
+      "baseline": {
+        "schemaVersion": 1,
+        "kind": "BaselineResult",
+        "generatedAt": "2026-09-23T12:00:00Z",
+        "status": "pass",
+        "summary": {
+          "total": 1,
+          "pass": 0,
+          "fail": 1,
+          "error": 0,
+          "notRun": 0
+        },
+        "environment": {
+          "capturedAt": "2026-09-23T12:00:00Z",
+          "node": "v22.22.1",
+          "npm": "9.2.0",
+          "platform": "linux",
+          "arch": "x64",
+          "osRelease": "6.18.33.2",
+          "ci": false,
+          "github": {},
+          "git": {
+            "commit": "83ad91a963d8055f77c29fb4361455689df95acb",
+            "shortCommit": "83ad91a",
+            "branch": "main"
+          }
+        },
+        "checks": [
+          {
+            "id": "check-unit",
+            "title": "check-unit",
+            "component": "fixture",
+            "level": "real",
+            "external": false,
+            "server": false,
+            "critical": true,
+            "command": [
+              "true"
+            ],
+            "evidence": [],
+            "gap": null,
+            "status": "fail",
+            "exitCode": 1,
+            "durationMs": 1,
+            "startedAt": "2026-09-23T12:00:00Z",
+            "finishedAt": "2026-09-23T12:00:00Z",
+            "log": "logs/check-unit.log",
+            "reason": null
+          }
+        ]
+      },
+      "assessments": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "IndependentAssessment",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Tomt fixture-register med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "assessments": []
+      },
+      "exceptions": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "RiskExceptions",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Fixture der forsøger at undtage et nonExcepted-krav.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "exceptions": [
+          {
+            "id": "EXC-FIX-002",
+            "requirementId": "REQ-FIX-EXC-002",
+            "reason": "Forsøg på at undtage et sikkerhedskritisk krav i et tidsrum.",
+            "owner": {
+              "subject": "oidc|anna.andersen",
+              "name": "Anna Andersen",
+              "role": "Platform Owner"
+            },
+            "approvedAt": "2026-09-20T00:00:00Z",
+            "expiresAt": "2026-10-20T00:00:00Z",
+            "scope": "Forsøg.",
+            "compensatingControls": [
+              "Ingen."
+            ],
+            "status": "open"
+          }
+        ]
+      },
+      "producer": {
+        "type": "implementer",
+        "name": "local-baseline",
+        "subject": "process|baseline"
+      },
+      "targetCommit": null,
+      "now": "2026-09-24T00:00:00Z",
+      "expect": {
+        "requirementId": "REQ-FIX-EXC-002",
+        "status": "failed",
+        "decision": "blocked"
+      }
+    },
+    {
+      "id": "exception-expired",
+      "description": "En udløbet undtagelse er ikke en undtagelse.",
+      "matrix": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "TestMatrix",
+        "metadata": {
+          "name": "fixture-matrix",
+          "version": "1.0.0",
+          "description": "Minimal fixture-matrix til release-gate-testene med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "matrixVersion": "1.0.0",
+        "supportedEnvironments": [
+          "linux-amd64-node22"
+        ],
+        "freshnessPolicy": {
+          "defaultDays": 30,
+          "maxDays": 90
+        },
+        "thresholds": {
+          "requireAllMandatoryPass": true,
+          "allowImplementerEvidenceForRelease": false,
+          "maxOpenExceptions": 1,
+          "maxExceptionDays": 90,
+          "acceptedBy": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "acceptedAt": "2026-09-23T08:00:00Z"
+        },
+        "stages": [
+          {
+            "id": "fixture",
+            "title": "Fixtures",
+            "blocking": true,
+            "commands": [
+              "make release-test"
+            ]
+          }
+        ],
+        "requirements": [
+          {
+            "id": "REQ-FIX-EXC-003",
+            "title": "Krav REQ-FIX-EXC-003",
+            "description": "Et syntetisk testkrav med en gyldig beskrivelse.",
+            "mandatory": true,
+            "releaseBlocking": true,
+            "nonExcepted": false,
+            "owner": {
+              "subject": "oidc|anna.andersen",
+              "name": "Anna Andersen",
+              "role": "Platform Owner"
+            },
+            "controlRefs": [],
+            "testTypes": [
+              "unit"
+            ],
+            "checks": [
+              {
+                "id": "check-unit",
+                "testTypes": [
+                  "unit"
+                ],
+                "mustPass": true
+              }
+            ],
+            "evidenceFreshnessDays": 30,
+            "independentAssessment": null
+          }
+        ]
+      },
+      "baseline": {
+        "schemaVersion": 1,
+        "kind": "BaselineResult",
+        "generatedAt": "2026-09-23T12:00:00Z",
+        "status": "pass",
+        "summary": {
+          "total": 1,
+          "pass": 0,
+          "fail": 1,
+          "error": 0,
+          "notRun": 0
+        },
+        "environment": {
+          "capturedAt": "2026-09-23T12:00:00Z",
+          "node": "v22.22.1",
+          "npm": "9.2.0",
+          "platform": "linux",
+          "arch": "x64",
+          "osRelease": "6.18.33.2",
+          "ci": false,
+          "github": {},
+          "git": {
+            "commit": "83ad91a963d8055f77c29fb4361455689df95acb",
+            "shortCommit": "83ad91a",
+            "branch": "main"
+          }
+        },
+        "checks": [
+          {
+            "id": "check-unit",
+            "title": "check-unit",
+            "component": "fixture",
+            "level": "real",
+            "external": false,
+            "server": false,
+            "critical": true,
+            "command": [
+              "true"
+            ],
+            "evidence": [],
+            "gap": null,
+            "status": "fail",
+            "exitCode": 1,
+            "durationMs": 1,
+            "startedAt": "2026-09-23T12:00:00Z",
+            "finishedAt": "2026-09-23T12:00:00Z",
+            "log": "logs/check-unit.log",
+            "reason": null
+          }
+        ]
+      },
+      "assessments": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "IndependentAssessment",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Tomt fixture-register med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "assessments": []
+      },
+      "exceptions": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "RiskExceptions",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Fixture med en udløbet undtagelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "exceptions": [
+          {
+            "id": "EXC-FIX-003",
+            "requirementId": "REQ-FIX-EXC-003",
+            "reason": "Udløbet undtagelse der ikke længere må dække kravet.",
+            "owner": {
+              "subject": "oidc|anna.andersen",
+              "name": "Anna Andersen",
+              "role": "Platform Owner"
+            },
+            "approvedAt": "2026-08-01T00:00:00Z",
+            "expiresAt": "2026-08-15T00:00:00Z",
+            "scope": "Udløbet.",
+            "compensatingControls": [
+              "Ingen."
+            ],
+            "status": "open"
+          }
+        ]
+      },
+      "producer": {
+        "type": "implementer",
+        "name": "local-baseline",
+        "subject": "process|baseline"
+      },
+      "targetCommit": null,
+      "now": "2026-09-24T00:00:00Z",
+      "expect": {
+        "requirementId": "REQ-FIX-EXC-003",
+        "status": "failed",
+        "decision": "blocked"
+      }
+    },
+    {
+      "id": "thresholds-not-accepted",
+      "description": "Uden en navngivet accept af tærsklerne blokeres release.",
+      "matrix": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "TestMatrix",
+        "metadata": {
+          "name": "fixture-matrix",
+          "version": "1.0.0",
+          "description": "Minimal fixture-matrix til release-gate-testene med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "matrixVersion": "1.0.0",
+        "supportedEnvironments": [
+          "linux-amd64-node22"
+        ],
+        "freshnessPolicy": {
+          "defaultDays": 30,
+          "maxDays": 90
+        },
+        "thresholds": {
+          "requireAllMandatoryPass": true,
+          "allowImplementerEvidenceForRelease": false,
+          "maxOpenExceptions": 0,
+          "maxExceptionDays": 90,
+          "acceptedBy": {
+            "subject": "team|platform",
+            "name": "Platform Team",
+            "role": "team"
+          },
+          "acceptedAt": null
+        },
+        "stages": [
+          {
+            "id": "fixture",
+            "title": "Fixtures",
+            "blocking": true,
+            "commands": [
+              "make release-test"
+            ]
+          }
+        ],
+        "requirements": [
+          {
+            "id": "REQ-FIX-THRESH-001",
+            "title": "Krav REQ-FIX-THRESH-001",
+            "description": "Et syntetisk testkrav med en gyldig beskrivelse.",
+            "mandatory": true,
+            "releaseBlocking": true,
+            "nonExcepted": false,
+            "owner": {
+              "subject": "oidc|anna.andersen",
+              "name": "Anna Andersen",
+              "role": "Platform Owner"
+            },
+            "controlRefs": [],
+            "testTypes": [
+              "unit"
+            ],
+            "checks": [
+              {
+                "id": "check-unit",
+                "testTypes": [
+                  "unit"
+                ],
+                "mustPass": true
+              }
+            ],
+            "evidenceFreshnessDays": 30,
+            "independentAssessment": null
+          }
+        ]
+      },
+      "baseline": {
+        "schemaVersion": 1,
+        "kind": "BaselineResult",
+        "generatedAt": "2026-09-23T12:00:00Z",
+        "status": "pass",
+        "summary": {
+          "total": 1,
+          "pass": 1,
+          "fail": 0,
+          "error": 0,
+          "notRun": 0
+        },
+        "environment": {
+          "capturedAt": "2026-09-23T12:00:00Z",
+          "node": "v22.22.1",
+          "npm": "9.2.0",
+          "platform": "linux",
+          "arch": "x64",
+          "osRelease": "6.18.33.2",
+          "ci": false,
+          "github": {},
+          "git": {
+            "commit": "83ad91a963d8055f77c29fb4361455689df95acb",
+            "shortCommit": "83ad91a",
+            "branch": "main"
+          }
+        },
+        "checks": [
+          {
+            "id": "check-unit",
+            "title": "check-unit",
+            "component": "fixture",
+            "level": "real",
+            "external": false,
+            "server": false,
+            "critical": true,
+            "command": [
+              "true"
+            ],
+            "evidence": [],
+            "gap": null,
+            "status": "pass",
+            "exitCode": 0,
+            "durationMs": 1,
+            "startedAt": "2026-09-23T12:00:00Z",
+            "finishedAt": "2026-09-23T12:00:00Z",
+            "log": "logs/check-unit.log",
+            "reason": null
+          }
+        ]
+      },
+      "assessments": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "IndependentAssessment",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Tomt fixture-register med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "assessments": []
+      },
+      "exceptions": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "RiskExceptions",
+        "metadata": {
+          "name": "fixture",
+          "version": "1.0.0",
+          "description": "Tomt fixture-register med en gyldig beskrivelse.",
+          "accountableHuman": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "exceptions": []
+      },
+      "producer": {
+        "type": "implementer",
+        "name": "local-baseline",
+        "subject": "process|baseline"
+      },
+      "targetCommit": null,
+      "now": "2026-09-24T00:00:00Z",
+      "expect": {
+        "requirementId": "REQ-FIX-THRESH-001",
+        "status": "passed",
+        "decision": "blocked"
+      }
+    }
+  ]
+}

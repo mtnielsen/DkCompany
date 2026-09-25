@@ -1,0 +1,138 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "UpstreamReleaseProfile",
+  "metadata": {
+    "name": "mattermost-10-0-0",
+    "version": "1.0.0",
+    "description": "Releaseprofil for Mattermost 10.0.0 (Enterprise).",
+    "accountableHuman": {
+      "subject": "oidc|hans.hansen",
+      "name": "Hans Hansen",
+      "role": "Solution Architect"
+    }
+  },
+  "upstream": {
+    "vendor": "Mattermost, Inc.",
+    "product": "Mattermost",
+    "exactVersion": "10.0.0",
+    "edition": "Enterprise",
+    "tier": "enterprise"
+  },
+  "candidateRef": "mattermost-adapter-10-0-0.json",
+  "negotiation": {
+    "supportedRanges": [
+      "^10.0.0"
+    ],
+    "supportedEditions": [
+      "Enterprise"
+    ],
+    "onUnsupported": "refuse"
+  },
+  "verbMatrix": {
+    "backup": {
+      "conformance": "unsupported",
+      "reason": "Mattermosts backup er database- og fillag på driftniveau; adapteren har ingen API-adgang til at tage den."
+    },
+    "restore": {
+      "conformance": "unsupported",
+      "reason": "Gendannelse sker på database- og fillag og kan ikke udføres gennem Mattermost API."
+    },
+    "verify-restore": {
+      "conformance": "unsupported",
+      "reason": "Der findes ingen API til at verificere en gendannelse; det kræver adgang til backup-lagret."
+    },
+    "drain": {
+      "conformance": "partial",
+      "reason": "Adapteren kan sætte Mattermost i læs-tilstand via config, men kan ikke dræne aktive websocket-forbindelser."
+    },
+    "upgrade.dry-run": {
+      "conformance": "partial",
+      "reason": "Adapteren kan rapportere nuværende og ønsket version, men Mattermost tilbyder ikke en egentlig dry-run."
+    },
+    "upgrade": {
+      "conformance": "unsupported",
+      "reason": "Mattermost opgraderes ved at udskifte containeren; det ligger uden for adapterens verbkontrakt."
+    },
+    "migrate": {
+      "conformance": "unsupported",
+      "reason": "Mattermost kører sine egne database-migrationer ved opstart; adapteren kan ikke styre dem."
+    },
+    "rollback": {
+      "conformance": "unsupported",
+      "reason": "Rollback kræver gendannelse fra backup og er derfor ikke mulig gennem adapteren."
+    },
+    "health": {
+      "conformance": "full",
+      "endpoint": "https://mattermost-adapter.example.org/healthz",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/health.json"
+      }
+    },
+    "slo": {
+      "conformance": "partial",
+      "reason": "Adapteren måler sin egen svartid, men Mattermosts SLO og fejlbudget ligger hos upstream-drift."
+    }
+  },
+  "privacyMatrix": {
+    "subject.locate": {
+      "conformance": "full",
+      "endpoint": "https://mattermost-adapter.example.org/v1/privacy/locate",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/subject.locate.json"
+      }
+    },
+    "subject.export": {
+      "conformance": "full",
+      "endpoint": "https://mattermost-adapter.example.org/v1/privacy/export",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/subject.export.json"
+      }
+    },
+    "subject.erase": {
+      "conformance": "partial",
+      "reason": "Adapteren kan slette brugerens opslag gennem API'et, men ikke kopier i backups, søgeindeks og revisionsspor; de skal håndteres af upstream-drift."
+    },
+    "subject.legal_hold": {
+      "conformance": "unsupported",
+      "reason": "Mattermost har ingen API til legal hold; et hold kræver manuel indgriben i upstream."
+    },
+    "retention.policy": {
+      "conformance": "partial",
+      "reason": "Mattermost har globale opbevaringsindstillinger, men de kan ikke sættes eller rapporteres pr. subjekt gennem adapteren."
+    }
+  },
+  "nativeAdmin": {
+    "exposed": false,
+    "protectedBy": [
+      "adapter",
+      "pdp",
+      "network-policy"
+    ],
+    "evidence": [
+      "gitops/manifests/dev/model-egress-default-deny.json",
+      "infrastructure/src/netpol.mjs"
+    ]
+  },
+  "approvalGate": {
+    "requiredSso": true,
+    "licenseType": "mixed",
+    "status": "approved",
+    "blockers": []
+  },
+  "verification": {
+    "status": "approved",
+    "verifiedBy": {
+      "subject": "oidc|hans.hansen",
+      "name": "Hans Hansen",
+      "role": "Solution Architect"
+    },
+    "verifiedAt": "2025-01-10",
+    "evidence": [
+      "https://mattermost.com/pricing/",
+      "https://developers.mattermost.com/integrate/reference/"
+    ]
+  }
+}

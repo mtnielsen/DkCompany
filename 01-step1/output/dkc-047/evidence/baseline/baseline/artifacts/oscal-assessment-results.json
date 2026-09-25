@@ -1,0 +1,2219 @@
+{
+  "assessment-results": {
+    "uuid": "615f29d7-02c9-5419-966a-a7a165d1996d",
+    "metadata": {
+      "title": "Platformens compliance-evidens",
+      "published": "2026-09-23T14:10:25.846Z",
+      "last-modified": "2026-09-23T14:10:25.846Z",
+      "version": "1.0.0",
+      "oscal-version": "1.1.2",
+      "roles": [
+        {
+          "role-id": "platform-owner",
+          "title": "Platformsejer"
+        },
+        {
+          "role-id": "prepared-by",
+          "title": "Evidens-emitter"
+        }
+      ],
+      "parties": [
+        {
+          "uuid": "958867ac-f472-5033-bafb-8969bba506ea",
+          "type": "organization",
+          "name": "Platformsteamet",
+          "email-addresses": [
+            "platform@example.org"
+          ]
+        }
+      ],
+      "responsible-parties": [
+        {
+          "role-id": "platform-owner",
+          "party-uuids": [
+            "958867ac-f472-5033-bafb-8969bba506ea"
+          ]
+        }
+      ],
+      "remarks": "Genereret maskinelt af evidence/src/cli.mjs. Prosa er ikke evidens."
+    },
+    "import-ap": {
+      "href": "urn:platform:assessment-plan:governance",
+      "remarks": "Assessment-planen er platformens kontrakt- og konformanssuite."
+    },
+    "results": [
+      {
+        "uuid": "a7fe8f8f-5416-50ce-ab55-16d6847e0550",
+        "title": "audit-service konformans",
+        "description": "Konformansresultater for audit-service@1.0.0.",
+        "start": "2026-09-23T14:10:25.216Z",
+        "end": "2026-09-23T14:10:25.289Z",
+        "reviewed-controls": {
+          "control-selections": [
+            {
+              "include-controls": [
+                {
+                  "control-id": "ac-2"
+                },
+                {
+                  "control-id": "au-2"
+                },
+                {
+                  "control-id": "au-9"
+                },
+                {
+                  "control-id": "cp-9"
+                },
+                {
+                  "control-id": "si-12"
+                }
+              ]
+            }
+          ]
+        },
+        "observations": [
+          {
+            "uuid": "ccdd24cd-0ddf-5cc0-b4bd-eec19e1f374e",
+            "title": "Bevis for verbet backup",
+            "description": "backup mod audit-service: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/audit-service/conformance/evidence/backup.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2026-09-23T14:10:04.537Z"
+          },
+          {
+            "uuid": "54a127f0-0146-50e1-b30e-3bdf13118598",
+            "title": "Bevis for verbet restore",
+            "description": "restore mod audit-service: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/audit-service/conformance/evidence/restore.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2026-09-23T14:10:04.542Z"
+          },
+          {
+            "uuid": "39c5cb2c-9d19-5cec-9a4c-4f92df24b735",
+            "title": "Bevis for verbet verify-restore",
+            "description": "verify-restore mod audit-service: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/audit-service/conformance/evidence/verify-restore.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2026-09-23T14:10:04.546Z"
+          },
+          {
+            "uuid": "73e441c1-dca6-5741-86bd-448b86f1ee58",
+            "title": "Bevis for verbet drain",
+            "description": "drain mod audit-service: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/audit-service/conformance/evidence/drain.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2026-09-23T14:10:04.548Z"
+          },
+          {
+            "uuid": "0f6a1ffb-e9de-5ee2-8e98-0c196658cf7e",
+            "title": "Bevis for verbet upgrade.dry-run",
+            "description": "upgrade.dry-run mod audit-service: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/audit-service/conformance/evidence/upgrade.dry-run.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2026-09-23T14:10:04.551Z"
+          },
+          {
+            "uuid": "ccc2ba8b-6be9-5a4d-808d-6b044c457eff",
+            "title": "Bevis for verbet upgrade",
+            "description": "upgrade mod audit-service: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/audit-service/conformance/evidence/upgrade.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2026-09-23T14:10:04.553Z"
+          },
+          {
+            "uuid": "f18bec72-7002-5465-849f-aaf6e0f3eb99",
+            "title": "Bevis for verbet migrate",
+            "description": "migrate mod audit-service: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/audit-service/conformance/evidence/migrate.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2026-09-23T14:10:04.555Z"
+          },
+          {
+            "uuid": "67edb7f4-2436-5b05-8a6b-a59b4f7a4c99",
+            "title": "Bevis for verbet rollback",
+            "description": "rollback mod audit-service: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/audit-service/conformance/evidence/rollback.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2026-09-23T14:10:04.557Z"
+          },
+          {
+            "uuid": "930aa148-c6de-5988-bd25-888c0e5be6cf",
+            "title": "Bevis for verbet health",
+            "description": "health mod audit-service: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/audit-service/conformance/evidence/health.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2026-09-23T14:10:04.563Z"
+          },
+          {
+            "uuid": "0507c5e0-d0ae-5266-ad23-7625c33f68cb",
+            "title": "Bevis for verbet slo",
+            "description": "slo mod audit-service: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/audit-service/conformance/evidence/slo.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2026-09-23T14:10:04.561Z"
+          },
+          {
+            "uuid": "273e9c0a-c7fd-5a65-a721-54bac3b09fe9",
+            "title": "Bevis for verbet subject.locate",
+            "description": "subject.locate mod audit-service: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/audit-service/conformance/evidence/subject.locate.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2026-09-23T14:10:04.565Z"
+          },
+          {
+            "uuid": "ebd97992-797d-56ed-aa25-0137c77c4d95",
+            "title": "Bevis for verbet subject.export",
+            "description": "subject.export mod audit-service: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/audit-service/conformance/evidence/subject.export.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2026-09-23T14:10:04.567Z"
+          },
+          {
+            "uuid": "0ce7dddf-5549-53d7-8b70-41b3aede9266",
+            "title": "Bevis for verbet subject.erase",
+            "description": "subject.erase mod audit-service: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/audit-service/conformance/evidence/subject.erase.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2026-09-23T14:10:04.571Z"
+          },
+          {
+            "uuid": "26d3e0cc-0e87-502c-9558-d02914fe5db0",
+            "title": "Bevis for verbet subject.legal_hold",
+            "description": "subject.legal_hold mod audit-service: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/audit-service/conformance/evidence/subject.legal_hold.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2026-09-23T14:10:04.569Z"
+          },
+          {
+            "uuid": "eabbce2e-f15a-5468-9c4a-5181aead6904",
+            "title": "Bevis for verbet retention.policy",
+            "description": "retention.policy mod audit-service: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/audit-service/conformance/evidence/retention.policy.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2026-09-23T14:10:04.568Z"
+          },
+          {
+            "uuid": "73fa47fe-8165-5c57-830b-7db779145a2e",
+            "title": "PDP-beslutning",
+            "description": "Beslutning 'allow-with-approval' fra platform-pdp@1.0.0 med bundle platform@1.0.0.",
+            "methods": [
+              "EXAMINE",
+              "ANALYZE"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/audit-service/conformance/evidence/policy-decision.json",
+                "description": "policy-decision fixture"
+              }
+            ],
+            "collected": "2026-09-23T14:10:04.573Z"
+          },
+          {
+            "uuid": "a48acec9-96d1-5e53-84c5-b49746cd41bf",
+            "title": "Audit-hændelse dk.platform.audit-service.backup.completed",
+            "description": "CloudEvent fra urn:platform:module:audit-service med principal agent:spiffe://platform.example.org/agents/audit-service-operator.",
+            "methods": [
+              "EXAMINE"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/audit-service/conformance/events/agent-action.json",
+                "description": "CloudEvent (audit-log)"
+              }
+            ],
+            "collected": "2026-09-23T14:10:04.529Z"
+          },
+          {
+            "uuid": "b64cd66c-ccc1-55ac-a53d-63e3374ba117",
+            "title": "Audit-hændelse dk.platform.audit-service.subject-locate.completed",
+            "description": "CloudEvent fra urn:platform:module:audit-service med principal human:oidc|dpo@example.org.",
+            "methods": [
+              "EXAMINE"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/audit-service/conformance/events/human-action.json",
+                "description": "CloudEvent (audit-log)"
+              }
+            ],
+            "collected": "2026-09-23T14:10:04.572Z"
+          }
+        ],
+        "findings": [
+          {
+            "uuid": "7512499a-f109-5d95-80e6-b41aed0b295f",
+            "title": "C-001 module-manifest.json validerer mod kontrakten",
+            "description": "Manifest matcher module-manifest.schema.json",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-001",
+              "title": "module-manifest.json validerer mod kontrakten",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "e1c91e43-afa0-5166-a0f9-03f9c29961f0",
+            "title": "C-002 Alle ops- og privacy-verber er deklareret",
+            "description": "15 verber deklareret",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-002",
+              "title": "Alle ops- og privacy-verber er deklareret",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "133066ae-ef2b-55ba-a230-7a35145ca6e1",
+            "title": "C-003 Conformance-niveauer er ærlige (reason på partial/unsupported)",
+            "description": "15 full, 0 partial/unsupported — alle begrundede",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-003",
+              "title": "Conformance-niveauer er ærlige (reason på partial/unsupported)",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "2762e528-f3bc-5382-8812-06a6e4e45a8f",
+            "title": "C-005 Ingen lokal brugerdatabase; OIDC/SCIM/SPIFFE erklæret",
+            "description": "userStore=none · spiffe://platform.example.org",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-005",
+              "title": "Ingen lokal brugerdatabase; OIDC/SCIM/SPIFFE erklæret",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "11d67170-e008-54c5-8de7-2c0d542a56de",
+            "title": "C-006 OTel-signaler og obligatoriske CloudEvent-attributter",
+            "description": "traces/metrics/logs + tenantid/traceid/principal",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-006",
+              "title": "OTel-signaler og obligatoriske CloudEvent-attributter",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "a48acec9-96d1-5e53-84c5-b49746cd41bf"
+              },
+              {
+                "observation-uuid": "b64cd66c-ccc1-55ac-a53d-63e3374ba117"
+              }
+            ]
+          },
+          {
+            "uuid": "28805212-74a8-586d-aea3-6bde82933ba3",
+            "title": "C-004 Bevisfiler for full-verber findes og validerer",
+            "description": "15 fixtures verificeret",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-004",
+              "title": "Bevisfiler for full-verber findes og validerer",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "ccdd24cd-0ddf-5cc0-b4bd-eec19e1f374e"
+              },
+              {
+                "observation-uuid": "54a127f0-0146-50e1-b30e-3bdf13118598"
+              },
+              {
+                "observation-uuid": "39c5cb2c-9d19-5cec-9a4c-4f92df24b735"
+              },
+              {
+                "observation-uuid": "73e441c1-dca6-5741-86bd-448b86f1ee58"
+              },
+              {
+                "observation-uuid": "0f6a1ffb-e9de-5ee2-8e98-0c196658cf7e"
+              },
+              {
+                "observation-uuid": "ccc2ba8b-6be9-5a4d-808d-6b044c457eff"
+              },
+              {
+                "observation-uuid": "f18bec72-7002-5465-849f-aaf6e0f3eb99"
+              },
+              {
+                "observation-uuid": "67edb7f4-2436-5b05-8a6b-a59b4f7a4c99"
+              },
+              {
+                "observation-uuid": "930aa148-c6de-5988-bd25-888c0e5be6cf"
+              },
+              {
+                "observation-uuid": "0507c5e0-d0ae-5266-ad23-7625c33f68cb"
+              },
+              {
+                "observation-uuid": "273e9c0a-c7fd-5a65-a721-54bac3b09fe9"
+              },
+              {
+                "observation-uuid": "ebd97992-797d-56ed-aa25-0137c77c4d95"
+              },
+              {
+                "observation-uuid": "0ce7dddf-5549-53d7-8b70-41b3aede9266"
+              },
+              {
+                "observation-uuid": "26d3e0cc-0e87-502c-9558-d02914fe5db0"
+              },
+              {
+                "observation-uuid": "eabbce2e-f15a-5468-9c4a-5181aead6904"
+              }
+            ]
+          },
+          {
+            "uuid": "951550f7-c620-5b09-8bdc-e5b3e36a497c",
+            "title": "C-007 CloudEvent-eksempler validerer mod envelopen",
+            "description": "2 events gyldige (1 human, 1 agent)",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-007",
+              "title": "CloudEvent-eksempler validerer mod envelopen",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "a48acec9-96d1-5e53-84c5-b49746cd41bf"
+              },
+              {
+                "observation-uuid": "b64cd66c-ccc1-55ac-a53d-63e3374ba117"
+              }
+            ]
+          },
+          {
+            "uuid": "aa75a9ca-894b-5562-90b4-30ab3f9bb704",
+            "title": "C-008 Privacy-verber og datakategorier hænger sammen",
+            "description": "datakategorier: operational, pseudonymised, personal",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-008",
+              "title": "Privacy-verber og datakategorier hænger sammen",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "a48acec9-96d1-5e53-84c5-b49746cd41bf"
+              },
+              {
+                "observation-uuid": "b64cd66c-ccc1-55ac-a53d-63e3374ba117"
+              }
+            ]
+          },
+          {
+            "uuid": "cd8b4070-bb25-5b1e-b8fb-2996202fa8a7",
+            "title": "C-009 Modulet er bundet til central PDP (fail-closed)",
+            "description": "8 gatede verber · fail-closed · bundle platform@1.0.0",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-009",
+              "title": "Modulet er bundet til central PDP (fail-closed)",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "73fa47fe-8165-5c57-830b-7db779145a2e"
+              }
+            ]
+          },
+          {
+            "uuid": "b399a142-87bb-5702-b0c6-f13113cef6b5",
+            "title": "C-010 Aktiv policy-bundle er skemagyldig og signeret",
+            "description": "platform@1.0.0 · 11 regler · sha256 baeeeb11cb00…",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-010",
+              "title": "Aktiv policy-bundle er skemagyldig og signeret",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "73fa47fe-8165-5c57-830b-7db779145a2e"
+              }
+            ]
+          },
+          {
+            "uuid": "ff891005-d154-503e-ba35-878c4a80aa9b",
+            "title": "C-011 Compliance-kontrolpåstande er velformede og dækker persondata",
+            "description": "5 kontrolpåstande · rolle 'processor' · DPIA henvist",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-011",
+              "title": "Compliance-kontrolpåstande er velformede og dækker persondata",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "3a01ef6e-acb1-56fb-9494-8cd145e3d2bb",
+            "title": "C-012 Modulets kontrolpåstande findes i den regulatoriske kortlægning",
+            "description": "5 kontrolpåstande kortlagt mod NIS2/GDPR/AI Act",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-012",
+              "title": "Modulets kontrolpåstande findes i den regulatoriske kortlægning",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "736ba80e-9d28-515a-b031-ad53228b2cbb",
+            "title": "A-001 Agent-manifester validerer mod agent-manifest.schema.json",
+            "description": "modulet har ingen agents/*.json",
+            "target": {
+              "type": "objective-id",
+              "target-id": "A-001",
+              "title": "Agent-manifester validerer mod agent-manifest.schema.json",
+              "status": {
+                "state": "not-satisfied",
+                "reason": "modulet har ingen agents/*.json"
+              }
+            }
+          },
+          {
+            "uuid": "f59f1fd9-54c2-5b81-8c15-1b56d206d0a8",
+            "title": "A-002 Agent-capabilities ligger inden for scope; navngivet ansvarlig",
+            "description": "modulet har ingen agents/*.json",
+            "target": {
+              "type": "objective-id",
+              "target-id": "A-002",
+              "title": "Agent-capabilities ligger inden for scope; navngivet ansvarlig",
+              "status": {
+                "state": "not-satisfied",
+                "reason": "modulet har ingen agents/*.json"
+              }
+            }
+          },
+          {
+            "uuid": "71afe99d-3b07-5448-8323-5a7226b3ee96",
+            "title": "A-003 Agenten er bundet til AI-gateway (ingen direkte leverandørkald)",
+            "description": "modulet har ingen agents/*.json",
+            "target": {
+              "type": "objective-id",
+              "target-id": "A-003",
+              "title": "Agenten er bundet til AI-gateway (ingen direkte leverandørkald)",
+              "status": {
+                "state": "not-satisfied",
+                "reason": "modulet har ingen agents/*.json"
+              }
+            }
+          }
+        ],
+        "remarks": "5 kontrolpåstande · 18 observationer."
+      },
+      {
+        "uuid": "2468e8dc-2bca-5ae7-840f-56ec810785e7",
+        "title": "dummy-ok konformans",
+        "description": "Konformansresultater for dummy-ok@1.2.0.",
+        "start": "2026-09-23T14:10:25.290Z",
+        "end": "2026-09-23T14:10:25.306Z",
+        "reviewed-controls": {
+          "control-selections": [
+            {
+              "include-controls": [
+                {
+                  "control-id": "ac-2"
+                },
+                {
+                  "control-id": "au-2"
+                },
+                {
+                  "control-id": "cp-9"
+                },
+                {
+                  "control-id": "si-12"
+                }
+              ]
+            }
+          ]
+        },
+        "observations": [
+          {
+            "uuid": "547d798a-6572-505d-b262-4d4e7775bf0d",
+            "title": "Bevis for verbet backup",
+            "description": "backup mod dummy-ok: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/dummy-ok/conformance/evidence/backup.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2025-09-01T08:00:00.000Z"
+          },
+          {
+            "uuid": "f31031ee-390f-5977-9afe-de234f483318",
+            "title": "Bevis for verbet restore",
+            "description": "restore mod dummy-ok: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/dummy-ok/conformance/evidence/restore.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2025-09-01T08:10:00.000Z"
+          },
+          {
+            "uuid": "1b479af5-5521-5613-a83c-9066b8eec489",
+            "title": "Bevis for verbet verify-restore",
+            "description": "verify-restore mod dummy-ok: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/dummy-ok/conformance/evidence/verify-restore.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2025-09-01T08:20:00.000Z"
+          },
+          {
+            "uuid": "bdb48e96-9763-5416-8702-8494834c8bd0",
+            "title": "Bevis for verbet drain",
+            "description": "drain mod dummy-ok: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/dummy-ok/conformance/evidence/drain.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2025-09-01T08:30:00.000Z"
+          },
+          {
+            "uuid": "5dc05060-21c7-5b7d-b090-e465a59796d9",
+            "title": "Bevis for verbet upgrade.dry-run",
+            "description": "upgrade.dry-run mod dummy-ok: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/dummy-ok/conformance/evidence/upgrade.dry-run.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2025-09-01T08:40:00.000Z"
+          },
+          {
+            "uuid": "5ad15b37-9fbd-5aad-92cd-735acd95f6fa",
+            "title": "Bevis for verbet upgrade",
+            "description": "upgrade mod dummy-ok: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/dummy-ok/conformance/evidence/upgrade.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2025-09-01T08:50:00.000Z"
+          },
+          {
+            "uuid": "13e8d0d7-c37c-52ac-8ad4-5f4ea9a980af",
+            "title": "Bevis for verbet migrate",
+            "description": "migrate mod dummy-ok: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/dummy-ok/conformance/evidence/migrate.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2025-09-01T09:00:00.000Z"
+          },
+          {
+            "uuid": "9f3cdb34-b1ec-552f-a8e7-755f64781edd",
+            "title": "Bevis for verbet rollback",
+            "description": "rollback mod dummy-ok: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/dummy-ok/conformance/evidence/rollback.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2025-09-01T09:10:00.000Z"
+          },
+          {
+            "uuid": "78f4c029-7570-5624-96c4-3b97ef473cdb",
+            "title": "Bevis for verbet health",
+            "description": "health mod dummy-ok: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/dummy-ok/conformance/evidence/health.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2025-09-01T09:20:00.000Z"
+          },
+          {
+            "uuid": "793696b2-04bf-52c6-8ed6-3440d834cb48",
+            "title": "Bevis for verbet slo",
+            "description": "slo mod dummy-ok: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/dummy-ok/conformance/evidence/slo.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2025-09-01T09:30:00.000Z"
+          },
+          {
+            "uuid": "d4dc5794-0f6d-52de-a5a8-71b85bae8b0b",
+            "title": "Bevis for verbet subject.locate",
+            "description": "subject.locate mod dummy-ok: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/dummy-ok/conformance/evidence/subject.locate.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2025-09-01T09:40:00.000Z"
+          },
+          {
+            "uuid": "6afa5921-4838-52f8-8bc1-e87c18be1a32",
+            "title": "Bevis for verbet subject.export",
+            "description": "subject.export mod dummy-ok: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/dummy-ok/conformance/evidence/subject.export.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2025-09-01T09:50:00.000Z"
+          },
+          {
+            "uuid": "aa77df93-41fa-5a05-9600-618d827e1acb",
+            "title": "Bevis for verbet subject.erase",
+            "description": "subject.erase mod dummy-ok: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/dummy-ok/conformance/evidence/subject.erase.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2025-09-01T10:00:00.000Z"
+          },
+          {
+            "uuid": "842f2dcc-006b-5890-a3be-c739dfe22caa",
+            "title": "Bevis for verbet retention.policy",
+            "description": "retention.policy mod dummy-ok: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/dummy-ok/conformance/evidence/retention.policy.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2025-09-01T10:10:00.000Z"
+          },
+          {
+            "uuid": "fbe6c1c5-5759-5353-b939-12c9535a2263",
+            "title": "PDP-beslutning",
+            "description": "Beslutning 'allow-with-approval' fra platform-pdp@1.0.0 med bundle platform@1.0.0.",
+            "methods": [
+              "EXAMINE",
+              "ANALYZE"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/dummy-ok/conformance/evidence/policy-decision.json",
+                "description": "policy-decision fixture"
+              }
+            ],
+            "collected": "2026-09-16T21:05:41.033Z"
+          },
+          {
+            "uuid": "078bedd2-fe56-5571-86ce-3f83673baf1b",
+            "title": "Audit-hændelse dk.platform.dummy-ok.upgrade.proposed",
+            "description": "CloudEvent fra urn:platform:module:dummy-ok med principal agent:spiffe://platform.example.org/agents/dummy-ok-upgrader.",
+            "methods": [
+              "EXAMINE"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/dummy-ok/conformance/events/agent-upgrade-proposed.json",
+                "description": "CloudEvent (audit-log)"
+              }
+            ],
+            "collected": "2025-09-01T08:40:02Z"
+          },
+          {
+            "uuid": "33d3be4e-e82a-541b-8eae-3f1240decec9",
+            "title": "Audit-hændelse dk.platform.dummy-ok.backup.completed",
+            "description": "CloudEvent fra urn:platform:module:dummy-ok med principal human:oidc|anna.andersen.",
+            "methods": [
+              "EXAMINE"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/dummy-ok/conformance/events/human-backup-request.json",
+                "description": "CloudEvent (audit-log)"
+              }
+            ],
+            "collected": "2025-09-01T08:00:05Z"
+          }
+        ],
+        "findings": [
+          {
+            "uuid": "819dfe2a-e2cf-5651-bc4e-4022005b06b6",
+            "title": "C-001 module-manifest.json validerer mod kontrakten",
+            "description": "Manifest matcher module-manifest.schema.json",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-001",
+              "title": "module-manifest.json validerer mod kontrakten",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "76b47d0b-87d6-59a5-a044-834966a9dfa6",
+            "title": "C-002 Alle ops- og privacy-verber er deklareret",
+            "description": "15 verber deklareret",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-002",
+              "title": "Alle ops- og privacy-verber er deklareret",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "bedee535-bd4d-54da-8a4a-09c8e7296af1",
+            "title": "C-003 Conformance-niveauer er ærlige (reason på partial/unsupported)",
+            "description": "14 full, 1 partial/unsupported — alle begrundede",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-003",
+              "title": "Conformance-niveauer er ærlige (reason på partial/unsupported)",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "e32fe34b-3855-5d31-ad91-ae35ea9084f3",
+            "title": "C-005 Ingen lokal brugerdatabase; OIDC/SCIM/SPIFFE erklæret",
+            "description": "userStore=none · spiffe://platform.example.org",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-005",
+              "title": "Ingen lokal brugerdatabase; OIDC/SCIM/SPIFFE erklæret",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "faafb60a-d318-599e-81db-62c3d4606d3f",
+            "title": "C-006 OTel-signaler og obligatoriske CloudEvent-attributter",
+            "description": "traces/metrics/logs + tenantid/traceid/principal",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-006",
+              "title": "OTel-signaler og obligatoriske CloudEvent-attributter",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "078bedd2-fe56-5571-86ce-3f83673baf1b"
+              },
+              {
+                "observation-uuid": "33d3be4e-e82a-541b-8eae-3f1240decec9"
+              }
+            ]
+          },
+          {
+            "uuid": "70af94c6-b65c-574a-9c75-c3b14afbb97d",
+            "title": "C-004 Bevisfiler for full-verber findes og validerer",
+            "description": "14 fixtures verificeret",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-004",
+              "title": "Bevisfiler for full-verber findes og validerer",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "547d798a-6572-505d-b262-4d4e7775bf0d"
+              },
+              {
+                "observation-uuid": "f31031ee-390f-5977-9afe-de234f483318"
+              },
+              {
+                "observation-uuid": "1b479af5-5521-5613-a83c-9066b8eec489"
+              },
+              {
+                "observation-uuid": "bdb48e96-9763-5416-8702-8494834c8bd0"
+              },
+              {
+                "observation-uuid": "5dc05060-21c7-5b7d-b090-e465a59796d9"
+              },
+              {
+                "observation-uuid": "5ad15b37-9fbd-5aad-92cd-735acd95f6fa"
+              },
+              {
+                "observation-uuid": "13e8d0d7-c37c-52ac-8ad4-5f4ea9a980af"
+              },
+              {
+                "observation-uuid": "9f3cdb34-b1ec-552f-a8e7-755f64781edd"
+              },
+              {
+                "observation-uuid": "78f4c029-7570-5624-96c4-3b97ef473cdb"
+              },
+              {
+                "observation-uuid": "793696b2-04bf-52c6-8ed6-3440d834cb48"
+              },
+              {
+                "observation-uuid": "d4dc5794-0f6d-52de-a5a8-71b85bae8b0b"
+              },
+              {
+                "observation-uuid": "6afa5921-4838-52f8-8bc1-e87c18be1a32"
+              },
+              {
+                "observation-uuid": "aa77df93-41fa-5a05-9600-618d827e1acb"
+              },
+              {
+                "observation-uuid": "842f2dcc-006b-5890-a3be-c739dfe22caa"
+              }
+            ]
+          },
+          {
+            "uuid": "5d8f7dcd-b926-5724-853a-20ae0dd9b198",
+            "title": "C-007 CloudEvent-eksempler validerer mod envelopen",
+            "description": "2 events gyldige (1 human, 1 agent)",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-007",
+              "title": "CloudEvent-eksempler validerer mod envelopen",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "078bedd2-fe56-5571-86ce-3f83673baf1b"
+              },
+              {
+                "observation-uuid": "33d3be4e-e82a-541b-8eae-3f1240decec9"
+              }
+            ]
+          },
+          {
+            "uuid": "c30f5c5d-1863-5c02-88b9-498a63af8da1",
+            "title": "C-008 Privacy-verber og datakategorier hænger sammen",
+            "description": "datakategorier: operational, pseudonymised, personal",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-008",
+              "title": "Privacy-verber og datakategorier hænger sammen",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "078bedd2-fe56-5571-86ce-3f83673baf1b"
+              },
+              {
+                "observation-uuid": "33d3be4e-e82a-541b-8eae-3f1240decec9"
+              }
+            ]
+          },
+          {
+            "uuid": "9e93614c-9865-54b6-a21a-90a6bf517544",
+            "title": "C-009 Modulet er bundet til central PDP (fail-closed)",
+            "description": "8 gatede verber · fail-closed · bundle platform@1.0.0",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-009",
+              "title": "Modulet er bundet til central PDP (fail-closed)",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "fbe6c1c5-5759-5353-b939-12c9535a2263"
+              }
+            ]
+          },
+          {
+            "uuid": "c2231aa8-4b35-56d7-9d46-9c4a9f64ee89",
+            "title": "C-010 Aktiv policy-bundle er skemagyldig og signeret",
+            "description": "platform@1.0.0 · 11 regler · sha256 baeeeb11cb00…",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-010",
+              "title": "Aktiv policy-bundle er skemagyldig og signeret",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "fbe6c1c5-5759-5353-b939-12c9535a2263"
+              }
+            ]
+          },
+          {
+            "uuid": "50555f51-0f5c-560c-aa41-c8032bd8a743",
+            "title": "C-011 Compliance-kontrolpåstande er velformede og dækker persondata",
+            "description": "4 kontrolpåstande · rolle 'processor' · DPIA henvist",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-011",
+              "title": "Compliance-kontrolpåstande er velformede og dækker persondata",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "0f76f3cb-f976-58bc-88c0-1719a64a8766",
+            "title": "C-012 Modulets kontrolpåstande findes i den regulatoriske kortlægning",
+            "description": "4 kontrolpåstande kortlagt mod NIS2/GDPR/AI Act",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-012",
+              "title": "Modulets kontrolpåstande findes i den regulatoriske kortlægning",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "da532d36-550c-50ed-bb18-f98b24a6bd5a",
+            "title": "A-001 Agent-manifester validerer mod agent-manifest.schema.json",
+            "description": "1 agent-manifester gyldige",
+            "target": {
+              "type": "objective-id",
+              "target-id": "A-001",
+              "title": "Agent-manifester validerer mod agent-manifest.schema.json",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "b966afb3-b32c-5ef8-a492-8bec9bd265e8",
+            "title": "A-002 Agent-capabilities ligger inden for scope; navngivet ansvarlig",
+            "description": "1 agenter inden for scope",
+            "target": {
+              "type": "objective-id",
+              "target-id": "A-002",
+              "title": "Agent-capabilities ligger inden for scope; navngivet ansvarlig",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "1b89f040-87a2-5697-b006-fc940f1f3f0a",
+            "title": "A-003 Agenten er bundet til AI-gateway (ingen direkte leverandørkald)",
+            "description": "1 agenter bundet til gateway",
+            "target": {
+              "type": "objective-id",
+              "target-id": "A-003",
+              "title": "Agenten er bundet til AI-gateway (ingen direkte leverandørkald)",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          }
+        ],
+        "remarks": "4 kontrolpåstande · 17 observationer."
+      },
+      {
+        "uuid": "fc68012b-b1cb-5fab-b531-cd5d2c5878d0",
+        "title": "keycloak-adapter konformans",
+        "description": "Konformansresultater for keycloak-adapter@1.0.0.",
+        "start": "2026-09-23T14:10:25.306Z",
+        "end": "2026-09-23T14:10:25.309Z",
+        "reviewed-controls": {
+          "control-selections": [
+            {
+              "include-controls": [
+                {
+                  "control-id": "ac-2"
+                },
+                {
+                  "control-id": "au-2"
+                },
+                {
+                  "control-id": "si-12"
+                }
+              ]
+            }
+          ]
+        },
+        "observations": [
+          {
+            "uuid": "ae4161e1-c003-50c8-ad51-f6311b6ecd4f",
+            "title": "Bevis for verbet health",
+            "description": "health mod keycloak-adapter: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/keycloak-adapter/conformance/evidence/health.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2026-09-23T14:10:05.896Z"
+          },
+          {
+            "uuid": "e40553cb-581e-5ce2-a5d2-ce3f710d2f38",
+            "title": "Bevis for verbet subject.locate",
+            "description": "subject.locate mod keycloak-adapter: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/keycloak-adapter/conformance/evidence/subject.locate.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2026-09-23T14:10:05.919Z"
+          },
+          {
+            "uuid": "7df0dca5-ed89-59f3-9b6e-3fa2441ae8cc",
+            "title": "Bevis for verbet subject.export",
+            "description": "subject.export mod keycloak-adapter: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/keycloak-adapter/conformance/evidence/subject.export.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2026-09-23T14:10:05.928Z"
+          },
+          {
+            "uuid": "87bbc2ab-1350-50e7-bfd8-f78f0ec6171e",
+            "title": "PDP-beslutning",
+            "description": "Beslutning 'allow-with-approval' fra platform-pdp@1.0.0 med bundle platform@1.0.0.",
+            "methods": [
+              "EXAMINE",
+              "ANALYZE"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/keycloak-adapter/conformance/evidence/policy-decision.json",
+                "description": "policy-decision fixture"
+              }
+            ],
+            "collected": "2026-09-23T14:10:05.934Z"
+          },
+          {
+            "uuid": "9241914a-76b1-5f4b-9989-ac0af3468714",
+            "title": "Audit-hændelse dk.platform.keycloak-adapter.subject-locate.completed",
+            "description": "CloudEvent fra urn:platform:module:keycloak-adapter med principal agent:spiffe://platform.example.org/agents/keycloak-adapter.",
+            "methods": [
+              "EXAMINE"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/keycloak-adapter/conformance/events/agent-action.json",
+                "description": "CloudEvent (audit-log)"
+              }
+            ],
+            "collected": "2026-09-23T14:10:05.918Z"
+          },
+          {
+            "uuid": "e11a387f-4825-5a2d-91c5-23ee59eed8ae",
+            "title": "Audit-hændelse dk.platform.keycloak-adapter.subject-locate.completed",
+            "description": "CloudEvent fra urn:platform:module:keycloak-adapter med principal human:oidc|dpo@example.org.",
+            "methods": [
+              "EXAMINE"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/keycloak-adapter/conformance/events/human-action.json",
+                "description": "CloudEvent (audit-log)"
+              }
+            ],
+            "collected": "2026-09-23T14:10:05.934Z"
+          }
+        ],
+        "findings": [
+          {
+            "uuid": "778f4b0d-4667-51eb-bca3-7f3ebc35bf45",
+            "title": "C-001 module-manifest.json validerer mod kontrakten",
+            "description": "Manifest matcher module-manifest.schema.json",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-001",
+              "title": "module-manifest.json validerer mod kontrakten",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "82a4f66e-a03e-5eed-b3d8-6ad1007f3f7c",
+            "title": "C-002 Alle ops- og privacy-verber er deklareret",
+            "description": "15 verber deklareret",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-002",
+              "title": "Alle ops- og privacy-verber er deklareret",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "ff5a73c6-2e09-5b17-8ba9-8166efe3c12c",
+            "title": "C-003 Conformance-niveauer er ærlige (reason på partial/unsupported)",
+            "description": "3 full, 12 partial/unsupported — alle begrundede",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-003",
+              "title": "Conformance-niveauer er ærlige (reason på partial/unsupported)",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "ae949bad-8fa9-55b4-8801-331491563119",
+            "title": "C-005 Ingen lokal brugerdatabase; OIDC/SCIM/SPIFFE erklæret",
+            "description": "userStore=none · spiffe://platform.example.org",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-005",
+              "title": "Ingen lokal brugerdatabase; OIDC/SCIM/SPIFFE erklæret",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "81650de3-c7ed-5044-b6dd-70e0714d0690",
+            "title": "C-006 OTel-signaler og obligatoriske CloudEvent-attributter",
+            "description": "traces/metrics/logs + tenantid/traceid/principal",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-006",
+              "title": "OTel-signaler og obligatoriske CloudEvent-attributter",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "9241914a-76b1-5f4b-9989-ac0af3468714"
+              },
+              {
+                "observation-uuid": "e11a387f-4825-5a2d-91c5-23ee59eed8ae"
+              }
+            ]
+          },
+          {
+            "uuid": "da18f4c2-f8e7-58fb-a059-01345bd659c2",
+            "title": "C-004 Bevisfiler for full-verber findes og validerer",
+            "description": "3 fixtures verificeret",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-004",
+              "title": "Bevisfiler for full-verber findes og validerer",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "ae4161e1-c003-50c8-ad51-f6311b6ecd4f"
+              },
+              {
+                "observation-uuid": "e40553cb-581e-5ce2-a5d2-ce3f710d2f38"
+              },
+              {
+                "observation-uuid": "7df0dca5-ed89-59f3-9b6e-3fa2441ae8cc"
+              }
+            ]
+          },
+          {
+            "uuid": "496c59b5-0141-5b89-a0e2-0a7dd8f47d31",
+            "title": "C-007 CloudEvent-eksempler validerer mod envelopen",
+            "description": "2 events gyldige (1 human, 1 agent)",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-007",
+              "title": "CloudEvent-eksempler validerer mod envelopen",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "9241914a-76b1-5f4b-9989-ac0af3468714"
+              },
+              {
+                "observation-uuid": "e11a387f-4825-5a2d-91c5-23ee59eed8ae"
+              }
+            ]
+          },
+          {
+            "uuid": "214a1ed3-5d98-5599-b613-ac054dce42ef",
+            "title": "C-008 Privacy-verber og datakategorier hænger sammen",
+            "description": "datakategorier: operational, pseudonymised, personal",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-008",
+              "title": "Privacy-verber og datakategorier hænger sammen",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "9241914a-76b1-5f4b-9989-ac0af3468714"
+              },
+              {
+                "observation-uuid": "e11a387f-4825-5a2d-91c5-23ee59eed8ae"
+              }
+            ]
+          },
+          {
+            "uuid": "0d2add44-ab22-5d89-8eda-2a8d1a0aa606",
+            "title": "C-009 Modulet er bundet til central PDP (fail-closed)",
+            "description": "8 gatede verber · fail-closed · bundle platform@1.0.0",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-009",
+              "title": "Modulet er bundet til central PDP (fail-closed)",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "87bbc2ab-1350-50e7-bfd8-f78f0ec6171e"
+              }
+            ]
+          },
+          {
+            "uuid": "06d86571-4397-5a3e-adfd-46a6aad7a813",
+            "title": "C-010 Aktiv policy-bundle er skemagyldig og signeret",
+            "description": "platform@1.0.0 · 11 regler · sha256 baeeeb11cb00…",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-010",
+              "title": "Aktiv policy-bundle er skemagyldig og signeret",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "87bbc2ab-1350-50e7-bfd8-f78f0ec6171e"
+              }
+            ]
+          },
+          {
+            "uuid": "658b01af-5e46-5ca7-aa98-e23a8630c68a",
+            "title": "C-011 Compliance-kontrolpåstande er velformede og dækker persondata",
+            "description": "3 kontrolpåstande · rolle 'processor' · DPIA henvist",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-011",
+              "title": "Compliance-kontrolpåstande er velformede og dækker persondata",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "e0c53027-165c-507d-81c6-9de9f9410ed8",
+            "title": "C-012 Modulets kontrolpåstande findes i den regulatoriske kortlægning",
+            "description": "3 kontrolpåstande kortlagt mod NIS2/GDPR/AI Act",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-012",
+              "title": "Modulets kontrolpåstande findes i den regulatoriske kortlægning",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "93a788ee-eb8d-5b68-a146-d37ed2cb3969",
+            "title": "A-001 Agent-manifester validerer mod agent-manifest.schema.json",
+            "description": "modulet har ingen agents/*.json",
+            "target": {
+              "type": "objective-id",
+              "target-id": "A-001",
+              "title": "Agent-manifester validerer mod agent-manifest.schema.json",
+              "status": {
+                "state": "not-satisfied",
+                "reason": "modulet har ingen agents/*.json"
+              }
+            }
+          },
+          {
+            "uuid": "587831c5-5ad2-5489-92c7-aee47d732264",
+            "title": "A-002 Agent-capabilities ligger inden for scope; navngivet ansvarlig",
+            "description": "modulet har ingen agents/*.json",
+            "target": {
+              "type": "objective-id",
+              "target-id": "A-002",
+              "title": "Agent-capabilities ligger inden for scope; navngivet ansvarlig",
+              "status": {
+                "state": "not-satisfied",
+                "reason": "modulet har ingen agents/*.json"
+              }
+            }
+          },
+          {
+            "uuid": "05306a9a-468e-5a02-b2fe-dfad86abe2e0",
+            "title": "A-003 Agenten er bundet til AI-gateway (ingen direkte leverandørkald)",
+            "description": "modulet har ingen agents/*.json",
+            "target": {
+              "type": "objective-id",
+              "target-id": "A-003",
+              "title": "Agenten er bundet til AI-gateway (ingen direkte leverandørkald)",
+              "status": {
+                "state": "not-satisfied",
+                "reason": "modulet har ingen agents/*.json"
+              }
+            }
+          }
+        ],
+        "remarks": "3 kontrolpåstande · 6 observationer."
+      },
+      {
+        "uuid": "c7862a00-eca1-5261-b804-aa1dc55905b1",
+        "title": "mattermost-adapter konformans",
+        "description": "Konformansresultater for mattermost-adapter@1.0.0.",
+        "start": "2026-09-23T14:10:25.309Z",
+        "end": "2026-09-23T14:10:25.311Z",
+        "reviewed-controls": {
+          "control-selections": [
+            {
+              "include-controls": [
+                {
+                  "control-id": "ac-2"
+                },
+                {
+                  "control-id": "au-2"
+                },
+                {
+                  "control-id": "si-12"
+                }
+              ]
+            }
+          ]
+        },
+        "observations": [
+          {
+            "uuid": "1daa32c2-301f-5a0c-9e4b-b367894c2a1e",
+            "title": "Bevis for verbet health",
+            "description": "health mod mattermost-adapter: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/mattermost-adapter/conformance/evidence/health.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2026-09-23T14:10:05.211Z"
+          },
+          {
+            "uuid": "b9f6ec63-d936-5123-9d2a-1254204b6c46",
+            "title": "Bevis for verbet subject.locate",
+            "description": "subject.locate mod mattermost-adapter: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/mattermost-adapter/conformance/evidence/subject.locate.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2026-09-23T14:10:05.231Z"
+          },
+          {
+            "uuid": "656d9a3c-bb0a-559f-b4ce-a2fb73c2925c",
+            "title": "Bevis for verbet subject.export",
+            "description": "subject.export mod mattermost-adapter: result=pass.",
+            "methods": [
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/mattermost-adapter/conformance/evidence/subject.export.json",
+                "description": "verb-evidence (result=pass)"
+              }
+            ],
+            "collected": "2026-09-23T14:10:05.236Z"
+          },
+          {
+            "uuid": "f05686bb-1aa0-57ba-a9db-ac4878b605ab",
+            "title": "PDP-beslutning",
+            "description": "Beslutning 'allow-with-approval' fra platform-pdp@1.0.0 med bundle platform@1.0.0.",
+            "methods": [
+              "EXAMINE",
+              "ANALYZE"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/mattermost-adapter/conformance/evidence/policy-decision.json",
+                "description": "policy-decision fixture"
+              }
+            ],
+            "collected": "2026-09-23T14:10:05.249Z"
+          },
+          {
+            "uuid": "e00bae1e-f8fc-5246-9e07-a2cc67e84ab3",
+            "title": "Audit-hændelse dk.platform.mattermost-adapter.subject-locate.completed",
+            "description": "CloudEvent fra urn:platform:module:mattermost-adapter med principal agent:spiffe://platform.example.org/agents/mattermost-adapter.",
+            "methods": [
+              "EXAMINE"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/mattermost-adapter/conformance/events/agent-action.json",
+                "description": "CloudEvent (audit-log)"
+              }
+            ],
+            "collected": "2026-09-23T14:10:05.229Z"
+          },
+          {
+            "uuid": "b8539374-47fc-58d9-a0a5-14a445765138",
+            "title": "Audit-hændelse dk.platform.mattermost-adapter.subject-locate.completed",
+            "description": "CloudEvent fra urn:platform:module:mattermost-adapter med principal human:oidc|dpo@example.org.",
+            "methods": [
+              "EXAMINE"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "modules/mattermost-adapter/conformance/events/human-action.json",
+                "description": "CloudEvent (audit-log)"
+              }
+            ],
+            "collected": "2026-09-23T14:10:05.248Z"
+          }
+        ],
+        "findings": [
+          {
+            "uuid": "fa8e2fb9-cad8-5146-b864-a48c4b0e10f2",
+            "title": "C-001 module-manifest.json validerer mod kontrakten",
+            "description": "Manifest matcher module-manifest.schema.json",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-001",
+              "title": "module-manifest.json validerer mod kontrakten",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "1adcb1ae-ea28-51c0-8a88-74630728b1e5",
+            "title": "C-002 Alle ops- og privacy-verber er deklareret",
+            "description": "15 verber deklareret",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-002",
+              "title": "Alle ops- og privacy-verber er deklareret",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "27e17629-f164-594d-8fc5-589d2adfd358",
+            "title": "C-003 Conformance-niveauer er ærlige (reason på partial/unsupported)",
+            "description": "3 full, 12 partial/unsupported — alle begrundede",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-003",
+              "title": "Conformance-niveauer er ærlige (reason på partial/unsupported)",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "85c60f00-5671-5e5b-9aff-8e1e6e5a24b6",
+            "title": "C-005 Ingen lokal brugerdatabase; OIDC/SCIM/SPIFFE erklæret",
+            "description": "userStore=none · spiffe://platform.example.org",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-005",
+              "title": "Ingen lokal brugerdatabase; OIDC/SCIM/SPIFFE erklæret",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "63e789fb-5f9b-522a-8494-215fbac090a0",
+            "title": "C-006 OTel-signaler og obligatoriske CloudEvent-attributter",
+            "description": "traces/metrics/logs + tenantid/traceid/principal",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-006",
+              "title": "OTel-signaler og obligatoriske CloudEvent-attributter",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "e00bae1e-f8fc-5246-9e07-a2cc67e84ab3"
+              },
+              {
+                "observation-uuid": "b8539374-47fc-58d9-a0a5-14a445765138"
+              }
+            ]
+          },
+          {
+            "uuid": "ba2591d1-adc7-53a8-b280-d7d177ca44fa",
+            "title": "C-004 Bevisfiler for full-verber findes og validerer",
+            "description": "3 fixtures verificeret",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-004",
+              "title": "Bevisfiler for full-verber findes og validerer",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "1daa32c2-301f-5a0c-9e4b-b367894c2a1e"
+              },
+              {
+                "observation-uuid": "b9f6ec63-d936-5123-9d2a-1254204b6c46"
+              },
+              {
+                "observation-uuid": "656d9a3c-bb0a-559f-b4ce-a2fb73c2925c"
+              }
+            ]
+          },
+          {
+            "uuid": "e6a30503-777a-5f7c-8e98-bba73505eb76",
+            "title": "C-007 CloudEvent-eksempler validerer mod envelopen",
+            "description": "2 events gyldige (1 human, 1 agent)",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-007",
+              "title": "CloudEvent-eksempler validerer mod envelopen",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "e00bae1e-f8fc-5246-9e07-a2cc67e84ab3"
+              },
+              {
+                "observation-uuid": "b8539374-47fc-58d9-a0a5-14a445765138"
+              }
+            ]
+          },
+          {
+            "uuid": "62f901cd-efef-5304-a5f7-e801c47ec44d",
+            "title": "C-008 Privacy-verber og datakategorier hænger sammen",
+            "description": "datakategorier: operational, pseudonymised, personal",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-008",
+              "title": "Privacy-verber og datakategorier hænger sammen",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "e00bae1e-f8fc-5246-9e07-a2cc67e84ab3"
+              },
+              {
+                "observation-uuid": "b8539374-47fc-58d9-a0a5-14a445765138"
+              }
+            ]
+          },
+          {
+            "uuid": "4eb2f797-c0d7-5929-b662-a556fc81132a",
+            "title": "C-009 Modulet er bundet til central PDP (fail-closed)",
+            "description": "8 gatede verber · fail-closed · bundle platform@1.0.0",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-009",
+              "title": "Modulet er bundet til central PDP (fail-closed)",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "f05686bb-1aa0-57ba-a9db-ac4878b605ab"
+              }
+            ]
+          },
+          {
+            "uuid": "65790542-d2ad-5779-b025-a48e06bc3569",
+            "title": "C-010 Aktiv policy-bundle er skemagyldig og signeret",
+            "description": "platform@1.0.0 · 11 regler · sha256 baeeeb11cb00…",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-010",
+              "title": "Aktiv policy-bundle er skemagyldig og signeret",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "f05686bb-1aa0-57ba-a9db-ac4878b605ab"
+              }
+            ]
+          },
+          {
+            "uuid": "648fdfcb-b2b2-51f5-9573-715fc776d00c",
+            "title": "C-011 Compliance-kontrolpåstande er velformede og dækker persondata",
+            "description": "3 kontrolpåstande · rolle 'processor' · DPIA henvist",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-011",
+              "title": "Compliance-kontrolpåstande er velformede og dækker persondata",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "5555707f-28ca-594b-9c13-8976ae602b5d",
+            "title": "C-012 Modulets kontrolpåstande findes i den regulatoriske kortlægning",
+            "description": "3 kontrolpåstande kortlagt mod NIS2/GDPR/AI Act",
+            "target": {
+              "type": "objective-id",
+              "target-id": "C-012",
+              "title": "Modulets kontrolpåstande findes i den regulatoriske kortlægning",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "1bc5bd71-483a-5572-9495-b7f947f8d8a2",
+            "title": "A-001 Agent-manifester validerer mod agent-manifest.schema.json",
+            "description": "modulet har ingen agents/*.json",
+            "target": {
+              "type": "objective-id",
+              "target-id": "A-001",
+              "title": "Agent-manifester validerer mod agent-manifest.schema.json",
+              "status": {
+                "state": "not-satisfied",
+                "reason": "modulet har ingen agents/*.json"
+              }
+            }
+          },
+          {
+            "uuid": "7a0d79df-62d6-5b67-8f45-81918417002c",
+            "title": "A-002 Agent-capabilities ligger inden for scope; navngivet ansvarlig",
+            "description": "modulet har ingen agents/*.json",
+            "target": {
+              "type": "objective-id",
+              "target-id": "A-002",
+              "title": "Agent-capabilities ligger inden for scope; navngivet ansvarlig",
+              "status": {
+                "state": "not-satisfied",
+                "reason": "modulet har ingen agents/*.json"
+              }
+            }
+          },
+          {
+            "uuid": "2501a052-e81c-50ee-8e18-7019d22f64d4",
+            "title": "A-003 Agenten er bundet til AI-gateway (ingen direkte leverandørkald)",
+            "description": "modulet har ingen agents/*.json",
+            "target": {
+              "type": "objective-id",
+              "target-id": "A-003",
+              "title": "Agenten er bundet til AI-gateway (ingen direkte leverandørkald)",
+              "status": {
+                "state": "not-satisfied",
+                "reason": "modulet har ingen agents/*.json"
+              }
+            }
+          }
+        ],
+        "remarks": "3 kontrolpåstande · 6 observationer."
+      },
+      {
+        "uuid": "2ad6f8bd-5fc3-5844-9a37-c247c7381ebb",
+        "title": "GitOps og change control",
+        "description": "Git er den eneste ændringskanal: policy-gates, reconcile og DCO-signering.",
+        "start": "2026-09-23T14:10:25.846Z",
+        "end": "2026-09-23T14:10:25.846Z",
+        "reviewed-controls": {
+          "control-selections": [
+            {
+              "include-all": {}
+            }
+          ]
+        },
+        "observations": [
+          {
+            "uuid": "d96cd840-4806-5501-9c56-49d22f5da099",
+            "title": "Git change log",
+            "description": "20 commits, 4 uden DCO sign-off.",
+            "methods": [
+              "EXAMINE"
+            ],
+            "relevant-evidence": [
+              {
+                "href": ".conformance-out/CHANGELOG.jsonl",
+                "description": "Maskinlæsbar git-historik (NIS2)"
+              }
+            ],
+            "collected": "2026-09-23T14:10:25.846Z"
+          }
+        ],
+        "findings": [
+          {
+            "uuid": "6b5dddab-4859-527d-854d-077d03b491f1",
+            "title": "G-001 Alle moduler er GitOps-styret",
+            "description": "4 moduler",
+            "target": {
+              "type": "objective-id",
+              "target-id": "G-001",
+              "title": "Alle moduler er GitOps-styret",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "70737d84-345c-5bba-a25b-3601b96db493",
+            "title": "G-002 Alle container-images er pinnet på digest",
+            "description": "37 manifester",
+            "target": {
+              "type": "objective-id",
+              "target-id": "G-002",
+              "title": "Alle container-images er pinnet på digest",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "f6ea38ab-8eff-58e4-8c81-ddc0bba23da8",
+            "title": "G-003 Obligatoriske labels på alle ressourcer",
+            "description": "4 labels",
+            "target": {
+              "type": "objective-id",
+              "target-id": "G-003",
+              "title": "Obligatoriske labels på alle ressourcer",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "34475bbd-eb17-5ff0-87ce-402451be2a46",
+            "title": "G-004 Argo CD selfHeal + prune (drift fjernes)",
+            "description": "6 applikationer",
+            "target": {
+              "type": "objective-id",
+              "target-id": "G-004",
+              "title": "Argo CD selfHeal + prune (drift fjernes)",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "03b67740-2fdc-5f5f-b6c7-00db9f7d1949",
+            "title": "G-005 Containere er hærdet (non-root, read-only, drop ALL)",
+            "description": "Ingen detaljer",
+            "target": {
+              "type": "objective-id",
+              "target-id": "G-005",
+              "title": "Containere er hærdet (non-root, read-only, drop ALL)",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "98783c46-4fb2-5e4c-aa66-8be280955342",
+            "title": "G-006 PDP kører fail-closed på signeret bundle",
+            "description": "Ingen detaljer",
+            "target": {
+              "type": "objective-id",
+              "target-id": "G-006",
+              "title": "PDP kører fail-closed på signeret bundle",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "53d72e5d-feca-593c-959d-d304572ff68e",
+            "title": "G-007 Ingen ressourcer i privilegerede namespaces",
+            "description": "tilladte: platform, argocd",
+            "target": {
+              "type": "objective-id",
+              "target-id": "G-007",
+              "title": "Ingen ressourcer i privilegerede namespaces",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "e9d54ab4-9712-5455-ae5e-1b6a82213f7c",
+            "title": "G-008 Application-kilder peger på eksisterende stier",
+            "description": "Ingen detaljer",
+            "target": {
+              "type": "objective-id",
+              "target-id": "G-008",
+              "title": "Application-kilder peger på eksisterende stier",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "3ea4de1b-4655-54ad-9fd0-3d884b7b91ad",
+            "title": "G-009 Agent-arbejdsbelastninger kan ikke få kontrolplans-adgang",
+            "description": "1 agent-moduler, 0 bindings",
+            "target": {
+              "type": "objective-id",
+              "target-id": "G-009",
+              "title": "Agent-arbejdsbelastninger kan ikke få kontrolplans-adgang",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "efb546a4-5ac4-5fe0-aeb2-55e5458e6462",
+            "title": "DCO sign-off på alle commits",
+            "description": "4 commits mangler sign-off",
+            "target": {
+              "type": "objective-id",
+              "target-id": "DCO",
+              "title": "DCO sign-off",
+              "status": {
+                "state": "not-satisfied",
+                "reason": "4 commits uden Signed-off-by"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "d96cd840-4806-5501-9c56-49d22f5da099"
+              }
+            ]
+          }
+        ],
+        "remarks": "10 gate-resultater."
+      },
+      {
+        "uuid": "5938817f-283f-52f5-add2-174196fa5fbe",
+        "title": "Sikkerhed (Trivy/Falco/Wazuh)",
+        "description": "Sikkerhedsfund fra CI, runtime og SIEM, koblet ind i evidensplanen.",
+        "start": "2026-09-23T14:10:25.846Z",
+        "end": "2026-09-23T14:10:25.846Z",
+        "reviewed-controls": {
+          "control-selections": [
+            {
+              "include-controls": [
+                {
+                  "control-id": "ra-5"
+                },
+                {
+                  "control-id": "si-4"
+                }
+              ]
+            }
+          ]
+        },
+        "observations": [
+          {
+            "uuid": "404e6fff-3dff-5aec-a635-7fe1c465806d",
+            "title": "Sikkerhedsscan: trivy",
+            "description": "trivy mod platform-repo: partial (2 fund; critical 0, high 0).",
+            "methods": [
+              "EXAMINE",
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "security/raw/trivy-app.json",
+                "description": "trivy-rapport (54828c61aae9…)"
+              }
+            ],
+            "collected": "2025-09-01T10:00:00Z"
+          },
+          {
+            "uuid": "0b48d501-aad0-5238-9efd-4bd052e550b1",
+            "title": "Sikkerhedsscan: falco",
+            "description": "falco mod runtime:platform: partial (1 fund; critical 0, high 0).",
+            "methods": [
+              "EXAMINE",
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "security/raw/falco-events.json",
+                "description": "falco-rapport (4c1f4fc4b05d…)"
+              }
+            ],
+            "collected": "2025-09-01T10:05:00Z"
+          },
+          {
+            "uuid": "5e765ea7-de6b-5313-8d5b-a320047142a7",
+            "title": "Sikkerhedsscan: wazuh",
+            "description": "wazuh mod siem:platform: pass (0 fund; critical 0, high 0).",
+            "methods": [
+              "EXAMINE",
+              "TEST"
+            ],
+            "relevant-evidence": [
+              {
+                "href": "security/raw/wazuh-alerts.json",
+                "description": "wazuh-rapport (37517e5f3dc6…)"
+              }
+            ],
+            "collected": "2025-09-01T10:10:00Z"
+          }
+        ],
+        "findings": [
+          {
+            "uuid": "4b90a773-25c2-5f86-b636-9aad523512fa",
+            "title": "trivy: platform-repo",
+            "description": "2 fund (critical 0, high 0, medium 1, low 1).",
+            "target": {
+              "type": "objective-id",
+              "target-id": "SEC-trivy",
+              "title": "Sikkerhedsscan trivy",
+              "status": {
+                "state": "not-satisfied",
+                "reason": "partial: 2 fund"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "404e6fff-3dff-5aec-a635-7fe1c465806d"
+              }
+            ]
+          },
+          {
+            "uuid": "b342a2fb-1efc-52dc-9e17-e2b32e94bee2",
+            "title": "falco: runtime:platform",
+            "description": "1 fund (critical 0, high 0, medium 1, low 0).",
+            "target": {
+              "type": "objective-id",
+              "target-id": "SEC-falco",
+              "title": "Sikkerhedsscan falco",
+              "status": {
+                "state": "not-satisfied",
+                "reason": "partial: 1 fund"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "0b48d501-aad0-5238-9efd-4bd052e550b1"
+              }
+            ]
+          },
+          {
+            "uuid": "7e024f3e-6f07-58ff-b7d5-ef4a2dfb7ee6",
+            "title": "wazuh: siem:platform",
+            "description": "0 fund (critical 0, high 0, medium 0, low 0).",
+            "target": {
+              "type": "objective-id",
+              "target-id": "SEC-wazuh",
+              "title": "Sikkerhedsscan wazuh",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "5e765ea7-de6b-5313-8d5b-a320047142a7"
+              }
+            ]
+          }
+        ],
+        "remarks": "Ikke en separat silo: fundene bæres af OSCAL-evidenspakken."
+      }
+    ]
+  }
+}

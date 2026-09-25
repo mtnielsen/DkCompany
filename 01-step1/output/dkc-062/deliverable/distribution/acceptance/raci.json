@@ -1,0 +1,232 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "RaciRegistry",
+  "metadata": {
+    "name": "platform-acceptance-raci",
+    "version": "1.0.0",
+    "description": "RACI for installations- og releaseacceptance: et ansvarligt menneske og en stedfortræder pr. service, dataklasse og kontrolproces. Ejeraccept registreres særskilt i owner-acceptance.json.",
+    "labels": { "wave": "5" }
+  },
+  "entries": [
+    {
+      "id": "svc-platform-core",
+      "scope": "service",
+      "ref": "platform-core",
+      "responsible": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Deputy Platform Owner" },
+      "accountable": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "consulted": [{ "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer" }],
+      "informed": [{ "subject": "oidc|ditte.dpo", "name": "Ditte DPO", "role": "Data Protection Officer" }],
+      "ownerAcceptanceRef": null
+    },
+    {
+      "id": "svc-identity-broker",
+      "scope": "service",
+      "ref": "identity-broker",
+      "responsible": { "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer" },
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Deputy Platform Owner" },
+      "accountable": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "consulted": [{ "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" }],
+      "informed": [{ "subject": "oidc|ditte.dpo", "name": "Ditte DPO", "role": "Data Protection Officer" }],
+      "ownerAcceptanceRef": null
+    },
+    {
+      "id": "svc-audit-service",
+      "scope": "service",
+      "ref": "audit-service",
+      "responsible": { "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer" },
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Deputy Platform Owner" },
+      "accountable": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "consulted": [{ "subject": "oidc|ditte.dpo", "name": "Ditte DPO", "role": "Data Protection Officer" }],
+      "informed": [{ "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" }],
+      "ownerAcceptanceRef": null
+    },
+    {
+      "id": "svc-host-management",
+      "scope": "service",
+      "ref": "host-management",
+      "responsible": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Deputy Platform Owner" },
+      "accountable": { "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer" },
+      "consulted": [{ "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer" }],
+      "informed": [{ "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" }],
+      "ownerAcceptanceRef": null
+    },
+    {
+      "id": "svc-primary-database",
+      "scope": "service",
+      "ref": "primary-database",
+      "responsible": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Deputy Platform Owner" },
+      "accountable": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "consulted": [{ "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer" }],
+      "informed": [{ "subject": "oidc|ditte.dpo", "name": "Ditte DPO", "role": "Data Protection Officer" }],
+      "ownerAcceptanceRef": null
+    },
+    {
+      "id": "svc-backup-destination",
+      "scope": "service",
+      "ref": "backup-destination",
+      "responsible": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Deputy Platform Owner" },
+      "accountable": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "consulted": [{ "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer" }],
+      "informed": [{ "subject": "oidc|ditte.dpo", "name": "Ditte DPO", "role": "Data Protection Officer" }],
+      "ownerAcceptanceRef": null
+    },
+    {
+      "id": "svc-object-store",
+      "scope": "service",
+      "ref": "object-store",
+      "responsible": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Deputy Platform Owner" },
+      "accountable": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "consulted": [{ "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer" }],
+      "informed": [{ "subject": "oidc|ditte.dpo", "name": "Ditte DPO", "role": "Data Protection Officer" }],
+      "ownerAcceptanceRef": null
+    },
+    {
+      "id": "dc-public",
+      "scope": "data-class",
+      "ref": "public",
+      "responsible": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Deputy Platform Owner" },
+      "accountable": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "consulted": [{ "subject": "oidc|ditte.dpo", "name": "Ditte DPO", "role": "Data Protection Officer" }],
+      "informed": [{ "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer" }],
+      "ownerAcceptanceRef": null
+    },
+    {
+      "id": "dc-internal",
+      "scope": "data-class",
+      "ref": "internal",
+      "responsible": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Deputy Platform Owner" },
+      "accountable": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "consulted": [{ "subject": "oidc|ditte.dpo", "name": "Ditte DPO", "role": "Data Protection Officer" }],
+      "informed": [{ "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer" }],
+      "ownerAcceptanceRef": null
+    },
+    {
+      "id": "dc-confidential",
+      "scope": "data-class",
+      "ref": "confidential",
+      "responsible": { "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer" },
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Deputy Platform Owner" },
+      "accountable": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "consulted": [{ "subject": "oidc|ditte.dpo", "name": "Ditte DPO", "role": "Data Protection Officer" }],
+      "informed": [{ "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" }],
+      "ownerAcceptanceRef": null
+    },
+    {
+      "id": "dc-personal",
+      "scope": "data-class",
+      "ref": "personal",
+      "responsible": { "subject": "oidc|ditte.dpo", "name": "Ditte DPO", "role": "Data Protection Officer" },
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Deputy Platform Owner" },
+      "accountable": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "consulted": [{ "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer" }],
+      "informed": [{ "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" }],
+      "ownerAcceptanceRef": null
+    },
+    {
+      "id": "dc-security",
+      "scope": "data-class",
+      "ref": "security",
+      "responsible": { "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer" },
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Deputy Platform Owner" },
+      "accountable": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "consulted": [{ "subject": "oidc|ditte.dpo", "name": "Ditte DPO", "role": "Data Protection Officer" }],
+      "informed": [{ "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" }],
+      "ownerAcceptanceRef": null
+    },
+    {
+      "id": "cp-security",
+      "scope": "control-process",
+      "ref": "security",
+      "responsible": { "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer" },
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Deputy Platform Owner" },
+      "accountable": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "consulted": [{ "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" }],
+      "informed": [{ "subject": "oidc|ditte.dpo", "name": "Ditte DPO", "role": "Data Protection Officer" }],
+      "ownerAcceptanceRef": null
+    },
+    {
+      "id": "cp-privacy",
+      "scope": "control-process",
+      "ref": "privacy",
+      "responsible": { "subject": "oidc|ditte.dpo", "name": "Ditte DPO", "role": "Data Protection Officer" },
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Deputy Platform Owner" },
+      "accountable": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "consulted": [{ "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer" }],
+      "informed": [{ "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" }],
+      "ownerAcceptanceRef": null
+    },
+    {
+      "id": "cp-restore",
+      "scope": "control-process",
+      "ref": "restore",
+      "responsible": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Deputy Platform Owner" },
+      "accountable": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "consulted": [{ "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer" }],
+      "informed": [{ "subject": "oidc|ditte.dpo", "name": "Ditte DPO", "role": "Data Protection Officer" }],
+      "ownerAcceptanceRef": null
+    },
+    {
+      "id": "cp-role",
+      "scope": "control-process",
+      "ref": "role",
+      "responsible": { "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer" },
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Deputy Platform Owner" },
+      "accountable": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "consulted": [{ "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" }],
+      "informed": [{ "subject": "oidc|ditte.dpo", "name": "Ditte DPO", "role": "Data Protection Officer" }],
+      "ownerAcceptanceRef": null
+    },
+    {
+      "id": "cp-ha",
+      "scope": "control-process",
+      "ref": "ha",
+      "responsible": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Deputy Platform Owner" },
+      "accountable": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "consulted": [{ "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer" }],
+      "informed": [{ "subject": "oidc|ditte.dpo", "name": "Ditte DPO", "role": "Data Protection Officer" }],
+      "ownerAcceptanceRef": null
+    },
+    {
+      "id": "cp-host-management",
+      "scope": "control-process",
+      "ref": "host-management",
+      "responsible": { "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer" },
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Deputy Platform Owner" },
+      "accountable": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "consulted": [{ "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" }],
+      "informed": [{ "subject": "oidc|ditte.dpo", "name": "Ditte DPO", "role": "Data Protection Officer" }],
+      "ownerAcceptanceRef": null
+    },
+    {
+      "id": "cp-immutable",
+      "scope": "control-process",
+      "ref": "immutable",
+      "responsible": { "subject": "oidc|ditte.dpo", "name": "Ditte DPO", "role": "Data Protection Officer" },
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Deputy Platform Owner" },
+      "accountable": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "consulted": [{ "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer" }],
+      "informed": [{ "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" }],
+      "ownerAcceptanceRef": null
+    },
+    {
+      "id": "cp-self-healing",
+      "scope": "control-process",
+      "ref": "self-healing",
+      "responsible": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Deputy Platform Owner" },
+      "accountable": { "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer" },
+      "consulted": [{ "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer" }],
+      "informed": [{ "subject": "oidc|ditte.dpo", "name": "Ditte DPO", "role": "Data Protection Officer" }],
+      "ownerAcceptanceRef": null
+    }
+  ]
+}

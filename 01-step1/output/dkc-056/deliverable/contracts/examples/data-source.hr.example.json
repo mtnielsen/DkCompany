@@ -1,0 +1,56 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "DataSource",
+  "metadata": {
+    "name": "hr-source",
+    "version": "1.0.0",
+    "description": "Read-only HR-kilde. Bruges til organisationsopslag. Scopet omfatter kun medarbejder- og afdelingsdata, ikke løn, sygefravær eller personalesager.",
+    "dataOwner": { "subject": "oidc|ingrid.iversen", "name": "Ingrid Iversen", "role": "HR Data Owner" },
+    "labels": { "tier": "external", "source": "hr" }
+  },
+  "sourceType": "hr",
+  "engine": { "family": "postgresql", "version": "16.4" },
+  "connection": {
+    "host": "hr-db.customer.example.org",
+    "port": 5432,
+    "database": "hr",
+    "tls": { "mode": "verify-full", "minVersion": "1.3", "certSha256": "3b1f0f3e0e6a1f6c9f9a4c2b1d0e8f7a6c5b4a39281706f5e4d3c2b1a0908f7e" },
+    "secretRef": "vault:secret/data/hr/readonly#password"
+  },
+  "access": {
+    "readOnly": true,
+    "allowedSchemas": ["hr"],
+    "allowedTables": ["hr.employees", "hr.departments", "hr.employee_departments"],
+    "denyWrites": true,
+    "denyDdl": true,
+    "maxRows": 1000
+  },
+  "tenantBinding": {
+    "required": true,
+    "source": "principal",
+    "strategy": "per-tenant-credential"
+  },
+  "schemaDiscovery": {
+    "enabled": true,
+    "includeSchemas": ["hr"],
+    "discoveredAt": "2026-09-23T00:00:00.000Z",
+    "snapshotRef": "hr-source:2026-09-23"
+  },
+  "dataOwnership": {
+    "owner": { "subject": "oidc|ingrid.iversen", "name": "Ingrid Iversen", "role": "HR Data Owner" },
+    "classification": "personal",
+    "agreementRef": "dpa://customer/hr-source/2026",
+    "purpose": "Organisationsopslag til adgangskontrol og rapportering."
+  },
+  "externalPolicy": {
+    "treatAsOwnDatabase": false,
+    "autoMigrate": false,
+    "autoBackup": false,
+    "scopeAgreementRef": "scope://customer/hr-source/read-only-2026"
+  },
+  "auditTrail": {
+    "enabled": true,
+    "events": ["connect", "schema-discovery", "query", "denied", "disconnect"],
+    "sink": "audit://platform/data-source-access"
+  }
+}

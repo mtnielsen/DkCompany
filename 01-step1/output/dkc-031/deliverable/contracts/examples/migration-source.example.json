@@ -1,0 +1,140 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "MigrationSource",
+  "metadata": {
+    "name": "example-migration-sources",
+    "version": "1.0.0",
+    "description": "Eksempel: ét valgt, dokumenteret kildeformat (Nextcloud) med en fuld dækningsmatrix for ejerskab, timestamps, kommentarer, bilag, ACL og links.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner"
+      }
+    },
+    "labels": {
+      "tier": "migration",
+      "wave": "4"
+    }
+  },
+  "sources": [
+    {
+      "id": "files-acme",
+      "appId": "files",
+      "product": "nextcloud",
+      "tenantId": "acme",
+      "format": {
+        "id": "nextcloud-export-bundle",
+        "version": "1",
+        "mediaType": "application/zip+json",
+        "documented": true,
+        "docsRef": "docs/migration/exit-export.md#nextcloud",
+        "readableWithoutPlatform": true
+      },
+      "systemOfRecord": "upstream",
+      "ownerField": "owner",
+      "defaultOwner": "oidc|ada.acme",
+      "entityTypes": [
+        "File",
+        "Folder"
+      ],
+      "dedupKeys": {
+        "File": [
+          "path",
+          "contentHash"
+        ],
+        "Folder": [
+          "path"
+        ]
+      },
+      "facets": {
+        "File": {
+          "ownership": {
+            "status": "full",
+            "source": "owner",
+            "target": "owner.subject"
+          },
+          "timestamps": {
+            "status": "full",
+            "source": "createdAt/updatedAt",
+            "target": "createdAt/updatedAt"
+          },
+          "comments": {
+            "status": "partial",
+            "source": "comments",
+            "note": "Nextcloud-kommentarer overføres uden @-mention-metadata; selve teksten bevares."
+          },
+          "attachments": {
+            "status": "full",
+            "source": "attachments",
+            "target": "attachments"
+          },
+          "acl": {
+            "status": "full",
+            "source": "acl",
+            "target": "acl.readSubjects/readGroups"
+          },
+          "links": {
+            "status": "full",
+            "source": "links",
+            "target": "links"
+          }
+        },
+        "Folder": {
+          "ownership": {
+            "status": "full",
+            "source": "owner",
+            "target": "owner.subject"
+          },
+          "timestamps": {
+            "status": "full",
+            "source": "createdAt/updatedAt",
+            "target": "createdAt/updatedAt"
+          },
+          "comments": {
+            "status": "unsupported",
+            "note": "Mapper i Nextcloud har ingen kommentarfunktion; feltet er tomt og vises som tabt funktionalitet før cutover."
+          },
+          "attachments": {
+            "status": "full",
+            "source": "attachments",
+            "target": "attachments"
+          },
+          "acl": {
+            "status": "full",
+            "source": "acl",
+            "target": "acl.readSubjects/readGroups"
+          },
+          "links": {
+            "status": "full",
+            "source": "links",
+            "target": "links"
+          }
+        }
+      },
+      "roles": {
+        "content-admin": {
+          "read": true,
+          "write": true,
+          "appIds": [
+            "files"
+          ]
+        },
+        "content-auditor": {
+          "read": true,
+          "write": false,
+          "appIds": [
+            "files"
+          ]
+        }
+      },
+      "retention": {
+        "recordDays": 1095,
+        "exportDays": 90
+      }
+    }
+  ]
+}

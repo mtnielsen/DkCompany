@@ -1,0 +1,42 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ReportRun",
+  "id": "run-monthly-payroll-reconciliation-1756720800000",
+  "reportId": "monthly-payroll-reconciliation",
+  "reportVersion": 3,
+  "startedAt": "2025-09-01T06:00:00Z",
+  "completedAt": "2025-09-01T06:00:04Z",
+  "environment": "staging",
+  "format": "pdf",
+  "dataSource": {
+    "id": "external-hr-source",
+    "systemOfRecord": "External HR (HR-system)",
+    "moduleRef": "reporting"
+  },
+  "sender": {
+    "subject": "oidc|cecilia.christensen",
+    "decision": "allow",
+    "resolvedAt": "2025-09-01T06:00:00Z"
+  },
+  "recipients": [
+    {
+      "id": "external-auditor",
+      "subject": "oidc|external.auditor",
+      "decision": "allow",
+      "deliveredAt": "2025-09-01T06:00:04Z"
+    }
+  ],
+  "authorization": {
+    "revalidatedAt": "2025-09-01T06:00:00Z",
+    "senderResolved": true,
+    "recipientsResolved": true,
+    "sourceResolved": true,
+    "usedStoredCreatorToken": false
+  },
+  "decision": "run",
+  "artifact": {
+    "uri": "object-store://reports/monthly-payroll-reconciliation/2025-09.pdf",
+    "sha256": "5d41402abc4b2a76b9719d911017c592ff2b5f4c4b4f5b6d7f8a9b0c1d2e3f40"
+  },
+  "audit": { "required": true, "ref": "audit://reports/monthly-payroll-reconciliation/3" }
+}

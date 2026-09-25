@@ -1,0 +1,78 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "IntegrationCandidate",
+  "metadata": {
+    "name": "keycloak-adapter-26-0-0",
+    "version": "1.0.0",
+    "description": "Kandidatvurdering af Keycloak 26.0.0 (upstream) som IAM-modul bag den fælles adapter-SDK. Open source og selvhostet.",
+    "accountableHuman": {
+      "subject": "oidc|hans.hansen",
+      "name": "Hans Hansen",
+      "role": "Solution Architect"
+    },
+    "labels": { "application": "APP-021", "adapter": "keycloak-adapter" }
+  },
+  "applicationId": "APP-021",
+  "name": "Keycloak",
+  "upstream": {
+    "vendor": "Red Hat / CNCF",
+    "projectUrl": "https://www.keycloak.org/",
+    "documentationUrl": "https://www.keycloak.org/documentation",
+    "sourceUrl": "https://github.com/keycloak/keycloak"
+  },
+  "exactVersion": "26.0.0",
+  "edition": { "name": "upstream", "tier": "community", "notes": "Upstream-projektet uden kommerciel supportaftale." },
+  "license": {
+    "spdx": "Apache-2.0",
+    "type": "open-source",
+    "paidFeaturesRequired": false,
+    "redistributionAllowed": true
+  },
+  "hosting": {
+    "mode": "customer-self-hosted",
+    "commercialRedistribution": false,
+    "commercialHostingAllowed": true
+  },
+  "sso": { "capability": "full", "supported": true, "protocols": ["oidc", "saml2", "ldap"] },
+  "scim": { "capability": "partial", "supported": true, "version": "2.0", "notes": "SCIM understøttes via extension; konsumeres af adapteren." },
+  "api": {
+    "capability": "full",
+    "documented": true,
+    "protocols": ["rest"],
+    "authentication": ["oauth2", "mTLS"]
+  },
+  "isolation": {
+    "capability": "partial",
+    "tenantModel": "shared-control-plane",
+    "databasePerTenant": true,
+    "notes": "Én realm og én database pr. kunde; tenantgrænsen håndhæves i adapter og politik."
+  },
+  "export": {
+    "capability": "partial",
+    "formats": ["json"],
+    "aclPreserved": false,
+    "apiAccessible": true,
+    "notes": "Brugere og grupper eksporteres via Admin API; relationer genskabes i mål."
+  },
+  "backup": { "capability": "full", "supported": true, "pointInTime": true, "restoreTested": true },
+  "price": { "model": "free", "currency": "EUR", "recurring": false, "listPriceMinor": 0, "priceBasis": "Open source" },
+  "maintenance": {
+    "vendorSupport": "community",
+    "releaseCadence": "Kvartalsvise feature-udgivelser og løbende patches.",
+    "securityResponse": "Offentlig CVE-proces og advisories.",
+    "upgradePath": "Trinvis opgradering med dokumenterede database-migrationer."
+  },
+  "freeVsPaid": {
+    "documented": true,
+    "freeTierLimitations": ["Ingen kommerciel supportaftale; support kræver et separat abonnement."],
+    "requiredPaidFeatures": [],
+    "sourceUrl": "https://www.keycloak.org/downloads"
+  },
+  "verification": {
+    "status": "approved",
+    "verifiedBy": { "subject": "oidc|hans.hansen", "name": "Hans Hansen", "role": "Solution Architect" },
+    "verifiedAt": "2025-01-10",
+    "evidence": ["https://www.keycloak.org/documentation", "https://github.com/keycloak/keycloak"],
+    "notes": "Godkendt på den eksakte upstream-version. Kommerciel support er ikke en del af godkendelsen."
+  }
+}

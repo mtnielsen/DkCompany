@@ -1,0 +1,33 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "EventOutboxRecord",
+  "tenantId": "acme",
+  "eventId": "evt-0001",
+  "eventType": "dk.platform.jobs.job.completed",
+  "source": "platform/jobs",
+  "resource": { "type": "job", "id": "job-1", "version": 1 },
+  "status": "pending",
+  "attempts": 0,
+  "leaseToken": 0,
+  "idempotencyKey": "job-1:completed",
+  "createdAt": "2025-09-02T00:00:00Z",
+  "updatedAt": "2025-09-02T00:00:00Z",
+  "deliveryGuarantee": "at-least-once",
+  "event": {
+    "specversion": "1.0",
+    "id": "evt-0001",
+    "source": "platform/jobs",
+    "type": "dk.platform.jobs.job.completed",
+    "time": "2025-09-02T00:00:00Z",
+    "datacontenttype": "application/json",
+    "subject": "job/job-1",
+    "tenantid": "acme",
+    "traceid": "0123456789abcdef0123456789abcdef",
+    "principal": { "kind": "service", "id": "svc|jobs-worker" },
+    "dataclassification": "operational",
+    "data": {
+      "resource": { "type": "job", "id": "job-1", "version": 1 },
+      "result": { "ok": true }
+    }
+  }
+}

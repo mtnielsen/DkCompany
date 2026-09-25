@@ -1,0 +1,128 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "AdapterInterfaceCatalog",
+  "metadata": {
+    "name": "platform-business-adapter-interfaces",
+    "version": "1.0.0",
+    "description": "Adaptergrænseflader for økonomi-, fakturerings-, HR-, tid- og handelsfamilierne. Hver grænseflade erklærer ops-verber, scopes, data-klasser og om den kræver en godkendt ekstern tjeneste. Betaling/bank er begrænset til en godkendt ekstern tjeneste og må aldrig have fuld bankadgang.",
+    "accountableHuman": {
+      "subject": "oidc|hans.hansen",
+      "name": "Hans Hansen",
+      "role": "Solution Architect",
+      "substitute": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      }
+    },
+    "labels": {
+      "tier": "business-modules",
+      "wave": "6"
+    }
+  },
+  "interfaces": [
+    {
+      "id": "finance-ledger",
+      "title": "Økonomi/ERP-ledger",
+      "family": "finance",
+      "description": "Bogføringsgrænsefladen: kontoplan, bilag, perioder og regnskabsdata. Al skrivning går gennem adapteren; upstream forbliver system-of-record.",
+      "verbs": ["backup", "restore", "verify-restore", "upgrade", "rollback", "health", "slo"],
+      "scopes": [
+        { "id": "ledger:read", "access": "read", "description": "Læs kontoplan, bilag og perioder i tenantens eget regnskab." },
+        { "id": "ledger:write", "access": "write", "description": "Opret og ret bilag gennem en godkendt ændring." },
+        { "id": "report:read", "access": "read", "description": "Læs regnskabs- og momsrapporter for tenanten." }
+      ],
+      "deniedScopes": ["bank:full-access", "ledger:admin.*", "company:*"],
+      "externalServiceRequired": false,
+      "approvedExternalServiceRef": null,
+      "legalReviewRequired": true,
+      "dataClasses": ["financial", "personal"]
+    },
+    {
+      "id": "invoicing",
+      "title": "Fakturering og e-faktura",
+      "family": "invoicing",
+      "description": "Faktureringsgrænsefladen: salgsfakturaer, kreditnotaer og afsendelse. E-faktura sendes gennem et godkendt access point, ikke direkte fra platformen.",
+      "verbs": ["backup", "restore", "verify-restore", "upgrade", "rollback", "health", "slo"],
+      "scopes": [
+        { "id": "invoice:read", "access": "read", "description": "Læs fakturaer og kreditnotaer for tenanten." },
+        { "id": "invoice:write", "access": "write", "description": "Opret og udsted fakturaer gennem en godkendt ændring." },
+        { "id": "einvoice:send", "access": "write", "description": "Send e-faktura gennem et godkendt access point." }
+      ],
+      "deniedScopes": ["bank:full-access", "payment:admin"],
+      "externalServiceRequired": false,
+      "approvedExternalServiceRef": null,
+      "legalReviewRequired": true,
+      "dataClasses": ["financial", "personal"]
+    },
+    {
+      "id": "payroll",
+      "title": "HR og løn",
+      "family": "hr",
+      "description": "HR-/løngrænsefladen: medarbejderstamdata, fravær, stillinger og løn. Lønkørsel er juridisk reguleret og kræver en navngivet lønansvarlig.",
+      "verbs": ["backup", "restore", "verify-restore", "upgrade", "rollback", "health", "slo"],
+      "scopes": [
+        { "id": "employee:read", "access": "read", "description": "Læs medarbejderstamdata i tenanten." },
+        { "id": "employee:write", "access": "write", "description": "Vedligehold medarbejderstamdata gennem en godkendt ændring." },
+        { "id": "payroll:read", "access": "read", "description": "Læs løndata for tenanten." },
+        { "id": "payroll:run", "access": "write", "description": "Kør løn efter en navngivet lønansvarligs afgørelse." }
+      ],
+      "deniedScopes": ["bank:full-access", "employee:admin.*"],
+      "externalServiceRequired": false,
+      "approvedExternalServiceRef": null,
+      "legalReviewRequired": true,
+      "dataClasses": ["personal", "special-category", "financial"]
+    },
+    {
+      "id": "time-tracking",
+      "title": "Tidsregistrering",
+      "family": "time",
+      "description": "Tidsregistreringsgrænsefladen: tidsregistreringer, sager og projekter. Bruges til fakturering og intern opfølgning.",
+      "verbs": ["backup", "restore", "verify-restore", "upgrade", "rollback", "health", "slo"],
+      "scopes": [
+        { "id": "time:read", "access": "read", "description": "Læs tidsregistreringer for tenanten." },
+        { "id": "time:write", "access": "write", "description": "Registrér og ret tid for tenanten." }
+      ],
+      "deniedScopes": ["bank:full-access"],
+      "externalServiceRequired": false,
+      "approvedExternalServiceRef": null,
+      "legalReviewRequired": false,
+      "dataClasses": ["personal"]
+    },
+    {
+      "id": "commerce-catalog",
+      "title": "Handels- og webshopkatalog",
+      "family": "commerce",
+      "description": "Handelsgrænsefladen: produkter, ordrer, lager og kundedata. Betaling håndteres af den separate payment-bank-grænseflade.",
+      "verbs": ["backup", "restore", "verify-restore", "upgrade", "rollback", "health", "slo"],
+      "scopes": [
+        { "id": "catalog:read", "access": "read", "description": "Læs produkter og lager for tenanten." },
+        { "id": "catalog:write", "access": "write", "description": "Vedligehold produkter og lager gennem en godkendt ændring." },
+        { "id": "order:read", "access": "read", "description": "Læs ordrer og kundedata for tenanten." },
+        { "id": "order:write", "access": "write", "description": "Behandl og eksportér ordrer gennem en godkendt ændring." }
+      ],
+      "deniedScopes": ["bank:full-access", "payment:admin"],
+      "externalServiceRequired": false,
+      "approvedExternalServiceRef": null,
+      "legalReviewRequired": false,
+      "dataClasses": ["personal", "financial"]
+    },
+    {
+      "id": "payment-bank",
+      "title": "Betaling og bankadgang",
+      "family": "finance",
+      "description": "Betaling og bankadgang går kun gennem en godkendt ekstern betalingstjeneste med begrænsede scopes. Platformen gemmer aldrig kortdata og har aldrig fuld bankadgang.",
+      "verbs": ["health", "slo"],
+      "scopes": [
+        { "id": "payments:read", "access": "read", "description": "Læs betalingsstatus for tenanten." },
+        { "id": "payments:write", "access": "write", "description": "Initier en betaling gennem en godkendt ændring." },
+        { "id": "refunds:write", "access": "write", "description": "Tilbagefør en betaling gennem en godkendt ændring." }
+      ],
+      "deniedScopes": ["bank:full-access", "accounts:full-access", "payments:admin", "cards:read"],
+      "externalServiceRequired": true,
+      "approvedExternalServiceRef": null,
+      "legalReviewRequired": true,
+      "dataClasses": ["financial"]
+    }
+  ]
+}

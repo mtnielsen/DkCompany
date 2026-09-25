@@ -1,0 +1,781 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "TakeoverPlan",
+  "metadata": {
+    "name": "platform-takeover-plan",
+    "version": "1.0.0",
+    "description": "Menneskelig overtagelses- og beredskabsplan: navngivne roller, uafhængig kontaktkanal, offline-runbooks, credentials under menneskekontrol, prioriteret restoreplan, formelt valgt HA-/immutable-/self-healing-profil og gentagelige øvelsesscenarier.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner"
+    },
+    "lastReviewed": "2026-09-29",
+    "labels": {
+      "wave": "5",
+      "capability": "continuity"
+    }
+  },
+  "roles": {
+    "serviceOwner": {
+      "subject": "oidc|maja.mortensen",
+      "name": "Maja Mortensen",
+      "role": "Service Owner",
+      "channel": "phone",
+      "contact": "+45 20 00 00 02"
+    },
+    "substitute": {
+      "subject": "oidc|bo.bertelsen",
+      "name": "Bo Bertelsen",
+      "role": "Platform Owner",
+      "channel": "phone",
+      "contact": "+45 20 00 00 04"
+    },
+    "onCall": {
+      "subject": "oidc|bo.bertelsen",
+      "name": "Bo Bertelsen",
+      "role": "Platform Owner",
+      "channel": "phone",
+      "contact": "+45 20 00 00 04"
+    },
+    "incidentLead": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Incident Lead",
+      "channel": "phone",
+      "contact": "+45 20 00 00 03"
+    },
+    "changeAuthority": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Incident Lead",
+      "channel": "phone",
+      "contact": "+45 20 00 00 03"
+    },
+    "dataProtection": {
+      "subject": "oidc|cecilia.christensen",
+      "name": "Cecilia Christensen",
+      "role": "Security Owner",
+      "channel": "phone",
+      "contact": "+45 20 00 00 05"
+    }
+  },
+  "contactChannel": {
+    "independent": true,
+    "channel": "out-of-band telefonbro + SMS (uafhængig af platformen)",
+    "instructions": "Ring telefonbroen på +45 70 00 00 00, oplys incident-ID, og eskalér efter kadencen hvis kvittering udebliver. Kanalen kræver hverken model eller portal.",
+    "testRecipients": [
+      {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Incident Lead",
+        "channel": "phone",
+        "contact": "+45 20 00 00 03"
+      },
+      {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "channel": "phone",
+        "contact": "+45 20 00 00 05"
+      },
+      {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner",
+        "channel": "phone",
+        "contact": "+45 20 00 00 04"
+      }
+    ],
+    "escalation": [
+      {
+        "afterMinutes": 15,
+        "to": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Incident Lead",
+          "channel": "phone",
+          "contact": "+45 20 00 00 03"
+        }
+      },
+      {
+        "afterMinutes": 30,
+        "to": {
+          "subject": "oidc|cecilia.christensen",
+          "name": "Cecilia Christensen",
+          "role": "Security Owner",
+          "channel": "phone",
+          "contact": "+45 20 00 00 05"
+        }
+      }
+    ]
+  },
+  "offlineRunbooks": {
+    "independentMedium": "trykt kopi i aflåst skab + airgapped USB i bankboks",
+    "location": "Hovedkontorets sikkerhedsskab og bankboks 2 (to geografiske steder)",
+    "lastVerified": "2026-09-29",
+    "copies": [
+      {
+        "ref": "docs/runbooks/break-glass.md",
+        "digest": "sha256:0ea9164ff37e1bc66b01ca0f6647b013a5f653ace45e13a5760640b68cbf9b2e"
+      },
+      {
+        "ref": "docs/runbooks/disaster-recovery.md",
+        "digest": "sha256:ba6e68fec15941bb37d34fe72be147d5b695cf92e9f58fa71ee6da7637913389"
+      },
+      {
+        "ref": "docs/runbooks/ha-failover.md",
+        "digest": "sha256:65970ee34be4f8fdcf8e527bfc821f49b0eb9c4183eeea4004e7f06f49e6c251"
+      },
+      {
+        "ref": "docs/runbooks/database-failover.md",
+        "digest": "sha256:15d5bdfc89a666d899c2bea6f5d17d6a2051406624ddd97e9ad9ddf72a09bc29"
+      }
+    ]
+  },
+  "credentials": {
+    "underHumanControl": true,
+    "custodians": [
+      {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Incident Lead",
+        "channel": "phone",
+        "contact": "+45 20 00 00 03"
+      },
+      {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "channel": "phone",
+        "contact": "+45 20 00 00 05"
+      }
+    ],
+    "vault": "forseglede konvolutter i sikkerhedsskabet + HSM-smartcard hos depositarerne",
+    "breakGlass": {
+      "ref": "docs/runbooks/break-glass.md",
+      "requiresTwoPerson": true
+    }
+  },
+  "restorePlan": {
+    "ref": "docs/continuity/dr-plan.md",
+    "owner": {
+      "subject": "oidc|bo.bertelsen",
+      "name": "Bo Bertelsen",
+      "role": "Platform Owner",
+      "channel": "phone",
+      "contact": "+45 20 00 00 04"
+    },
+    "dataIntegrityCheck": "sha256 på hver gendannet komponent, ACL-afstemning og et fuldt brugerflow",
+    "priority": [
+      {
+        "order": 1,
+        "component": "identity",
+        "ref": "backup/dr/recovery-access-profile.json"
+      },
+      {
+        "order": 2,
+        "component": "database",
+        "ref": "persistence/ha-plan.json"
+      },
+      {
+        "order": 3,
+        "component": "storage",
+        "ref": "storage/storage-plan.json"
+      },
+      {
+        "order": 4,
+        "component": "configuration",
+        "ref": "contracts/examples/deployment-profile.enterprise.example.json"
+      }
+    ]
+  },
+  "profiles": {
+    "deploymentProfile": "contracts/examples/deployment-profile.enterprise.example.json",
+    "haProfile": "infrastructure/ha-plan.json",
+    "immutableProfile": "data-protection/enforcement/immutable-policy.json",
+    "selfHealingProfile": "chaos/failure-matrix.json",
+    "formallyChosen": true,
+    "chosenBy": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Incident Lead",
+      "channel": "phone",
+      "contact": "+45 20 00 00 03"
+    },
+    "testedBy": [
+      "chaos/report/chaos-report.json",
+      "continuity/report/recovery-drill-report.json",
+      "shadow/report/shadow-report.json"
+    ]
+  },
+  "drills": {
+    "schedule": {
+      "accessReviewDays": 90,
+      "backupControlDays": 30,
+      "capacityReviewDays": 90,
+      "drDrillDays": 180,
+      "runbookRecertificationDays": 180
+    },
+    "lastCompleted": {
+      "accessReview": "2026-08-15",
+      "backupControl": "2026-09-01",
+      "capacityReview": "2026-07-01",
+      "drDrill": "2026-06-15",
+      "runbookRecertification": "2026-06-01"
+    },
+    "scenarios": [
+      {
+        "id": "single-server",
+        "kind": "single-server",
+        "title": "Single-server: menneskelig overtagelse og gendannelse uden AI",
+        "environment": "isolated-recovery",
+        "artifacts": {
+          "runbook": "docs/runbooks/disaster-recovery.md",
+          "restorePlan": "docs/continuity/dr-plan.md",
+          "deploymentProfile": "contracts/examples/deployment-profile.service.example.json",
+          "haProfile": "infrastructure/ha-plan.json"
+        },
+        "steps": [
+          {
+            "id": "declare-incident",
+            "phase": "takeover",
+            "kind": "human",
+            "ownerRole": "incidentLead",
+            "evidenceKind": "incident-declaration",
+            "required": true,
+            "ackMinutes": 5,
+            "probe": null
+          },
+          {
+            "id": "notify-test-recipients",
+            "phase": "takeover",
+            "kind": "human",
+            "ownerRole": "incidentLead",
+            "evidenceKind": "escalation-receipt",
+            "required": true,
+            "ackMinutes": 10,
+            "probe": null
+          },
+          {
+            "id": "verify-artifacts",
+            "phase": "takeover",
+            "kind": "machine",
+            "ownerRole": null,
+            "evidenceKind": "probe",
+            "required": true,
+            "ackMinutes": 0,
+            "probe": "verify-artifacts"
+          },
+          {
+            "id": "retrieve-break-glass",
+            "phase": "restore",
+            "kind": "human",
+            "ownerRole": "dataProtection",
+            "evidenceKind": "credential-possession",
+            "required": true,
+            "ackMinutes": 30,
+            "probe": null
+          },
+          {
+            "id": "restore-integrity",
+            "phase": "restore",
+            "kind": "machine",
+            "ownerRole": null,
+            "evidenceKind": "probe",
+            "required": true,
+            "ackMinutes": 0,
+            "probe": "restore-integrity"
+          },
+          {
+            "id": "owner-restore-decision",
+            "phase": "restore",
+            "kind": "human",
+            "ownerRole": "serviceOwner",
+            "evidenceKind": "owner-decision",
+            "required": true,
+            "ackMinutes": 15,
+            "probe": null
+          },
+          {
+            "id": "failback-decision",
+            "phase": "failback",
+            "kind": "human",
+            "ownerRole": "changeAuthority",
+            "evidenceKind": "owner-decision",
+            "required": true,
+            "ackMinutes": 30,
+            "probe": null
+          },
+          {
+            "id": "service-validation",
+            "phase": "validation",
+            "kind": "machine",
+            "ownerRole": null,
+            "evidenceKind": "probe",
+            "required": true,
+            "ackMinutes": 0,
+            "probe": "service-validation"
+          },
+          {
+            "id": "human-acceptance",
+            "phase": "validation",
+            "kind": "human",
+            "ownerRole": "serviceOwner",
+            "evidenceKind": "incident-acceptance",
+            "required": true,
+            "ackMinutes": 15,
+            "probe": null
+          }
+        ]
+      },
+      {
+        "id": "ha",
+        "kind": "ha",
+        "title": "HA: failover, gendannelse og failback til primær",
+        "environment": "isolated-recovery",
+        "artifacts": {
+          "runbook": "docs/runbooks/disaster-recovery.md",
+          "restorePlan": "docs/continuity/dr-plan.md",
+          "deploymentProfile": "contracts/examples/deployment-profile.enterprise.example.json",
+          "haProfile": "infrastructure/ha-plan.json",
+          "databasePlan": "persistence/ha-plan.json"
+        },
+        "steps": [
+          {
+            "id": "declare-incident",
+            "phase": "takeover",
+            "kind": "human",
+            "ownerRole": "incidentLead",
+            "evidenceKind": "incident-declaration",
+            "required": true,
+            "ackMinutes": 5,
+            "probe": null
+          },
+          {
+            "id": "notify-test-recipients",
+            "phase": "takeover",
+            "kind": "human",
+            "ownerRole": "incidentLead",
+            "evidenceKind": "escalation-receipt",
+            "required": true,
+            "ackMinutes": 10,
+            "probe": null
+          },
+          {
+            "id": "verify-artifacts",
+            "phase": "takeover",
+            "kind": "machine",
+            "ownerRole": null,
+            "evidenceKind": "probe",
+            "required": true,
+            "ackMinutes": 0,
+            "probe": "verify-artifacts"
+          },
+          {
+            "id": "retrieve-break-glass",
+            "phase": "restore",
+            "kind": "human",
+            "ownerRole": "dataProtection",
+            "evidenceKind": "credential-possession",
+            "required": true,
+            "ackMinutes": 30,
+            "probe": null
+          },
+          {
+            "id": "restore-integrity",
+            "phase": "restore",
+            "kind": "machine",
+            "ownerRole": null,
+            "evidenceKind": "probe",
+            "required": true,
+            "ackMinutes": 0,
+            "probe": "restore-integrity"
+          },
+          {
+            "id": "owner-restore-decision",
+            "phase": "restore",
+            "kind": "human",
+            "ownerRole": "serviceOwner",
+            "evidenceKind": "owner-decision",
+            "required": true,
+            "ackMinutes": 15,
+            "probe": null
+          },
+          {
+            "id": "failback-decision",
+            "phase": "failback",
+            "kind": "human",
+            "ownerRole": "changeAuthority",
+            "evidenceKind": "owner-decision",
+            "required": true,
+            "ackMinutes": 30,
+            "probe": null
+          },
+          {
+            "id": "failback-integrity",
+            "phase": "failback",
+            "kind": "machine",
+            "ownerRole": null,
+            "evidenceKind": "probe",
+            "required": true,
+            "ackMinutes": 0,
+            "probe": "failback-integrity"
+          },
+          {
+            "id": "service-validation",
+            "phase": "validation",
+            "kind": "machine",
+            "ownerRole": null,
+            "evidenceKind": "probe",
+            "required": true,
+            "ackMinutes": 0,
+            "probe": "service-validation"
+          },
+          {
+            "id": "human-acceptance",
+            "phase": "validation",
+            "kind": "human",
+            "ownerRole": "serviceOwner",
+            "evidenceKind": "incident-acceptance",
+            "required": true,
+            "ackMinutes": 15,
+            "probe": null
+          }
+        ]
+      },
+      {
+        "id": "ai-offline",
+        "kind": "ai-offline",
+        "title": "AI-offline: mennesket driver uden model eller hovedportal",
+        "environment": "airgapped-control",
+        "artifacts": {
+          "runbook": "docs/runbooks/break-glass.md",
+          "restorePlan": "docs/continuity/dr-plan.md",
+          "failureMatrix": "chaos/failure-matrix.json",
+          "autonomyGrant": "shadow/autonomy-policy.json"
+        },
+        "steps": [
+          {
+            "id": "declare-incident",
+            "phase": "takeover",
+            "kind": "human",
+            "ownerRole": "incidentLead",
+            "evidenceKind": "incident-declaration",
+            "required": true,
+            "ackMinutes": 5,
+            "probe": null
+          },
+          {
+            "id": "notify-test-recipients",
+            "phase": "takeover",
+            "kind": "human",
+            "ownerRole": "incidentLead",
+            "evidenceKind": "escalation-receipt",
+            "required": true,
+            "ackMinutes": 10,
+            "probe": null
+          },
+          {
+            "id": "verify-artifacts",
+            "phase": "takeover",
+            "kind": "machine",
+            "ownerRole": null,
+            "evidenceKind": "probe",
+            "required": true,
+            "ackMinutes": 0,
+            "probe": "verify-artifacts"
+          },
+          {
+            "id": "retrieve-break-glass",
+            "phase": "restore",
+            "kind": "human",
+            "ownerRole": "dataProtection",
+            "evidenceKind": "credential-possession",
+            "required": true,
+            "ackMinutes": 30,
+            "probe": null
+          },
+          {
+            "id": "ai-offline",
+            "phase": "restore",
+            "kind": "machine",
+            "ownerRole": null,
+            "evidenceKind": "probe",
+            "required": true,
+            "ackMinutes": 0,
+            "probe": "ai-offline"
+          },
+          {
+            "id": "owner-restore-decision",
+            "phase": "restore",
+            "kind": "human",
+            "ownerRole": "serviceOwner",
+            "evidenceKind": "owner-decision",
+            "required": true,
+            "ackMinutes": 15,
+            "probe": null
+          },
+          {
+            "id": "failback-decision",
+            "phase": "failback",
+            "kind": "human",
+            "ownerRole": "changeAuthority",
+            "evidenceKind": "owner-decision",
+            "required": true,
+            "ackMinutes": 30,
+            "probe": null
+          },
+          {
+            "id": "service-validation",
+            "phase": "validation",
+            "kind": "machine",
+            "ownerRole": null,
+            "evidenceKind": "probe",
+            "required": true,
+            "ackMinutes": 0,
+            "probe": "service-validation"
+          },
+          {
+            "id": "human-acceptance",
+            "phase": "validation",
+            "kind": "human",
+            "ownerRole": "serviceOwner",
+            "evidenceKind": "incident-acceptance",
+            "required": true,
+            "ackMinutes": 15,
+            "probe": null
+          }
+        ]
+      },
+      {
+        "id": "iam-loss",
+        "kind": "iam-loss",
+        "title": "IAM-tab: gendan identitet og adgang fra separat recovery-identitet",
+        "environment": "isolated-recovery",
+        "artifacts": {
+          "runbook": "docs/runbooks/break-glass.md",
+          "restorePlan": "docs/continuity/dr-plan.md",
+          "recoveryAccessProfile": "backup/dr/recovery-access-profile.json"
+        },
+        "steps": [
+          {
+            "id": "declare-incident",
+            "phase": "takeover",
+            "kind": "human",
+            "ownerRole": "incidentLead",
+            "evidenceKind": "incident-declaration",
+            "required": true,
+            "ackMinutes": 5,
+            "probe": null
+          },
+          {
+            "id": "notify-test-recipients",
+            "phase": "takeover",
+            "kind": "human",
+            "ownerRole": "incidentLead",
+            "evidenceKind": "escalation-receipt",
+            "required": true,
+            "ackMinutes": 10,
+            "probe": null
+          },
+          {
+            "id": "verify-artifacts",
+            "phase": "takeover",
+            "kind": "machine",
+            "ownerRole": null,
+            "evidenceKind": "probe",
+            "required": true,
+            "ackMinutes": 0,
+            "probe": "verify-artifacts"
+          },
+          {
+            "id": "retrieve-break-glass",
+            "phase": "restore",
+            "kind": "human",
+            "ownerRole": "dataProtection",
+            "evidenceKind": "credential-possession",
+            "required": true,
+            "ackMinutes": 30,
+            "probe": null
+          },
+          {
+            "id": "iam-loss",
+            "phase": "restore",
+            "kind": "machine",
+            "ownerRole": null,
+            "evidenceKind": "probe",
+            "required": true,
+            "ackMinutes": 0,
+            "probe": "iam-loss"
+          },
+          {
+            "id": "restore-integrity",
+            "phase": "restore",
+            "kind": "machine",
+            "ownerRole": null,
+            "evidenceKind": "probe",
+            "required": true,
+            "ackMinutes": 0,
+            "probe": "restore-integrity"
+          },
+          {
+            "id": "owner-restore-decision",
+            "phase": "restore",
+            "kind": "human",
+            "ownerRole": "serviceOwner",
+            "evidenceKind": "owner-decision",
+            "required": true,
+            "ackMinutes": 15,
+            "probe": null
+          },
+          {
+            "id": "failback-decision",
+            "phase": "failback",
+            "kind": "human",
+            "ownerRole": "changeAuthority",
+            "evidenceKind": "owner-decision",
+            "required": true,
+            "ackMinutes": 30,
+            "probe": null
+          },
+          {
+            "id": "service-validation",
+            "phase": "validation",
+            "kind": "machine",
+            "ownerRole": null,
+            "evidenceKind": "probe",
+            "required": true,
+            "ackMinutes": 0,
+            "probe": "service-validation"
+          },
+          {
+            "id": "human-acceptance",
+            "phase": "validation",
+            "kind": "human",
+            "ownerRole": "serviceOwner",
+            "evidenceKind": "incident-acceptance",
+            "required": true,
+            "ackMinutes": 15,
+            "probe": null
+          }
+        ]
+      },
+      {
+        "id": "site-catastrophe",
+        "kind": "site-catastrophe",
+        "title": "Sitekatastrofe: gendan til andet site og failback",
+        "environment": "isolated-recovery-site-b",
+        "artifacts": {
+          "runbook": "docs/runbooks/disaster-recovery.md",
+          "restorePlan": "docs/continuity/dr-plan.md",
+          "drPlan": "backup/dr/disaster-recovery-plan.json",
+          "storagePlan": "storage/storage-plan.json",
+          "haProfile": "infrastructure/ha-plan.json"
+        },
+        "steps": [
+          {
+            "id": "declare-incident",
+            "phase": "takeover",
+            "kind": "human",
+            "ownerRole": "incidentLead",
+            "evidenceKind": "incident-declaration",
+            "required": true,
+            "ackMinutes": 5,
+            "probe": null
+          },
+          {
+            "id": "notify-test-recipients",
+            "phase": "takeover",
+            "kind": "human",
+            "ownerRole": "incidentLead",
+            "evidenceKind": "escalation-receipt",
+            "required": true,
+            "ackMinutes": 10,
+            "probe": null
+          },
+          {
+            "id": "verify-artifacts",
+            "phase": "takeover",
+            "kind": "machine",
+            "ownerRole": null,
+            "evidenceKind": "probe",
+            "required": true,
+            "ackMinutes": 0,
+            "probe": "verify-artifacts"
+          },
+          {
+            "id": "retrieve-break-glass",
+            "phase": "restore",
+            "kind": "human",
+            "ownerRole": "dataProtection",
+            "evidenceKind": "credential-possession",
+            "required": true,
+            "ackMinutes": 30,
+            "probe": null
+          },
+          {
+            "id": "restore-integrity",
+            "phase": "restore",
+            "kind": "machine",
+            "ownerRole": null,
+            "evidenceKind": "probe",
+            "required": true,
+            "ackMinutes": 0,
+            "probe": "restore-integrity"
+          },
+          {
+            "id": "owner-restore-decision",
+            "phase": "restore",
+            "kind": "human",
+            "ownerRole": "serviceOwner",
+            "evidenceKind": "owner-decision",
+            "required": true,
+            "ackMinutes": 15,
+            "probe": null
+          },
+          {
+            "id": "failback-decision",
+            "phase": "failback",
+            "kind": "human",
+            "ownerRole": "changeAuthority",
+            "evidenceKind": "owner-decision",
+            "required": true,
+            "ackMinutes": 30,
+            "probe": null
+          },
+          {
+            "id": "failback-integrity",
+            "phase": "failback",
+            "kind": "machine",
+            "ownerRole": null,
+            "evidenceKind": "probe",
+            "required": true,
+            "ackMinutes": 0,
+            "probe": "failback-integrity"
+          },
+          {
+            "id": "service-validation",
+            "phase": "validation",
+            "kind": "machine",
+            "ownerRole": null,
+            "evidenceKind": "probe",
+            "required": true,
+            "ackMinutes": 0,
+            "probe": "service-validation"
+          },
+          {
+            "id": "human-acceptance",
+            "phase": "validation",
+            "kind": "human",
+            "ownerRole": "serviceOwner",
+            "evidenceKind": "incident-acceptance",
+            "required": true,
+            "ackMinutes": 15,
+            "probe": null
+          }
+        ]
+      }
+    ]
+  }
+}

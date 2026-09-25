@@ -1,0 +1,19 @@
+{
+  "apiVersion": "v1",
+  "kind": "ConfigMap",
+  "metadata": {
+    "name": "platform-configuration",
+    "namespace": "platform",
+    "labels": {
+      "app.kubernetes.io/name": "platform-configuration",
+      "app.kubernetes.io/managed-by": "gitops",
+      "platform.example.org/module": "configuration",
+      "platform.example.org/environment": "dev"
+    }
+  },
+  "data": {
+    "desired-state.json": "{\"apiVersion\":\"contracts.platform/v1alpha1\",\"kind\":\"PlatformConfiguration\",\"metadata\":{\"name\":\"acme-prod-config\",\"version\":\"1.0.0\",\"installationId\":\"acme-prod\",\"description\":\"Den ene ønskede tilstand for installation acme-prod, med sikre standarder og menneskeligt vedtagede rammer.\"},\"schemaVersion\":\"1.0.0\",\"installation\":{\"logLevel\":\"info\",\"debug\":{\"enabled\":false,\"expiresAt\":null,\"reason\":\"debug er slået fra som standard (fail-closed)\",\"requestedBy\":\"system|installer\"},\"retention\":[{\"dataClass\":\"public\",\"retentionDays\":30,\"legalHold\":false,\"worm\":false,\"basis\":\"drifts- og revisionsbehov\"},{\"dataClass\":\"internal\",\"retentionDays\":365,\"legalHold\":false,\"worm\":false,\"basis\":\"drifts- og revisionsbehov\"},{\"dataClass\":\"confidential\",\"retentionDays\":365,\"legalHold\":false,\"worm\":false,\"basis\":\"kontraktligt opbevaringsbehov\"},{\"dataClass\":\"personal\",\"retentionDays\":90,\"legalHold\":true,\"worm\":true,\"basis\":\"GDPR art. 5(1)(e) — formålsbestemt opbevaring\"},{\"dataClass\":\"security\",\"retentionDays\":730,\"legalHold\":false,\"worm\":true,\"basis\":\"NIS2 art. 21 — lognings- og revisionsbehov\"}],\"backups\":{\"enabled\":true,\"schedule\":\"6h\",\"external\":true,\"targetSetRef\":\"primary-offsite\",\"retentionDays\":365},\"modelRoutes\":[{\"dataClass\":\"internal\",\"routeRef\":\"dummy-ok-upgrader-sonnet\",\"provider\":\"anthropic\",\"egressApproved\":false}],\"resourceLimits\":{\"cpuMillicores\":2000,\"memoryMiB\":4096,\"storageGiB\":40,\"maxReplicas\":3}},\"overrides\":[{\"scope\":\"tenant\",\"target\":\"acme\",\"reason\":\"midlertidig fejlfinding efter kundehenvendelse, tidsbegrænset\",\"settings\":{\"debug\":{\"enabled\":true,\"expiresAt\":\"2026-09-24T14:00:00Z\",\"reason\":\"fejlfinding af checkout-latency for kunden\",\"requestedBy\":\"oidc|anna.andersen\"}}},{\"scope\":\"module\",\"target\":\"host-management\",\"reason\":\"host-brokeren logger kun advarsler for at begrænse støj\",\"settings\":{\"logLevel\":\"warn\"}}],\"authorization\":{\"humanSubject\":\"oidc|anna.andersen\",\"role\":\"Platform Owner\",\"grantedAt\":\"2026-09-24T08:00:00Z\",\"expiresAt\":\"2026-09-25T08:00:00Z\",\"frameRef\":\"frame://platform/retention-2026\",\"approvalRef\":\"approval://config/2026-091\",\"decisionDigest\":\"9097107244f515876a6351f302d59e5671fbbaad7d1cefc4610578b51dd8f9ac\"},\"enforcement\":{\"singleSource\":true,\"driftPolicy\":\"fail-closed\",\"auditTrailImmutable\":true,\"secretRedaction\":true}}",
+    "configDigest": "bbab039a5f33e2af6b4d32e3ef45c03ab0cbfeea7d4506703a06135b2b4a9cec",
+    "singleSource": "true"
+  }
+}

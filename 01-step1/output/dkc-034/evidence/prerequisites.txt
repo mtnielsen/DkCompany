@@ -1,0 +1,23 @@
+DKC-034 forudsætningskæde — verificeret i den anvendte stak (83ad91a + dkc-052 + DKC-034)
+======================================================================================
+
+Stak-tip der lægges før DKC-034: dkc-052/apply.sh
+Kæde: dkc-052 -> dkc-032 -> dkc-051 -> dkc-050 -> ... -> dkc-001
+
+DKC       Nøgleartefakt                                             Status
+DKC-002   contracts/deployment-profile.schema.json                   findes
+DKC-002   contracts/identity-trust.schema.json                       findes
+DKC-017   observability/src/telemetry.mjs                            findes
+DKC-017   observability/sensors.json                                 findes
+DKC-025   portal/src/lifecycle.mjs                                   findes
+DKC-025   portal/service-packages/starter.json                       findes
+DKC-025   contracts/service-package.schema.json                      findes
+DKC-006   identity/src/tenant.mjs                                    findes
+DKC-050   performance/src/cost.mjs                                   findes
+
+DKC-034 genbruger desuden:
+DKC-006   identity/src/tenant.mjs                                 findes
+DKC-025   portal/service-packages/*.json                         findes
+
+Bemærk: DKC-034's målte afstemning (levende faktura og faktisk driftsregnskab) er
+integration-metering-live og er NOT RUN i dette miljø.

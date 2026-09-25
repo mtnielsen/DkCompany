@@ -1,0 +1,113 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "CustomerOrder",
+  "orderId": "acme-hr-suite-1.0.0",
+  "tenantId": "acme",
+  "packageId": "hr-suite",
+  "packageVersion": "1.0.0",
+  "state": "active",
+  "requestedBy": {
+    "subject": "oidc|carol.customer",
+    "name": "Carol Customer",
+    "role": null
+  },
+  "approvedBy": {
+    "subject": "oidc|ada.approver",
+    "name": "Ada Approver",
+    "role": null
+  },
+  "approval": {
+    "reason": "godkendt til provisionering",
+    "at": "2026-09-24T08:00:00.000Z"
+  },
+  "acknowledgedConsequences": [
+    "personal-data",
+    "access-review"
+  ],
+  "preview": {
+    "currency": "DKK",
+    "monthly": 3600,
+    "implementation": 12000,
+    "firstMonthTotal": 15600,
+    "consequences": [
+      {
+        "id": "personal-data",
+        "severity": "material",
+        "description": "HR-pakken behandler medarbejderpersondata, herunder beskyttede kategorier, og kræver den godkendte databehandleraftale.",
+        "requiresAcknowledgment": true
+      },
+      {
+        "id": "access-review",
+        "severity": "material",
+        "description": "Kunden skal gennemføre den aftalte adgangsrevision og udpege en navngiven ejer for HR-adgang.",
+        "requiresAcknowledgment": true
+      },
+      {
+        "id": "shared-control-plane",
+        "severity": "notice",
+        "description": "HR-data er tenantadskilt; kontrolplanen er fælles driftet.",
+        "requiresAcknowledgment": false
+      }
+    ]
+  },
+  "createdAt": "2026-09-24T08:00:00.000Z",
+  "updatedAt": "2026-09-24T08:00:00.000Z",
+  "steps": [
+    {
+      "stepId": "audit-service",
+      "moduleId": "audit-service",
+      "idempotencyKey": "fd2c97125cc43d89911bf9396f8f208011bddbc7186a21d4383260f62f4a2948",
+      "resourceRef": "res://acme/module/hr-suite-audit-service",
+      "state": "succeeded",
+      "attempts": 1,
+      "error": null,
+      "resource": {
+        "ref": "res://acme/module/hr-suite-audit-service",
+        "created": true,
+        "reused": false
+      }
+    },
+    {
+      "stepId": "hr",
+      "moduleId": "hr",
+      "idempotencyKey": "3e6fa713c24534c3c331f27c8a57042f66c46a05f2944b46fe7ba5286c3b50e9",
+      "resourceRef": "res://acme/module/hr-suite-hr",
+      "state": "succeeded",
+      "attempts": 1,
+      "error": null,
+      "resource": {
+        "ref": "res://acme/module/hr-suite-hr",
+        "created": true,
+        "reused": false
+      }
+    },
+    {
+      "stepId": "identity-broker",
+      "moduleId": "identity-broker",
+      "idempotencyKey": "f363b7389c95bd3166be43aa32d6c544bcaaae01aefdaf1bef76442134188daa",
+      "resourceRef": "res://acme/module/hr-suite-identity-broker",
+      "state": "succeeded",
+      "attempts": 1,
+      "error": null,
+      "resource": {
+        "ref": "res://acme/module/hr-suite-identity-broker",
+        "created": true,
+        "reused": false
+      }
+    },
+    {
+      "stepId": "platform-core",
+      "moduleId": "platform-core",
+      "idempotencyKey": "80032e0aee2b724092faf0ab02951f96f05c076be6e60f15f9fd29816e595023",
+      "resourceRef": "res://acme/module/hr-suite-platform-core",
+      "state": "succeeded",
+      "attempts": 1,
+      "error": null,
+      "resource": {
+        "ref": "res://acme/module/hr-suite-platform-core",
+        "created": true,
+        "reused": false
+      }
+    }
+  ]
+}

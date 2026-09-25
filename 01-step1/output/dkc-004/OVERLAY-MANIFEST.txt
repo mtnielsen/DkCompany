@@ -1,0 +1,95 @@
+# SHA256-manifest for DKC-004-leverancen
+# Genereret: 2026-09-23T09:30:14Z
+# Forudsætning: DKC-001 (output/deliverable) + DKC-002 (output/dkc-002/deliverable) + DKC-003 (output/dkc-003/deliverable)
+# Reviewets base: 5f9fa73, undersøgt checkout: 83ad91a
+
+# --- deliverable/ (overlay, relative til 00-core/) ---
+868c32f08bb4a2212833e52a502544a29fb73fe94d069f08f1c93a41bcfd201f  ./Makefile
+5ee11ffbe94c020a6fb4c01125c86c3a68ab0a603fa2e5252cbadf07532632b1  ./approvals/src/approval-policy.mjs
+83f79f0a49480aebeabd8fa79558f73bbe9f032279517da770a4e4e575311862  ./approvals/src/approval-service.mjs
+daf1ca26281716a6792c9073982d7d83537c7bc266f8cb34742b6773031b7b09  ./approvals/src/binding.mjs
+bad9fd2ca1c895b9c09f928f6194e334dad02d5d3af35612e6d1d58e7196d4a6  ./approvals/src/cli.mjs
+a4670c96d1e4cb16be44fb7c4851e2d6c4e67d20132d4f0dd28accb810c91548  ./approvals/src/ledger.mjs
+d8548067818495c878a22fabe2dc30cb591eeb5f676124510bc76dc8b6b319f7  ./approvals/src/store.mjs
+9c8ec2385d6bd378922b0fc49e4513b1825b1e3088a4bf0ea949f444609b70ec  ./approvals/test/persistence.test.mjs
+8badd399101d387bd146c61423769572415f94eb47ac8bf7680a6ee8e9d2bcd7  ./conformance/src/approval-check.mjs
+82e5a005f89573069b688437a85fcab0bf2d7f8f255853d7d2b98223d77d1dea  ./conformance/src/approval.mjs
+0ebed576000409ef608e7360d68673a5bdaea3375cf811dbfc81f6dba1d7c6ef  ./conformance/src/validate-schemas.mjs
+5cca4bde71a2309a38cd32de48acadf21a89a78f417c50c84ee239e58a051748  ./conformance/test/agent-conformance.test.mjs
+de0fdf7d7df0fc2b0f4c09ae116fc028b542f423246482e7ab98aa422e898020  ./conformance/test/approval-conformance.test.mjs
+9aa61b3e3df8f041d9208cad4be131c383aff33fd594f0c28cf59375d6c731c4  ./contracts/approval-request.schema.json
+182b18a1eff87f0c31ab14e38fce9f053ae2aaa2390264a016b7037cfc429d7a  ./contracts/examples/approval-request.example.json
+22af57117c187bf4a3f96a23f7fc732666798e63dda09dcf257b428953488b4f  ./curriculum/test/curriculum.test.mjs
+e4c62e553dbceed7df7010d250a5c5ed7c2a77588332756f171db68c1375d22d  ./docs/adr/0015-autentiske-godkendelser.md
+ca1dab08ab52d3fc8e46a766a31ec0ad0573097c21631bd31e33be2a8a055ed7  ./docs/adr/README.md
+1b843ccd411cba92ab111ebd06d65627a7664222101c753cf5ab79bf13f5448a  ./docs/spec/README.md
+2e3c33f8b1441ec40d9d261b495a1ca3bb59b3b4995e2a45cdf800e3a32392c1  ./docs/spec/approval-service.md
+69f8fb473ac80d97b0c3d8e8a68bc9801a224c8f94a754626cd3bce980e838db  ./docs/status/implementation-matrix.md
+8462c4cf355f0339a0d09a567c7c36b486ea102632af86576d0e01eb7735b6c0  ./tools/baseline/registry.mjs
+
+# --- evidence/ ---
+7825edf96b5a82fd18a7b2216c29eab659ec3d63d8b848cf5e55f05c6722c3c7  ./baseline/artifacts/CHANGELOG.jsonl
+3d71594a1b3f891b9184f3062a9dea930d5790869bf2c46b5b1531259cc56eb0  ./baseline/artifacts/badge.json
+3152c6e029bf5927b997f8765502aa487c2f8e4e1739acee4a8e8675bffe888d  ./baseline/artifacts/oscal-assessment-results.json
+51f67c04c32684d1f017c9fbda1d70c81263fad255390580656603860d36b41c  ./baseline/artifacts/report.json
+945468df7b2c0d4441d41f89c946c5fb6ce4feda9d9d3f2cae379a095fd74381  ./baseline/latest.json
+038ad35b752f54ed42cefb199be4ac4a684b7ebbe15a3f4aea4cf305fa73366a  ./baseline/logs/adapter-evidence.log
+fb3594c260136247674eba3925acd39df1a699313d20f35a60ce83fc0301a29a  ./baseline/logs/adapter-test.log
+76df4675d9020271787b32f98221402f98f127b6f9556ec9f5601821e86d5de1  ./baseline/logs/agent-conformance-test.log
+33b2871a30ed79b6194e318e8a228de60373da79e5a80e566b7fa86941b2661d  ./baseline/logs/approval-check.log
+19302b96ecb510e05637ac58a4edffa401b6174a3ea47831bc5ad50e9656f6f2  ./baseline/logs/approval-test.log
+f1b3cf8f41e6986e2bc8f205bf5ebb1a9075e89681b75333854c68c1f5ee8c0b  ./baseline/logs/architecture-test.log
+31383322fa40f4a7cd15cef96d636bc7e2cc6d97f861411815dfe63792413804  ./baseline/logs/audit-service-evidence.log
+02c82a16a18a865719ec5fb69117aeaeef5007b431c2a7a26820e8e835686725  ./baseline/logs/audit-service-test.log
+825c4324b5ced0a5a2d9122b67bb018e418b65bc795450acf2852a6582f00286  ./baseline/logs/changelog-check.log
+6d462cc924777060a829e768bf506daca0710386869f3912900f136cc907fb53  ./baseline/logs/changelog.log
+97e602c5205d702c1a330af1160980115235660a1bc1eb07b067dabc8474504c  ./baseline/logs/compliance-check.log
+69302da170c7bb7bf7ff19adc6bcb0bd0b60c73a6c88827311f7278c9d84c996  ./baseline/logs/compliance-test.log
+bdbe3fef7fc4a233e2ce24f6a8958e005cb7c09605f78a3ca8730006e76fc741  ./baseline/logs/conform-all.log
+9de38dc1ca58e98e50887d2772276e70a1998611a5069a3a5ff1dade1e109491  ./baseline/logs/conform-negative.log
+42b96f1146f049961fa727757d847554cc7c1db3b2713240a77dca027b7acab5  ./baseline/logs/curriculum-check.log
+90bce18cf5a9caf2610c73a88254fd4da886b6dfa337b32fd8fd4c90388d8c95  ./baseline/logs/curriculum-test.log
+3d65f1297723e206fbbffa0c7cfa1fd349a0400d064600c27e92cfaf34fa9722  ./baseline/logs/dsar-demo.log
+7420d5266d92f366eb2ecd3a851cc413b12cb8f1e35739d29d6ecdfd6bdb23fd  ./baseline/logs/evidence-test.log
+18bd80ba327406e9c7388a1f7f1ca5294ebb630ae98521bea3dd8f50d7d4cd3d  ./baseline/logs/gateway-test.log
+dcafe70a29b2a24896a6884e094fe44479ef5f20749b15dd9c913f09b4305ac7  ./baseline/logs/gitops-drift.log
+58c811f05c036cb2f393d36ddfa50d623da3970b35184f82162dc825804f9214  ./baseline/logs/gitops-reconcile.log
+f8af55115c403f8fe602387fa30cebbde622b16269bd110160b8385779597996  ./baseline/logs/gitops-test.log
+2dc53052407f5d66cae6fcbed36d8c0c10334615b03e9c078ab7084a87ca42e5  ./baseline/logs/gitops-verify.log
+6e3384b8d2c041621e0b4c363549fbd7a2300bad5d7ab876fe4d89ab519b1d5f  ./baseline/logs/iam-adapter-evidence.log
+aa10e9f68d96c159ec139a5c4ba872c9970829a6e700a694cbf6218f36f5310a  ./baseline/logs/iam-adapter-test.log
+6671e5929e4cb1f428ab341b5e34386148d82717ca5b078c393a8c561dc2f902  ./baseline/logs/identity-test.log
+2f5e6f758a4c8bcb37b3f8e5045b26af66cabb34850295d5036646bfd3e1e43a  ./baseline/logs/integration-falco.log
+d6e3e6c8b49ac9e82367f3648e2bc04b032f803a14fc058a8c7467a0d297311a  ./baseline/logs/integration-github-actions.log
+5b62755334a28bef9a57e52ed303e10bce280225d387e9113519fd3f37f142f2  ./baseline/logs/integration-keycloak.log
+61e783298f236dd015bf5b9988a30906aeb92f672a957380d0d0f9273243c54d  ./baseline/logs/integration-llm.log
+6fab477bd69fed8f3eca856c415cd075ce3688f302c1dd3fd46f5f1681b99d61  ./baseline/logs/integration-mattermost.log
+b1e6add3daf1baecca131db0df9eee56b4232d162db428975cff651835094074  ./baseline/logs/integration-oidc.log
+3abf0e36c3f0ac75910f46eb90c32ff6b5b2732f6be90eb55500368166de4c3c  ./baseline/logs/integration-trivy.log
+dc948d32428f2246e0a6bcb6fcc2a42617878e68f96a408c5a67d17b8fb7c4b8  ./baseline/logs/integration-wazuh.log
+6060985f7da5ae8062989a8c811a4b31bb6be11e4d3bb2573f4ffdaf55e6cf1e  ./baseline/logs/lint.log
+a6c96507a57095d4e4edfdab4eacb2f568aa602c72a4044911a8979e98e5c262  ./baseline/logs/observability-check.log
+89426e2d7b649b69ec8127ba1e6e3cd7a8d296876cd037e85f36f95d00477190  ./baseline/logs/observability-test.log
+dbc605dcd96610ed571d677ea763a5ebce6a9170c2905718745bfa300ff1e8fe  ./baseline/logs/oscal-evidence.log
+11419abb993494ad3a793a64bec34d92865db466d1b97527fdd47fe417dadb9f  ./baseline/logs/pitch-check.log
+4a842afcbe4f392fdbbb89da9e40be2a2e56681995e4a10c609e83266b3586f2  ./baseline/logs/pitch-test.log
+bc4e61460e3c13ad03c49a9bb41ef4843274f780567e491ecda172baa8dd3628  ./baseline/logs/policy-decide.log
+0ad3638a10c1ff58c50f90ab8efdd920c07b16152356124c1af097179fd05599  ./baseline/logs/policy-test.log
+b495a909aab8ad1d6f7f229cfa91d97cc9f79ce6056085f863e25b99dc06be03  ./baseline/logs/policy-verify.log
+04a81aec8caf9676a2bf8e7b907c0402e944231da3362d68cbc0a7c53be27486  ./baseline/logs/reviewer-metrics.log
+56836709add00a924b48cc89e02d4f96599d21aa7d8ca4c8d5ea9601ff3d5158  ./baseline/logs/reviewer-test.log
+839482c867eb32010749941309c494916f7c0399d2fc60d48e38d19afc70b2e9  ./baseline/logs/runtime-test.log
+8181173ee4859bad57ff9ad479bd46acb293469f39832578f658e5db37bc47a8  ./baseline/logs/security-check.log
+b3349f7c6b9f64ce9e12a3aefc4a4f233eb8787ff68d0a0052979b524b78cae3  ./baseline/logs/security-test.log
+09a695863d9486e2bc453871076a45bcfd01a70f120479a997a7430580dc7b41  ./baseline/logs/telemetry-test.log
+229f5edf5493b6f649afa34a58a6c575dc263920d272392b30859005d0cf8524  ./baseline/logs/test.log
+0e08f8c724407984e0ab4e1d9dd343ff7d228a6a0010144c77780a61d48d2329  ./baseline/logs/validate.log
+945468df7b2c0d4441d41f89c946c5fb6ce4feda9d9d3f2cae379a095fd74381  ./baseline/runs/2026-09-23T09-29-45-117Z-83ad91a.json
+9efb1e08f8b47b1d16d9be0d3f7c2bcf8843b12b5712a30e213b862b3a7160ab  ./logs/agent-conformance-test.log
+393eb5bb98fb84e2075eb1a20d9b9aeee96bc2221bf827aa3c70336b83394dca  ./logs/approval-check.log
+126b8cb82a7ecedab9cb3ca970fba27079bda00b5bc91e8318dba429234ce826  ./logs/approval-test.log
+c8b25cc1bd35bc034d1063072e359423631369a14ae0698f1466487166993369  ./logs/baseline.log
+765f18af8bac82fbb5876cad42920aac4e12fec5c37079dda62cc1407ec8413c  ./logs/conformance-test.log
+1a136c7be65bb480bfb1292d8028c56f4018be9392bcd9278ebe3c3b22810572  ./logs/curriculum-test.log
+8509fc45578a46d7058910399fd23e958accfd04f0314f923ac04af389b8a238  ./logs/identity-test.log
+ebd3f0ae53250c1b761df731828de116521db8d335127c881335a8b61f93576b  ./logs/validate.log

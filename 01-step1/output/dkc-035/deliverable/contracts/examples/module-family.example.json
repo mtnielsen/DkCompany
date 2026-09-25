@@ -1,0 +1,41 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ModuleFamily",
+  "metadata": {
+    "name": "example-module-family",
+    "version": "1.0.0",
+    "description": "Eksempel på en enkelt registreret forretningsmodulfamilie (økonomi/ERP) med kandidat, lokaliseringskrav og adaptergrænseflade.",
+    "accountableHuman": {
+      "subject": "oidc|cecilia.christensen",
+      "name": "Cecilia Christensen",
+      "role": "Service Owner"
+    }
+  },
+  "families": [
+    {
+      "id": "finance",
+      "title": "Økonomi/ERP",
+      "order": 1,
+      "selectionRationale": "Økonomi/ERP er den første familie fordi pilotkunderne allerede fører regnskab og mangler en fælles, tenantadskilt bogføringsflade.",
+      "pilotNeed": "Dansk bogføring og moms for pilotvirksomhederne.",
+      "familyStatus": "pending-legal-review",
+      "components": ["finance"],
+      "localeRequirements": ["accounting", "vat", "agreements", "authoritative-registers", "payment"],
+      "adapterInterface": "finance-ledger",
+      "candidateProducts": [
+        {
+          "product": "Tryton",
+          "candidateRef": "integration-candidate.tryton.example.json",
+          "selected": true,
+          "reason": "Teknisk kandidat med åben kerne, dokumenteret API og dedikeret database pr. kunde."
+        }
+      ],
+      "exclusions": [
+        {
+          "candidate": "Egen bogføringsmotor",
+          "reason": "Egen bogføringsmotor ville være et parallelt ERP-produkt med dansk bogføringslov som vedvarende ansvar."
+        }
+      ]
+    }
+  ]
+}

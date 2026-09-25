@@ -1,0 +1,14 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "RunbookKeyring",
+  "description": "Syntetisk udviklingsnøglesæt til runbooks. Nøglerne her er bevidst offentlige testfixtures og må aldrig bruges i produktion. I produktion leveres signeringsnøgler af KMS/HSM (ekstern integration), og en tilbagekaldt nøgle afvises ved verifikation.",
+  "usage": "development-fixture-only",
+  "keys": [
+    {
+      "keyId": "runbook-example-key",
+      "secret": "dkc045-runbook-example-key",
+      "usage": "development-fixture-only",
+      "createdAt": "2025-09-01T00:00:00Z"
+    }
+  ]
+}

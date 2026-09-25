@@ -1,0 +1,21 @@
+BaselineResult — commit 83ad91a (HEAD)
+status: fail
+summary: 84 pass, 1 fail, 0 error, 16 not-run of 101
+
+  fail     changelog-check                    
+  not-run  reviewer-metrics                   Starter en HTTP-server på 127.0.0.1:8484 og terminerer ikke; det er ikke en afsluttende check. Effektmålingen er dækket af reviewer-test.
+  not-run  integration-trivy                  Trivy er ikke installeret i dette miljø; CI-workflowet er fjernet. Sample-data dækker kun normaliseringen.
+  not-run  integration-falco                  Kræver en levende container-runtime/klynge. Reglerne er kun konfiguration i repoet.
+  not-run  integration-wazuh                  Kræver en levende SIEM-installation. Reglerne er kun konfiguration i repoet.
+  not-run  integration-mattermost             Ingen MATTERMOST_URL/credentials i dette miljø. Kun mock-adfærd er bevist.
+  not-run  integration-keycloak               Ingen IAM-instans i dette miljø. Kun mock-adfærd er bevist.
+  not-run  integration-llm                    Den reelle OpenAI-kompatible adapter findes og testes mod loopback-HTTP; ingen leverandørnøgle/-endpoint er konfigureret i dette miljø.
+  not-run  integration-oidc                   Identitet er kontraktvalideret og simuleret; ingen rigtig IdP er koblet på.
+  not-run  integration-continuity-measurement Ingen levende probe-/fejltest-infrastruktur i dette miljø. Målene er kontraktvalideret og et erklæret niveau er ikke et målt niveau.
+  not-run  integration-postgresql             Ingen PostgreSQL installeret i dette miljø. Driveren taler den rigtige wire-protokol og efterprøves mod en protokolfast test-dobbelt; en rigtig server kræver ekstern installation.
+  not-run  integration-github-actions         Actions er slået fra på repo-niveau, og det gamle ci.yml blev fjernet i commit 76e4782. Workflows for release-gate, DCO og forsyningskæde er konfiguration; kun lokal `make ci`/`make baseline` kan køres.
+  not-run  integration-container-build        Docker er ikke tilgængeligt i WSL-distroen, og cosign/syft/trivy er ikke installeret. Dockerfiles, base-digests og byggeplan er kontrolleret statisk; selve byggeriet, scanningen og signeringen kræver CI.
+  not-run  integration-staging-drift          Der findes ingen stagingklynge og ingen kubectl/kubeconfig i dette miljø. Reconcile er efterprøvet mod injiceret observeret tilstand i tests, men rigtig drift kræver en levende klynge.
+  not-run  integration-staging-provision      OpenTofu/Terraform er ikke installeret i dette miljø. Modulet er statisk kontrolleret (pinned providere, default-deny firewall, kryptering), men plan/apply er NOT RUN.
+  not-run  evidence-probe-staging             Der findes ingen kørende PDP/audit/gateway/runtime i dette miljø, og DKC_PROBE_*-bindingen (commit/image/miljø/run-ID) er ikke sat. Probekøreren skriver not-run med begrundelse; et fixture-pass tæller ikke som driftsbevis.
+  not-run  integration-vulnerability-scan     Hverken Trivy, OSV-scanner, Semgrep, Gitleaks eller en isoleret stagingklynge er installeret/tilgængelig her. Beholdningen bygges fra committede, repræsentative scannerfixtures; de rigtige scannere og dynamisk scanning er NOT RUN og dækningen er derfor erklæret ufuldstændig.

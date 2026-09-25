@@ -1,0 +1,21 @@
+{
+  "verb": "subject.locate",
+  "module": "itsm-adapter",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-24T11:12:35.853Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 23
+  },
+  "artifact": {
+    "uri": "s3://evidence/itsm-adapter/subject.locate.json",
+    "sha256": "708a7a7af350c91fedfa249caaf0c90cae4b50339edb701e247526dcb452151c"
+  }
+}

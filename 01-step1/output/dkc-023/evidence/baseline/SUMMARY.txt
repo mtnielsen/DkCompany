@@ -1,0 +1,24 @@
+BaselineResult — commit 83ad91a (HEAD)
+status: fail
+summary: 86 pass, 1 fail, 0 error, 16 not-run of 103
+
+  fail     changelog-check
+  not-run  reviewer-metrics
+  not-run  integration-trivy
+  not-run  integration-falco
+  not-run  integration-wazuh
+  not-run  integration-mattermost
+  not-run  integration-keycloak
+  not-run  integration-llm
+  not-run  integration-oidc
+  not-run  integration-continuity-measurement
+  not-run  integration-postgresql
+  not-run  integration-github-actions
+  not-run  integration-container-build
+  not-run  integration-staging-drift
+  not-run  integration-staging-provision
+  not-run  evidence-probe-staging
+  not-run  integration-vulnerability-scan
+
+Den kendte, allerede eksisterende fejl er changelog-check: commits i baseline mangler DCO sign-off.
+Den er ikke rettet eller skjult i denne leverance.

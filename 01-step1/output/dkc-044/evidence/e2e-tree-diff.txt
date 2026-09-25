@@ -1,0 +1,2 @@
+$ diff -rq /tmp/dkc-044/00-core /tmp/dkc-044-e2e/00-core -x node_modules -x .git -x .conformance-out -x generated
+exit=0

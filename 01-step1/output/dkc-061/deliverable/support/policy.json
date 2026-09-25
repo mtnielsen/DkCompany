@@ -1,0 +1,80 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "SupportBundlePolicy",
+  "metadata": {
+    "name": "platform-support-bundle-policy",
+    "version": "1.0.0",
+    "description": "Politik for redigerede supportbundles og diagnostik: ingen hemmeligheder, intet ikke-godkendt HR-indhold og ingen skjult fjernadgang. Fjernadgang er default-deny og kræver menneskeligt samtykke med TTL og revisionsspor.",
+    "accountableHuman": {
+      "subject": "oidc|cecilia.christensen",
+      "name": "Cecilia Christensen",
+      "role": "Security Owner",
+      "substitute": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      }
+    },
+    "labels": {
+      "tier": "support",
+      "wave": "5"
+    }
+  },
+  "policy": {
+    "redactionRequired": true,
+    "secretScanRequired": true,
+    "hrContentAllowed": false,
+    "forbiddenContentClasses": [
+      "secret",
+      "hr-personal",
+      "payroll",
+      "health",
+      "union-membership",
+      "customer-personal",
+      "raw-payload"
+    ],
+    "remoteAccessDefaultDeny": true,
+    "hiddenRemoteAccessAllowed": false,
+    "remoteAccessRequiresHumanConsent": true,
+    "remoteAccessMaxTtlMinutes": 120,
+    "auditRemoteAccess": true
+  },
+  "allowlist": [
+    {
+      "id": "installer-status",
+      "source": "configuration/installer-state.json",
+      "dataClass": "configuration",
+      "description": "Installatørens trin- og genoptagelsestilstand."
+    },
+    {
+      "id": "release-version",
+      "source": "catalog/releases.json",
+      "dataClass": "public",
+      "description": "Aktiv release, kanal og supportvindue."
+    },
+    {
+      "id": "component-versions",
+      "source": "catalog/components/",
+      "dataClass": "public",
+      "description": "Installerede komponenters id og version."
+    },
+    {
+      "id": "preflight-checks",
+      "source": "installer preflight",
+      "dataClass": "operational",
+      "description": "Read-only preflight-checks uden hemmeligheder."
+    },
+    {
+      "id": "migration-status",
+      "source": "migration/report/migration-report.json",
+      "dataClass": "operational",
+      "description": "Afstemt migrationsstatus og dækning."
+    },
+    {
+      "id": "lifecycle-report",
+      "source": "lifecycle/report/lifecycle-report.json",
+      "dataClass": "operational",
+      "description": "Seneste livscykluskontrol uden personhenførbare data."
+    }
+  ]
+}

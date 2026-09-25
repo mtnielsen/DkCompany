@@ -1,0 +1,85 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "CronJob",
+  "metadata": {
+    "name": "runtime",
+    "namespace": "platform-staging",
+    "labels": {
+      "app.kubernetes.io/name": "runtime",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "runtime",
+      "platform.example.org/environment": "staging"
+    }
+  },
+  "spec": {
+    "schedule": "0 * * * *",
+    "concurrencyPolicy": "Forbid",
+    "jobTemplate": {
+      "spec": {
+        "template": {
+          "metadata": {
+            "labels": {
+              "app.kubernetes.io/name": "runtime",
+              "app.kubernetes.io/managed-by": "argocd",
+              "platform.example.org/module": "runtime",
+              "platform.example.org/environment": "staging"
+            }
+          },
+          "spec": {
+            "serviceAccountName": "runtime",
+            "restartPolicy": "Never",
+            "securityContext": {
+              "runAsNonRoot": true,
+              "seccompProfile": {
+                "type": "RuntimeDefault"
+              }
+            },
+            "containers": [
+              {
+                "name": "runtime",
+                "image": "ghcr.io/example/platform-runtime@sha256:0000000000000000000000000000000000000000000000000000000000000000",
+                "args": [
+                  "--manifest",
+                  "modules/dummy-ok/agents/backup-agent.json",
+                  "--task",
+                  "contracts/examples/agent-task.example.json"
+                ],
+                "envFrom": [
+                  {
+                    "secretRef": {
+                      "name": "staging-pdp-signing"
+                    }
+                  },
+                  {
+                    "secretRef": {
+                      "name": "staging-db"
+                    }
+                  }
+                ],
+                "securityContext": {
+                  "readOnlyRootFilesystem": true,
+                  "allowPrivilegeEscalation": false,
+                  "capabilities": {
+                    "drop": [
+                      "ALL"
+                    ]
+                  }
+                },
+                "resources": {
+                  "requests": {
+                    "cpu": "100m",
+                    "memory": "128Mi"
+                  },
+                  "limits": {
+                    "cpu": "500m",
+                    "memory": "256Mi"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

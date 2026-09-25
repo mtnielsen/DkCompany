@@ -1,0 +1,13 @@
+Baseline: 214 checks, 166 PASS, 1 FAIL, 0 error, 47 NOT RUN
+Run: 2026-09-24T14:44:47.104Z-83ad91a.json
+Repo: /tmp/dkc-032/00-core
+
+FAIL:
+  - changelog-check: 
+
+DKC-032-checks:
+  - shadow-check: pass
+  - shadow-test: pass
+  - shadow-run: pass
+  - shadow-report: pass
+  - integration-ai-shadow: not-run

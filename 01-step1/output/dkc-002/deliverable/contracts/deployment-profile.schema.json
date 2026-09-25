@@ -1,0 +1,179 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/deployment-profile.schema.json",
+  "title": "Deployment Profile",
+  "description": "Versioneret kontrakt for en installationsprofil. Den beskriver den fælles kontrolplan, tenantmodel (pilotstandard: fælles kontrolplan med særskilte app-instanser og databaser pr. kunde; enterprise: dedikeret installation), HA-niveau, valgfri host-styring, datatjenester, eksplicitte driftsomkostninger og eksplicitte begrænsninger. Én og samme kontrakt bruges for SMV, servicevirksomhed og enterprise.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "profileType", "tenantModel", "highAvailability", "hostManagement", "dataServices", "serviceTargets", "cost", "limitations"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "DeploymentProfile" },
+
+    "metadata": { "$ref": "#/$defs/metadata" },
+
+    "profileType": {
+      "enum": ["single-server", "multiple-servers", "dedicated-customer", "external-data-services"],
+      "description": "Installationsprofil. single-server er en understøttet produktionsprofil uden HA; multiple-servers kræver HA; dedicated-customer er enterprise-isolation; external-data-services peger på eksterne data- og backupmål."
+    },
+
+    "tenantModel": {
+      "type": "object",
+      "required": ["mode", "applicationInstancesPerTenant", "databasePerTenant", "tenantBoundaryEnforcedAt"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "enum": ["shared-control-plane", "dedicated-installation"],
+          "description": "shared-control-plane er pilotstandarden: én fælles kontrolplan, men særskilte app-instanser og databaser pr. kunde. dedicated-installation er enterprise: kunden får sin egen installation."
+        },
+        "applicationInstancesPerTenant": { "type": "boolean" },
+        "databasePerTenant": { "type": "boolean" },
+        "tenantBoundaryEnforcedAt": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["api", "database", "queue", "storage", "search", "reporting", "connector"] },
+          "description": "Hvor tenantgrænsen håndhæves. Skal omfatte mindst api og database."
+        },
+        "sharedComponents": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Komponenter der bevidst deles på tværs af tenants. Må ikke omfatte kundedata."
+        }
+      }
+    },
+
+    "highAvailability": {
+      "type": "object",
+      "required": ["enabled"],
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "failureDomains": { "type": "integer", "minimum": 1 },
+        "fencing": { "enum": ["none", "quorum", "broker"] },
+        "redundantEntrypoints": { "type": "boolean" },
+        "measuredFailureTests": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Referencer til daterede fejltest-resultater. En påstand om HA uden målte tests er ikke HA."
+        }
+      }
+    },
+
+    "hostManagement": {
+      "type": "object",
+      "required": ["enabled"],
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Host-/OS-styring er en valgfri kapacitet, slået fra som standard. Kræver et afgrænset, menneskegodkendt broker-lag."
+        },
+        "broker": { "type": "string", "description": "Navn/version på det afgrænsede broker-lag." },
+        "allowedOperations": {
+          "type": "array",
+          "items": { "enum": ["diagnostics", "package-update", "certificate-renewal", "service-drain", "service-restart", "planned-reboot"] }
+        },
+        "outOfBandRecovery": { "type": "string", "description": "Hvordan mennesker kommer ind, hvis den automatiske vej svigter." }
+      }
+    },
+
+    "dataServices": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "provider", "responsibilityOwner"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "kind": { "enum": ["built-in-database", "external-application-database", "external-business-source", "backup-destination"] },
+          "provider": { "type": "string", "minLength": 1 },
+          "responsibilityOwner": { "$ref": "#/$defs/accountableHuman" },
+          "responsibilityAgreement": {
+            "type": "string",
+            "description": "Referencedokument, der deler ansvar for drift, skema, adgang, kryptering og gendannelse. Påkrævet for externe tjenester."
+          },
+          "credentialsRef": { "type": "string", "description": "Reference til en secret, ikke hemmeligheden selv." },
+          "tenantBound": { "type": "boolean" }
+        }
+      }
+    },
+
+    "serviceTargets": {
+      "type": "object",
+      "required": ["availability", "rpoMinutes", "rtoMinutes"],
+      "additionalProperties": false,
+      "properties": {
+        "availability": { "type": "string", "minLength": 1, "description": "Fx '99.0% målt pr. måned' — en målt forventning, ikke et løfte." },
+        "rpoMinutes": { "type": "integer", "minimum": 0 },
+        "rtoMinutes": { "type": "integer", "minimum": 0 },
+        "measurementWindowDays": { "type": "integer", "minimum": 1 }
+      }
+    },
+
+    "cost": {
+      "type": "object",
+      "required": ["model", "currency", "recurring", "notes"],
+      "additionalProperties": false,
+      "properties": {
+        "model": { "enum": ["infrastructure", "subscription", "license", "support", "mixed"] },
+        "currency": { "type": "string", "pattern": "^[A-Z]{3}$" },
+        "recurring": { "type": "boolean", "description": "Om der er en tilbagevendende driftsudgift. Selv 'gratis' software har driftsomkostninger." },
+        "monthlyEstimateMinor": { "type": "integer", "minimum": 0, "description": "Estimeret månedspris i mindste valutaenhed, fx øre." },
+        "priceBasis": { "type": "string", "description": "Hvad prisen dækker (pr. tenant, pr. bruger, pr. vCPU …)." },
+        "breakEvenNote": { "type": "string" },
+        "notes": { "type": "string", "minLength": 10 }
+      }
+    },
+
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 10 },
+      "description": "Eksplicitte begrænsninger for profilen. Tom liste er en fejl, ikke en hemmelighed."
+    },
+
+    "supportedModules": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Moduler/pakker profilen er tilladt at installere. Tom = ingen begrænsning ud over dependency-resolveren."
+    }
+  },
+
+  "$defs": {
+    "accountableHuman": {
+      "type": "object",
+      "description": "Et navngivet menneske. Et team-alias eller en rolle uden en person er ikke en ejer.",
+      "required": ["subject", "role", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3, "description": "Fx 'oidc|anna.andersen'. Skal navngive en person, ikke et team." },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": { "$ref": "#/$defs/substitute" }
+      }
+    },
+    "substitute": {
+      "type": "object",
+      "required": ["subject", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{3,63}$" },
+        "version": { "type": "string", "description": "SemVer for profilkonfigurationen." },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/accountableHuman" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    }
+  }
+}

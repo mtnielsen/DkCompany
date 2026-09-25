@@ -1,0 +1,23 @@
+{
+  "apiVersion": "policy/v1",
+  "kind": "PodDisruptionBudget",
+  "metadata": {
+    "name": "primary-database",
+    "namespace": "platform-ha",
+    "labels": {
+      "app.kubernetes.io/name": "primary-database",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "primary-database",
+      "platform.example.org/environment": "ha"
+    }
+  },
+  "spec": {
+    "minAvailable": 2,
+    "maxUnavailable": 1,
+    "selector": {
+      "matchLabels": {
+        "app.kubernetes.io/name": "primary-database"
+      }
+    }
+  }
+}

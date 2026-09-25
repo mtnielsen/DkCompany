@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/locale-requirement.schema.json",
+  "title": "Locale Requirement Catalog",
+  "description": "Katalog over de danske lokaliseringskrav, der gælder for økonomi-, HR-, tid-, fakturerings- og handelsmoduler: bogføring, moms, e-faktura, løn, betaling/bank, aftaler og autoritative registre. Hvert krav er en særskilt gate med en eksplicit review-status og et navngivet menneske. Et uafklaret eller uafgjort krav blokerer 'Danmarksklar', uanset hvor komplet upstream-produktet er.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "requirements"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "LocaleRequirementCatalog" },
+    "metadata": { "$ref": "#/$defs/metadata" },
+    "requirements": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/requirement" }
+    }
+  },
+  "$defs": {
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$" },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/accountableHuman" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "accountableHuman": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": {
+          "type": "object",
+          "required": ["subject", "name"],
+          "additionalProperties": false,
+          "properties": {
+            "subject": { "type": "string", "minLength": 3 },
+            "name": { "type": "string", "minLength": 2 },
+            "role": { "type": "string" }
+          }
+        }
+      }
+    },
+    "requirement": {
+      "type": "object",
+      "required": ["id", "title", "description", "appliesToFamilies", "status", "reviewedBy", "reviewedAt", "evidence", "gate"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "enum": ["accounting", "vat", "e-invoicing", "payroll", "payment", "agreements", "authoritative-registers"] },
+        "title": { "type": "string", "minLength": 3 },
+        "description": { "type": "string", "minLength": 20 },
+        "appliesToFamilies": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["finance", "hr", "time", "invoicing", "commerce"] }
+        },
+        "status": {
+          "enum": ["unreviewed", "pending", "confirmed", "not-applicable"],
+          "description": "unreviewed = ingen fagperson har set den. pending = afventer en navngivet fagpersons afgørelse. confirmed = afgjort og dokumenteret. not-applicable = eksplicit fravalgt med begrundelse."
+        },
+        "reviewedBy": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/accountableHuman" }
+          ]
+        },
+        "reviewedAt": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "string", "format": "date-time" }
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 3 }
+        },
+        "gate": {
+          "type": "object",
+          "required": ["required", "blocksDanishReady"],
+          "additionalProperties": false,
+          "properties": {
+            "required": { "type": "boolean" },
+            "blocksDanishReady": { "type": "boolean" }
+          }
+        }
+      }
+    }
+  }
+}

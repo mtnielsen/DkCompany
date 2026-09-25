@@ -1,0 +1,37 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ProviderCapabilityCatalog",
+  "metadata": {
+    "name": "example-provider-capabilities",
+    "version": "1.0.0",
+    "description": "Eksempel på et versionsstyret capability-katalog for udskiftelige providere.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner"
+    },
+    "labels": { "tier": "example" }
+  },
+  "levels": [
+    { "id": "enforced", "rank": 2, "title": "Håndhævet", "description": "Provideren håndhæver capability'en teknisk." },
+    { "id": "advisory", "rank": 1, "title": "Rådgivende", "description": "Provideren understøtter capability'en uden teknisk håndhævelse." }
+  ],
+  "classes": [
+    { "id": "iam", "title": "IAM", "description": "Identitet, føderation og audit-provenance." },
+    { "id": "modelprovider", "title": "Modelprovider", "description": "Modeladgang bag en egress-vagt." },
+    { "id": "database", "title": "Database", "description": "Strukturerede data med tenantisolation." },
+    { "id": "storage", "title": "Lager", "description": "Objekter med checksums og ACL." },
+    { "id": "backup", "title": "Backup", "description": "Krypteret og uforanderlig backup." },
+    { "id": "queue", "title": "Køer", "description": "Holdbar og idempotent beskedudveksling." },
+    { "id": "apps", "title": "Applikationer", "description": "Applikationsdata med ACL og stabile id'er." }
+  ],
+  "capabilities": [
+    { "id": "iam.oidc", "class": "iam", "title": "OIDC-føderation", "mandatory": true, "securityCritical": true, "minVersion": "1.0.0", "description": "Verificeret fødereret login via OIDC." },
+    { "id": "model.egress-control", "class": "modelprovider", "title": "Egresskontrol", "mandatory": true, "securityCritical": true, "minVersion": "1.0.0", "description": "Kun gatewayen må kalde provideren." },
+    { "id": "database.tls", "class": "database", "title": "TLS", "mandatory": true, "securityCritical": true, "minVersion": "1.0.0", "description": "Alle forbindelser kræver verificeret TLS." },
+    { "id": "storage.checksums", "class": "storage", "title": "Checksums", "mandatory": true, "securityCritical": true, "minVersion": "1.0.0", "description": "Hvert objekt har en verificerbar checksum." },
+    { "id": "backup.encryption", "class": "backup", "title": "Krypteret backup", "mandatory": true, "securityCritical": true, "minVersion": "1.0.0", "description": "Backups er krypteret med AES-256-GCM." },
+    { "id": "queue.durable-outbox", "class": "queue", "title": "Holdbar outbox", "mandatory": true, "securityCritical": true, "minVersion": "1.0.0", "description": "Beskeder skrives holdbart før de sendes." },
+    { "id": "app.acl", "class": "apps", "title": "Applikations-ACL", "mandatory": true, "securityCritical": true, "minVersion": "1.0.0", "description": "Adgangsrettigheder pr. objekt bevares." }
+  ]
+}

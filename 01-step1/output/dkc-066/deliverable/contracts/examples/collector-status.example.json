@@ -1,0 +1,78 @@
+{
+  "schemaVersion": "1.0",
+  "kind": "CollectorStatus",
+  "generatedAt": "2025-09-01T10:00:00.000Z",
+  "overall": "pass",
+  "collectors": [
+    {
+      "id": "otel-collector",
+      "kind": "otel",
+      "status": "pass",
+      "freshness": "fresh",
+      "lastSeenAt": "2025-09-01T10:00:00.000Z",
+      "ageSeconds": 0,
+      "expectedIntervalSeconds": 30,
+      "maxAgeSeconds": 300,
+      "drops": 0,
+      "backpressure": 0,
+      "rejected": 0,
+      "bound": "0 drops / 0 backpressure / 0 afviste"
+    },
+    {
+      "id": "trivy-ci",
+      "kind": "scanner",
+      "status": "pass",
+      "freshness": "fresh",
+      "lastSeenAt": "2025-09-01T10:00:00.000Z",
+      "ageSeconds": 0,
+      "expectedIntervalSeconds": 86400,
+      "maxAgeSeconds": 172800,
+      "drops": 0,
+      "backpressure": 0,
+      "rejected": 0,
+      "bound": "0 drops / 0 backpressure / 0 afviste"
+    },
+    {
+      "id": "release-gate",
+      "kind": "ci",
+      "status": "pass",
+      "freshness": "fresh",
+      "lastSeenAt": "2025-09-01T10:00:00.000Z",
+      "ageSeconds": 0,
+      "expectedIntervalSeconds": 86400,
+      "maxAgeSeconds": 2592000,
+      "drops": 0,
+      "backpressure": 0,
+      "rejected": 0,
+      "bound": "0 drops / 0 backpressure / 0 afviste"
+    },
+    {
+      "id": "backup-drill",
+      "kind": "backup",
+      "status": "pass",
+      "freshness": "fresh",
+      "lastSeenAt": "2025-09-01T10:00:00.000Z",
+      "ageSeconds": 0,
+      "expectedIntervalSeconds": 604800,
+      "maxAgeSeconds": 1209600,
+      "drops": 0,
+      "backpressure": 0,
+      "rejected": 0,
+      "bound": "0 drops / 0 backpressure / 0 afviste"
+    },
+    {
+      "id": "agent-runtime",
+      "kind": "agent",
+      "status": "pass",
+      "freshness": "fresh",
+      "lastSeenAt": "2025-09-01T10:00:00.000Z",
+      "ageSeconds": 0,
+      "expectedIntervalSeconds": 300,
+      "maxAgeSeconds": 900,
+      "drops": 0,
+      "backpressure": 0,
+      "rejected": 0,
+      "bound": "0 drops / 0 backpressure / 0 afviste"
+    }
+  ]
+}

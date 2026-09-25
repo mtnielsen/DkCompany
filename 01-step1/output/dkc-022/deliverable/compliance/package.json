@@ -1,0 +1,17 @@
+{
+  "name": "@platform/compliance",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Kontrolmapping mod NIS2, GDPR og AI Act samt dataregister og evidens-/risikoregister. Kanoniske kilder er control-mapping.json, data-register.json og assurance-register.json; de genererede tabeller skrives til docs/compliance/.",
+  "bin": {
+    "control-mapping": "./src/cli.mjs",
+    "assurance": "./src/assurance-cli.mjs"
+  },
+  "scripts": {
+    "test": "node --test",
+    "assurance-check": "node src/assurance-cli.mjs check",
+    "assurance-write": "node src/assurance-cli.mjs write",
+    "assurance-export": "node src/assurance-cli.mjs export"
+  }
+}

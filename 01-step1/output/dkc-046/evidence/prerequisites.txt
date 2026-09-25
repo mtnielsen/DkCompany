@@ -1,0 +1,23 @@
+Prerequisite chain for DKC-046 (verified in the applied stack, commit 83ad91a + dkc-001..dkc-045 overlays)
+
+OK   credentials/src/kill-switch.mjs
+OK   runtime/src/tools.mjs
+OK   runtime/src/classification.mjs
+OK   runtime/src/reconcile.mjs
+OK   observability/src/alerts.mjs
+OK   observability/src/sensors.mjs
+OK   infrastructure/src/ha.mjs
+OK   continuity/service-classes
+OK   approvals/src/runbook.mjs
+OK   approvals/src/change-service.mjs
+OK   data-protection/src/guard.mjs
+MISS retention/src/immutable.mjs
+OK   agent-registry/src/roles.mjs
+OK   agent-registry/src/runtime-role-guard.mjs
+OK   reviewer/src/reviewer.mjs
+OK   runtime/src/runtime.mjs
+
+DKC-010 kill switch:  10 files
+DKC-013 action classes: 2 marker i classification.mjs
+DKC-045 runbooks:      2 signerede runbooks
+DKC-055 roles:         64 konstanter i roles.mjs

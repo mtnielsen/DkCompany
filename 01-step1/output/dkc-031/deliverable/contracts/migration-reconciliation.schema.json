@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/migration-reconciliation.schema.json",
+  "title": "Migration Reconciliation",
+  "description": "DKC-031: resultatet af en dry-run eller import. Den opgiver antal og checksums (sha256) for kilde og mål, en fejlliste, dublerede forretningsidentiteter (som aldrig flettes) og de tabte dækningsfacetter. En dry-run skriver intet; en import er resumabel og idempotent.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "sourceId", "appId", "tenantId", "mode", "generatedAt", "counts", "checksums", "errors", "conflicts", "coverageLosses"],
+  "additionalProperties": true,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "MigrationReconciliation" },
+    "sourceId": { "type": "string" },
+    "appId": { "enum": ["files", "projects", "knowledge", "support", "crm"] },
+    "tenantId": { "type": "string" },
+    "mode": { "enum": ["dry-run", "import"] },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "counts": {
+      "type": "object",
+      "required": ["source", "created", "updated", "conflicts", "skipped", "failed"],
+      "additionalProperties": false,
+      "properties": {
+        "source": { "type": "integer", "minimum": 0 },
+        "created": { "type": "integer", "minimum": 0 },
+        "updated": { "type": "integer", "minimum": 0 },
+        "conflicts": { "type": "integer", "minimum": 0 },
+        "skipped": { "type": "integer", "minimum": 0 },
+        "failed": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "checksums": {
+      "type": "object",
+      "required": ["algorithm", "source", "target", "match"],
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": { "const": "sha256" },
+        "source": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "target": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "match": { "type": "boolean" }
+      }
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["sourceObjectId", "code", "message"],
+        "additionalProperties": true,
+        "properties": {
+          "sourceObjectId": { "type": "string" },
+          "entityType": { "type": "string" },
+          "code": { "type": "string" },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "conflicts": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+    "coverageLosses": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+    "checkpoint": { "type": ["object", "null"] },
+    "persisted": { "type": "boolean" }
+  }
+}

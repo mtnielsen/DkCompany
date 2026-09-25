@@ -1,0 +1,128 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "Runbook",
+  "metadata": {
+    "name": "stateful-scaling",
+    "version": "1.0.0",
+    "description": "Skalerer en stateful workload (fx databasen eller brokeren) efter en eksplicit multi-active-vurdering, med fencing, quorumkontrol, observationstid og testet rollback. Kræver et menneskes godkendelse.",
+    "owner": {
+      "team": "platform",
+      "contact": "platform@example.org"
+    },
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "role": "Platform Owner",
+      "name": "Anna Andersen"
+    }
+  },
+  "scope": {
+    "verbs": [
+      "scale"
+    ],
+    "targets": [
+      "stateful/*"
+    ],
+    "environments": [
+      "staging",
+      "prod"
+    ],
+    "tenants": [
+      "*"
+    ]
+  },
+  "parameters": {
+    "schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "replicas": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "required": true
+        },
+        "multiActive": {
+          "type": "boolean",
+          "required": true
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "limits": {
+      "maxDurationSeconds": 900,
+      "maxTargets": 1
+    }
+  },
+  "preconditions": [
+    {
+      "id": "healthy-before",
+      "check": "healthcheck",
+      "expect": "green"
+    },
+    {
+      "id": "quorum-intact",
+      "check": "quorum",
+      "expect": true
+    },
+    {
+      "id": "multi-active-declared",
+      "check": "multi-active",
+      "expect": true
+    }
+  ],
+  "maxImpact": {
+    "blastRadius": "single-service",
+    "maxTargets": 1,
+    "customerVisible": true,
+    "maxDurationSeconds": 900
+  },
+  "expiry": {
+    "approvedAt": "2025-09-01T00:00:00Z",
+    "expiresAt": "2025-09-03T00:00:00Z",
+    "maxAgeSeconds": 604800
+  },
+  "attempts": {
+    "maxAttempts": 2,
+    "windowSeconds": 1800
+  },
+  "rollback": {
+    "required": true,
+    "method": "scale",
+    "runbookRef": "stateful-scaling@1.0.0",
+    "tested": true
+  },
+  "postchecks": [
+    {
+      "id": "healthy-after",
+      "check": "healthcheck",
+      "expect": "green",
+      "timeoutSeconds": 300,
+      "onFailure": "rollback"
+    },
+    {
+      "id": "replication-caught-up",
+      "check": "replication-lag",
+      "expect": true,
+      "timeoutSeconds": 300,
+      "onFailure": "rollback"
+    }
+  ],
+  "approval": {
+    "flow": "standard",
+    "preApproved": true,
+    "preApprovalRef": "APR-STATEFUL-SCALE",
+    "requiredApprovals": 2,
+    "eligibleGroups": [
+      "platform-approvers"
+    ]
+  },
+  "signature": {
+    "algorithm": "hmac-sha256",
+    "keyId": "runbook-example-key",
+    "value": "7311275253e10b9eeb7b4aacc9ad524d13d6c18fcf38bd45ca0da5077233ae04",
+    "signedAt": "2025-09-01T00:00:00Z"
+  }
+}

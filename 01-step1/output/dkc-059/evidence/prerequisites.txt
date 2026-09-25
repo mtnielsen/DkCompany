@@ -1,0 +1,33 @@
+# Forudsætninger verificeret i kode (DKC-059)
+
+Review-base: 5f9fa73 ; checkout: 83ad91a
+Stak-tip: DKC-031 (01-step1/output/dkc-031/apply.sh)
+
+## DKC-023 — adapter-SDK og godkendelsestest
+  OK  adapter-sdk/src/sdk.mjs
+  OK  adapter-sdk/src/version.mjs
+  OK  adapter-sdk/src/candidates.mjs
+  OK  adapter-sdk/registry.json
+  OK  contracts/integration-candidate.schema.json
+
+## DKC-031 — migrations- og exitværktøjer
+  OK  migration/sources.json
+  OK  migration/policy.json
+  OK  migration/src/import.mjs
+  OK  migration/src/cutover.mjs
+  OK  migration/src/approval.mjs
+  OK  migration/src/permissions.mjs
+  OK  migration/src/references.mjs
+  OK  migration/src/store.mjs
+
+## DKC-053 — installationsprofiler og dependency-resolver
+  OK  distribution/src/resolver.mjs
+  OK  distribution/src/catalog.mjs
+  OK  catalog/components/identity-broker.component.json
+  OK  contracts/component-manifest.schema.json
+
+## DKC-056 — datatjenester og ejerskab
+  OK  data-services/src/registry.mjs
+  OK  data-services/src/migration-scope.mjs
+  OK  contracts/database-profile.schema.json
+  OK  contracts/data-service-binding.schema.json

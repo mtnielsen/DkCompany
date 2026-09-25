@@ -1,0 +1,14 @@
+{
+  "name": "@platform/retention",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "DKC-021: håndhæver sletning, legal hold og gendannelsesregler. Dokumenteret sletningsdækning pr. datalag, begrundede og godkendte holds der blokerer sletning, ærlige modulsvar med resterende kopier og et releasegate der genanvender slettebeslutninger ved restore.",
+  "bin": {
+    "retention": "./src/cli.mjs"
+  },
+  "scripts": {
+    "test": "node --test",
+    "check": "node src/check.mjs"
+  }
+}

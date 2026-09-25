@@ -1,0 +1,73 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ProviderSupportMatrix",
+  "metadata": {
+    "name": "example-provider-support-matrix",
+    "version": "1.0.0",
+    "description": "Eksempel på en supportmatrix over drop-in, planlagt datamigration og ikke-understøttet skift.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner"
+    },
+    "labels": { "tier": "example" }
+  },
+  "modes": [
+    { "id": "drop-in", "title": "Drop-in", "description": "Kun forbindelsen skifter; alle capabilities bevares." },
+    { "id": "planned-migration", "title": "Planlagt migration", "description": "Kræver migrationsbevis, mappings, godkendelse og rollback." },
+    { "id": "unsupported", "title": "Ikke-understøttet", "description": "Skiftet afvises før ændring." }
+  ],
+  "rows": [
+    {
+      "id": "example-drop-in",
+      "class": "modelprovider",
+      "from": "example-model-a",
+      "to": "example-model-b",
+      "mode": "drop-in",
+      "reason": "Begge providere håndhæver de samme capabilities, så kun forbindelsen skifter.",
+      "requiresDataMigration": false,
+      "requiresMigrationProof": false,
+      "requiresIdMapping": false,
+      "requiresAclMapping": false,
+      "requiresHumanApproval": false,
+      "requiresRollback": false,
+      "oldProviderReadOnly": false,
+      "revokeCredentials": true,
+      "evidenceRef": "docs/spec/provider-contracts.md#drop-in-skift"
+    },
+    {
+      "id": "example-planned",
+      "class": "database",
+      "from": "example-db-a",
+      "to": "example-db-b",
+      "mode": "planned-migration",
+      "reason": "To forskellige motorer kræver datamigrering med afstemning og rollback.",
+      "requiresDataMigration": true,
+      "requiresMigrationProof": true,
+      "requiresIdMapping": true,
+      "requiresAclMapping": true,
+      "requiresHumanApproval": true,
+      "requiresRollback": true,
+      "oldProviderReadOnly": true,
+      "revokeCredentials": true,
+      "evidenceRef": "docs/spec/provider-contracts.md#planlagt-datamigration"
+    },
+    {
+      "id": "example-unsupported",
+      "class": "database",
+      "from": "example-db-a",
+      "to": "example-db-c",
+      "mode": "unsupported",
+      "reason": "Målet mangler en obligatorisk capability og håndhæver ikke kryptering i hvile.",
+      "requiresDataMigration": false,
+      "requiresMigrationProof": false,
+      "requiresIdMapping": false,
+      "requiresAclMapping": false,
+      "requiresHumanApproval": false,
+      "requiresRollback": false,
+      "oldProviderReadOnly": false,
+      "revokeCredentials": false,
+      "evidenceRef": "docs/spec/provider-contracts.md#manglende-obligatorisk-capability"
+    }
+  ]
+}

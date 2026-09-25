@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/offboarding-plan.schema.json",
+  "title": "Offboarding Plan",
+  "description": "Plan og resultat for afvikling af en identitet. Alle fem rettighedsklasser skal lukkes inden for den aftalte frist: sessioner, API-tokens, delinger, planlagte workflows og AI-værktøjsbevillinger. En plan der erklærer `complete` uden at alle mål er lukket, eller hvor en handling ligger efter fristen, er ugyldig. Planen er idempotent og bærer et revisionsspor.",
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "kind",
+    "id",
+    "subject",
+    "requestedAt",
+    "deadlineAt",
+    "deadlineSeconds",
+    "targets",
+    "actions",
+    "status"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "OffboardingPlan" },
+    "id": { "type": "string", "minLength": 3 },
+    "subject": { "type": "string", "minLength": 3 },
+    "requestedAt": { "type": "string", "format": "date-time" },
+    "deadlineAt": { "type": "string", "format": "date-time" },
+    "deadlineSeconds": { "type": "integer", "minimum": 1 },
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "enum": ["sessions", "api-tokens", "shares", "scheduled-workflows", "ai-tool-grants"] }
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["target", "rightId", "action", "at", "status"],
+        "additionalProperties": false,
+        "properties": {
+          "target": { "enum": ["sessions", "api-tokens", "shares", "scheduled-workflows", "ai-tool-grants"] },
+          "rightId": { "type": "string", "minLength": 1 },
+          "action": { "enum": ["revoke", "disable"] },
+          "at": { "type": "string", "format": "date-time" },
+          "status": { "enum": ["done", "already-revoked", "failed"] },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "outstanding": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "completeByDeadline": { "type": "boolean" },
+    "status": { "enum": ["complete", "partial", "failed"] },
+    "auditRef": { "type": "string", "minLength": 3 }
+  }
+}

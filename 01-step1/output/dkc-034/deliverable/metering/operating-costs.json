@@ -1,0 +1,47 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "OperatingCosts",
+  "metadata": {
+    "name": "platform-operating-costs",
+    "version": "1.0.0",
+    "description": "Manuelt indtastede driftsudgifter pr. tenant for afstemning mod den beregnede forbrugsregistrering. Beløbene er syntetiske og erstatter ikke en faktura.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner"
+      }
+    },
+    "labels": {
+      "wave": "3",
+      "task": "DKC-034"
+    }
+  },
+  "currency": "EUR",
+  "source": "docs/costs/staging.json",
+  "period": "2026-02",
+  "tolerancePercent": 10,
+  "tenants": [
+    {
+      "tenantId": "acme",
+      "operatingExpenseTotal": 640,
+      "invoiceRef": "invoice://acme/2026-02",
+      "note": "Syntetisk driftsudgift for februar."
+    },
+    {
+      "tenantId": "globex",
+      "operatingExpenseTotal": 110,
+      "invoiceRef": "invoice://globex/2026-02",
+      "note": "Syntetisk driftsudgift for februar."
+    },
+    {
+      "tenantId": "initech",
+      "operatingExpenseTotal": 1850,
+      "invoiceRef": "invoice://initech/2026-02",
+      "note": "Syntetisk driftsudgift for februar."
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "specversion": "1.0",
+  "id": "d648f2f3-d855-4da1-b2c8-880c0693af4b",
+  "source": "urn:platform:module:openproject-adapter",
+  "type": "dk.platform.openproject-adapter.subject-locate.completed",
+  "time": "2026-09-24T12:51:03.395Z",
+  "datacontenttype": "application/json",
+  "tenantid": "acme",
+  "traceid": "01f2b88c66ac292037f3eeec015adfe4",
+  "spanid": "fe7a9f179e37b65d",
+  "principal": {
+    "kind": "human",
+    "id": "oidc|dpo@example.org"
+  },
+  "dataclassification": "personal",
+  "data": {
+    "verb": "subject.locate",
+    "decision": "allow"
+  }
+}

@@ -1,0 +1,12 @@
+Baseline (DKC-021 overlay, DKC-001..DKC-048 + DKC-021)
+Run-fil: .conformance-out/baseline/runs/2026-09-24T09-04-04-155Z-83ad91a.json
+Commit: 83ad91a · Node: v22.22.1 · Total: 152 checks
+Status: {"pass":118,"not-run":33,"fail":1}
+
+Kendt, pre-eksisterende FAIL (ikke indført af DKC-021):
+  - changelog-check: Fejl hvis commits mangler DCO sign-off
+
+DKC-021-checks:
+  - retention-check: pass (contract)
+  - retention-test: pass (real)
+  - integration-retention-live: not-run (integration)

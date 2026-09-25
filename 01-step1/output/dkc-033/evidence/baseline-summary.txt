@@ -1,0 +1,17 @@
+Baseline (make baseline), Node v22.22.1, checkout 83ad91a.
+
+FØR DKC-033 (stak-tip DKC-065):
+  total=264  pass=206  fail=1  notRun=57
+
+EFTER DKC-033:
+  total=269  pass=210  fail=1  notRun=58
+
+Delta: +5 checks = +4 PASS (pilot-check, pilot-test, pilot-run, pilot-report)
+       +1 NOT RUN (integration-pilot-live).
+
+Den ene FAIL er den kendte, forud-eksisterende changelog-check (manglende DCO
+sign-off, inkl. 83ad91a). Den er ikke "rettet" for at opnå grøn status.
+
+Reproducerbarheds-advarslen om ændrede module-fixtures er den kendte runtime-
+mutation; modules/*/conformance blev gendannet fra en ren reference efter
+baseline (evidence/fixture-restore.log).

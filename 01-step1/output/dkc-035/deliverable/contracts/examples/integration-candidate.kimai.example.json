@@ -1,0 +1,93 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "IntegrationCandidate",
+  "metadata": {
+    "name": "kimai-2-30-0",
+    "version": "1.0.0",
+    "description": "Kandidatvurdering af Kimai 2.30.0 (Community) som tidsregistreringskernel. Ingen dansk lokalisering kræves for selve tidsregistreringen.",
+    "accountableHuman": {
+      "subject": "oidc|hans.hansen",
+      "name": "Hans Hansen",
+      "role": "Solution Architect"
+    },
+    "labels": { "application": "APP-051", "adapter": "time-adapter", "product": "kimai" }
+  },
+  "applicationId": "APP-051",
+  "name": "Kimai",
+  "upstream": {
+    "vendor": "Kimai",
+    "projectUrl": "https://www.kimai.org/",
+    "documentationUrl": "https://www.kimai.org/documentation/",
+    "sourceUrl": "https://github.com/kimai/kimai"
+  },
+  "exactVersion": "2.30.0",
+  "edition": { "name": "Community", "tier": "community", "notes": "Kernen er fri software; cloud-drift er en betalt tjeneste." },
+  "license": {
+    "spdx": "AGPL-3.0-or-later",
+    "type": "open-source",
+    "paidFeaturesRequired": false,
+    "redistributionAllowed": true,
+    "notes": "AGPL; platformen videredistribuerer ikke binæren."
+  },
+  "hosting": {
+    "mode": "customer-self-hosted",
+    "commercialRedistribution": false,
+    "commercialHostingAllowed": true,
+    "notes": "Hostes for kunden; én database pr. installation."
+  },
+  "sso": { "capability": "partial", "supported": true, "protocols": ["oidc", "saml2"], "notes": "OIDC/SAML understøttes gennem et plugin." },
+  "scim": { "capability": "none", "supported": false, "provisioningAlternative": "Brugere provisioneres gennem REST-API'et eller en SCIM-bro.", "notes": "Ingen SCIM." },
+  "api": {
+    "capability": "full",
+    "documented": true,
+    "protocols": ["rest"],
+    "authentication": ["api-key", "oauth2"],
+    "notes": "REST API dækker tidsregistreringer, aktiviteter, kunder og projekter."
+  },
+  "isolation": {
+    "capability": "full",
+    "tenantModel": "dedicated-installation",
+    "databasePerTenant": true,
+    "notes": "Dedikeret installation pr. kunde; tenantgrænsen håndhæves i adapter og netværkspolitik."
+  },
+  "export": {
+    "capability": "full",
+    "formats": ["json", "csv"],
+    "aclPreserved": true,
+    "apiAccessible": true,
+    "notes": "Alle tidsregistreringer kan eksporteres gennem API'et."
+  },
+  "backup": {
+    "capability": "partial",
+    "supported": true,
+    "pointInTime": false,
+    "restoreTested": false,
+    "notes": "Databasebackup understøttes, men gendannelse er ikke testet i dette miljø."
+  },
+  "price": {
+    "model": "mixed",
+    "currency": "EUR",
+    "recurring": false,
+    "priceBasis": "Kernen er gratis; cloud-drift er en betalt tjeneste.",
+    "notes": "Selvhostet drift er gratis."
+  },
+  "maintenance": {
+    "vendorSupport": "community",
+    "releaseCadence": "Løbende patch og kvartalsvise feature-udgivelser.",
+    "securityResponse": "Offentlig sikkerhedsproces.",
+    "upgradePath": "Trinvis opgradering via migrations."
+  },
+  "freeVsPaid": {
+    "documented": true,
+    "freeTierLimitations": ["Cloud-drift er en betalt tjeneste.", "SCIM er ikke i kernen."],
+    "requiredPaidFeatures": [],
+    "sourceUrl": "https://www.kimai.org/pricing/"
+  },
+  "verification": {
+    "status": "candidate_not_approved",
+    "verifiedBy": { "subject": "oidc|hans.hansen", "name": "Hans Hansen", "role": "Solution Architect" },
+    "verifiedAt": "2025-01-15",
+    "evidence": ["https://www.kimai.org/documentation/rest-api.html", "https://github.com/kimai/kimai"],
+    "notes": "Licens, SSO, API og isolation er vurderet. Kandidaten godkendes ikke endnu: en testet gendannelse mangler, og en menneskelig kandidatgodkendelse er ikke gennemført."
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "specversion": "1.0",
+  "id": "b02551a3-105e-4fc4-9134-c4d7af49b4b3",
+  "source": "urn:platform:module:itsm-adapter",
+  "type": "dk.platform.itsm-adapter.subject-locate.completed",
+  "time": "2026-09-24T11:12:35.851Z",
+  "datacontenttype": "application/json",
+  "tenantid": "acme",
+  "traceid": "fb1a52083455946efbc655ffc1df4fdb",
+  "spanid": "a4307255e3c4a6dc",
+  "principal": {
+    "kind": "agent",
+    "id": "spiffe://platform.example.org/agents/itsm-observer"
+  },
+  "dataclassification": "personal",
+  "data": {
+    "verb": "subject.locate",
+    "decision": "allow"
+  }
+}

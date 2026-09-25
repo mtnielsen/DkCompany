@@ -1,0 +1,6 @@
+Baseline før DKC-035 (ren DKC-033-stak):
+  total=269 pass=210 fail=1 error=0 notRun=58
+Baseline efter DKC-035:
+  total=274 pass=214 fail=1 error=0 notRun=59
+Delta: total +5, pass +4, fail +0, notRun +1
+Det ene FAIL er det kendte, forudgående changelog-check (manglende DCO sign-off, også i 83ad91a).

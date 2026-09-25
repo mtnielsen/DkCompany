@@ -1,0 +1,155 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ModuleFamily",
+  "metadata": {
+    "name": "platform-module-families",
+    "version": "1.0.0",
+    "description": "Versioneret registrering af de næste forretningsmodulfamilier: økonomi/ERP, fakturering, HR, tid og handel. Rækkefølgen er valgt efter faktisk pilotbehov, hvert fravalg er begrundet, og en registrering er en katalogpost — ikke en fungerende applikation.",
+    "accountableHuman": {
+      "subject": "oidc|cecilia.christensen",
+      "name": "Cecilia Christensen",
+      "role": "Service Owner",
+      "substitute": {
+        "subject": "oidc|david.dahl",
+        "name": "David Dahl",
+        "role": "Service Owner"
+      }
+    },
+    "labels": {
+      "tier": "business-modules",
+      "wave": "6"
+    }
+  },
+  "families": [
+    {
+      "id": "finance",
+      "title": "Økonomi/ERP",
+      "order": 1,
+      "selectionRationale": "Økonomi/ERP er den første familie fordi pilotkunderne allerede fører regnskab og mangler en fælles, tenantadskilt bogføringsflade. Uden den kan fakturering og løn ikke hænge sammen med resten af platformen.",
+      "pilotNeed": "Dansk bogføring, moms og regnskabsårsafslutning for de tre pilotvirksomheder.",
+      "familyStatus": "pending-legal-review",
+      "components": ["finance"],
+      "localeRequirements": ["accounting", "vat", "agreements", "authoritative-registers", "payment"],
+      "adapterInterface": "finance-ledger",
+      "candidateProducts": [
+        {
+          "product": "Tryton",
+          "candidateRef": "integration-candidate.tryton.example.json",
+          "selected": true,
+          "reason": "Valgt som teknisk kandidat: modulær kerne, dokumenteret REST/JSON-RPC-API, relationel database pr. kunde og en åben kerne, der kan lokaliseres uden at forke kontrolplanet."
+        },
+        {
+          "product": "ERPNext",
+          "candidateRef": "integration-candidate.erpnext.example.json",
+          "selected": false,
+          "reason": "Fravalgt til økonomifamilien fordi CRM-vurderingen (DKC-030) viste en delt installation og et tungere ERP-livscyklusforløb end en dedikeret økonomikerne."
+        }
+      ],
+      "exclusions": [
+        {
+          "candidate": "Egen bogføringsmotor",
+          "reason": "Egen bogføringsmotor ville være et parallelt ERP-produkt med dansk bogføringslov som vedvarende ansvar; platformen integrerer i stedet en afgrænset upstream."
+        },
+        {
+          "candidate": "Dansk standardbogføring uden fagperson",
+          "reason": "Bogføring og moms må ikke erklæres danskklare alene på baggrund af upstream-features; en registreret revisor eller bogholder skal bekræfte kontoplan, moms og årsafslutning."
+        }
+      ]
+    },
+    {
+      "id": "invoicing",
+      "title": "Fakturering",
+      "order": 2,
+      "selectionRationale": "Fakturering følger økonomi fordi den deler kontoplan, moms og betalingsflow. Den er en selvstændig familie, så e-faktura (OIOUBL/NemHandel) kan gå gennem en særskilt gate uden at blokere hele ERP-registreringen.",
+      "pilotNeed": "Udsendelse af danske salgsfakturaer med moms og e-faktura til offentlige og private kunder.",
+      "familyStatus": "pending-legal-review",
+      "components": ["invoicing"],
+      "localeRequirements": ["e-invoicing", "vat", "accounting", "payment", "agreements"],
+      "adapterInterface": "invoicing",
+      "candidateProducts": [
+        {
+          "product": "Invoice Ninja",
+          "candidateRef": "integration-candidate.invoiceninja.example.json",
+          "selected": true,
+          "reason": "Valgt som teknisk kandidat: selvhostet, OIDC-SSO, dokumenteret REST-API, eksport og en åben kerne med betalte funktioner tydeligt adskilt."
+        }
+      ],
+      "exclusions": [
+        {
+          "candidate": "Egen e-faktura-afsendelse",
+          "reason": "NemHandel/OIOUBL kræver en godkendt access point-udbyder; platformen må ikke selv udsende e-fakturaer uden en aftalt og godkendt tjeneste."
+        }
+      ]
+    },
+    {
+      "id": "hr",
+      "title": "HR og personaledata",
+      "order": 3,
+      "selectionRationale": "HR registreres tidligt fordi personaledata allerede findes i kataloget (hr-komponenten), men løn er juridisk uafklaret. Familien holdes derfor særskilt, så HR kan registreres uden at løn erklæres danskklar.",
+      "pilotNeed": "Medarbejderstamdata, fravær og organisationsstruktur for pilotvirksomhederne.",
+      "familyStatus": "pending-legal-review",
+      "components": ["hr"],
+      "localeRequirements": ["payroll", "agreements", "authoritative-registers"],
+      "adapterInterface": "payroll",
+      "candidateProducts": [
+        {
+          "product": "Frappe HR",
+          "candidateRef": "integration-candidate.frappe-hr.example.json",
+          "selected": true,
+          "reason": "Valgt som teknisk kandidat: OIDC-SSO gennem Frappe-laget, dokumenteret REST-API og relationel database pr. site."
+        }
+      ],
+      "exclusions": [
+        {
+          "candidate": "Lønberegning i platformen",
+          "reason": "Løn er juridisk og skattemæssigt reguleret. Uden en navngivet lønansvarlig og en revideret lønproces markeres familien 'pending-legal-review' og må ikke erklæres danskklar."
+        }
+      ]
+    },
+    {
+      "id": "time",
+      "title": "Tid",
+      "order": 4,
+      "selectionRationale": "Tid registreres efter HR fordi tidsregistrering er en forudsætning for fakturering og løn, men kan bruges selvstændigt. Den har ingen lovbestemt dansk lokalisering og kan derfor registreres uden en juridisk gate.",
+      "pilotNeed": "Tidsregistrering pr. sag og projekt til fakturering og intern opfølgning.",
+      "familyStatus": "registered",
+      "components": ["time"],
+      "localeRequirements": ["agreements", "authoritative-registers"],
+      "adapterInterface": "time-tracking",
+      "candidateProducts": [
+        {
+          "product": "Kimai",
+          "candidateRef": "integration-candidate.kimai.example.json",
+          "selected": true,
+          "reason": "Valgt som teknisk kandidat: selvhostet, OIDC-SSO, dokumenteret REST-API, relationel database og enkel drift."
+        }
+      ],
+      "exclusions": []
+    },
+    {
+      "id": "commerce",
+      "title": "Handel/webshop",
+      "order": 5,
+      "selectionRationale": "Handel registreres sidst fordi den har det bredeste angrebs- og betalingsflade og først giver værdi, når økonomi, fakturering og betaling er på plads. Den holdes som selvstændig familie, så en webshop ikke trækker hele ERP-registreringen med.",
+      "pilotNeed": "En dansk webshopflade med moms, betaling og ordreeksport til økonomi.",
+      "familyStatus": "pending-legal-review",
+      "components": ["webshop"],
+      "localeRequirements": ["vat", "payment", "agreements"],
+      "adapterInterface": "commerce-catalog",
+      "candidateProducts": [
+        {
+          "product": "Medusa",
+          "candidateRef": "integration-candidate.medusa.example.json",
+          "selected": true,
+          "reason": "Valgt som teknisk kandidat: hovedløs handelskerne, OIDC-SSO, dokumenteret REST-API og relationel database uden at låse en bestemt butiksfront."
+        }
+      ],
+      "exclusions": [
+        {
+          "candidate": "Egen betalingsformidling",
+          "reason": "Kortdata og PCI-DSS er eksplicit udskudt i BACKLOG; handel må kun bruge en godkendt ekstern betalingstjeneste og aldrig gemme kortdata selv."
+        }
+      ]
+    }
+  ]
+}

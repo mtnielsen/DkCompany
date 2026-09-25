@@ -1,0 +1,19 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "IndependentAssessment",
+  "metadata": {
+    "name": "platform-independent-assessments",
+    "version": "1.0.0",
+    "description": "Uafhængige vurderinger (penetrationstest, levende måling, ekstern revision). En implementør kan ikke oprette en gyldig post; den kræver et navngivet menneske uden for implementeringen.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen"
+      }
+    }
+  },
+  "assessments": []
+}

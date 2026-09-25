@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<title>Datatjenester: ejerskab og scope</title>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 2rem; color: #1b1b1b; }
+  table { border-collapse: collapse; margin-bottom: 2rem; }
+  th, td { border: 1px solid #ccc; padding: 0.4rem 0.6rem; text-align: left; vertical-align: top; }
+  th { background: #f0f0f0; }
+  caption { text-align: left; font-weight: 600; margin-bottom: 0.5rem; }
+</style>
+</head>
+<body>
+<h1>Datatjenester: ejerskab og scope</h1>
+<p>Genereret fra <code>data-services/</code>. Platformen driver ikke sin egen databaseengine.</p>
+<table><caption>Databaseprofiler</caption><thead><tr><th>Profil</th><th>Type</th><th>Motor</th><th>Versioner</th><th>Tenant-isolation</th><th>Verificeret restore</th></tr></thead><tbody>
+<tr><td>byo-postgres</td><td>byo</td><td>postgresql</td><td>&gt;=15.0.0 &lt;17.0.0</td><td>schema-per-tenant</td><td>ja</td></tr>
+<tr><td>managed-postgres</td><td>managed</td><td>postgresql</td><td>&gt;=15.0.0 &lt;16.0.0, &gt;=16.0.0 &lt;17.0.0</td><td>database-per-tenant</td><td>ja</td></tr>
+</tbody></table>
+<table>
+<thead><tr><th>Profil</th><th>Patching</th><th>Backup</th><th>Restore</th><th>Nøgler</th><th>Omkostninger</th><th>Overvågning</th><th>Migration</th></tr></thead>
+<tbody>
+<tr><td>byo-postgres</td><td>customer — Henrik Hansen (Customer DBA)</td><td>customer — Henrik Hansen (Customer DBA)</td><td>customer — Henrik Hansen (Customer DBA)</td><td>customer — Henrik Hansen (Customer DBA)</td><td>customer — Henrik Hansen (Customer DBA)</td><td>shared — Henrik Hansen (Customer DBA)</td><td>platform — David Dahl (Service Owner)</td></tr>
+<tr><td>managed-postgres</td><td>platform — Anna Andersen (Platform Owner)</td><td>platform — Cecilia Christensen (Continuity Owner)</td><td>platform — Cecilia Christensen (Continuity Owner)</td><td>platform — Cecilia Christensen (Security Owner)</td><td>platform — Anna Andersen (Platform Owner)</td><td>platform — Carl Iversen (Operations Owner)</td><td>platform — David Dahl (Service Owner)</td></tr>
+</tbody>
+</table>
+<table>
+<thead><tr><th>Kilde</th><th>Type</th><th>Dataejer</th><th>Klassifikation</th><th>Scope</th><th>Auto-migrate</th><th>Auto-backup</th></tr></thead>
+<tbody>
+<tr><td>analytics-source</td><td>analytics</td><td>Cecilia Christensen</td><td>pseudonymised</td><td>reporting → reporting.metrics_daily, reporting.dim_department</td><td>nej</td><td>nej</td></tr>
+<tr><td>hr-source</td><td>hr</td><td>Ingrid Iversen</td><td>personal</td><td>hr → hr.employees, hr.departments, hr.employee_departments</td><td>nej</td><td>nej</td></tr>
+</tbody>
+</table>
+<table>
+<thead><tr><th>Binding</th><th>Applikation</th><th>Databaseprofil</th><th>Datakilder</th><th>Tenant-scope</th></tr></thead>
+<tbody>
+<tr><td>dummy-ok-binding</td><td>dummy-ok</td><td>managed-postgres</td><td>hr-source</td><td>per-tenant</td></tr>
+</tbody>
+</table>
+</body>
+</html>

@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/risk-exception.schema.json",
+  "title": "Risk Exceptions",
+  "description": "Register over tidsbegrænsede, menneskeejede risiko­undtagelser (DKC-063). En undtagelse kan højst dække et krav i et afgrænset tidsrum, skal have en navngivet ejer og kompenserende kontroller, og må ikke dække sikkerhedskritiske krav markeret nonExcepted. En udløbet undtagelse er ikke en undtagelse.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "exceptions"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "RiskExceptions" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$" },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/accountableHuman" }
+      }
+    },
+    "exceptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "requirementId", "reason", "owner", "approvedAt", "expiresAt", "scope", "compensatingControls"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^EXC-[A-Z0-9-]{2,40}$" },
+          "requirementId": { "type": "string", "pattern": "^REQ-[A-Z0-9-]{2,40}$" },
+          "checkId": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$", "description": "Valgfrit: kun denne check er undtaget." },
+          "reason": { "type": "string", "minLength": 15 },
+          "owner": { "$ref": "#/$defs/accountableHuman" },
+          "approvedAt": { "type": "string", "format": "date-time" },
+          "expiresAt": { "type": "string", "format": "date-time" },
+          "scope": { "type": "string", "minLength": 5, "description": "Hvad undtagelsen dækker, og hvad den ikke dækker." },
+          "compensatingControls": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 5 } },
+          "status": { "enum": ["open", "closed"], "default": "open" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "accountableHuman": {
+      "type": "object",
+      "required": ["subject", "role", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": {
+          "type": "object",
+          "required": ["subject", "name"],
+          "additionalProperties": false,
+          "properties": { "subject": { "type": "string", "minLength": 3 }, "name": { "type": "string", "minLength": 2 } }
+        }
+      }
+    }
+  }
+}

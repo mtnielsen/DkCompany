@@ -1,0 +1,5 @@
+Baseline — commit 83ad91a (HEAD)
+  139 pass, 1 fail, 0 error, 41 not run af 181
+RESULTAT: FAIL
+
+Eneste FAIL er den kendte, forudgående changelog-check (manglende DCO sign-off).

@@ -1,0 +1,49 @@
+{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "Ingress",
+  "metadata": {
+    "name": "prod-ingress",
+    "namespace": "platform-prod",
+    "labels": {
+      "app.kubernetes.io/name": "platform",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "platform",
+      "platform.example.org/environment": "prod"
+    },
+    "annotations": {
+      "cert-manager.io/cluster-issuer": "letsencrypt-prod"
+    }
+  },
+  "spec": {
+    "ingressClassName": "nginx",
+    "tls": [
+      {
+        "hosts": [
+          "platform.example.org"
+        ],
+        "secretName": "prod-platform-tls"
+      }
+    ],
+    "rules": [
+      {
+        "host": "platform.example.org",
+        "http": {
+          "paths": [
+            {
+              "path": "/",
+              "pathType": "Prefix",
+              "backend": {
+                "service": {
+                  "name": "pdp",
+                  "port": {
+                    "number": 443
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

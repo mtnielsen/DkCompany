@@ -1,0 +1,22 @@
+DKC-017 baseline — DKC-001 .. DKC-057 + DKC-017
+================================================
+Commit: 83ad91a963d8055f77c29fb4361455689df95acb
+Node:   v22.22.1
+Result: FAIL — 97 pass, 1 fail, 22 not run, 0 error (120 checks)
+
+Den ene FAIL er den kendte, forudgående `changelog-check` (manglende DCO
+sign-off, inkl. 83ad91a). Den er dokumenteret og ikke ændret i DKC-017.
+
+Nye checks i DKC-017:
+  monitoring-check                     PASS (contract)
+  monitoring-test                      PASS (real)
+  monitoring-drill                     PASS (real)
+  integration-monitoring-backend       NOT RUN (integration, external)
+  integration-alert-delivery           NOT RUN (integration, external)
+
+Baselinekørslen ændrede 30 sporede fixture-filer under modules/*/conformance
+(evidensfiler fra conformance-kørsler). De er efterfølgende gendannet fra en ren
+reference-checkout med kun DKC-057-stakken lagt, så arbejdstræet matcher
+leverancen. Se evidence/logs/baseline.log og evidence/logs/ci.log.
+
+Kilde: .conformance-out/baseline/latest.json (runs/ og logs/ følger med).

@@ -1,0 +1,21 @@
+{
+  "verb": "health",
+  "module": "nextcloud-adapter",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-24T10:59:05.722Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 36
+  },
+  "artifact": {
+    "uri": "s3://evidence/nextcloud-adapter/health.json",
+    "sha256": "362c7981c5991f2b1df44e909400321d59193a2888f369fd69ed6f09f202d4de"
+  }
+}

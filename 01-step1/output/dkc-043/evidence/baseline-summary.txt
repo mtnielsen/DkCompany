@@ -1,0 +1,4 @@
+Baseline — commit 83ad91a (HEAD)
+    125 pass, 1 fail, 0 error, 36 not run af 162
+    ✘ changelog-check (real) — exit 2
+  RESULTAT: FAIL

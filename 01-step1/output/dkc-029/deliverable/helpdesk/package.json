@@ -1,0 +1,10 @@
+{
+  "name": "dkcompany-helpdesk",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "DKC-029: support og sagsbehandling med Zammad som første kandidat. Indgående testmail/webformular, køer og rettigheder, sikker vedhæftningshåndtering, AI-klassifikation og svarudkast (afsendelse er en separat godkendt handling) samt eksport, sletning og retention for mails, bilag og indeks.",
+  "scripts": {
+    "test": "node --test"
+  }
+}

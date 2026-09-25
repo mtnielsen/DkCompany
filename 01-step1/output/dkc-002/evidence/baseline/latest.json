@@ -1,0 +1,1467 @@
+{
+  "schemaVersion": 1,
+  "kind": "BaselineResult",
+  "generatedAt": "2026-09-23T09:08:52.518Z",
+  "status": "fail",
+  "summary": {
+    "total": 48,
+    "pass": 38,
+    "fail": 1,
+    "error": 0,
+    "notRun": 9
+  },
+  "environment": {
+    "capturedAt": "2026-09-23T09:08:38.595Z",
+    "node": "v22.22.1",
+    "npm": "9.2.0",
+    "platform": "linux",
+    "arch": "x64",
+    "osRelease": "6.18.33.2-microsoft-standard-WSL2",
+    "execPath": "/usr/bin/node",
+    "cwd": "/tmp/dkc-002/00-core",
+    "ci": false,
+    "github": {
+      "repository": null,
+      "runId": null,
+      "sha": null,
+      "workflow": null
+    },
+    "git": {
+      "commit": "b49fe01279930dd4e61ab9e04fff720409817613",
+      "shortCommit": "b49fe01",
+      "branch": "main",
+      "dirty": false,
+      "dirtyFiles": []
+    }
+  },
+  "repo": "/tmp/dkc-002/00-core",
+  "evidencePath": "/tmp/dkc-002/00-core/.conformance-out/baseline/runs/2026-09-23T09-08-52-518Z-b49fe01.json",
+  "matrix": "/tmp/dkc-002/00-core/docs/status/implementation-matrix.md",
+  "prerequisites": [
+    "make install (npm ci i conformance/)"
+  ],
+  "worktree": {
+    "before": [],
+    "after": [
+      "M 00-core/modules/audit-service/conformance/events/agent-action.json",
+      "M 00-core/modules/audit-service/conformance/events/human-action.json",
+      "M 00-core/modules/audit-service/conformance/evidence/backup.json",
+      "M 00-core/modules/audit-service/conformance/evidence/drain.json",
+      "M 00-core/modules/audit-service/conformance/evidence/health.json",
+      "M 00-core/modules/audit-service/conformance/evidence/migrate.json",
+      "M 00-core/modules/audit-service/conformance/evidence/policy-decision.json",
+      "M 00-core/modules/audit-service/conformance/evidence/restore.json",
+      "M 00-core/modules/audit-service/conformance/evidence/retention.policy.json",
+      "M 00-core/modules/audit-service/conformance/evidence/rollback.json",
+      "M 00-core/modules/audit-service/conformance/evidence/slo.json",
+      "M 00-core/modules/audit-service/conformance/evidence/subject.erase.json",
+      "M 00-core/modules/audit-service/conformance/evidence/subject.export.json",
+      "M 00-core/modules/audit-service/conformance/evidence/subject.legal_hold.json",
+      "M 00-core/modules/audit-service/conformance/evidence/subject.locate.json",
+      "M 00-core/modules/audit-service/conformance/evidence/upgrade.dry-run.json",
+      "M 00-core/modules/audit-service/conformance/evidence/upgrade.json",
+      "M 00-core/modules/audit-service/conformance/evidence/verify-restore.json",
+      "M 00-core/modules/keycloak-adapter/conformance/events/agent-action.json",
+      "M 00-core/modules/keycloak-adapter/conformance/events/human-action.json",
+      "M 00-core/modules/keycloak-adapter/conformance/evidence/health.json",
+      "M 00-core/modules/keycloak-adapter/conformance/evidence/policy-decision.json",
+      "M 00-core/modules/keycloak-adapter/conformance/evidence/subject.export.json",
+      "M 00-core/modules/keycloak-adapter/conformance/evidence/subject.locate.json",
+      "M 00-core/modules/mattermost-adapter/conformance/events/agent-action.json",
+      "M 00-core/modules/mattermost-adapter/conformance/events/human-action.json",
+      "M 00-core/modules/mattermost-adapter/conformance/evidence/health.json",
+      "M 00-core/modules/mattermost-adapter/conformance/evidence/policy-decision.json",
+      "M 00-core/modules/mattermost-adapter/conformance/evidence/subject.export.json",
+      "M 00-core/modules/mattermost-adapter/conformance/evidence/subject.locate.json"
+    ],
+    "mutatedFiles": [
+      "M 00-core/modules/audit-service/conformance/events/agent-action.json",
+      "M 00-core/modules/audit-service/conformance/events/human-action.json",
+      "M 00-core/modules/audit-service/conformance/evidence/backup.json",
+      "M 00-core/modules/audit-service/conformance/evidence/drain.json",
+      "M 00-core/modules/audit-service/conformance/evidence/health.json",
+      "M 00-core/modules/audit-service/conformance/evidence/migrate.json",
+      "M 00-core/modules/audit-service/conformance/evidence/policy-decision.json",
+      "M 00-core/modules/audit-service/conformance/evidence/restore.json",
+      "M 00-core/modules/audit-service/conformance/evidence/retention.policy.json",
+      "M 00-core/modules/audit-service/conformance/evidence/rollback.json",
+      "M 00-core/modules/audit-service/conformance/evidence/slo.json",
+      "M 00-core/modules/audit-service/conformance/evidence/subject.erase.json",
+      "M 00-core/modules/audit-service/conformance/evidence/subject.export.json",
+      "M 00-core/modules/audit-service/conformance/evidence/subject.legal_hold.json",
+      "M 00-core/modules/audit-service/conformance/evidence/subject.locate.json",
+      "M 00-core/modules/audit-service/conformance/evidence/upgrade.dry-run.json",
+      "M 00-core/modules/audit-service/conformance/evidence/upgrade.json",
+      "M 00-core/modules/audit-service/conformance/evidence/verify-restore.json",
+      "M 00-core/modules/keycloak-adapter/conformance/events/agent-action.json",
+      "M 00-core/modules/keycloak-adapter/conformance/events/human-action.json",
+      "M 00-core/modules/keycloak-adapter/conformance/evidence/health.json",
+      "M 00-core/modules/keycloak-adapter/conformance/evidence/policy-decision.json",
+      "M 00-core/modules/keycloak-adapter/conformance/evidence/subject.export.json",
+      "M 00-core/modules/keycloak-adapter/conformance/evidence/subject.locate.json",
+      "M 00-core/modules/mattermost-adapter/conformance/events/agent-action.json",
+      "M 00-core/modules/mattermost-adapter/conformance/events/human-action.json",
+      "M 00-core/modules/mattermost-adapter/conformance/evidence/health.json",
+      "M 00-core/modules/mattermost-adapter/conformance/evidence/policy-decision.json",
+      "M 00-core/modules/mattermost-adapter/conformance/evidence/subject.export.json",
+      "M 00-core/modules/mattermost-adapter/conformance/evidence/subject.locate.json"
+    ],
+    "reproducible": false
+  },
+  "checks": [
+    {
+      "id": "validate",
+      "title": "Metavalidér kontraktskemaer og eksempler",
+      "component": "repo-skeleton",
+      "level": "contract",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "validate"
+      ],
+      "evidence": [
+        "contracts/",
+        "conformance/src/validate-schemas.mjs"
+      ],
+      "gap": null,
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:38.608Z",
+      "finishedAt": "2026-09-23T09:08:39.058Z",
+      "durationMs": 450,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/validate.log",
+      "stdoutTail": "make[1]: Entering directory '/tmp/dkc-002/00-core'\nnode conformance/src/validate-schemas.mjs\n✔ 22 kontraktskemaer metavalideret\n✔ 21 eksempler valideret\n✔ 5 arkitektur-/identitetseksempler valideret (skema + semantik)\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "lint",
+      "title": "Lint JSON og tekstfiler",
+      "component": "repo-skeleton",
+      "level": "contract",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "lint"
+      ],
+      "evidence": [
+        "conformance/src/lint.mjs"
+      ],
+      "gap": null,
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:39.058Z",
+      "finishedAt": "2026-09-23T09:08:39.221Z",
+      "durationMs": 163,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/lint.log",
+      "stdoutTail": "make[1]: Entering directory '/tmp/dkc-002/00-core'\nnode conformance/src/lint.mjs\n✔ Lint OK (167 JSON-filer, 325 filer gennemgået)\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "test",
+      "title": "Conformance-suitens egne tests",
+      "component": "conformance-suite",
+      "level": "real",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "test"
+      ],
+      "evidence": [
+        "conformance/test/"
+      ],
+      "gap": null,
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:39.221Z",
+      "finishedAt": "2026-09-23T09:08:40.009Z",
+      "durationMs": 788,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/test.log",
+      "stdoutTail": "# pass 30\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 676.811037\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "architecture-test",
+      "title": "Deployment-, identitets- og kandidatkontrakter (skema + semantik)",
+      "component": "architecture-contracts",
+      "level": "real",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "architecture-test"
+      ],
+      "evidence": [
+        "contracts/deployment-profile.schema.json",
+        "contracts/identity-trust.schema.json",
+        "contracts/integration-candidate.schema.json",
+        "conformance/src/architecture.mjs",
+        "conformance/test/architecture.test.mjs"
+      ],
+      "gap": null,
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:40.009Z",
+      "finishedAt": "2026-09-23T09:08:40.723Z",
+      "durationMs": 714,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/architecture-test.log",
+      "stdoutTail": "# pass 10\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 608.079703\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "policy-test",
+      "title": "PDP'ens tests",
+      "component": "policy",
+      "level": "real",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "policy-test"
+      ],
+      "evidence": [
+        "policy/pdp/test/"
+      ],
+      "gap": null,
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:40.724Z",
+      "finishedAt": "2026-09-23T09:08:41.151Z",
+      "durationMs": 427,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/policy-test.log",
+      "stdoutTail": "# pass 13\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 315.435957\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "policy-verify",
+      "title": "Verificér signeret policy-bundle",
+      "component": "policy",
+      "level": "real",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "policy-verify"
+      ],
+      "evidence": [
+        "policy/keys/",
+        "policy/pdp/src/verify.mjs"
+      ],
+      "gap": null,
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:41.151Z",
+      "finishedAt": "2026-09-23T09:08:41.301Z",
+      "durationMs": 150,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/policy-verify.log",
+      "stdoutTail": "make[1]: Entering directory '/tmp/dkc-002/00-core'\nnode policy/pdp/src/cli.mjs verify\n✔ Bundle platform@1.0.0 er signeret og verificeret\n  keyId:  platform-demo\n  sha256: baeeeb11cb003454ccd12473856966c8769388870d74f30428dfc9bd20ba2d86\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "policy-decide",
+      "title": "Træf eksempelbeslutning gennem PDP",
+      "component": "policy",
+      "level": "real",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "policy-decide"
+      ],
+      "evidence": [
+        "contracts/examples/policy-input.example.json"
+      ],
+      "gap": null,
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:41.302Z",
+      "finishedAt": "2026-09-23T09:08:41.460Z",
+      "durationMs": 158,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/policy-decide.log",
+      "stdoutTail": "    },\n    {\n      \"type\": \"auto-rollback\"\n    }\n  ]\n}\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "gitops-test",
+      "title": "GitOps-værktøjernes tests",
+      "component": "gitops",
+      "level": "real",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "gitops-test"
+      ],
+      "evidence": [
+        "gitops/test/"
+      ],
+      "gap": null,
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:41.460Z",
+      "finishedAt": "2026-09-23T09:08:41.814Z",
+      "durationMs": 354,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/gitops-test.log",
+      "stdoutTail": "# pass 9\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 233.970816\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "gitops-verify",
+      "title": "GitOps-policy-gates (digests, labels, hardening, fail-closed)",
+      "component": "gitops",
+      "level": "real",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "gitops-verify"
+      ],
+      "evidence": [
+        "gitops/src/verify.mjs",
+        "gitops/manifests/"
+      ],
+      "gap": null,
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:41.814Z",
+      "finishedAt": "2026-09-23T09:08:41.938Z",
+      "durationMs": 124,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/gitops-verify.log",
+      "stdoutTail": "  ✔ G-005  Containere er hærdet (non-root, read-only, drop ALL)\n  ✔ G-006  PDP kører fail-closed på signeret bundle\n  ✔ G-007  Ingen ressourcer i privilegerede namespaces — tilladte: platform, argocd\n  ✔ G-008  Application-kilder peger på eksisterende stier\n\n✔ GitOps-gates bestået (8/8)\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "gitops-reconcile",
+      "title": "Reconcile mod simuleret observeret tilstand",
+      "component": "gitops",
+      "level": "fixture",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "gitops-reconcile"
+      ],
+      "evidence": [
+        "gitops/observed/"
+      ],
+      "gap": "Observeret tilstand er en committet simulering, ikke en rigtig klynge.",
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:41.939Z",
+      "finishedAt": "2026-09-23T09:08:42.054Z",
+      "durationMs": 115,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/gitops-reconcile.log",
+      "stdoutTail": "make[1]: Entering directory '/tmp/dkc-002/00-core'\nnode gitops/src/cli.mjs reconcile\n✔ Klyngen er i sync med git (31 ressourcer)\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "gitops-drift",
+      "title": "Bevis at simulerede ændringer uden om git opdages",
+      "component": "gitops",
+      "level": "fixture",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "gitops-drift"
+      ],
+      "evidence": [
+        "gitops/observed/dev-drift.json"
+      ],
+      "gap": "Driften er simuleret i repoet; ingen Argo CD/klynge er koblet på.",
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:42.054Z",
+      "finishedAt": "2026-09-23T09:08:42.176Z",
+      "durationMs": 122,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/gitops-drift.log",
+      "stdoutTail": "Simuleret drift (4 ændringer uden om git):\n  revert  apps/v1/Deployment/platform/pdp — afviger fra git\n  delete  v1/ConfigMap/platform/hotfix-temporary — findes ikke i git\n  create  v1/Service/platform/dummy-ok — findes ikke i klyngen\n\n✔ 3 drift-handlinger opdaget og ville blive ført tilbage til git\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "changelog-check",
+      "title": "Fejl hvis commits mangler DCO sign-off",
+      "component": "gitops",
+      "level": "real",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "changelog-check"
+      ],
+      "evidence": [
+        "gitops/src/changelog.mjs"
+      ],
+      "gap": null,
+      "status": "fail",
+      "exitCode": 2,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:42.176Z",
+      "finishedAt": "2026-09-23T09:08:42.350Z",
+      "durationMs": 174,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/changelog-check.log",
+      "stdoutTail": "make[1]: Entering directory '/tmp/dkc-002/00-core'\nnode gitops/src/cli.mjs changelog --check\n✔ 22 commits i change loggen\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": "  - b49fe0127993 DKC-002: deployment-, identitets- og kandidatkontrakter\n  - 2ddf6318e0fb DKC-001 baseline overlay\n  - 83ad91a963d8 ting\n  - 76e4782085c8 Fjern GitHub Actions CI-workflow\n  - 5f9fa73457d2 Merge remote-tracking branch 'origin/main'\n  - 87768da0dc83 Initial commit\nmake[1]: *** [Makefile:132: changelog-check] Error 1\n"
+    },
+    {
+      "id": "changelog",
+      "title": "Udled maskinlæsbar change log fra git",
+      "component": "gitops",
+      "level": "real",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "changelog"
+      ],
+      "evidence": [
+        ".conformance-out/CHANGELOG.jsonl"
+      ],
+      "gap": null,
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:42.350Z",
+      "finishedAt": "2026-09-23T09:08:42.528Z",
+      "durationMs": 178,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/changelog.log",
+      "stdoutTail": "make[1]: Entering directory '/tmp/dkc-002/00-core'\nnode gitops/src/cli.mjs changelog --out .conformance-out/CHANGELOG.jsonl\n✔ Change log skrevet: .conformance-out/CHANGELOG.jsonl (22 commits, 6 usignerede)\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "audit-service-test",
+      "title": "Referencemodulets tests (identitet, hash-kæde, PDP, fail-closed)",
+      "component": "audit-service",
+      "level": "real",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "audit-service-test"
+      ],
+      "evidence": [
+        "modules/audit-service/service/test/"
+      ],
+      "gap": null,
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:42.528Z",
+      "finishedAt": "2026-09-23T09:08:43.078Z",
+      "durationMs": 550,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/audit-service-test.log",
+      "stdoutTail": "# pass 19\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 439.677724\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "audit-service-evidence",
+      "title": "Fremkald konformansbevis ved at køre verberne",
+      "component": "audit-service",
+      "level": "real",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "audit-service-evidence"
+      ],
+      "evidence": [
+        "modules/audit-service/"
+      ],
+      "gap": "Referencetjenesten kører in-process/file-backed; intet deployet runtime er bevist. Skriver capturedAt/durationMs til committede fixtures og er ikke idempotent.",
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:43.078Z",
+      "finishedAt": "2026-09-23T09:08:43.342Z",
+      "durationMs": 264,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/audit-service-evidence.log",
+      "stdoutTail": "make[1]: Entering directory '/tmp/dkc-002/00-core'\nnode modules/audit-service/service/src/evidence.mjs\n✔ 15 verbums-beviser skrevet til /tmp/dkc-002/00-core/modules/audit-service/conformance/evidence\n✔ audit-kæde: intakt (15 events)\n✔ cloud events: 1 agent, 1 menneske\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "adapter-test",
+      "title": "Mattermost-adapterens tests",
+      "component": "mattermost-adapter",
+      "level": "mock",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "adapter-test"
+      ],
+      "evidence": [
+        "modules/mattermost-adapter/service/test/mock-mattermost.mjs"
+      ],
+      "gap": "Testes mod mock Mattermost, ikke en rigtig installation.",
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:43.342Z",
+      "finishedAt": "2026-09-23T09:08:43.728Z",
+      "durationMs": 386,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/adapter-test.log",
+      "stdoutTail": "# pass 7\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 280.588515\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "adapter-evidence",
+      "title": "Adapterbevis mod mock Mattermost + rigtig PDP",
+      "component": "mattermost-adapter",
+      "level": "mock",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "adapter-evidence"
+      ],
+      "evidence": [
+        "modules/mattermost-adapter/"
+      ],
+      "gap": "Beviset gælder adfærd mod mock; rigtig Mattermost er en separat integration (NOT RUN). Skriver ikke-idempotente fixtures.",
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:43.728Z",
+      "finishedAt": "2026-09-23T09:08:43.981Z",
+      "durationMs": 253,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/adapter-evidence.log",
+      "stdoutTail": "make[1]: Entering directory '/tmp/dkc-002/00-core'\nnode modules/mattermost-adapter/service/src/evidence.mjs\nsubject.erase -> HTTP 200, partial=true, slettet=2\n✔ 3 full-verbums-beviser + partial-erkendelse skrevet til /tmp/dkc-002/00-core/modules/mattermost-adapter/conformance/evidence\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "iam-adapter-test",
+      "title": "IAM-adapterens tests (mock Keycloak/Authentik)",
+      "component": "iam-adapter",
+      "level": "mock",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "iam-adapter-test"
+      ],
+      "evidence": [
+        "modules/keycloak-adapter/"
+      ],
+      "gap": "Testes mod mock Keycloak, ikke en rigtig IAM-instans.",
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:43.981Z",
+      "finishedAt": "2026-09-23T09:08:44.375Z",
+      "durationMs": 394,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/iam-adapter-test.log",
+      "stdoutTail": "# pass 7\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 286.866415\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "iam-adapter-evidence",
+      "title": "IAM-adapterbevis mod mock Keycloak + partial-erkendelse",
+      "component": "iam-adapter",
+      "level": "mock",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "iam-adapter-evidence"
+      ],
+      "evidence": [
+        "modules/keycloak-adapter/"
+      ],
+      "gap": "Beviset gælder adfærd mod mock; rigtig Keycloak/Authentik er en separat integration (NOT RUN). Skriver ikke-idempotente fixtures.",
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:44.375Z",
+      "finishedAt": "2026-09-23T09:08:44.620Z",
+      "durationMs": 245,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/iam-adapter-evidence.log",
+      "stdoutTail": "make[1]: Entering directory '/tmp/dkc-002/00-core'\nnode modules/keycloak-adapter/service/src/evidence.mjs\nsubject.erase -> HTTP 200, partial=true, slettet=1\n  event-store efter sletning: 1 hændelse(r) tilbage\n✔ 3 full-verbums-beviser + partial-erkendelse skrevet til /tmp/dkc-002/00-core/modules/keycloak-adapter/conformance/evidence\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "gateway-test",
+      "title": "AI-gatewayens tests (routing, budget, modelversion)",
+      "component": "ai-gateway",
+      "level": "mock",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "gateway-test"
+      ],
+      "evidence": [
+        "gateway/test/",
+        "gateway/src/provider.mjs"
+      ],
+      "gap": "Provideren er en echo-stub; ingen rigtig modelleverandør er koblet på (NOT RUN).",
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:44.620Z",
+      "finishedAt": "2026-09-23T09:08:45.017Z",
+      "durationMs": 397,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/gateway-test.log",
+      "stdoutTail": "# pass 7\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 290.810616\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "runtime-test",
+      "title": "Agent-runtime tests (A1, fail-closed, A4, budget, loop, JIT)",
+      "component": "agent-runtime",
+      "level": "real",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "runtime-test"
+      ],
+      "evidence": [
+        "runtime/test/"
+      ],
+      "gap": null,
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:45.017Z",
+      "finishedAt": "2026-09-23T09:08:45.294Z",
+      "durationMs": 277,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/runtime-test.log",
+      "stdoutTail": "# pass 10\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 170.961109\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "agent-conformance-test",
+      "title": "De seks agent-konformanstests",
+      "component": "agent-conformance",
+      "level": "real",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "agent-conformance-test"
+      ],
+      "evidence": [
+        "conformance/test/agent-conformance.test.mjs"
+      ],
+      "gap": null,
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:45.294Z",
+      "finishedAt": "2026-09-23T09:08:45.607Z",
+      "durationMs": 313,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/agent-conformance-test.log",
+      "stdoutTail": "# pass 10\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 201.87981\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "reviewer-test",
+      "title": "Reviewer-agent og effektmåling",
+      "component": "reviewer",
+      "level": "real",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "reviewer-test"
+      ],
+      "evidence": [
+        "reviewer/test/"
+      ],
+      "gap": null,
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:45.607Z",
+      "finishedAt": "2026-09-23T09:08:45.991Z",
+      "durationMs": 384,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/reviewer-test.log",
+      "stdoutTail": "# pass 3\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 276.432215\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "reviewer-metrics",
+      "title": "Reviewer-effektmålings-dashboard (langtkørende server)",
+      "component": "reviewer-metrics",
+      "level": "real",
+      "external": false,
+      "server": true,
+      "critical": true,
+      "command": [
+        "make",
+        "reviewer-metrics"
+      ],
+      "evidence": [
+        "reviewer/src/metrics.mjs"
+      ],
+      "gap": null,
+      "status": "not-run",
+      "reason": "Starter en HTTP-server på 127.0.0.1:8484 og terminerer ikke; det er ikke en afsluttende check. Effektmålingen er dækket af reviewer-test.",
+      "exitCode": null,
+      "startedAt": "2026-09-23T09:08:45.991Z",
+      "finishedAt": "2026-09-23T09:08:45.991Z",
+      "durationMs": 0,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/reviewer-metrics.log",
+      "stdoutTail": "",
+      "stderrTail": ""
+    },
+    {
+      "id": "compliance-test",
+      "title": "Kontrolmappingens tests",
+      "component": "control-mapping",
+      "level": "real",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "compliance-test"
+      ],
+      "evidence": [
+        "compliance/test/"
+      ],
+      "gap": null,
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:45.991Z",
+      "finishedAt": "2026-09-23T09:08:46.486Z",
+      "durationMs": 495,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/compliance-test.log",
+      "stdoutTail": "# pass 4\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 386.370521\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "compliance-check",
+      "title": "Kontrolmapping i sync med registry",
+      "component": "control-mapping",
+      "level": "real",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "compliance-check"
+      ],
+      "evidence": [
+        "compliance/control-mapping.json",
+        "docs/compliance/mapping.md"
+      ],
+      "gap": null,
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:46.486Z",
+      "finishedAt": "2026-09-23T09:08:46.699Z",
+      "durationMs": 213,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/compliance-check.log",
+      "stdoutTail": "make[1]: Entering directory '/tmp/dkc-002/00-core'\nnode compliance/src/cli.mjs check\n✔ docs/compliance/mapping.md matcher compliance/control-mapping.json\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "observability-test",
+      "title": "Observability-generatorens tests",
+      "component": "observability",
+      "level": "real",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "observability-test"
+      ],
+      "evidence": [
+        "observability/test/"
+      ],
+      "gap": null,
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:46.699Z",
+      "finishedAt": "2026-09-23T09:08:46.964Z",
+      "durationMs": 265,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/observability-test.log",
+      "stdoutTail": "# pass 5\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 159.848006\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "observability-check",
+      "title": "Dashboards i sync med modulernes SLO",
+      "component": "observability",
+      "level": "real",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "observability-check"
+      ],
+      "evidence": [
+        "observability/src/",
+        "gitops/manifests/dev/"
+      ],
+      "gap": null,
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:46.965Z",
+      "finishedAt": "2026-09-23T09:08:47.073Z",
+      "durationMs": 108,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/observability-check.log",
+      "stdoutTail": "make[1]: Entering directory '/tmp/dkc-002/00-core'\nnode observability/src/cli.mjs check\n✔ Dashboards og regler matcher modulets SLO\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "security-test",
+      "title": "Sikkerhedsnormaliseringens tests",
+      "component": "security-plan",
+      "level": "real",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "security-test"
+      ],
+      "evidence": [
+        "security/test/normalize.test.mjs"
+      ],
+      "gap": null,
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:47.073Z",
+      "finishedAt": "2026-09-23T09:08:47.488Z",
+      "durationMs": 415,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/security-test.log",
+      "stdoutTail": "# pass 4\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 307.362206\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "security-check",
+      "title": "Sikkerhedsfund validerer og er i sync med rådata",
+      "component": "security-plan",
+      "level": "fixture",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "security-check"
+      ],
+      "evidence": [
+        "security/raw/",
+        "security/generated/security-findings.json"
+      ],
+      "gap": "Rådata er committede samples; ingen rigtig Trivy/Falco/Wazuh-kørsel indgår (NOT RUN).",
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:47.488Z",
+      "finishedAt": "2026-09-23T09:08:47.705Z",
+      "durationMs": 217,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/security-check.log",
+      "stdoutTail": "make[1]: Entering directory '/tmp/dkc-002/00-core'\nnode security/src/cli.mjs check\n✔ Sikkerhedsfund matcher rådata og kontrakten\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "curriculum-test",
+      "title": "Ejer-curriculummets tests",
+      "component": "curriculum",
+      "level": "real",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "curriculum-test"
+      ],
+      "evidence": [
+        "curriculum/test/"
+      ],
+      "gap": null,
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:47.705Z",
+      "finishedAt": "2026-09-23T09:08:48.250Z",
+      "durationMs": 545,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/curriculum-test.log",
+      "stdoutTail": "# pass 5\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 432.274108\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "curriculum-check",
+      "title": "Validér curriculum og afvisningsscenarier",
+      "component": "curriculum",
+      "level": "real",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "curriculum-check"
+      ],
+      "evidence": [
+        "curriculum/"
+      ],
+      "gap": null,
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:48.250Z",
+      "finishedAt": "2026-09-23T09:08:48.515Z",
+      "durationMs": 265,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/curriculum-check.log",
+      "stdoutTail": "make[1]: Entering directory '/tmp/dkc-002/00-core'\nnode curriculum/src/cli.mjs check\n✔ Curriculum platform-owner-curriculum@1.0.0\n  8 scenarier, heraf 7 der skal afvises\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "pitch-test",
+      "title": "Pitch-checkerens tests",
+      "component": "pitch",
+      "level": "real",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "pitch-test"
+      ],
+      "evidence": [
+        "pitch/test/"
+      ],
+      "gap": null,
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:48.515Z",
+      "finishedAt": "2026-09-23T09:08:48.773Z",
+      "durationMs": 258,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/pitch-test.log",
+      "stdoutTail": "# pass 4\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 150.468403\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "pitch-check",
+      "title": "Hvert bevis i pitch-decket findes i repoet",
+      "component": "pitch",
+      "level": "real",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "pitch-check"
+      ],
+      "evidence": [
+        "pitch/src/cli.mjs",
+        "docs/pitch/"
+      ],
+      "gap": null,
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:48.773Z",
+      "finishedAt": "2026-09-23T09:08:48.874Z",
+      "durationMs": 101,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/pitch-check.log",
+      "stdoutTail": "make[1]: Entering directory '/tmp/dkc-002/00-core'\nnode pitch/src/cli.mjs check\n✔ 14 bevis-linjer peger på kommandoer og filer, der findes\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "conform-all",
+      "title": "Konformans mod alle rigtige moduler",
+      "component": "conformance-suite",
+      "level": "real",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "conform-all"
+      ],
+      "evidence": [
+        ".conformance-out/report.json"
+      ],
+      "gap": null,
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:48.875Z",
+      "finishedAt": "2026-09-23T09:08:49.179Z",
+      "durationMs": 304,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/conform-all.log",
+      "stdoutTail": "  ✔ C-012  Modulets kontrolpåstande findes i den regulatoriske kortlægning\n      3 kontrolpåstande kortlagt mod NIS2/GDPR/AI Act\n\nRESULTAT: PASS  (12 pass, 3 skip, 0 fail)\n\nSamlet: PASS\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "oscal-evidence",
+      "title": "Generér OSCAL-assessment-results",
+      "component": "oscal-evidence",
+      "level": "real",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "oscal-evidence"
+      ],
+      "evidence": [
+        ".conformance-out/oscal-assessment-results.json"
+      ],
+      "gap": null,
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:49.179Z",
+      "finishedAt": "2026-09-23T09:08:50.070Z",
+      "durationMs": 891,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/oscal-evidence.log",
+      "stdoutTail": "node security/src/cli.mjs write\n✔ Sikkerhedsfund skrevet: security/generated/security-findings.json\nnode evidence/src/cli.mjs --out .conformance-out/oscal-assessment-results.json\n✔ OSCAL-evidens skrevet: .conformance-out/oscal-assessment-results.json\n  6 resultater · 51 observationer · 72 findings\n  ✘ 12 findings er 'not-satisfied' — registreret, ikke skjult\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "evidence-test",
+      "title": "Evidens-emitterens tests",
+      "component": "oscal-evidence",
+      "level": "real",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "evidence-test"
+      ],
+      "evidence": [
+        "evidence/test/"
+      ],
+      "gap": null,
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:50.070Z",
+      "finishedAt": "2026-09-23T09:08:51.471Z",
+      "durationMs": 1401,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/evidence-test.log",
+      "stdoutTail": "# pass 5\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 406.904208\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "conform-negative",
+      "title": "Bevidst brudt fixture skal fejle",
+      "component": "conformance-suite",
+      "level": "fixture",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "conform-negative"
+      ],
+      "evidence": [
+        "modules/dummy-broken/"
+      ],
+      "gap": null,
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:51.471Z",
+      "finishedAt": "2026-09-23T09:08:51.740Z",
+      "durationMs": 269,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/conform-negative.log",
+      "stdoutTail": "  ✔ C-010  Aktiv policy-bundle er skemagyldig og signeret\n      platform@1.0.0 · 11 regler · sha256 baeeeb11cb00…\n\nRESULTAT: FAIL  (2 pass, 6 skip, 7 fail)\n\n✔ Negativ fixture fejlede som forventet (1 modul(er))\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "dsar-demo",
+      "title": "DSAR-fan-out mod dummy-moduler",
+      "component": "privacy-verbs",
+      "level": "fixture",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "dsar-demo"
+      ],
+      "evidence": [
+        "conformance/src/dsar.mjs",
+        "modules/dummy-ok/"
+      ],
+      "gap": "Fan-out demonstreres mod dummy-moduler, ikke mod rigtige tjenester.",
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:51.740Z",
+      "finishedAt": "2026-09-23T09:08:51.957Z",
+      "durationMs": 217,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/dsar-demo.log",
+      "stdoutTail": "      \"failed\": 0\n    }\n  }\n}\n\n✔ partially-completed: 2 full, 3 partial, 0 unsupported, 0 failed\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "telemetry-test",
+      "title": "CloudEvent end-to-end gennem collectoren",
+      "component": "telemetry-plan",
+      "level": "real",
+      "external": false,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "telemetry-test"
+      ],
+      "evidence": [
+        "conformance/test/telemetry.test.mjs"
+      ],
+      "gap": null,
+      "status": "pass",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "timedOut": false,
+      "startedAt": "2026-09-23T09:08:51.958Z",
+      "finishedAt": "2026-09-23T09:08:52.510Z",
+      "durationMs": 552,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/telemetry-test.log",
+      "stdoutTail": "# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 441.677809\nmake[1]: Leaving directory '/tmp/dkc-002/00-core'\n",
+      "stderrTail": ""
+    },
+    {
+      "id": "integration-trivy",
+      "title": "Trivy filesystem-scan (rigtigt værktøj)",
+      "component": "security-plan",
+      "level": "integration",
+      "external": true,
+      "server": false,
+      "critical": true,
+      "command": [
+        "trivy",
+        "fs",
+        "--severity",
+        "CRITICAL,HIGH",
+        "."
+      ],
+      "evidence": [
+        "security/raw/trivy-ci.json"
+      ],
+      "gap": null,
+      "status": "not-run",
+      "reason": "Trivy er ikke installeret i dette miljø; CI-workflowet er fjernet. Sample-data dækker kun normaliseringen.",
+      "exitCode": null,
+      "startedAt": "2026-09-23T09:08:52.510Z",
+      "finishedAt": "2026-09-23T09:08:52.510Z",
+      "durationMs": 0,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/integration-trivy.log",
+      "stdoutTail": "",
+      "stderrTail": ""
+    },
+    {
+      "id": "integration-falco",
+      "title": "Falco runtime-regler i en klynge",
+      "component": "security-plan",
+      "level": "integration",
+      "external": true,
+      "server": false,
+      "critical": true,
+      "command": [
+        "falco",
+        "-r",
+        "security/falco/platform-rules.yaml"
+      ],
+      "evidence": [
+        "security/falco/platform-rules.yaml"
+      ],
+      "gap": null,
+      "status": "not-run",
+      "reason": "Kræver en levende container-runtime/klynge. Reglerne er kun konfiguration i repoet.",
+      "exitCode": null,
+      "startedAt": "2026-09-23T09:08:52.510Z",
+      "finishedAt": "2026-09-23T09:08:52.510Z",
+      "durationMs": 0,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/integration-falco.log",
+      "stdoutTail": "",
+      "stderrTail": ""
+    },
+    {
+      "id": "integration-wazuh",
+      "title": "Wazuh SIEM-regler i en klynge",
+      "component": "security-plan",
+      "level": "integration",
+      "external": true,
+      "server": false,
+      "critical": true,
+      "command": [
+        "wazuh",
+        "-t",
+        "-r",
+        "security/wazuh/local_rules.xml"
+      ],
+      "evidence": [
+        "security/wazuh/local_rules.xml"
+      ],
+      "gap": null,
+      "status": "not-run",
+      "reason": "Kræver en levende SIEM-installation. Reglerne er kun konfiguration i repoet.",
+      "exitCode": null,
+      "startedAt": "2026-09-23T09:08:52.510Z",
+      "finishedAt": "2026-09-23T09:08:52.510Z",
+      "durationMs": 0,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/integration-wazuh.log",
+      "stdoutTail": "",
+      "stderrTail": ""
+    },
+    {
+      "id": "integration-mattermost",
+      "title": "Rigtig Mattermost-installation",
+      "component": "mattermost-adapter",
+      "level": "integration",
+      "external": true,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "adapter-run"
+      ],
+      "evidence": [
+        "docs/spec/adapter.md"
+      ],
+      "gap": null,
+      "status": "not-run",
+      "reason": "Ingen MATTERMOST_URL/credentials i dette miljø. Kun mock-adfærd er bevist.",
+      "exitCode": null,
+      "startedAt": "2026-09-23T09:08:52.510Z",
+      "finishedAt": "2026-09-23T09:08:52.510Z",
+      "durationMs": 0,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/integration-mattermost.log",
+      "stdoutTail": "",
+      "stderrTail": ""
+    },
+    {
+      "id": "integration-keycloak",
+      "title": "Rigtig Keycloak/Authentik-instans",
+      "component": "iam-adapter",
+      "level": "integration",
+      "external": true,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "iam-adapter-run"
+      ],
+      "evidence": [
+        "docs/spec/iam-adapter.md"
+      ],
+      "gap": null,
+      "status": "not-run",
+      "reason": "Ingen IAM-instans i dette miljø. Kun mock-adfærd er bevist.",
+      "exitCode": null,
+      "startedAt": "2026-09-23T09:08:52.510Z",
+      "finishedAt": "2026-09-23T09:08:52.510Z",
+      "durationMs": 0,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/integration-keycloak.log",
+      "stdoutTail": "",
+      "stderrTail": ""
+    },
+    {
+      "id": "integration-llm",
+      "title": "Rigtig modelleverandør gennem AI-gateway",
+      "component": "ai-gateway",
+      "level": "integration",
+      "external": true,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "gateway-run"
+      ],
+      "evidence": [
+        "gateway/src/provider.mjs"
+      ],
+      "gap": null,
+      "status": "not-run",
+      "reason": "Kun echo-provider findes; ingen leverandørnøgle/-endpoint er konfigureret.",
+      "exitCode": null,
+      "startedAt": "2026-09-23T09:08:52.510Z",
+      "finishedAt": "2026-09-23T09:08:52.510Z",
+      "durationMs": 0,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/integration-llm.log",
+      "stdoutTail": "",
+      "stderrTail": ""
+    },
+    {
+      "id": "integration-oidc",
+      "title": "Rigtig OIDC-identitetsudbyder",
+      "component": "identity-plan",
+      "level": "integration",
+      "external": true,
+      "server": false,
+      "critical": true,
+      "command": [
+        "make",
+        "runtime-demo"
+      ],
+      "evidence": [
+        "contracts/identity.schema.json"
+      ],
+      "gap": null,
+      "status": "not-run",
+      "reason": "Identitet er kontraktvalideret og simuleret; ingen rigtig IdP er koblet på.",
+      "exitCode": null,
+      "startedAt": "2026-09-23T09:08:52.510Z",
+      "finishedAt": "2026-09-23T09:08:52.510Z",
+      "durationMs": 0,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/integration-oidc.log",
+      "stdoutTail": "",
+      "stderrTail": ""
+    },
+    {
+      "id": "integration-github-actions",
+      "title": "GitHub Actions CI",
+      "component": "ci",
+      "level": "integration",
+      "external": true,
+      "server": false,
+      "critical": true,
+      "command": [
+        "gh",
+        "workflow",
+        "run",
+        "CI"
+      ],
+      "evidence": [
+        ".github/workflows/ci.yml"
+      ],
+      "gap": null,
+      "status": "not-run",
+      "reason": "Workflowet blev fjernet i commit 76e4782, og Actions er slået fra på repo-niveau. Kun lokal `make ci`/`make baseline` kan køres.",
+      "exitCode": null,
+      "startedAt": "2026-09-23T09:08:52.510Z",
+      "finishedAt": "2026-09-23T09:08:52.510Z",
+      "durationMs": 0,
+      "log": "/tmp/dkc-002/00-core/.conformance-out/baseline/logs/integration-github-actions.log",
+      "stdoutTail": "",
+      "stderrTail": ""
+    }
+  ],
+  "evidenceLatest": "/tmp/dkc-002/00-core/.conformance-out/baseline/latest.json",
+  "artifacts": [
+    "/tmp/dkc-002/00-core/.conformance-out/baseline/artifacts/CHANGELOG.jsonl",
+    "/tmp/dkc-002/00-core/.conformance-out/baseline/artifacts/badge.json",
+    "/tmp/dkc-002/00-core/.conformance-out/baseline/artifacts/oscal-assessment-results.json",
+    "/tmp/dkc-002/00-core/.conformance-out/baseline/artifacts/report.json"
+  ]
+}

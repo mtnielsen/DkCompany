@@ -1,0 +1,112 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "Runbook",
+  "metadata": {
+    "name": "host-package-update",
+    "version": "1.0.0",
+    "description": "Opdaterer en signeret, allowlistet pakke på én host efter menneskelig godkendelse og verificeret backup.",
+    "owner": {
+      "team": "platform",
+      "contact": "platform@example.org"
+    },
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "role": "Platform Owner",
+      "name": "Anna Andersen"
+    }
+  },
+  "scope": {
+    "verbs": [
+      "package-update",
+      "upgrade.patch"
+    ],
+    "targets": [
+      "host/*"
+    ],
+    "environments": [
+      "staging",
+      "prod"
+    ],
+    "tenants": [
+      "*"
+    ]
+  },
+  "parameters": {
+    "schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "hostRef": {
+          "type": "string",
+          "required": true
+        },
+        "packageSource": {
+          "type": "string"
+        },
+        "packageVersion": {
+          "type": "string"
+        }
+      }
+    },
+    "limits": {
+      "maxDurationSeconds": 600,
+      "maxTargets": 1
+    }
+  },
+  "preconditions": [
+    {
+      "id": "backup-verified",
+      "check": "backup",
+      "expect": true
+    },
+    {
+      "id": "host-enrolled",
+      "check": "host-enrollment",
+      "expect": true
+    }
+  ],
+  "maxImpact": {
+    "blastRadius": "single-target",
+    "maxTargets": 1,
+    "customerVisible": true,
+    "maxDurationSeconds": 600
+  },
+  "expiry": {
+    "approvedAt": "2026-09-01T00:00:00Z",
+    "expiresAt": "2026-09-15T00:00:00Z",
+    "maxAgeSeconds": 1209600
+  },
+  "attempts": {
+    "maxAttempts": 2,
+    "windowSeconds": 3600
+  },
+  "rollback": {
+    "required": true,
+    "method": "package-rollback",
+    "runbookRef": "host-package-update@1.0.0",
+    "tested": true
+  },
+  "postchecks": [
+    {
+      "id": "package-version",
+      "check": "package-version",
+      "expect": "current",
+      "timeoutSeconds": 300,
+      "onFailure": "rollback"
+    }
+  ],
+  "approval": {
+    "flow": "normal",
+    "preApproved": false,
+    "requiredApprovals": 1,
+    "eligibleGroups": [
+      "platform-approvers"
+    ]
+  },
+  "signature": {
+    "algorithm": "hmac-sha256",
+    "keyId": "runbook-example-key",
+    "value": "6fb13f2f829e9881b40fbbf2b3704c50a511d6d72a5657682cf8818192e72f11",
+    "signedAt": "2026-09-01T00:00:00Z"
+  }
+}

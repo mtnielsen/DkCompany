@@ -1,0 +1,76 @@
+# SHA256-manifest for DKC-010-leverancen
+# Genereret: 2026-09-23T11:28:24Z
+# Forudsætning: DKC-001 + DKC-002 + DKC-003 + DKC-004 + DKC-005 + DKC-006 + DKC-007 + DKC-008 + DKC-009 + DKC-055
+# Reviewets base: 5f9fa73, undersøgt checkout: 83ad91a
+# Node v22.22.1. DKC-010: KMS-signerede, scope-bundne rettigheder og nødstop.
+
+# --- deliverable/ (overlay, relative til 00-core/) ---
+2b98528e9c76eb73fe40493d20e6db53e72bce58dd2a8484b7976d5740ef15b9  ./Makefile
+26289f1ab81b5f61776b3e4b48f35b564af9e4cda8f2737244c0dab7a892eef2  ./conformance/src/validate-schemas.mjs
+e98cd3e31b5722e9427ed9cb27900f8ca2aed8b6c950c7492d4047300735a648  ./conformance/test/credentials-conformance.test.mjs
+bb6c3c2384a28c6a329a998f81543969f8a1973788c67329d8dbb23dd3beda9a  ./contracts/agent-manifest.schema.json
+264c37d4afe1fb5cb0274ff388051ab20a6e6cdf4433f1f131938bbdfbf61f7a  ./contracts/credential-token.schema.json
+9ab7fb55cd534523f71c90da32882e9682054200d12ac610b61cf1b11a1a2c3b  ./contracts/examples/credential-token.example.json
+eadb9a01f91543d3f3cf70f84e64d504c26c8c740cc2fa480010ce89a754d524  ./contracts/examples/kill-switch.example.json
+02538505274c1daad339fefc624294b1aa476a18794f9481943a0d467c6164fc  ./contracts/kill-switch.schema.json
+842ce80965ebb51bbfd399af561783670291cbd419df47b2570b7fa3ce0497ee  ./credentials/package.json
+f0a25a34c37b51ad2c966e04e5a786aad7ddc8a4175255e4d22dcaed9b3be1a2  ./credentials/src/broker.mjs
+37a41f4124a306a2ba9e4926dd612f5c28e4c6ac31bd877f76d7f86e3c84563f  ./credentials/src/check.mjs
+db3f523c763b06a9455bd7c1856900fb688cc96a579e643afc5b748c042d5354  ./credentials/src/index.mjs
+d04c64192c25ef3c4a939d1d3fa8983e4e7eaa337f99ff7763c769b4886cde97  ./credentials/src/jws.mjs
+9f3381039ced1b9d89196243d2f94d0851a92aa471edddfe466e5e524c782b58  ./credentials/src/keys.mjs
+fd11131a3f1175ebba49476204f5b17cdb884b2264eafcb2adaf5b61932bbb50  ./credentials/src/kill-switch.mjs
+bb154ec229ec4bc0927b0dd18a6bfd8e3b64fa3da7e7b50203cf52c1b06645e2  ./credentials/src/receiver.mjs
+02184c88305005300907ada8931646c0bee48059b8bb84045dc935c90c393b8c  ./credentials/src/revocation.mjs
+32050992ae1af002b24b5c5cad59c548af21811b85b9a89785ed177a0019feba  ./credentials/src/scope.mjs
+b39c525c7996f53ccf3d607f8b3dbc5fb78500e4312402d97154d85d78b91c09  ./credentials/src/verifier.mjs
+876a3fcb419f55efe337baa6268cf8705a5f95d51fc9e493bc8294cb51136e2e  ./credentials/test/credentials.test.mjs
+602b363df8bdd7a44a7a48398e61f2fa3fb5f937dfa0dd31039d288b736d40af  ./docs/adr/0022-rettigheder-og-noedstop.md
+f281fdb1b129705f6af313abfdee254125fa9ff7d79c9df88ff32c421f1210d8  ./docs/adr/README.md
+ed3d49a66eb9605a7ccfe28488ed62f536bb39172a10ac8eab1839098f90e16b  ./docs/spec/README.md
+c648df4105eb873a71842a1ab48b0e5e807a268770a14738e2a7ec0d8a3f5d7c  ./docs/spec/agent-runtime.md
+36fbfd97c8729131099f6082940eaaee8ea40edcc0173035aa2eaf305fcfa19d  ./docs/spec/credentials.md
+561a3745b302e89fdcc2756486ea4e1658077bd96fca66c311186f8a0400bb85  ./docs/spec/persistence.md
+a10002188f38c104e18e9717c4e241f38a1e9ce423f216b6dd5be08449ed8a32  ./docs/status/implementation-matrix.md
+f1f6e0f66b204fc541f4315992cf2a341ae8bb6cc878f73ed259fa358cd05c7e  ./gitops/src/verify.mjs
+380d19a8636463bd7e3c3d96c6fb6702d1a8d033990b1e2fcc49c5851bbcca2e  ./gitops/test/verify.test.mjs
+098ea2e9eb55177c87e5b8c6d6e2563ca9b123fa700ab937e5bba8dc518c2573  ./modules/audit-service/service/src/cli.mjs
+d02744d3741eab05f7dca13807185cb696ed9aca51c51730bd0c8044bd61323d  ./modules/audit-service/service/src/server.mjs
+54e02a91743372a3e654f6a6efa175101bb07f580b40e791febcd79acf8fe41e  ./modules/audit-service/service/test/credential-receiver.test.mjs
+f9ba5daf935521fb9a5377023acbcf5968bb226fc6b1de05368459a83a91e7db  ./modules/dummy-ok/agents/backup-agent.json
+e6712040ca5ec8a7a53932165040745c8c16a6b3e6eb01a32c459575f01058a9  ./persistence/migrations/0004_credentials_and_stops.sql
+2056e14744ec75043d0e4042005cfbaaf5544aa4ad27dd9647dee6172a05f7cd  ./persistence/src/adapters/issuances.mjs
+268fec2982509dbc49b8f920dad80bbf625b6d257e967bbd396b4fcdc8a079bb  ./persistence/src/adapters/revocations.mjs
+a63315bccb0e9587e00a42cbdef74ffc9984ceeaf19851c593a57cbe7cfc7d61  ./persistence/src/adapters/stops.mjs
+5f1531e5717a28350738649984606c73ca1428aa941640ebb4c15c5f23e2c013  ./persistence/src/db.mjs
+17bcbcd601da1534ff04441b97e05f9ce58ee453730ffc9d7232d09ee7ceb75f  ./persistence/src/identities.mjs
+f9e76294d745b1d173b3b747a40bef71ab0544b5be11845a4afd0ffaa51707b0  ./persistence/src/index.mjs
+f3dc7ca5f88edcf15d30735051615339bfed574cf547ddf356c1df93ef8f4cc0  ./persistence/test/credentials-stores.test.mjs
+ad0bb71ff9b90f46a3acebd84d6d45f46e377d576e7bc1fdb59cce76342f8829  ./persistence/test/migrations.test.mjs
+4f9c6d0d1f5117e913a212af0539f9cd6394a01c5880da63a772018bbafb7df9  ./runtime/src/classification.mjs
+37b5091e08d2be1134c8b75333026087f4e12cc87527c06869b9a466d4af0a4a  ./runtime/src/runtime.mjs
+b5d2c7a693cdd5dff228915ee1d58d2092e7a3dab5ab697bc94272e0514cd738  ./runtime/test/credentials-runtime.test.mjs
+2e7693bd85977eedd3e992b7f0548d4da6a759234bb72c09eb5d050b6a699fd0  ./tools/baseline/registry.mjs
+
+# --- evidence/ ---
+62359cd45f5bd1eeb5a1ee1c66b8858ec1c42472a55ccb95249b9b132a5739fe  evidence/baseline/baseline-run.json
+2f23171a292ffa77d38604f78440dc5735a0d7f53af5d85cc73820a940a666ba  evidence/baseline/baseline.log
+ab32ea4b5c56afb560dfffaaf3fef233477adab61fc7f4050d6add7d92dbcdb9  evidence/logs/agent-conformance-test.log
+46b2b6e033b53574f555823bd7535e95723d183edea45efd8736913131379b18  evidence/logs/agent-registry-test.log
+d8112c6e7948f04a0eb51b4a78e5c37fef88484a93b8431d186bfc51f40e064e  evidence/logs/approval-test.log
+caedfa06593e2710c57cfc8346e692d49e8ca879371e571c0bcce2cc77c0d7f9  evidence/logs/audit-service-test.log
+9c092de3286198c826c43dc357f857b03068ec39c65f0f487c0796bf9a12515a  evidence/logs/boundary-test.log
+e02d38e9dd19df2a6dcd34531bd4646b21aec2751dada4f63a0b293b74ba95f4  evidence/logs/credentials-check.log
+f18677d6db3c8d563bfa60e0bd4d49427f46d6183c0643f3ab158c2499a6f286  evidence/logs/credentials-test.log
+171acc1471e463ad84425969bf1b94acfe0fce674c8c086d3ce5f745491b9e0e  evidence/logs/gitops-test.log
+fcc2dc4a150f5be4d9d5add80f9f9a21e895263c345708598236ef99c98772c2  evidence/logs/gitops-verify.log
+a4634ad347558fdba107a33699ed65dafc6c7afc99df30a158a7ac204c7906dd  evidence/logs/lint.log
+a431cc1d77e9c69881b7ab0abf88b52bee14a5875a45dbab21d2e84bb8c16c5c  evidence/logs/persistence-check.log
+b096d40e9c2db67adb133fbd2aeb081b2874f4576f7f75c6b341d21ecaff65e7  evidence/logs/persistence-test.log
+1dc235fce015581e7397abee497a4e93e76de5b80657ea4c0825820e6332a264  evidence/logs/runtime-test.log
+9c5181b859f514b729479a7d31c3921bb2b616641bdad58c16559573f72b4dab  evidence/logs/test.log
+e3cf08235d00c088adb0016b0ee77180173e2503854209191d8e6b9422919d00  evidence/logs/validate.log
+
+# --- README.md, apply.sh ---
+a61d5b22cf200fc8d7c8dffe6b602a1757a617e9fdfe33f3af3e0c684ee8cb3f  ./README.md
+2e6ce7c10a263715df388599df5ac59b61c33aaf023863b3d3bf3111e0e6a0c4  ./apply.sh

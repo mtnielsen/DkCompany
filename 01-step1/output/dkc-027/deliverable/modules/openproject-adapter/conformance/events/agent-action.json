@@ -1,0 +1,20 @@
+{
+  "specversion": "1.0",
+  "id": "21224884-c039-40a8-853b-63f871f6277a",
+  "source": "urn:platform:module:openproject-adapter",
+  "type": "dk.platform.openproject-adapter.subject-locate.completed",
+  "time": "2026-09-24T12:51:03.363Z",
+  "datacontenttype": "application/json",
+  "tenantid": "acme",
+  "traceid": "2ee5a377f468cdb17e31981b8dcf14ee",
+  "spanid": "c117f2687540d316",
+  "principal": {
+    "kind": "agent",
+    "id": "spiffe://platform.example.org/agents/openproject-adapter"
+  },
+  "dataclassification": "personal",
+  "data": {
+    "verb": "subject.locate",
+    "decision": "allow"
+  }
+}

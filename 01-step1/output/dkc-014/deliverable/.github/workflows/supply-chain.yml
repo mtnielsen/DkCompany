@@ -1,0 +1,72 @@
+name: Supply chain
+
+# DKC-014 — byg reproducerbare artefakter, scan, signér og verificér før deployment.
+#
+# GitHub Actions er slået fra på repo-niveau i dette miljø. De samme trin kan
+# køres lokalt med `make supply-chain-sbom`, `make supply-chain-check`,
+# `make supply-chain-test` og `make supply-chain-vuln-check`. Docker mangler i
+# WSL-distroen, så containerbuild og -signering er NOT RUN lokalt.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+
+jobs:
+  supply-chain:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install
+        run: make install
+
+      - name: Reproducible SBOM
+        run: make supply-chain-sbom
+
+      - name: Static and policy checks
+        run: |
+          make supply-chain-check
+          make supply-chain-test
+          make supply-chain-vuln-check
+
+      - name: Vulnerability scan
+        run: make supply-chain-scan
+
+      - name: Container build plan
+        run: make supply-chain-containers-plan
+
+      - name: Build and push containers
+        run: make supply-chain-containers-build
+
+      - name: Sign release artifacts
+        env:
+          DKC_RELEASE_SIGNING_KEY: ${{ secrets.DKC_RELEASE_SIGNING_KEY }}
+        run: make supply-chain-sign
+
+      - name: Verify signatures before deployment
+        run: make supply-chain-verify
+
+      - name: Upload supply-chain evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: supply-chain-evidence
+          path: |
+            release/sbom/
+            release/artifacts.json
+            supply-chain/vuln/cache.json
+            docs/status/supply-chain.md

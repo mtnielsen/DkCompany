@@ -1,0 +1,32 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "EvidenceRecord",
+  "id": "assurance-transfer-vurdering",
+  "subject": {
+    "kind": "check",
+    "name": "transfer-assessment"
+  },
+  "mode": "contract",
+  "result": "pass",
+  "commit": "83ad91a963d8055f77c29fb4361455689df95acb",
+  "imageDigest": null,
+  "environment": "local",
+  "upstreamVersion": "platform@1.0.0",
+  "runId": "assurance-assurance-transfer-vurdering",
+  "capturedAt": "2026-09-24T10:00:00Z",
+  "expiresAt": "2026-10-24T10:00:00Z",
+  "producer": {
+    "type": "ci",
+    "name": "compliance-suite",
+    "subject": "ci|compliance"
+  },
+  "command": [
+    "make",
+    "assurance-check"
+  ],
+  "artifact": {
+    "uri": "docs/compliance/assurance.md",
+    "sha256": "569409096c239c2b98762bed7d12c50b5768586a054457ff550f50427b06b44b"
+  },
+  "digest": "901105dc21a088c96e2f5c31f8fd68b424e289e41e8ad94d889c68b537ad6d21"
+}

@@ -1,0 +1,89 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ServiceClass",
+  "metadata": {
+    "name": "keycloak-adapter",
+    "version": "1.0.0",
+    "description": "Serviceklasse for IAM-adapteren i SMV-pilotprofilen. Målene er foreslået og afventer menneskelig vedtagelse før produktion.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+    },
+    "labels": { "tier": "reference", "pilot": "true" }
+  },
+  "moduleRef": "keycloak-adapter",
+  "criticality": "critical",
+  "biaRef": "docs/continuity/bia.md#keycloak-adapter",
+  "failureModel": {
+    "networkPartition": {
+      "behavior": "fail-closed",
+      "splitBrain": "forbidden",
+      "quorumRequired": false,
+      "description": "Mister adapteren forbindelsen til IAM, afvises nye provisioneringer frem for at gætte på en identitet."
+    },
+    "corruptionDetection": {
+      "method": "checksum ved backup og verify-restore",
+      "detectionWindowMinutes": 1440
+    }
+  },
+  "availability": {
+    "targetPercent": 99.0,
+    "measurementWindowDays": 30,
+    "acceptedDowntime": true
+  },
+  "durability": {
+    "confirmedWrites": {
+      "rpoMinutes": 0,
+      "strategy": "commit til adapterens database før svar",
+      "basis": "BIA: en bekræftet IAM-ændring skal kunne spores efter svar."
+    },
+    "regionFailure": {
+      "rpoMinutes": 240,
+      "strategy": "natlig offsite backup",
+      "basis": "BIA: et regionsnedbrud er accepteret med op til fire timers tab i SMV-profilen."
+    },
+    "corruption": {
+      "rpoMinutes": 1440,
+      "strategy": "daglige krypterede snapshots",
+      "basis": "Korruption opdages ved verify-restore og gendannes fra seneste verificerede snapshot."
+    }
+  },
+  "recovery": {
+    "rtoMinutes": 240,
+    "restoreOrder": ["database", "keycloak-adapter"],
+    "healing": {
+      "automated": false,
+      "allowedActions": ["restart", "restore-from-backup"],
+      "forbiddenActions": ["manual-data-edit", "disable-audit", "bypass-policy"],
+      "requiresHumanApproval": ["restore-from-backup"]
+    }
+  },
+  "replication": {
+    "replicas": 1,
+    "statefulMode": "stateful",
+    "storageClass": "standard-rwo",
+    "consistency": "strong",
+    "writeMode": "single-writer",
+    "activeWriters": 1,
+    "upstreamSupportsMultiWriter": false
+  },
+  "backup": {
+    "required": true,
+    "mode": "external",
+    "offsite": true,
+    "encrypted": true,
+    "restoreTested": false,
+    "retentionDays": 30
+  },
+  "deploymentProfileCompatibility": {
+    "profiles": ["single-server"],
+    "haEligible": false,
+    "failureDomains": 1,
+    "nPlusOne": false
+  },
+  "serviceCommitment": {
+    "state": "proposed"
+  }
+}

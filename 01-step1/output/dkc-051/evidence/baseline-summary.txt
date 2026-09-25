@@ -1,0 +1,13 @@
+Baseline: 209 checks, 162 PASS, 1 FAIL, 0 error, 46 NOT RUN
+Run: 2026-09-24T14-28-30-739Z-83ad91a.json
+Repo: /tmp/dkc-051/00-core
+
+FAIL:
+  - changelog-check: 
+
+DKC-051-checks:
+  - chaos-check: pass
+  - chaos-test: pass
+  - chaos-run: pass
+  - chaos-report: pass
+  - integration-chaos-staging: not-run

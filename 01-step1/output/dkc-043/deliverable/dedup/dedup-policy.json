@@ -1,0 +1,125 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "DedupPolicy",
+  "metadata": {
+    "name": "platform-dedup-policy",
+    "version": "1.0.0",
+    "description": "Dedup-politik for platformen: separat design for backupblokke, primære objekter, jobhændelser og forretningsposter. Dedup sker kun inden for en tenant, et krypteringsdomæne og en retentionklasse, aldrig på tværs af kunder. Besparelser aktiveres kun efter bestået integritets- og restoretest.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen"
+      }
+    },
+    "labels": {
+      "segment": "data",
+      "tier": "durable"
+    }
+  },
+  "provenBackupSolutionRef": "backup/src/vault.mjs",
+  "primaryDataDedupOptional": true,
+  "crossTenantDedup": false,
+  "domains": [
+    {
+      "id": "backup-blocks",
+      "title": "Backupblokke",
+      "category": "backup-blocks",
+      "enabled": true,
+      "requiresValidation": true,
+      "mergeSemantics": "content-addressed-chunks",
+      "providerRef": "backup/src/vault.mjs",
+      "boundary": {
+        "tenantScoped": true,
+        "encryptionDomainScoped": true,
+        "retentionClassScoped": true,
+        "crossTenantDedup": false
+      },
+      "chunking": {
+        "algorithm": "gear-cdc-sha256-v1",
+        "minSizeBytes": 512,
+        "averageSizeBytes": 2048,
+        "maxSizeBytes": 8192
+      }
+    },
+    {
+      "id": "primary-objects",
+      "title": "Primære objekter",
+      "category": "primary-objects",
+      "enabled": false,
+      "requiresValidation": true,
+      "mergeSemantics": "content-addressed-chunks",
+      "providerRef": "storage/src/object-store.mjs",
+      "boundary": {
+        "tenantScoped": true,
+        "encryptionDomainScoped": true,
+        "retentionClassScoped": true,
+        "crossTenantDedup": false
+      },
+      "validation": {
+        "integrityTestRef": "dedup/test/store.test.mjs",
+        "restoreTestRef": "dedup/test/backup.test.mjs",
+        "requiresHumanApproval": true
+      },
+      "chunking": {
+        "algorithm": "gear-cdc-sha256-v1",
+        "minSizeBytes": 1024,
+        "averageSizeBytes": 4096,
+        "maxSizeBytes": 16384
+      }
+    },
+    {
+      "id": "job-events",
+      "title": "Jobhændelser",
+      "category": "job-events",
+      "enabled": true,
+      "requiresValidation": false,
+      "mergeSemantics": "idempotency-key-only",
+      "providerRef": "jobs/src/events.mjs",
+      "boundary": {
+        "tenantScoped": true,
+        "encryptionDomainScoped": true,
+        "retentionClassScoped": true,
+        "crossTenantDedup": false
+      },
+      "dedupKey": ["tenantId", "id", "resource.type", "resource.id", "resource.version"],
+      "windowSeconds": 86400
+    },
+    {
+      "id": "business-records",
+      "title": "Forretningsposter",
+      "category": "business-records",
+      "enabled": false,
+      "requiresValidation": true,
+      "mergeSemantics": "never-merge",
+      "providerRef": "storage/src/object-store.mjs",
+      "boundary": {
+        "tenantScoped": true,
+        "encryptionDomainScoped": true,
+        "retentionClassScoped": true,
+        "crossTenantDedup": false
+      },
+      "note": "Forretningsdubletter må aldrig flette automatisk af storage-dedup; de kræver en ejerbesluttet, versionsstyret sammensmeltning uden for dedup-laget."
+    }
+  ],
+  "garbageCollection": {
+    "retentionAware": true,
+    "singleWriterLease": true,
+    "markAndSweep": true,
+    "leaseRequiredForPrune": true,
+    "maxLeaseSeconds": 900
+  },
+  "savingsGate": {
+    "requireIntegrityCheck": true,
+    "requireFullRestore": true,
+    "activateOnlyWhenBothPass": true
+  },
+  "keys": {
+    "provider": "external-kms",
+    "storeContainsKey": false,
+    "domainScoped": true,
+    "algorithm": "hkdf-sha256+aes-256-gcm"
+  }
+}

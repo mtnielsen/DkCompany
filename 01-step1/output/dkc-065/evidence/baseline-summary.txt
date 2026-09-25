@@ -1,0 +1,6 @@
+DKC-065 baseline
+================
+Før DKC-065 (DKC-062-stak-tip): total=259 pass=202 fail=1 error=0 notRun=56
+Efter DKC-065:                 total=264 pass=206 fail=1 error=0 notRun=57
+Tilvækst: +4 PASS (security-assessment-check/-test/-run/-report), +1 NOT RUN (integration-pentest-independent)
+Den ene FAIL er den præeksisterende changelog-check (manglende DCO sign-off, bl.a. 83ad91a).

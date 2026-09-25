@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/job-reconciliation.schema.json",
+  "title": "Job Reconciliation",
+  "description": "DKC-013: resultatet af at afgøre et jobforsøgs faktiske udfald. Et irreversibelt `unknown` outcome kan ikke afgøres → eskaleres. En reversibel handling kan kompenseres. Der genudføres aldrig en irreversibel handling her.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "jobId", "tenantId", "classification", "attempts", "outcome", "at"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "JobReconciliation" },
+    "jobId": { "type": "string" },
+    "tenantId": { "type": "string" },
+    "classification": { "enum": ["read", "reversible-write", "irreversible-write"] },
+    "attempts": { "type": "integer", "minimum": 1 },
+    "idempotencyId": { "type": "string", "description": "Det forsøgs-intent der blev reconcileret." },
+    "outcome": {
+      "enum": ["resolved-succeeded", "resolved-failed", "compensated", "escalated", "unresolved"],
+      "description": "resolved-*: sandheden blev afgjort; compensated: en reversibel handling blev kompenseret; escalated: et irreversibelt unknown blev sendt til menneskelig behandling; unresolved: kunne ikke afgøres."
+    },
+    "compensation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["verb"],
+      "properties": {
+        "verb": { "type": "string" },
+        "jobId": { "type": "string" }
+      }
+    },
+    "reason": { "type": "string" },
+    "requiresHumanReview": { "type": "boolean" },
+    "at": { "type": "string", "format": "date-time" }
+  }
+}

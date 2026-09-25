@@ -1,0 +1,29 @@
+# DKC-027 — forudsætningskæde og verifikation
+
+- **Reviewets base:** 5f9fa73457d22583b9948611d5cc3afffec4ae38 (`5f9fa73`)
+- **Undersøgt checkout:** 83ad91a963d8055f77c29fb4361455689df95acb (`83ad91a`)
+- **Stak-tip før denne opgave:** DKC-058 (`01-step1/output/dkc-058/apply.sh`)
+- **Anvendt kæde:** dkc-058/apply.sh → dkc-054/apply.sh → dkc-046/apply.sh → … → dkc-001/apply.sh
+- **Node:** v22.22.1
+
+## Formelle afhængigheder (fra tasks.json) og deres verificerede tilstedeværelse
+
+| Afhængighed | Krav | Verificeret i stakken |
+| --- | --- | --- |
+| DKC-016 | Backup og gendannelse | `backup/`, `docs/spec/backup.md`, `make backup-check`/`backup-test` |
+| DKC-021 | Sletning, legal hold og gendannelsesregler | `retention/`, `conformance/src/retention.mjs`, `make retention-check` |
+| DKC-023 | Fælles adapterværktøjer og godkendelsestest | `adapter-sdk/` (sdk, version, idempotency, harness), `make adapter-sdk-check` |
+| DKC-025 | Portal og kundens livscyklus | `portal/`, `make portal-check` |
+
+## Understøttende afhængigheder, der genbruges
+
+| Opgave | Bidrag |
+| --- | --- |
+| DKC-011 | Værktøjsgrænse og injection-tests |
+| DKC-019 | Dataregister og retentionkonfiguration (`compliance/data-register.json`) |
+| DKC-048 | Immutable data uden for agentens kontrol (dataklasser) |
+| DKC-055 | Præcis én rolle pr. agent (immutable single-role agents) |
+| DKC-063 | Testmatrix og release-gates (`release/`) |
+
+Alle afhængigheder er til stede i den anvendte stak og bestod deres respektive
+checks i baseline-kørslen (154 pass, 1 kendt fail, 44 not run af 199).

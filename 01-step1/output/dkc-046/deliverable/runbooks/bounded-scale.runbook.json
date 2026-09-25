@@ -1,0 +1,112 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "Runbook",
+  "metadata": {
+    "name": "bounded-scale",
+    "version": "1.0.0",
+    "description": "Skalerer en tjeneste inden for en snæver, forhåndsgodkendt replikaramme med observationstid og testet rollback.",
+    "owner": {
+      "team": "platform",
+      "contact": "platform@example.org"
+    },
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "role": "Platform Owner",
+      "name": "Anna Andersen"
+    }
+  },
+  "scope": {
+    "verbs": [
+      "scale"
+    ],
+    "targets": [
+      "service/*"
+    ],
+    "environments": [
+      "staging",
+      "prod"
+    ],
+    "tenants": [
+      "*"
+    ]
+  },
+  "parameters": {
+    "schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "replicas": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4,
+          "required": true
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "limits": {
+      "maxDurationSeconds": 300,
+      "maxTargets": 1
+    }
+  },
+  "preconditions": [
+    {
+      "id": "healthy-before",
+      "check": "healthcheck",
+      "expect": "green"
+    },
+    {
+      "id": "within-headroom",
+      "check": "headroom",
+      "expect": true
+    }
+  ],
+  "maxImpact": {
+    "blastRadius": "single-service",
+    "maxTargets": 1,
+    "customerVisible": false,
+    "maxDurationSeconds": 300
+  },
+  "expiry": {
+    "approvedAt": "2025-09-01T00:00:00Z",
+    "expiresAt": "2025-09-03T00:00:00Z",
+    "maxAgeSeconds": 604800
+  },
+  "attempts": {
+    "maxAttempts": 2,
+    "windowSeconds": 1800
+  },
+  "rollback": {
+    "required": true,
+    "method": "scale",
+    "runbookRef": "bounded-scale@1.0.0",
+    "tested": true
+  },
+  "postchecks": [
+    {
+      "id": "healthy-after",
+      "check": "healthcheck",
+      "expect": "green",
+      "timeoutSeconds": 120,
+      "onFailure": "rollback"
+    }
+  ],
+  "approval": {
+    "flow": "standard",
+    "preApproved": true,
+    "preApprovalRef": "APR-REMEDIATION-SCALE",
+    "requiredApprovals": 2,
+    "eligibleGroups": [
+      "platform-approvers"
+    ]
+  },
+  "signature": {
+    "algorithm": "hmac-sha256",
+    "keyId": "runbook-example-key",
+    "value": "663c15a9b48c4047c0c0de0e0e1ff61153a18d63338a5f5f8a8f7f1d7ff59340",
+    "signedAt": "2025-09-01T00:00:00Z"
+  }
+}

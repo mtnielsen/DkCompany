@@ -1,0 +1,35 @@
+# Baseline for DKC-020 (ægte kørsel)
+
+- **Commit:** 83ad91a963d8055f77c29fb4361455689df95acb (83ad91a)
+- **Reviewets base:** 5f9fa73457d22583b9948611d5cc3afffec4ae38 (5f9fa73)
+- **Forudsætnings-overlays:** DKC-001 .. DKC-024 (via dkc-024/apply.sh)
+- **Miljø:** Node v22.22.1, WSL. Ingen live tredjepartsapps/upstream, ingen
+  stagingklynge, intet Docker/cosign/trivy/tofu/kubectl.
+- **Kommando:** `make baseline`
+
+## Resultat
+
+- **90 pass, 1 fail, 0 error, 18 not run (109 checks).**
+- Den eneste FAIL er den kendte, forudgående `changelog-check`: commits mangler
+  DCO sign-off (også 83ad91a). Den er hverken "rettet" eller skjult.
+- Nye checks: `privacy-check` (contract, PASS), `privacy-test` (real, PASS) og
+  `integration-privacy-live` (**NOT RUN**): ingen levende tredjepartsapps i
+  dette miljø. To-app fan-out er efterprøvet mod de rigtige adaptere med
+  mock-upstream og i conformance-testen.
+
+## DKC-020-checks
+
+| Check | Niveau | Resultat |
+| --- | --- | --- |
+| `privacy-check` | contract | PASS |
+| `privacy-test` | real | PASS |
+| `integration-privacy-live` | integration | NOT RUN |
+
+## Fokuserede logfiler
+
+Se `evidence/logs/` for `validate`, `lint`, `privacy-check`, `privacy-test`,
+`privacy-run`, `persistence-check`, `persistence-test`, `release-check`,
+`release-test`, `supply-chain-check`, `supply-chain-test`, `adapter-test`,
+`iam-adapter-test`, `test`, `dsar-demo` og selve `baseline.log`.
+`evidence/baseline/` indeholder den fulde baseline (logs, artefacts, latest.json,
+kørselsrapport).

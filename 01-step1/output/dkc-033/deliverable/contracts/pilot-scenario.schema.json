@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/pilot-scenario.schema.json",
+  "title": "Pilot Scenario Set",
+  "description": "Kørebare end-to-end pilotscenarier (DKC-033). Hver virksomhedsprofil gennemfører de seks kritiske arbejdsgange mod sin valgte installationsprofil: login/offboarding, dagligt arbejde, restore, privacy-sag, opgradering og exit. Hvert trin har et forventet udfald, og hvert scenarie har en navngivet menneskelig ejer. En deterministisk fixture-kørsel er ikke en målt produktionsobservation.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "scenarios"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "PilotScenarioSet" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$" },
+        "description": { "type": "string", "minLength": 20 },
+        "accountableHuman": { "$ref": "#/$defs/human" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "scenarios": {
+      "type": "array",
+      "minItems": 18,
+      "items": { "$ref": "#/$defs/scenario" }
+    }
+  },
+  "$defs": {
+    "human": {
+      "type": "object",
+      "required": ["subject", "role", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": {
+          "type": "object",
+          "required": ["subject", "name"],
+          "additionalProperties": false,
+          "properties": {
+            "subject": { "type": "string", "minLength": 3 },
+            "name": { "type": "string", "minLength": 2 }
+          }
+        }
+      }
+    },
+    "step": {
+      "type": "object",
+      "required": ["id", "action", "expected"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+        "action": { "type": "string", "minLength": 2 },
+        "expected": { "enum": ["ok", "denied", "approval-required", "blocked", "resumable", "rolled-back"] },
+        "humanApproval": { "type": "boolean" },
+        "note": { "type": "string" }
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "required": ["id", "title", "profileRef", "deploymentProfileRef", "journey", "runner", "steps", "evidenceLevel", "owner"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]{3,63}$" },
+        "title": { "type": "string", "minLength": 5 },
+        "profileRef": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+        "deploymentProfileRef": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+        "journey": { "enum": ["login-offboarding", "daily-work", "restore", "privacy-case", "upgrade", "exit"] },
+        "runner": {
+          "enum": ["login-offboarding", "daily-work", "restore", "privacy-case", "upgrade", "exit"]
+        },
+        "selection": { "type": "array", "items": { "type": "string", "minLength": 2 } },
+        "steps": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/step" } },
+        "abuseCase": { "type": ["string", "null"] },
+        "evidenceLevel": { "enum": ["fixture", "measured"] },
+        "owner": { "$ref": "#/$defs/human" }
+      }
+    }
+  }
+}

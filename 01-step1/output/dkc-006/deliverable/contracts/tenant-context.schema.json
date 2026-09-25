@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/tenant-context.schema.json",
+  "title": "Tenant Context",
+  "description": "DKC-006: den fælles tenant-kontekst og ressource-ID-kontrakt. Tenant udledes af den verificerede kontekst (OIDC, mTLS-SVID, betroet proxy eller session) og følger alle data og handlinger. En påstand i URL, header eller body må kun stemme med den udledte tenant. Ressource-ID'er bærer tenanten, så identiske lokale id'er hos to kunder ikke kolliderer: res://<tenant>/<type>/<lokal-id>.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "tenantId", "subject", "source", "crossTenant", "scope", "resources"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "TenantContext" },
+    "tenantId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{1,62}$",
+      "description": "Den autoritative kunde, udledt af den verificerede kontekst — ikke af et klientfelt."
+    },
+    "subject": {
+      "type": "object",
+      "required": ["kind", "id"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "enum": ["human", "agent", "service"] },
+        "id": { "type": "string", "minLength": 1 },
+        "transport": { "type": "string", "description": "Hvordan identiteten blev verificeret, fx oidc, mtls, trusted-proxy." }
+      }
+    },
+    "source": {
+      "enum": ["oidc", "mtls", "trusted-proxy", "session", "demo-shim", "service"],
+      "description": "Kilden konteksten blev udledt fra. Demo-shim er kun gyldig i testprofil."
+    },
+    "crossTenant": {
+      "type": "boolean",
+      "description": "true når principalen handler for en anden kunde end sin egen. Kræver særskilt platformrolle og eksplicit scope."
+    },
+    "platformRole": {
+      "type": "string",
+      "description": "Den særskilte rolle (fx platform-admin) der kræves når crossTenant er true."
+    },
+    "scope": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" },
+      "description": "Eksplicit liste af kunder (eller '*'), principalen må handle for. Når crossTenant er false skal den være præcis [tenantId]."
+    },
+    "resources": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^res://[a-z0-9][a-z0-9-]{1,62}/[a-z][a-z0-9._-]{1,63}/[^/]+$"
+      },
+      "description": "Ressource-ID'er konteksten omfatter. Hver ID skal bære samme tenant som tenantId."
+    },
+    "resourceIdFormat": {
+      "const": "res://<tenant>/<type>/<local-id>",
+      "description": "Den kanoniske form. Tenant er en del af ID'et, så en fremmed tenant ikke kan læses under en anden kundes namespace."
+    },
+    "claims": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "De tenant-påstande requesten bar (header/body/URL). Alle skal stemme med tenantId, ellers afvises requesten."
+    }
+  }
+}

@@ -1,0 +1,16 @@
+Baseline: 224 checks, 174 PASS, 1 FAIL, 0 error, 49 NOT RUN
+Run: 2026-09-24T18-50-35-057Z-83ad91a.json
+Repo: /tmp/dkc-034/00-core
+
+FAIL:
+  - changelog-check: (manglende DCO sign-off, også i 83ad91a — forudgående)
+
+DKC-034-checks:
+  - metering-check: pass
+  - metering-test: pass
+  - metering-run: pass
+  - metering-report: pass
+  - integration-metering-live: not-run
+
+Bemærk: den forrige stak havde 219 checks (170 PASS, 1 FAIL, 48 NOT RUN).
+DKC-034 tilføjer 5 checks: 4 passer, 1 integration er NOT RUN.

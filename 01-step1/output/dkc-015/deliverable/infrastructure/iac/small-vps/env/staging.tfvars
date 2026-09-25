@@ -1,0 +1,10 @@
+environment        = "staging"
+region             = "fsn1"
+server_type        = "cpx21"
+admin_cidr         = "203.0.113.0/24"
+dns_zone           = "platform.example.org"
+hostname           = "staging.platform.example.org"
+storage_size_gb    = 50
+encryption_enabled = true
+k3s_version        = "v1.30.4+k3s1"
+model_egress_allow = ["api.anthropic.com", "api.openai.com"]

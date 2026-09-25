@@ -1,0 +1,22 @@
+DKC-040 baseline
+generatedAt: 2026-09-24T07:24:46.552Z
+status: fail
+repo: /tmp/dkc-039/00-core
+total: 138, pass: 108, fail: 1, error: 0, notRun: 29
+
+FAIL:
+  - changelog-check: ✘ 4 commits mangler sign-off:
+  - 83ad91a963d8 ting
+  - 76e4782085c8 Fjern GitHub Actions CI-workflow
+  - 5f9fa73457d2 Merge remote-tracking branch 'origin/main'
+  - 87768da0dc83 Initial commit
+make[1]: *** [Makefile:466: changelog-check] Error 1
+
+
+DKC-040-checks:
+  - messaging-check: pass
+  - messaging-test: pass
+  - integration-message-broker: not-run
+
+Forud eksisterende fejl: changelog-check fejler fordi commits mangler DCO sign-off (inkl. 83ad91a).
+Kørslen ændrede 30 sporede filer under modules/*/conformance; de er restaureret fra snapshot efter kørslen.

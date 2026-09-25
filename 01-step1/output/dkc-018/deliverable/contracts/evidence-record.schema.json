@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/evidence-record.schema.json",
+  "title": "Evidence Record",
+  "description": "DKC-018: én versioneret evidenspost. Moden (fixture/contract/integration/runtime), commit, image-digest, miljø, upstream-version, run-ID og udløb er en del af posten, så et fixture-pass aldrig kan forveksles med håndhævelse i en rigtig deployment. `digest` er en SHA-256 over postens kanoniske indhold (uden `digest` og `signature`) og gør en manuel redigering af resultatet detekterbar.",
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "kind",
+    "id",
+    "subject",
+    "mode",
+    "result",
+    "commit",
+    "imageDigest",
+    "environment",
+    "upstreamVersion",
+    "runId",
+    "capturedAt",
+    "expiresAt",
+    "producer",
+    "command",
+    "artifact",
+    "digest"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "EvidenceRecord" },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{2,127}$" },
+    "subject": {
+      "type": "object",
+      "required": ["kind", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "enum": ["module", "verb", "check", "component", "deployment"] },
+        "name": { "type": "string", "minLength": 2 },
+        "verb": { "type": "string", "minLength": 2 },
+        "component": { "type": "string", "minLength": 2 }
+      }
+    },
+    "mode": {
+      "enum": ["fixture", "contract", "integration", "runtime"],
+      "description": "fixture = sampledata, contract = skema-/metavalidering, integration = kørt mod et levende system, runtime = målt i en kørende deployment."
+    },
+    "result": { "enum": ["pass", "fail", "skip", "not-run"] },
+    "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+    "imageDigest": {
+      "oneOf": [{ "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }, { "type": "null" }],
+      "description": "Den præcise container-digest posten er bundet til, eller null for ikke-containerbevis."
+    },
+    "environment": {
+      "enum": ["local", "dev", "staging", "prod"],
+      "description": "Miljøet posten er indsamlet i. Kun integration/runtime i staging/prod kan bære et produktionsbadge."
+    },
+    "upstreamVersion": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Versionen af det underliggende system (database, app, runtime), så et bevis ikke genbruges på tværs af versioner."
+    },
+    "runId": { "type": "string", "minLength": 1 },
+    "capturedAt": { "type": "string", "format": "date-time" },
+    "expiresAt": { "type": "string", "format": "date-time" },
+    "producer": {
+      "type": "object",
+      "required": ["type", "name", "subject"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "enum": ["ci", "runtime", "human", "implementer"] },
+        "name": { "type": "string", "minLength": 2 },
+        "subject": { "type": "string", "minLength": 3 }
+      }
+    },
+    "command": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+    "artifact": {
+      "type": "object",
+      "required": ["uri", "sha256"],
+      "additionalProperties": false,
+      "properties": {
+        "uri": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "description": "SHA-256 over postens kanoniske indhold uden `digest` og `signature`. Enhver manuel ændring (fx result: pass) bryder digesten."
+    },
+    "notes": { "type": "string", "description": "Kort, menneskelæsbar begrundelse (fx hvorfor en probe er not-run)." },
+    "signature": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "required": ["algorithm", "keyId", "value"],
+          "additionalProperties": false,
+          "properties": {
+            "algorithm": { "const": "ed25519" },
+            "keyId": { "type": "string", "pattern": "^[a-f0-9]{8,16}$" },
+            "value": { "type": "string", "minLength": 16 }
+          }
+        }
+      ]
+    }
+  }
+}

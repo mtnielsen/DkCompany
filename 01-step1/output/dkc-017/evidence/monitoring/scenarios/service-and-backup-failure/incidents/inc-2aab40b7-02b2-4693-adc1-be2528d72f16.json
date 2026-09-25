@@ -1,0 +1,39 @@
+{
+  "incidentId": "inc-2aab40b7-02b2-4693-adc1-be2528d72f16",
+  "alertId": "alert-561ce539-e909-4c36-abe5-2eccc657acbb",
+  "ruleId": "backup-failed",
+  "severity": "critical",
+  "tenantId": null,
+  "state": "open",
+  "owner": {
+    "subject": "oidc|anna.andersen",
+    "name": "Anna Andersen",
+    "role": "Platform Owner"
+  },
+  "escalation": [
+    {
+      "afterMinutes": 15,
+      "to": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner (substitute)"
+      }
+    }
+  ],
+  "runbook": "docs/runbooks/backup-restore.md",
+  "openedAt": "2026-09-23T22:46:50.269Z",
+  "timeline": [
+    {
+      "at": "2026-09-23T22:46:50.269Z",
+      "type": "alerted",
+      "actor": "monitoring",
+      "detail": "regel 'backup-failed': status er 'fail'"
+    },
+    {
+      "at": "2026-09-23T22:46:50.278Z",
+      "type": "notified",
+      "actor": "monitoring",
+      "detail": "leveret til platform-oncall-local (local:5552abcf5e7d1d69c4c61d709109b052d5db5faaf3bf7f1876e94950af59a703)"
+    }
+  ]
+}

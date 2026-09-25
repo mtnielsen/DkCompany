@@ -1,0 +1,13 @@
+{
+  "name": "@platform/release",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Testmatrix og release-gates (DKC-063): krav-til-test-matrix, trusselmodel, tidsbegrænsede risikoundtagelser og en fail-closed gate der kun tæller 'passed'.",
+  "scripts": {
+    "test": "node --test",
+    "check": "node src/check.mjs",
+    "gate": "node src/cli.mjs gate",
+    "render": "node src/cli.mjs write"
+  }
+}

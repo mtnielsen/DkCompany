@@ -1,0 +1,49 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "KnowledgeSource",
+  "metadata": {
+    "name": "platform-knowledge-sources",
+    "version": "1.0.0",
+    "description": "Read-only videnskilde med BookStack som første kandidat. Adapteren læser sider og deres kilde-ACL; den skriver aldrig tilbage og behandler alt indhold som ubetroet data.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner"
+      }
+    },
+    "labels": {
+      "wave": "3",
+      "task": "DKC-028"
+    }
+  },
+  "sources": [
+    {
+      "id": "bookstack-acme",
+      "type": "bookstack",
+      "tenantId": "acme",
+      "baseUrl": "https://knowledge.acme.example",
+      "readOnly": true,
+      "aclMode": "source",
+      "secretRef": "vault:kv/platform/bookstack/acme-token",
+      "classificationDefault": "internal",
+      "sync": { "fullEveryMinutes": 1440, "incrementalMinutes": 15 },
+      "includeArchived": false
+    },
+    {
+      "id": "bookstack-globex",
+      "type": "bookstack",
+      "tenantId": "globex",
+      "baseUrl": "https://knowledge.globex.example",
+      "readOnly": true,
+      "aclMode": "source",
+      "secretRef": "vault:kv/platform/bookstack/globex-token",
+      "classificationDefault": "internal",
+      "sync": { "fullEveryMinutes": 1440, "incrementalMinutes": 15 },
+      "includeArchived": false
+    }
+  ]
+}

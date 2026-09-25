@@ -1,0 +1,79 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "HostScope",
+  "metadata": {
+    "name": "acme-prod-host",
+    "version": "1.0.0",
+    "description": "Eksplicit host-scope for acme-prod: kun diagnosticering, godkendte pakkeopdateringer og drift uden fri root."
+  },
+  "installationId": "acme-prod",
+  "ownership": {
+    "ownerSubject": "oidc|anna.andersen",
+    "ownerName": "Anna Andersen",
+    "role": "Platform Owner"
+  },
+  "os": {
+    "family": "linux",
+    "distro": "ubuntu",
+    "version": "24.04",
+    "kernel": "6.8",
+    "supportTier": "lts",
+    "supportedMatrixRef": "linux-amd64-node22"
+  },
+  "privileges": {
+    "brokerSubject": "spiffe://platform.example.org/host-broker",
+    "executorRole": "executor",
+    "noRootForAgents": true,
+    "scopedOperationTicket": true
+  },
+  "allowedOperations": [
+    "diagnose",
+    "package-update",
+    "drain",
+    "reboot",
+    "certificate-renew",
+    "capacity-alert"
+  ],
+  "forbiddenOperations": [
+    "format-disk",
+    "take-over-database-schema",
+    "change-host-os",
+    "arbitrary-shell",
+    "upload-script",
+    "unsigned-package",
+    "modify-broker-policy",
+    "modify-package-source",
+    "modify-payload",
+    "hypervisor-control"
+  ],
+  "diskPolicy": {
+    "formatAllowed": false,
+    "existingDataPreserved": true,
+    "encrypted": true
+  },
+  "databasePolicy": {
+    "adoptExistingSchema": false,
+    "migrationOwnerSubject": "oidc|anna.andersen",
+    "backupRequired": true
+  },
+  "hostChangePolicy": {
+    "osUpgradeAllowed": false,
+    "allowedWithExplicitScope": false
+  },
+  "recovery": {
+    "outOfBandConsoleRef": "console://provider/out-of-band/acme-prod",
+    "maintenanceWindow": "søndag 02:00-04:00 CET",
+    "backupRef": "backup-target://acme-prod/primary-offsite",
+    "stopConditions": [
+      "recoverykonsollen svarer ikke",
+      "backupverificering fejler",
+      "mere end 5% fejlende noder"
+    ]
+  },
+  "authorization": {
+    "humanSubject": "oidc|anna.andersen",
+    "grantedAt": "2026-09-24T08:00:00Z",
+    "expiresAt": "2026-10-24T08:00:00Z",
+    "decisionDigest": "afa976d93e3e6f71e2e1bbe0dc4e708c061e28254c03a68c62dd075ebb976d3b"
+  }
+}

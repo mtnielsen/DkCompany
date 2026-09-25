@@ -1,0 +1,13 @@
+{
+  "name": "@platform/telemetry-api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "DKC-066: autentificeret telemetri-API med stabile ressource-ID'er, tenant-scopede views, udskiftelige dashboard-adaptere og collector-selvovervågning. Genbruger identitet, JWS-verifikation, redaktion og friskhed.",
+  "bin": {
+    "telemetry-api": "./src/cli.mjs"
+  },
+  "scripts": {
+    "test": "node --test"
+  }
+}

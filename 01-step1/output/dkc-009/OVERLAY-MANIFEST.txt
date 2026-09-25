@@ -1,0 +1,69 @@
+# SHA256-manifest for DKC-009-leverancen
+# Genereret: 2026-09-23T11:04:52Z
+# Forudsætning: DKC-001 + DKC-002 + DKC-003 + DKC-004 + DKC-005 + DKC-006 + DKC-007 + DKC-008 + DKC-055
+# Reviewets base: 5f9fa73, undersøgt checkout: 83ad91a
+# Node v22.22.1. DKC-009: holdbar audit med intent-før-handling og eksternt checkpoint.
+
+# --- deliverable/ (overlay, relative til 00-core/) ---
+a807a02b05f3876e5e34bd3a4c2755fc7ddc2c8cfec4cb0e4916ee5219563691  ./Makefile
+12120d20171aee64fad79023cff5684146aa13254a25e87d69fc3c654ff9bcf8  ./conformance/src/validate-schemas.mjs
+cfed2757accde56f577638d09139b577e8e24e0ca7f2ffa0127048a00e374de0  ./conformance/test/audit-durability-conformance.test.mjs
+1dc1e5a5e5d5822eadcc966a7eb8e97b4aa70961ef20e8ac4d142e7bd3b94e34  ./contracts/audit-checkpoint.schema.json
+ac0eccb5267c6cd56377790e08ebeab84c2f72236cf2417dfc469deae775ae1b  ./contracts/audit-intent.schema.json
+1e55ac7e6e33502cccca6282636041b60ee7bd98e6e9dd9c415aafabc079e0d2  ./contracts/audit-outcome.schema.json
+974adea4a51539dce5f94ddb3e5663db79b26d0d4338d452b590a8c6c160cd25  ./contracts/examples/audit-checkpoint.example.json
+66250ec4be211b806306a1de06f61fbb63f5411928c9061a460ff301cfe7f469  ./contracts/examples/audit-intent.example.json
+3ab67794e08d899a67df9769a66ee2f196753e22c5a6fd8ce7513145c832c7d8  ./contracts/examples/audit-outcome.example.json
+b053a0ae645693a23a91488293171e82875788e13ab62ae765d28550d5744755  ./docs/adr/0021-holdbar-audit-og-fail-closed.md
+6863a7146ee69e58f201f20333ba1a726dfc54df2e427a35ab72ec3ec69a8f5c  ./docs/adr/README.md
+3216197910efcbf72b759d578723b167e4ac82a4ecf31a3156bd7df3a7ba4a08  ./docs/spec/README.md
+8cf1e8e5ae49869ee980cd07fd7064ea14e3fe5f818a057a11f5f6a6c6711bb2  ./docs/spec/audit-durability.md
+edbafbdc357f558587445943e7758fd086669592965a140826741208ddd69e5c  ./docs/spec/reference-module.md
+20ce31b4696c94ee11044f7058a2a45db9bc2e2facb33a55f76de2e242b2862c  ./docs/status/implementation-matrix.md
+9281cdff34842fa581cb2f465e779d9fc6656569e21f066dc8179fd2d819a684  ./modules/audit-service/service/src/cli.mjs
+ef899fb1676eac9985000715772562abe19f5b5edccd87f655b8dfb5c3f2ca0c  ./modules/audit-service/service/src/server.mjs
+7d8a8124e1a03db46738d4832220f723cca6f7ee016e32a83be1907a431a1672  ./modules/audit-service/service/test/audit-durability.test.mjs
+7351c20cfd8fbb8a881a8972f05ee91525cc2bea13e64d60955279423a541dd2  ./persistence/migrations/0003_audit_durability.sql
+0182922e4e1a5be6f243b746cf11ca1fbb525d1e720a88f96b10e3fc71a4b34f  ./persistence/src/adapters/audit-journal.mjs
+6be158fc63d133d9f33b6597961bbbd2485aaf853f07f0cf895fc1bf09ec25ef  ./persistence/src/adapters/audit.mjs
+713958bff48cc384fcfc5473723a5220b99c63092ce8bda8f2552cac161cba52  ./persistence/src/audit-check.mjs
+2842412afbca7a1ba664c7e3bb85bb6197d4e2e25e7df525b3d048a6fbc903e0  ./persistence/src/audit-roles.mjs
+71f2b52d2bb407fd468a46433da65a8d173058250b0e9ae24b7a61ab6b9ecdf7  ./persistence/src/check.mjs
+829567c8748146ca63775d0fe6d769bf0486cb3922d09dba91120c3972c05cce  ./persistence/src/checkpoint.mjs
+6add64f8161b9bad0ae122ceeed93a32855be60e9131564799a6eea4fb0e8aa6  ./persistence/src/db.mjs
+6a77b31d5519d44c367f83c6ba2ad04cea6ea9633826f5f6e1ac79e2f07f4540  ./persistence/src/index.mjs
+56fc2a2421d555b3fc83533698a765d6ed009d7d1bea870ffc98fad25e06197a  ./persistence/src/redact.mjs
+6b5f5ba38957d417908959738cae536343fea09f90da681ee3c5f49939cf9410  ./persistence/test/audit-journal.test.mjs
+639b273651432a1ea7158e7cdc18f497a7cd1060687598d1b5ee270bf92b3e66  ./persistence/test/checkpoint.test.mjs
+8494bbcb99438f38ee91f8ad970d2b89bcd483d00dec460f87e4c713ba8027a7  ./persistence/test/migrations.test.mjs
+e022dfa89b4ea6a0411feaede42b2c8b6511b8b4ab25d56b4d9633ff25aa8d7a  ./runtime/src/clients.mjs
+c93b310336035b8e890a1989bef7d7b40c548fceb6aa8fa9acb6cd31001ef35c  ./runtime/src/reconcile.mjs
+571cbfc61469f077151a74b0c0c6d4b8ac2a332bc3e5aa8e31fbf23936c94232  ./runtime/src/runtime.mjs
+028688cf669e278a81971227a43dcc286f0a84b4b1a1c7563bc8b44243bb9ff4  ./runtime/test/audit-durability-runtime.test.mjs
+1221f472875e1a1438a97180d3b6ea9a136bc7743a8416d6cf7c51e19eef4f6b  ./tools/baseline/registry.mjs
+
+# --- evidence/ ---
+ed7f25aa1800c780b4b66da7156d0923ffa9ea598f44fb92b2b4e54c7c498d77  evidence/baseline/baseline-run.json
+38cdd1f543cdf5791f690ce362d3cc39b749107c3e6d56c648a03ae2ca9bd0fc  evidence/baseline/baseline.log
+fcd64df7097292e7d829bd784b7b9b1867a3adfb318d2b6d4e0a822a0ebb3c98  evidence/logs/agent-conformance-test.log
+e34e6ab5507c1036406c6529fae057c1720363a1ef4eb3b6852b878d9e96f474  evidence/logs/agent-registry-test.log
+2f7463f48b1e4774ec6ce924b1892ec18556b9884fcc6af96524cc7ba7534632  evidence/logs/approval-test.log
+e89742554bbeb59113b1cd0a379111ff9f849275b02ed4de347d15fc26fe7e16  evidence/logs/architecture-test.log
+d71deebbb9f94f0c8db8bce193cb0ac145099ab6284c533629b17bc27a902d1f  evidence/logs/audit-durability-check.log
+af1066fb7ad3762b2575ee015d0a73d8db5acbab11fcd39e1330444a9d1a44f2  evidence/logs/audit-durability-test.log
+aae061c56305331d2c560e72d402f6b7c0388be1c3c851edecbcd880a64648ff  evidence/logs/audit-service-test.log
+509a99c449e0f14f15d2044f12cbe2549fa1a429ed20d70fcd0a25d26d7a4b00  evidence/logs/baseline-test.log
+879168a2d0857f9c8b1753a384f1b0078cdfaab5ef91f52e79f7a47cd5e51dd6  evidence/logs/boundary-test.log
+5cd6827a9a26db5d94c6f98070b710ad61cfc8b03d3ca5270f9b0e54d34dea38  evidence/logs/lint.log
+aa083daf7862f33d78876705df825be9c3e144ac89c9b05dcf4cdafe626e2dfc  evidence/logs/persistence-check.log
+99e43433d1f6749155bbb9a22a0a24967db64d445e088e4313d2f43dbac1ea91  evidence/logs/persistence-test.log
+67c465f54df7287393c27f74385ba283de68e38e5f04203806ab25646d58699f  evidence/logs/policy-test.log
+f215f6082915b3bea772de402735b25c634fc7d93ed651a190008f9c8ee4908e  evidence/logs/reviewer-test.log
+aa301fa2dc323048d61751303b12fdc7c9654d7643b4758e068664843a34e070  evidence/logs/runtime-test.log
+89ae43e90b0bfb5d3d8b28f0a36904d2686b44debb2d3a305a29f2d308ac7eab  evidence/logs/tenant-test.log
+a1b73441bf07726ce0c6867cb787a4c279e73a01591bd18352c01c05533387c5  evidence/logs/test.log
+6033c26024a5a1087c13e1bb3a380c60a4a3198fcc3b473a48f913254fccd9fa  evidence/logs/validate.log
+
+# --- README.md, apply.sh ---
+fd4cae5a170c4b7cfb17cac3c57417999fa657892f6d5e63f41cb53a209198bb  ./README.md
+49fd10e16868cd4086da797837c20c86081e5465de5dbf5d2103159d0e78fc7f  ./apply.sh

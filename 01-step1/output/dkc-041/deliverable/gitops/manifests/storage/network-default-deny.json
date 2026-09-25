@@ -1,0 +1,23 @@
+{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "default-deny",
+    "namespace": "platform-storage",
+    "labels": {
+      "app.kubernetes.io/name": "platform-storage",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "platform-storage",
+      "platform.example.org/environment": "storage"
+    }
+  },
+  "spec": {
+    "podSelector": {},
+    "policyTypes": [
+      "Ingress",
+      "Egress"
+    ],
+    "ingress": [],
+    "egress": []
+  }
+}

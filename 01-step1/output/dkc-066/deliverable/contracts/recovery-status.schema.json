@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/recovery-status.schema.json",
+  "title": "Recovery Status",
+  "description": "Struktureret recovery-status for en tjenesteklasse: målte og vedtagne RPO/RTO, backup-/gendannelsesfriskhed, gate-status og evidensreference. Et erklæret niveau er ikke et målt niveau: uden en frisk måling er status `unknown`, og en `pass`-gate kræver målte tal inden for målene.",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "id", "generatedAt", "scope", "serviceClass", "gate", "targets", "measured", "owner", "evidence"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+$" },
+    "kind": { "const": "RecoveryStatus" },
+    "id": { "type": "string", "minLength": 1 },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "occurredAt": { "type": "string", "format": "date-time" },
+    "scope": {
+      "type": "object",
+      "required": ["tenantId"],
+      "additionalProperties": false,
+      "properties": {
+        "tenantId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+        "environment": { "enum": ["dev", "staging", "prod"] }
+      }
+    },
+    "serviceClass": { "type": "string", "minLength": 2 },
+    "gate": { "enum": ["pass", "blocked", "unknown"] },
+    "targets": {
+      "type": "object",
+      "required": ["rpoMinutes", "rtoMinutes"],
+      "additionalProperties": false,
+      "properties": {
+        "rpoMinutes": { "type": "number", "minimum": 0 },
+        "rtoMinutes": { "type": "number", "minimum": 0 }
+      }
+    },
+    "measured": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "dataLossMinutes": { "type": ["number", "null"] },
+        "restoreMinutes": { "type": ["number", "null"] }
+      }
+    },
+    "lastBackupAt": { "type": ["string", "null"], "format": "date-time" },
+    "lastRestoreDrillAt": { "type": ["string", "null"], "format": "date-time" },
+    "owner": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["uri"],
+        "additionalProperties": false,
+        "properties": {
+          "uri": { "type": "string", "minLength": 1 },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+        }
+      }
+    },
+    "reason": { "type": "string" }
+  }
+}

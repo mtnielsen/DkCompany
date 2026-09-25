@@ -1,0 +1,98 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "SecurityPosture",
+  "generatedAt": "2026-09-23T22:46:50.269Z",
+  "overall": "fail",
+  "sensors": [
+    {
+      "id": "trivy-fs",
+      "source": "trivy",
+      "kind": "scanner",
+      "capturedAt": "2026-09-23T22:46:50.269Z",
+      "ageSeconds": 0,
+      "freshness": "fresh",
+      "status": "pass",
+      "required": true,
+      "runbook": "docs/runbooks/vulnerability-response.md"
+    },
+    {
+      "id": "falco-runtime",
+      "source": "falco",
+      "kind": "runtime",
+      "capturedAt": "2026-09-23T22:46:50.269Z",
+      "ageSeconds": 0,
+      "freshness": "fresh",
+      "status": "pass",
+      "required": true,
+      "runbook": "docs/runbooks/vulnerability-response.md"
+    },
+    {
+      "id": "wazuh-siem",
+      "source": "wazuh",
+      "kind": "runtime",
+      "capturedAt": "2026-09-23T22:46:50.269Z",
+      "ageSeconds": 0,
+      "freshness": "fresh",
+      "status": "pass",
+      "required": true,
+      "runbook": "docs/runbooks/vulnerability-response.md"
+    },
+    {
+      "id": "service-availability",
+      "source": "prometheus",
+      "kind": "metrics",
+      "capturedAt": "2026-09-23T22:46:50.269Z",
+      "ageSeconds": 0,
+      "freshness": "fresh",
+      "status": "fail",
+      "required": true,
+      "runbook": "docs/runbooks/alerting.md",
+      "value": 0
+    },
+    {
+      "id": "backup-drill",
+      "source": "backup",
+      "kind": "backup",
+      "capturedAt": "2026-09-23T22:46:50.269Z",
+      "ageSeconds": 0,
+      "freshness": "fresh",
+      "status": "fail",
+      "required": true,
+      "runbook": "docs/runbooks/backup-restore.md"
+    },
+    {
+      "id": "audit-journal",
+      "source": "audit-journal",
+      "kind": "log",
+      "capturedAt": "2026-09-23T22:46:50.269Z",
+      "ageSeconds": 0,
+      "freshness": "fresh",
+      "status": "pass",
+      "required": true,
+      "runbook": "docs/runbooks/alerting.md"
+    },
+    {
+      "id": "credential-revocation",
+      "source": "credentials",
+      "kind": "credentials",
+      "capturedAt": "2026-09-23T22:46:50.269Z",
+      "ageSeconds": 0,
+      "freshness": "fresh",
+      "status": "pass",
+      "required": true,
+      "runbook": "docs/runbooks/key-management.md"
+    }
+  ],
+  "staleSensorIds": [],
+  "missingSensorIds": [],
+  "findings": {
+    "critical": 0,
+    "high": 0,
+    "medium": 2,
+    "low": 1,
+    "total": 3
+  },
+  "notes": [
+    "Kun en frisk måling uden fund giver 'pass'; 'stale' og 'missing' er ikke-grønne."
+  ]
+}

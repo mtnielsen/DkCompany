@@ -1,0 +1,33 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "AdapterInterfaceCatalog",
+  "metadata": {
+    "name": "example-business-adapter-interfaces",
+    "version": "1.0.0",
+    "description": "Eksempel på en enkelt adaptergrænseflade (økonomi/ERP-ledger) med driftsverber, scopes og dataklasser.",
+    "accountableHuman": {
+      "subject": "oidc|hans.hansen",
+      "name": "Hans Hansen",
+      "role": "Solution Architect"
+    }
+  },
+  "interfaces": [
+    {
+      "id": "finance-ledger",
+      "title": "Økonomi/ERP-ledger",
+      "family": "finance",
+      "description": "Bogføringsgrænsefladen: kontoplan, bilag, perioder og regnskabsdata. Al skrivning går gennem adapteren; upstream forbliver system-of-record.",
+      "verbs": ["backup", "restore", "verify-restore", "upgrade", "rollback", "health", "slo"],
+      "scopes": [
+        { "id": "ledger:read", "access": "read", "description": "Læs kontoplan, bilag og perioder i tenantens eget regnskab." },
+        { "id": "ledger:write", "access": "write", "description": "Opret og ret bilag gennem en godkendt ændring." },
+        { "id": "report:read", "access": "read", "description": "Læs regnskabs- og momsrapporter for tenanten." }
+      ],
+      "deniedScopes": ["bank:full-access", "ledger:admin.*"],
+      "externalServiceRequired": false,
+      "approvedExternalServiceRef": null,
+      "legalReviewRequired": true,
+      "dataClasses": ["financial", "personal"]
+    }
+  ]
+}

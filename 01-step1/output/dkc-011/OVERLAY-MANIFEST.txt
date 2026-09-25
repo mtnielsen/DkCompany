@@ -1,0 +1,48 @@
+# SHA256-manifest for DKC-011-leverancen
+# Genereret: 2026-09-23T11:38:45Z
+# Forudsætning: DKC-001 + DKC-002 + DKC-003 + DKC-004 + DKC-005 + DKC-006 + DKC-007 + DKC-008 + DKC-009 + DKC-010 + DKC-055
+# Reviewets base: 5f9fa73, undersøgt checkout: 83ad91a
+# Node v22.22.1. DKC-011: ubetroet indhold adskilt fra servervaliderede, typede værktøjskald og injection-tests.
+
+# --- deliverable/ (overlay, relative til 00-core/) ---
+fded835c0bcf281b34c3d3be905022ecd0b5e8dd57c1de3e1237f18141c4e516  ./Makefile
+c1bfcc70547ee43fe5b2de1abdc774e9f247222274479a043e28a01baac2a16a  ./conformance/src/validate-schemas.mjs
+c34390cf5cdea231871676d39b376fa8952e5896eb038abcbeffd44d77ef65a2  ./conformance/test/tool-boundary-conformance.test.mjs
+3f7bdc4e154e979d001245d7a6c33152d84dc387ab64fe04e9b5ac0e2628dd6c  ./contracts/agent-manifest.schema.json
+f0dfabbbe7e6df04706a93e7b0159be1b8e5695db78b552345b7b177eeba32a4  ./contracts/agent-task.schema.json
+49bc5fbbf2879f24be1711479cd6c88d0f85289725f63a668f3402bec98ca84c  ./contracts/examples/tool-call.example.json
+2ada90bd903c4a5b7f7513a9a771e19d09901de03d47e1c031145f337bb823ea  ./contracts/tool-call.schema.json
+badeab313b30ab63ae895311eba7a5ce20e3dde011a3b66eb60dcb74b5dfd566  ./docs/adr/0023-vaerktoejsgraense-og-injection.md
+996804842d55fb4be11ab1d86fb6494a228e6d0a81f2663de2fb8a80d706978b  ./docs/adr/README.md
+68f7b20c6d744a06668dc20e3429312bad025e50222a3f7af9921fc4b44b28ae  ./docs/spec/README.md
+5904141e07e52ed07bb8fc2bcd5390b4c8bde895f4bfaccb99555aaf963a455b  ./docs/spec/tool-boundary.md
+60f89c143c238e5fde0fe9de297206a9c0a261b8df629043186c836dc1229358  ./docs/status/implementation-matrix.md
+553f679fe132dd1fc4f8d47f9a55f997314f24098eb4710a9105d9ebedd5ff0b  ./runtime/src/boundary.mjs
+6d9fe0cbe8038253a49afdb76f62d086e58563a9b6c3bc9419c977ee94b9caae  ./runtime/src/injection.mjs
+50c5eab48f5145a5aa7276de53fb9adac2a0103e84c3b454448954438e4f9c12  ./runtime/src/runtime.mjs
+6150a8453db5176e7d723df171b0c165a5b58020bc52f00beebd6ddc3e950e21  ./runtime/src/tool-check.mjs
+ed852e950272b42d0a53f55bc970e18d7c79fb39e25c0b7de2e05e68379e265f  ./runtime/src/tools.mjs
+6cb89c79b906282fac5aa0100399bf774638c07b16bcbfdc94bd20b3d6c41a74  ./runtime/src/untrusted.mjs
+286176a8a5c7f7fa9fc4583440fc61f83d20e377eae1504e32e6a8e4da870bbb  ./runtime/test/fixtures/injection-corpus.json
+e07f6be5fd2ae93b8fe553f61fec269bbf30e4cb152bd1d5a1b8fb28116bcf78  ./runtime/test/injection.test.mjs
+c32ebfd39018dfccddd98883cb4fa2497b8bc9f3b152b40bcb8d4f1e17ccc5d4  ./runtime/test/tool-boundary.test.mjs
+defe0bff61dd2dd16bf4d618d476a1f3f659fd1e4121f01c3931ec94cbfd0861  ./tools/baseline/registry.mjs
+
+# --- evidence/ ---
+87dbc1f4a8b890f5479ad86d280425e234c7ce0a5cfb19c9e5ba2f2dc604a571  evidence/baseline/baseline-run.json
+ace7d63e3701526c1ba064765c3448763b3e176bd9d984d67a3dc666e14a2746  evidence/baseline/baseline.log
+927027e983786ba630516c65df2e0ca5a1c90a8eb91d58a74af709bc2ebbed0f  evidence/logs/agent-conformance-test.log
+800a1932dec3cfe2ae1ddb0e83cd9310d895789cbea98692ba9e5bd4441403bf  evidence/logs/boundary-test.log
+d36506d1cb9603a3f2eb162dbab124553d1268e850c9073d68b37905b04e7ecd  evidence/logs/credentials-test.log
+1b38e8d21ac9eeef36dac03561ae22fcd0f870dec771ab6a6c1a80d739ef7e87  evidence/logs/lint.log
+da2b7162483ce3844b94d3efb8e3ae0ef5969bddcc5d4325bf43ec2a4ef6e637  evidence/logs/persistence-test.log
+8b6a62146838741f81d4b856bafe9203b413d5d9b47e1aad58e604c39914aa7a  evidence/logs/reviewer-test.log
+7d977a4c16f932ec24d7037185a3cd8a51511e7d57647de91e880afb805572f8  evidence/logs/runtime-test.log
+ff77ad3d8b8d7fe72449c559a3fe93e9914baa488a68f41f8545faca5aba3c0f  evidence/logs/test.log
+f12cd1c9cd46a86383cf4793fb07c177b0734c65f8aa1ccb4b91c20e9d02f8c0  evidence/logs/tool-boundary-check.log
+2780fe0c9b9aa867b14a0f42ca00211d63181597f8b17dddcc17f7971e6a7971  evidence/logs/tool-boundary-test.log
+ff5a868a94c7e2e375825a4b095ffafa90fc989647d4fdc25718c518d1105261  evidence/logs/validate.log
+
+# --- README.md, apply.sh ---
+51466467c361c776923d4fc7dc30c119df4b77fb366928cea428a148f647eab1  ./README.md
+43ab05d4c56c4e1dfa120cf8188ebeee2b64ef844b1550e8f553660f035efefe  ./apply.sh

@@ -1,0 +1,14 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "HostOperationKeyring",
+  "description": "Syntetisk udviklingsnøglesæt til signerede host-operationer. Nøglerne er bevidst offentlige testfixtures og må aldrig bruges i produktion. I produktion leveres signeringsnøgler af KMS/HSM i et separat sikkerhedsdomæne.",
+  "usage": "development-fixture-only",
+  "keys": [
+    {
+      "keyId": "host-broker-key",
+      "secret": "dkc058-host-broker-example-key",
+      "usage": "development-fixture-only",
+      "createdAt": "2026-09-01T00:00:00Z"
+    }
+  ]
+}

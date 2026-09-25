@@ -1,0 +1,133 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "UpstreamReleaseProfile",
+  "metadata": {
+    "name": "glpi-10-0-16",
+    "version": "1.0.0",
+    "description": "Releaseprofil for GLPI 10.0.16 (Network).",
+    "accountableHuman": {
+      "subject": "oidc|hans.hansen",
+      "name": "Hans Hansen",
+      "role": "Solution Architect"
+    }
+  },
+  "upstream": {
+    "vendor": "Teclib'",
+    "product": "GLPI",
+    "exactVersion": "10.0.16",
+    "edition": "Network",
+    "tier": "enterprise"
+  },
+  "candidateRef": "itsm-adapter-10-0-16.json",
+  "negotiation": {
+    "supportedRanges": [
+      "^10.0.0"
+    ],
+    "supportedEditions": [
+      "Network",
+      "Community"
+    ],
+    "onUnsupported": "refuse"
+  },
+  "verbMatrix": {
+    "backup": {
+      "conformance": "partial",
+      "reason": "GLPI kan tage database- og filbackup, men adapteren kan ikke garantere et konsistent snapshot af alle plugins gennem API'et."
+    },
+    "restore": {
+      "conformance": "unsupported",
+      "reason": "Gendannelse sker på database-/filniveau og kan ikke udføres gennem GLPI's API."
+    },
+    "verify-restore": {
+      "conformance": "unsupported",
+      "reason": "Verifikation af en gendannelse kræver adgang til backup- og databaselaget."
+    },
+    "drain": {
+      "conformance": "partial",
+      "reason": "Adapteren kan sætte en tjeneste i vedligeholdelsestilstand i GLPI, men kan ikke dræne aktive klientforbindelser."
+    },
+    "upgrade.dry-run": {
+      "conformance": "partial",
+      "reason": "Adapteren kan rapportere nuværende og ønsket GLPI-version samt manglende migrationer, men GLPI tilbyder ikke en egentlig dry-run."
+    },
+    "upgrade": {
+      "conformance": "unsupported",
+      "reason": "GLPI opgraderes ved at udskifte containeren/appen og køre sin egen migrationsproces; det ligger uden for adapterens verbkontrakt."
+    },
+    "migrate": {
+      "conformance": "unsupported",
+      "reason": "GLPI kører sine egne database- og plugin-migrationer ved opstart; adapteren kan ikke styre dem."
+    },
+    "rollback": {
+      "conformance": "unsupported",
+      "reason": "Rollback kræver gendannelse fra backup og er derfor ikke mulig gennem adapteren."
+    },
+    "health": {
+      "conformance": "full",
+      "endpoint": "https://itsm-adapter.example.org/healthz",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/health.json"
+      }
+    },
+    "slo": {
+      "conformance": "partial",
+      "reason": "Adapteren måler sin egen svartid og incidentkorrelation, men GLPI's SLO/fejlbudget ligger hos upstream-drift."
+    }
+  },
+  "privacyMatrix": {
+    "subject.locate": {
+      "conformance": "partial",
+      "reason": "Adapteren kan lokalisere sager ud fra de subjektreferencer GLPI-ticket'en bærer, men en e-mail er ikke en verificeret subjektnøgle, og audit-/backupkopier dækkes ikke."
+    },
+    "subject.export": {
+      "conformance": "partial",
+      "reason": "Adapteren eksporterer sagsfelterne for de matchede sager, men ikke audit- og backupkopier; hele DSAR-eksporten koordineres af DKC-020."
+    },
+    "subject.erase": {
+      "conformance": "partial",
+      "reason": "Sagsrecords i GLPI-databasen, revisionssporet og backups kræver en godkendt sletteproces (DKC-021); adapteren rapporterer de kopier den ikke kan fjerne."
+    },
+    "subject.legal_hold": {
+      "conformance": "unsupported",
+      "reason": "GLPI har ingen legal hold-API; et hold håndteres af retention-modulet (DKC-021) og en manuel upstream-indgriben."
+    },
+    "retention.policy": {
+      "conformance": "partial",
+      "reason": "GLPI har globale opbevaringsindstillinger pr. itemtype, men de kan ikke sættes eller rapporteres pr. subjekt gennem adapteren."
+    }
+  },
+  "nativeAdmin": {
+    "exposed": false,
+    "protectedBy": [
+      "adapter",
+      "pdp",
+      "network-policy"
+    ],
+    "evidence": [
+      "gitops/manifests/dev/model-egress-default-deny.json",
+      "infrastructure/src/netpol.mjs"
+    ]
+  },
+  "approvalGate": {
+    "requiredSso": true,
+    "licenseType": "mixed",
+    "status": "blocked",
+    "blockers": [
+      "kandidaten er ikke godkendt af et navngivet menneske"
+    ]
+  },
+  "verification": {
+    "status": "candidate_not_approved",
+    "verifiedBy": {
+      "subject": "oidc|hans.hansen",
+      "name": "Hans Hansen",
+      "role": "Solution Architect"
+    },
+    "verifiedAt": "2025-01-10",
+    "evidence": [
+      "https://glpi-project.org/pricing/",
+      "https://glpi-developer-documentation.readthedocs.io/"
+    ]
+  }
+}

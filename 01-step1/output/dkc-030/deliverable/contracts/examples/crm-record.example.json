@@ -1,0 +1,35 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "CrmRecord",
+  "id": "crm:example:Contact:2001",
+  "reference": "crm:example:Contact:2001",
+  "sourceId": "espocrm-example",
+  "tenantId": "example",
+  "entityType": "Contact",
+  "upstreamId": "2001",
+  "owner": {
+    "subject": "oidc|ada.example",
+    "tenantId": "example",
+    "role": null
+  },
+  "name": "Carla Contact",
+  "classification": "personal",
+  "acl": {
+    "readGroups": [],
+    "readSubjects": [],
+    "denyGroups": [],
+    "denySubjects": []
+  },
+  "roles": ["sales", "support"],
+  "dedupKey": "3d1f0b8e2a4c6f9012345678abcdef00112233445566778899aabbccddeeff00",
+  "version": 1,
+  "data": {
+    "emailAddress": "carla@example.org",
+    "accountId": "1001",
+    "assignedUser": "oidc|ada.example"
+  },
+  "copies": [],
+  "createdAt": "2026-03-01T00:00:00Z",
+  "updatedAt": "2026-03-01T00:00:00Z",
+  "deletedAt": null
+}

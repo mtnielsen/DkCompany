@@ -1,0 +1,49 @@
+{
+  "apiVersion": "autoscaling/v2",
+  "kind": "HorizontalPodAutoscaler",
+  "metadata": {
+    "name": "queue-worker-autoscaler",
+    "labels": {
+      "app.kubernetes.io/name": "queue-worker",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "queue-worker",
+      "platform.example.org/environment": "performance"
+    }
+  },
+  "spec": {
+    "scaleTargetRef": {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "name": "queue-worker"
+    },
+    "minReplicas": 3,
+    "maxReplicas": 15,
+    "behavior": {
+      "scaleUp": {
+        "stabilizationWindowSeconds": 30
+      },
+      "scaleDown": {
+        "stabilizationWindowSeconds": 600
+      }
+    },
+    "metrics": [
+      {
+        "type": "External",
+        "external": {
+          "metric": {
+            "name": "queue_depth",
+            "selector": {
+              "matchLabels": {
+                "module": "jobs"
+              }
+            }
+          },
+          "target": {
+            "type": "AverageValue",
+            "averageValue": "100"
+          }
+        }
+      }
+    ]
+  }
+}

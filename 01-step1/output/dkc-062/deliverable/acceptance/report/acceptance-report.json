@@ -1,0 +1,1657 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "AcceptanceReport",
+  "metadata": {
+    "name": "platform-acceptance-report",
+    "version": "1.0.0",
+    "description": "Deterministisk rapport for installations- og releaseacceptance: kørebare brugerrejser, profilbevidste gates med fælles og særskilte krav, RACI og registreret ejeraccept.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen"
+      }
+    },
+    "labels": {
+      "wave": "5"
+    }
+  },
+  "generatedAt": "2026-03-01T00:00:00Z",
+  "measured": false,
+  "targetCommit": "83ad91a963d8055f77c29fb4361455689df95acb",
+  "artifactDigest": "sha256:ee6c8913ee1e10ef338d09665b7af92d913c1864ccb7380c062cdb8cfa7113c4",
+  "scenarioCount": 13,
+  "roleViolations": [],
+  "outcomes": [
+    {
+      "id": "install-clean-small-vps-local",
+      "journey": "install",
+      "profileRef": "small-vps",
+      "platformRef": "linux-amd64-node22",
+      "target": "local-server",
+      "status": "passed",
+      "steps": [
+        {
+          "id": "preflight",
+          "status": "ok",
+          "detail": null
+        },
+        {
+          "id": "plan",
+          "status": "ok",
+          "detail": "digest=52963253e824"
+        },
+        {
+          "id": "install",
+          "status": "ok",
+          "detail": null
+        },
+        {
+          "id": "verify",
+          "status": "ok",
+          "detail": null
+        }
+      ],
+      "problems": [],
+      "selection": [],
+      "closure": [
+        "audit-service",
+        "backup-destination",
+        "identity-broker",
+        "object-store",
+        "platform-core",
+        "primary-database"
+      ]
+    },
+    {
+      "id": "install-clean-small-vps-vps",
+      "journey": "install",
+      "profileRef": "small-vps",
+      "platformRef": "linux-arm64-node22",
+      "target": "vps",
+      "status": "passed",
+      "steps": [
+        {
+          "id": "preflight",
+          "status": "ok",
+          "detail": null
+        },
+        {
+          "id": "plan",
+          "status": "ok",
+          "detail": "digest=f3e6a6a3f572"
+        },
+        {
+          "id": "install",
+          "status": "ok",
+          "detail": null
+        },
+        {
+          "id": "verify",
+          "status": "ok",
+          "detail": null
+        }
+      ],
+      "problems": [],
+      "selection": [],
+      "closure": [
+        "audit-service",
+        "backup-destination",
+        "identity-broker",
+        "object-store",
+        "platform-core",
+        "primary-database"
+      ]
+    },
+    {
+      "id": "install-interrupted-resumed",
+      "journey": "install",
+      "profileRef": "small-vps",
+      "platformRef": "linux-amd64-node22",
+      "target": "local-server",
+      "status": "passed",
+      "steps": [
+        {
+          "id": "preflight",
+          "status": "ok",
+          "detail": null
+        },
+        {
+          "id": "plan",
+          "status": "ok",
+          "detail": "digest=52963253e824"
+        },
+        {
+          "id": "install",
+          "status": "resumable",
+          "detail": null
+        },
+        {
+          "id": "resume",
+          "status": "ok",
+          "detail": null
+        },
+        {
+          "id": "verify",
+          "status": "ok",
+          "detail": null
+        }
+      ],
+      "problems": [],
+      "selection": [],
+      "closure": [
+        "audit-service",
+        "backup-destination",
+        "identity-broker",
+        "object-store",
+        "platform-core",
+        "primary-database"
+      ]
+    },
+    {
+      "id": "expand-add-hr",
+      "journey": "add-remove",
+      "profileRef": "small-vps",
+      "platformRef": "linux-amd64-node22",
+      "target": "local-server",
+      "status": "passed",
+      "steps": [
+        {
+          "id": "preflight",
+          "status": "ok",
+          "detail": null
+        },
+        {
+          "id": "plan",
+          "status": "ok",
+          "detail": "digest=52963253e824"
+        },
+        {
+          "id": "add",
+          "status": "ok",
+          "detail": null
+        },
+        {
+          "id": "verify",
+          "status": "ok",
+          "detail": null
+        }
+      ],
+      "problems": [],
+      "selection": [
+        "hr"
+      ],
+      "closure": [
+        "audit-service",
+        "backup-destination",
+        "hr",
+        "identity-broker",
+        "object-store",
+        "platform-core",
+        "primary-database"
+      ]
+    },
+    {
+      "id": "configure-safe-defaults",
+      "journey": "configure",
+      "profileRef": "small-vps",
+      "platformRef": "linux-amd64-node22",
+      "target": "local-server",
+      "status": "passed",
+      "steps": [
+        {
+          "id": "plan",
+          "status": "ok",
+          "detail": "1 ændring(er)"
+        },
+        {
+          "id": "configure",
+          "status": "ok",
+          "detail": null
+        },
+        {
+          "id": "verify",
+          "status": "ok",
+          "detail": null
+        }
+      ],
+      "problems": [],
+      "changes": [
+        "/installation/logLevel"
+      ]
+    },
+    {
+      "id": "remove-app-preserve-data",
+      "journey": "add-remove",
+      "profileRef": "small-vps",
+      "platformRef": "linux-amd64-node22",
+      "target": "local-server",
+      "status": "passed",
+      "steps": [
+        {
+          "id": "remove",
+          "status": "ok",
+          "detail": null
+        },
+        {
+          "id": "verify",
+          "status": "ok",
+          "detail": null
+        }
+      ],
+      "problems": [],
+      "preserve": true,
+      "recoveryMetadataRef": "lifecycle://recovery/acme-prod/hr"
+    },
+    {
+      "id": "upgrade-release",
+      "journey": "upgrade",
+      "profileRef": "small-vps",
+      "platformRef": "linux-amd64-node22",
+      "target": "vps",
+      "status": "passed",
+      "steps": [
+        {
+          "id": "plan",
+          "status": "ok",
+          "detail": "impact=7"
+        },
+        {
+          "id": "upgrade",
+          "status": "ok",
+          "detail": null
+        },
+        {
+          "id": "verify",
+          "status": "ok",
+          "detail": null
+        }
+      ],
+      "problems": [],
+      "from": "1.3.0",
+      "to": "1.4.0",
+      "activeRelease": "1.4.0"
+    },
+    {
+      "id": "recover-interrupted-upgrade",
+      "journey": "recovery",
+      "profileRef": "small-vps",
+      "platformRef": "linux-amd64-node22",
+      "target": "vps",
+      "status": "passed",
+      "steps": [
+        {
+          "id": "plan",
+          "status": "ok",
+          "detail": "impact=7"
+        },
+        {
+          "id": "upgrade",
+          "status": "resumable",
+          "detail": null
+        },
+        {
+          "id": "recover",
+          "status": "rolled-back",
+          "detail": null
+        },
+        {
+          "id": "verify",
+          "status": "ok",
+          "detail": null
+        }
+      ],
+      "problems": [],
+      "from": "1.3.0",
+      "to": "1.4.0",
+      "activeRelease": "1.3.0"
+    },
+    {
+      "id": "provider-switch-database",
+      "journey": "provider-switch",
+      "profileRef": "small-vps",
+      "platformRef": "linux-amd64-node22",
+      "target": "vps",
+      "status": "passed",
+      "steps": [
+        {
+          "id": "provider-switch",
+          "status": "ok",
+          "detail": "filesystem-local->object-store-s3"
+        },
+        {
+          "id": "verify",
+          "status": "ok",
+          "detail": null
+        }
+      ],
+      "problems": [],
+      "from": "filesystem-local",
+      "to": "object-store-s3",
+      "receiptStatus": "cutover"
+    },
+    {
+      "id": "escalation-approval",
+      "journey": "escalation",
+      "profileRef": "small-vps",
+      "platformRef": "linux-amd64-node22",
+      "target": "vps",
+      "status": "passed",
+      "steps": [
+        {
+          "id": "preflight",
+          "status": "ok",
+          "detail": null
+        },
+        {
+          "id": "plan",
+          "status": "ok",
+          "detail": "digest=52963253e824"
+        },
+        {
+          "id": "escalate",
+          "status": "approval-required",
+          "detail": null
+        },
+        {
+          "id": "install",
+          "status": "ok",
+          "detail": null
+        },
+        {
+          "id": "verify",
+          "status": "ok",
+          "detail": null
+        }
+      ],
+      "problems": [],
+      "selection": [],
+      "closure": [
+        "audit-service",
+        "backup-destination",
+        "identity-broker",
+        "object-store",
+        "platform-core",
+        "primary-database"
+      ]
+    },
+    {
+      "id": "exit-export",
+      "journey": "exit",
+      "profileRef": "small-vps",
+      "platformRef": "linux-amd64-node22",
+      "target": "vps",
+      "status": "passed",
+      "steps": [
+        {
+          "id": "export",
+          "status": "ok",
+          "detail": "2 poster"
+        },
+        {
+          "id": "verify",
+          "status": "ok",
+          "detail": null
+        }
+      ],
+      "problems": [],
+      "files": [
+        "records.jsonl",
+        "records.csv",
+        "read-export.mjs",
+        "README.md"
+      ]
+    },
+    {
+      "id": "install-ha-cluster",
+      "journey": "install",
+      "profileRef": "ha-cluster",
+      "platformRef": "linux-amd64-node22",
+      "target": "ha-cluster",
+      "status": "passed",
+      "steps": [
+        {
+          "id": "preflight",
+          "status": "ok",
+          "detail": null
+        },
+        {
+          "id": "plan",
+          "status": "ok",
+          "detail": "digest=d8ffdeaa3b17"
+        },
+        {
+          "id": "install",
+          "status": "ok",
+          "detail": null
+        },
+        {
+          "id": "verify",
+          "status": "ok",
+          "detail": null
+        }
+      ],
+      "problems": [],
+      "selection": [],
+      "closure": [
+        "audit-service",
+        "backup-destination",
+        "identity-broker",
+        "object-store",
+        "platform-core",
+        "primary-database"
+      ]
+    },
+    {
+      "id": "install-enterprise-immutable-host-selfhealing",
+      "journey": "install",
+      "profileRef": "enterprise-dedicated",
+      "platformRef": "linux-amd64-node22",
+      "target": "enterprise-dedicated",
+      "status": "passed",
+      "steps": [
+        {
+          "id": "preflight",
+          "status": "ok",
+          "detail": null
+        },
+        {
+          "id": "plan",
+          "status": "ok",
+          "detail": "digest=ba8b8f323622"
+        },
+        {
+          "id": "install",
+          "status": "ok",
+          "detail": null
+        },
+        {
+          "id": "verify",
+          "status": "ok",
+          "detail": null
+        }
+      ],
+      "problems": [],
+      "selection": [],
+      "closure": [
+        "audit-service",
+        "backup-destination",
+        "identity-broker",
+        "object-store",
+        "platform-core",
+        "primary-database"
+      ]
+    }
+  ],
+  "targets": [
+    {
+      "apiVersion": "contracts.platform/v1alpha1",
+      "kind": "AcceptanceResult",
+      "generatedAt": "2026-03-01T00:00:00.000Z",
+      "targetCommit": "83ad91a963d8055f77c29fb4361455689df95acb",
+      "artifactDigest": "sha256:ee6c8913ee1e10ef338d09665b7af92d913c1864ccb7380c062cdb8cfa7113c4",
+      "producer": {
+        "type": "implementer",
+        "name": "acceptance-suite",
+        "subject": "process|acceptance"
+      },
+      "profile": "enterprise-dedicated",
+      "target": {
+        "id": "enterprise-dedicated-host-immutable-selfhealing",
+        "profileRef": "enterprise-dedicated",
+        "profileType": "dedicated-customer",
+        "platformRef": "linux-amd64-node22",
+        "hostManagement": true,
+        "immutable": true,
+        "selfHealing": true,
+        "acceptedDowntimeMinutes": 120,
+        "recoveryProfile": "HA"
+      },
+      "decision": "pending-owner-acceptance",
+      "statuses": {
+        "total": 8,
+        "passed": 0,
+        "failed": 0,
+        "notApplicable": 1,
+        "missing": 0,
+        "stale": 0,
+        "wrongArtifact": 0,
+        "unapproved": 7,
+        "notRun": 0
+      },
+      "gates": [
+        {
+          "id": "security",
+          "title": "Fælles sikkerhedsgate",
+          "kind": "common",
+          "applicable": true,
+          "mandatory": true,
+          "status": "unapproved",
+          "evidenceStatus": "passed",
+          "ownerAcceptanceStatus": "pending",
+          "checks": [
+            "identity-test",
+            "policy-test",
+            "boundary-test",
+            "policy-verify",
+            "audit-durability-test",
+            "audit-durability-check",
+            "credentials-test",
+            "tool-boundary-test",
+            "tool-boundary-check",
+            "security-test",
+            "security-check",
+            "vulnerability-check",
+            "vulnerability-test",
+            "distribution-check",
+            "distribution-test",
+            "configuration-check",
+            "configuration-test",
+            "installer-preflight",
+            "installer-plan",
+            "lifecycle-check",
+            "lifecycle-test",
+            "lifecycle-run",
+            "lifecycle-report"
+          ],
+          "requirementRefs": [
+            "REQ-INSTALL-001",
+            "REQ-CONFIGURATION-001",
+            "REQ-LIFECYCLE-001",
+            "REQ-IDENTITY-001",
+            "REQ-POLICY-001",
+            "REQ-AUDIT-001",
+            "REQ-CREDENTIALS-001",
+            "REQ-TOOL-001",
+            "REQ-SECURITY-001",
+            "REQ-VULN-001"
+          ],
+          "owner": {
+            "subject": "oidc|sven.security",
+            "name": "Sven Security",
+            "role": "Security Officer",
+            "substitute": {
+              "subject": "oidc|bo.bertelsen",
+              "name": "Bo Bertelsen"
+            }
+          },
+          "reasons": [
+            "afventer en særskilt registreret menneskelig ejeraccept"
+          ]
+        },
+        {
+          "id": "privacy",
+          "title": "Fælles privacygate",
+          "kind": "common",
+          "applicable": true,
+          "mandatory": true,
+          "status": "unapproved",
+          "evidenceStatus": "passed",
+          "ownerAcceptanceStatus": "pending",
+          "checks": [
+            "privacy-check",
+            "privacy-test",
+            "data-register-check",
+            "data-register-test",
+            "retention-check",
+            "retention-test",
+            "logging-check",
+            "logging-test"
+          ],
+          "requirementRefs": [
+            "REQ-PRIVACY-001",
+            "REQ-PRIVACY-002",
+            "REQ-RETENTION-001",
+            "REQ-LOGGING-001"
+          ],
+          "owner": {
+            "subject": "oidc|ditte.dpo",
+            "name": "Ditte DPO",
+            "role": "Data Protection Officer",
+            "substitute": {
+              "subject": "oidc|bo.bertelsen",
+              "name": "Bo Bertelsen"
+            }
+          },
+          "reasons": [
+            "afventer en særskilt registreret menneskelig ejeraccept"
+          ]
+        },
+        {
+          "id": "restore",
+          "title": "Fælles restoregate",
+          "kind": "common",
+          "applicable": true,
+          "mandatory": true,
+          "status": "unapproved",
+          "evidenceStatus": "passed",
+          "ownerAcceptanceStatus": "pending",
+          "checks": [
+            "backup-check",
+            "backup-test",
+            "backup-target-check",
+            "backup-target-test",
+            "dr-check",
+            "dr-test",
+            "continuity-check",
+            "continuity-test",
+            "takeover-check",
+            "takeover-test",
+            "takeover-run"
+          ],
+          "requirementRefs": [
+            "REQ-BACKUP-001",
+            "REQ-BACKUP-002",
+            "REQ-DR-001",
+            "REQ-CONTINUITY-001",
+            "REQ-TAKEOVER-001"
+          ],
+          "owner": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner",
+            "substitute": {
+              "subject": "oidc|bo.bertelsen",
+              "name": "Bo Bertelsen"
+            }
+          },
+          "reasons": [
+            "afventer en særskilt registreret menneskelig ejeraccept"
+          ]
+        },
+        {
+          "id": "role",
+          "title": "Fælles rollegate",
+          "kind": "common",
+          "applicable": true,
+          "mandatory": true,
+          "status": "unapproved",
+          "evidenceStatus": "passed",
+          "ownerAcceptanceStatus": "pending",
+          "checks": [
+            "agent-registry-check",
+            "agent-registry-test",
+            "agent-conformance-test",
+            "approval-check",
+            "approval-test",
+            "runbook-check",
+            "runbook-test"
+          ],
+          "requirementRefs": [
+            "REQ-AGENT-ROLE-001",
+            "REQ-AGENT-HANDOFF-001",
+            "REQ-APPROVAL-001",
+            "REQ-CHANGE-001"
+          ],
+          "owner": {
+            "subject": "oidc|sven.security",
+            "name": "Sven Security",
+            "role": "Security Officer",
+            "substitute": {
+              "subject": "oidc|bo.bertelsen",
+              "name": "Bo Bertelsen"
+            }
+          },
+          "reasons": [
+            "afventer en særskilt registreret menneskelig ejeraccept"
+          ]
+        },
+        {
+          "id": "ha",
+          "title": "HA-gate (kun ved valgt HA-profil)",
+          "kind": "profile",
+          "applicable": false,
+          "mandatory": true,
+          "status": "not-applicable",
+          "evidenceStatus": "passed",
+          "ownerAcceptanceStatus": "not-applicable",
+          "checks": [
+            "ha-check",
+            "ha-test",
+            "ha-drill",
+            "db-ha-check",
+            "db-ha-test",
+            "db-ha-drill",
+            "messaging-check",
+            "messaging-test",
+            "storage-check",
+            "storage-test",
+            "storage-drill",
+            "dedup-check",
+            "dedup-test",
+            "dedup-drill",
+            "performance-check",
+            "performance-test",
+            "performance-drill",
+            "chaos-check",
+            "chaos-test",
+            "chaos-run",
+            "takeover-check",
+            "takeover-test",
+            "takeover-run"
+          ],
+          "requirementRefs": [
+            "REQ-HA-001",
+            "REQ-DBHA-001",
+            "REQ-MSG-001",
+            "REQ-STORAGE-001",
+            "REQ-DR-001",
+            "REQ-DEDUP-001",
+            "REQ-CAPACITY-001",
+            "REQ-CHAOS-001",
+            "REQ-TAKEOVER-001"
+          ],
+          "owner": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner",
+            "substitute": {
+              "subject": "oidc|bo.bertelsen",
+              "name": "Bo Bertelsen"
+            }
+          },
+          "reasons": []
+        },
+        {
+          "id": "host-management",
+          "title": "Host management-gate (kun ved opt-in)",
+          "kind": "profile",
+          "applicable": true,
+          "mandatory": true,
+          "status": "unapproved",
+          "evidenceStatus": "passed",
+          "ownerAcceptanceStatus": "pending",
+          "checks": [
+            "host-management-check",
+            "host-management-test",
+            "host-management-status"
+          ],
+          "requirementRefs": [
+            "REQ-HOST-001"
+          ],
+          "owner": {
+            "subject": "oidc|sven.security",
+            "name": "Sven Security",
+            "role": "Security Officer",
+            "substitute": {
+              "subject": "oidc|bo.bertelsen",
+              "name": "Bo Bertelsen"
+            }
+          },
+          "reasons": [
+            "afventer en særskilt registreret menneskelig ejeraccept"
+          ]
+        },
+        {
+          "id": "immutable",
+          "title": "Immutable-gate (kun ved valgt immutable-profil)",
+          "kind": "profile",
+          "applicable": true,
+          "mandatory": true,
+          "status": "unapproved",
+          "evidenceStatus": "passed",
+          "ownerAcceptanceStatus": "pending",
+          "checks": [
+            "data-protection-check",
+            "data-protection-test",
+            "immutable-check",
+            "immutable-test",
+            "logging-check",
+            "logging-test",
+            "audit-durability-check",
+            "audit-durability-test"
+          ],
+          "requirementRefs": [
+            "REQ-IMMUTABLE-001",
+            "REQ-RETENTION-001",
+            "REQ-LOGGING-001",
+            "REQ-AUDIT-001"
+          ],
+          "owner": {
+            "subject": "oidc|ditte.dpo",
+            "name": "Ditte DPO",
+            "role": "Data Protection Officer",
+            "substitute": {
+              "subject": "oidc|bo.bertelsen",
+              "name": "Bo Bertelsen"
+            }
+          },
+          "reasons": [
+            "afventer en særskilt registreret menneskelig ejeraccept"
+          ]
+        },
+        {
+          "id": "self-healing",
+          "title": "Self-healing-gate (kun når aktiveret)",
+          "kind": "profile",
+          "applicable": true,
+          "mandatory": true,
+          "status": "unapproved",
+          "evidenceStatus": "passed",
+          "ownerAcceptanceStatus": "pending",
+          "checks": [
+            "runbook-check",
+            "runbook-test",
+            "remediation-check",
+            "remediation-test"
+          ],
+          "requirementRefs": [
+            "REQ-REMEDIATION-001",
+            "REQ-CHANGE-001"
+          ],
+          "owner": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner",
+            "substitute": {
+              "subject": "oidc|bo.bertelsen",
+              "name": "Bo Bertelsen"
+            }
+          },
+          "reasons": [
+            "afventer en særskilt registreret menneskelig ejeraccept"
+          ]
+        }
+      ],
+      "roles": {
+        "separated": true,
+        "violations": []
+      },
+      "ownerAcceptance": {
+        "required": true,
+        "registryRef": "distribution/acceptance/owner-acceptance.json",
+        "acceptedGates": [],
+        "pendingGates": [
+          "security",
+          "privacy",
+          "restore",
+          "role",
+          "host-management",
+          "immutable",
+          "self-healing"
+        ]
+      },
+      "environment": {
+        "measured": false
+      },
+      "reasons": [
+        "Den menneskelige ejeraccept er en særskilt begivenhed og er endnu ikke registreret for alle aktive gates."
+      ]
+    },
+    {
+      "apiVersion": "contracts.platform/v1alpha1",
+      "kind": "AcceptanceResult",
+      "generatedAt": "2026-03-01T00:00:00.000Z",
+      "targetCommit": "83ad91a963d8055f77c29fb4361455689df95acb",
+      "artifactDigest": "sha256:ee6c8913ee1e10ef338d09665b7af92d913c1864ccb7380c062cdb8cfa7113c4",
+      "producer": {
+        "type": "implementer",
+        "name": "acceptance-suite",
+        "subject": "process|acceptance"
+      },
+      "profile": "ha-cluster",
+      "target": {
+        "id": "ha-cluster-core",
+        "profileRef": "ha-cluster",
+        "profileType": "multiple-servers",
+        "platformRef": "linux-amd64-node22",
+        "hostManagement": false,
+        "immutable": false,
+        "selfHealing": false,
+        "acceptedDowntimeMinutes": 60,
+        "recoveryProfile": "HA-measured-pending"
+      },
+      "decision": "pending-owner-acceptance",
+      "statuses": {
+        "total": 8,
+        "passed": 0,
+        "failed": 0,
+        "notApplicable": 3,
+        "missing": 0,
+        "stale": 0,
+        "wrongArtifact": 0,
+        "unapproved": 5,
+        "notRun": 0
+      },
+      "gates": [
+        {
+          "id": "security",
+          "title": "Fælles sikkerhedsgate",
+          "kind": "common",
+          "applicable": true,
+          "mandatory": true,
+          "status": "unapproved",
+          "evidenceStatus": "passed",
+          "ownerAcceptanceStatus": "pending",
+          "checks": [
+            "identity-test",
+            "policy-test",
+            "boundary-test",
+            "policy-verify",
+            "audit-durability-test",
+            "audit-durability-check",
+            "credentials-test",
+            "tool-boundary-test",
+            "tool-boundary-check",
+            "security-test",
+            "security-check",
+            "vulnerability-check",
+            "vulnerability-test",
+            "distribution-check",
+            "distribution-test",
+            "configuration-check",
+            "configuration-test",
+            "installer-preflight",
+            "installer-plan",
+            "lifecycle-check",
+            "lifecycle-test",
+            "lifecycle-run",
+            "lifecycle-report"
+          ],
+          "requirementRefs": [
+            "REQ-INSTALL-001",
+            "REQ-CONFIGURATION-001",
+            "REQ-LIFECYCLE-001",
+            "REQ-IDENTITY-001",
+            "REQ-POLICY-001",
+            "REQ-AUDIT-001",
+            "REQ-CREDENTIALS-001",
+            "REQ-TOOL-001",
+            "REQ-SECURITY-001",
+            "REQ-VULN-001"
+          ],
+          "owner": {
+            "subject": "oidc|sven.security",
+            "name": "Sven Security",
+            "role": "Security Officer",
+            "substitute": {
+              "subject": "oidc|bo.bertelsen",
+              "name": "Bo Bertelsen"
+            }
+          },
+          "reasons": [
+            "afventer en særskilt registreret menneskelig ejeraccept"
+          ]
+        },
+        {
+          "id": "privacy",
+          "title": "Fælles privacygate",
+          "kind": "common",
+          "applicable": true,
+          "mandatory": true,
+          "status": "unapproved",
+          "evidenceStatus": "passed",
+          "ownerAcceptanceStatus": "pending",
+          "checks": [
+            "privacy-check",
+            "privacy-test",
+            "data-register-check",
+            "data-register-test",
+            "retention-check",
+            "retention-test",
+            "logging-check",
+            "logging-test"
+          ],
+          "requirementRefs": [
+            "REQ-PRIVACY-001",
+            "REQ-PRIVACY-002",
+            "REQ-RETENTION-001",
+            "REQ-LOGGING-001"
+          ],
+          "owner": {
+            "subject": "oidc|ditte.dpo",
+            "name": "Ditte DPO",
+            "role": "Data Protection Officer",
+            "substitute": {
+              "subject": "oidc|bo.bertelsen",
+              "name": "Bo Bertelsen"
+            }
+          },
+          "reasons": [
+            "afventer en særskilt registreret menneskelig ejeraccept"
+          ]
+        },
+        {
+          "id": "restore",
+          "title": "Fælles restoregate",
+          "kind": "common",
+          "applicable": true,
+          "mandatory": true,
+          "status": "unapproved",
+          "evidenceStatus": "passed",
+          "ownerAcceptanceStatus": "pending",
+          "checks": [
+            "backup-check",
+            "backup-test",
+            "backup-target-check",
+            "backup-target-test",
+            "dr-check",
+            "dr-test",
+            "continuity-check",
+            "continuity-test",
+            "takeover-check",
+            "takeover-test",
+            "takeover-run"
+          ],
+          "requirementRefs": [
+            "REQ-BACKUP-001",
+            "REQ-BACKUP-002",
+            "REQ-DR-001",
+            "REQ-CONTINUITY-001",
+            "REQ-TAKEOVER-001"
+          ],
+          "owner": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner",
+            "substitute": {
+              "subject": "oidc|bo.bertelsen",
+              "name": "Bo Bertelsen"
+            }
+          },
+          "reasons": [
+            "afventer en særskilt registreret menneskelig ejeraccept"
+          ]
+        },
+        {
+          "id": "role",
+          "title": "Fælles rollegate",
+          "kind": "common",
+          "applicable": true,
+          "mandatory": true,
+          "status": "unapproved",
+          "evidenceStatus": "passed",
+          "ownerAcceptanceStatus": "pending",
+          "checks": [
+            "agent-registry-check",
+            "agent-registry-test",
+            "agent-conformance-test",
+            "approval-check",
+            "approval-test",
+            "runbook-check",
+            "runbook-test"
+          ],
+          "requirementRefs": [
+            "REQ-AGENT-ROLE-001",
+            "REQ-AGENT-HANDOFF-001",
+            "REQ-APPROVAL-001",
+            "REQ-CHANGE-001"
+          ],
+          "owner": {
+            "subject": "oidc|sven.security",
+            "name": "Sven Security",
+            "role": "Security Officer",
+            "substitute": {
+              "subject": "oidc|bo.bertelsen",
+              "name": "Bo Bertelsen"
+            }
+          },
+          "reasons": [
+            "afventer en særskilt registreret menneskelig ejeraccept"
+          ]
+        },
+        {
+          "id": "ha",
+          "title": "HA-gate (kun ved valgt HA-profil)",
+          "kind": "profile",
+          "applicable": true,
+          "mandatory": true,
+          "status": "unapproved",
+          "evidenceStatus": "passed",
+          "ownerAcceptanceStatus": "pending",
+          "checks": [
+            "ha-check",
+            "ha-test",
+            "ha-drill",
+            "db-ha-check",
+            "db-ha-test",
+            "db-ha-drill",
+            "messaging-check",
+            "messaging-test",
+            "storage-check",
+            "storage-test",
+            "storage-drill",
+            "dedup-check",
+            "dedup-test",
+            "dedup-drill",
+            "performance-check",
+            "performance-test",
+            "performance-drill",
+            "chaos-check",
+            "chaos-test",
+            "chaos-run",
+            "takeover-check",
+            "takeover-test",
+            "takeover-run"
+          ],
+          "requirementRefs": [
+            "REQ-HA-001",
+            "REQ-DBHA-001",
+            "REQ-MSG-001",
+            "REQ-STORAGE-001",
+            "REQ-DR-001",
+            "REQ-DEDUP-001",
+            "REQ-CAPACITY-001",
+            "REQ-CHAOS-001",
+            "REQ-TAKEOVER-001"
+          ],
+          "owner": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner",
+            "substitute": {
+              "subject": "oidc|bo.bertelsen",
+              "name": "Bo Bertelsen"
+            }
+          },
+          "reasons": [
+            "afventer en særskilt registreret menneskelig ejeraccept"
+          ]
+        },
+        {
+          "id": "host-management",
+          "title": "Host management-gate (kun ved opt-in)",
+          "kind": "profile",
+          "applicable": false,
+          "mandatory": true,
+          "status": "not-applicable",
+          "evidenceStatus": "passed",
+          "ownerAcceptanceStatus": "not-applicable",
+          "checks": [
+            "host-management-check",
+            "host-management-test",
+            "host-management-status"
+          ],
+          "requirementRefs": [
+            "REQ-HOST-001"
+          ],
+          "owner": {
+            "subject": "oidc|sven.security",
+            "name": "Sven Security",
+            "role": "Security Officer",
+            "substitute": {
+              "subject": "oidc|bo.bertelsen",
+              "name": "Bo Bertelsen"
+            }
+          },
+          "reasons": []
+        },
+        {
+          "id": "immutable",
+          "title": "Immutable-gate (kun ved valgt immutable-profil)",
+          "kind": "profile",
+          "applicable": false,
+          "mandatory": true,
+          "status": "not-applicable",
+          "evidenceStatus": "passed",
+          "ownerAcceptanceStatus": "not-applicable",
+          "checks": [
+            "data-protection-check",
+            "data-protection-test",
+            "immutable-check",
+            "immutable-test",
+            "logging-check",
+            "logging-test",
+            "audit-durability-check",
+            "audit-durability-test"
+          ],
+          "requirementRefs": [
+            "REQ-IMMUTABLE-001",
+            "REQ-RETENTION-001",
+            "REQ-LOGGING-001",
+            "REQ-AUDIT-001"
+          ],
+          "owner": {
+            "subject": "oidc|ditte.dpo",
+            "name": "Ditte DPO",
+            "role": "Data Protection Officer",
+            "substitute": {
+              "subject": "oidc|bo.bertelsen",
+              "name": "Bo Bertelsen"
+            }
+          },
+          "reasons": []
+        },
+        {
+          "id": "self-healing",
+          "title": "Self-healing-gate (kun når aktiveret)",
+          "kind": "profile",
+          "applicable": false,
+          "mandatory": true,
+          "status": "not-applicable",
+          "evidenceStatus": "passed",
+          "ownerAcceptanceStatus": "not-applicable",
+          "checks": [
+            "runbook-check",
+            "runbook-test",
+            "remediation-check",
+            "remediation-test"
+          ],
+          "requirementRefs": [
+            "REQ-REMEDIATION-001",
+            "REQ-CHANGE-001"
+          ],
+          "owner": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner",
+            "substitute": {
+              "subject": "oidc|bo.bertelsen",
+              "name": "Bo Bertelsen"
+            }
+          },
+          "reasons": []
+        }
+      ],
+      "roles": {
+        "separated": true,
+        "violations": []
+      },
+      "ownerAcceptance": {
+        "required": true,
+        "registryRef": "distribution/acceptance/owner-acceptance.json",
+        "acceptedGates": [],
+        "pendingGates": [
+          "security",
+          "privacy",
+          "restore",
+          "role",
+          "ha"
+        ]
+      },
+      "environment": {
+        "measured": false
+      },
+      "reasons": [
+        "Den menneskelige ejeraccept er en særskilt begivenhed og er endnu ikke registreret for alle aktive gates."
+      ]
+    },
+    {
+      "apiVersion": "contracts.platform/v1alpha1",
+      "kind": "AcceptanceResult",
+      "generatedAt": "2026-03-01T00:00:00.000Z",
+      "targetCommit": "83ad91a963d8055f77c29fb4361455689df95acb",
+      "artifactDigest": "sha256:ee6c8913ee1e10ef338d09665b7af92d913c1864ccb7380c062cdb8cfa7113c4",
+      "producer": {
+        "type": "implementer",
+        "name": "acceptance-suite",
+        "subject": "process|acceptance"
+      },
+      "profile": "small-vps",
+      "target": {
+        "id": "small-vps-core",
+        "profileRef": "small-vps",
+        "profileType": "single-server",
+        "platformRef": "linux-amd64-node22",
+        "hostManagement": false,
+        "immutable": false,
+        "selfHealing": false,
+        "acceptedDowntimeMinutes": 0,
+        "recoveryProfile": "non-HA-accepted"
+      },
+      "decision": "pending-owner-acceptance",
+      "statuses": {
+        "total": 8,
+        "passed": 0,
+        "failed": 0,
+        "notApplicable": 4,
+        "missing": 0,
+        "stale": 0,
+        "wrongArtifact": 0,
+        "unapproved": 4,
+        "notRun": 0
+      },
+      "gates": [
+        {
+          "id": "security",
+          "title": "Fælles sikkerhedsgate",
+          "kind": "common",
+          "applicable": true,
+          "mandatory": true,
+          "status": "unapproved",
+          "evidenceStatus": "passed",
+          "ownerAcceptanceStatus": "pending",
+          "checks": [
+            "identity-test",
+            "policy-test",
+            "boundary-test",
+            "policy-verify",
+            "audit-durability-test",
+            "audit-durability-check",
+            "credentials-test",
+            "tool-boundary-test",
+            "tool-boundary-check",
+            "security-test",
+            "security-check",
+            "vulnerability-check",
+            "vulnerability-test",
+            "distribution-check",
+            "distribution-test",
+            "configuration-check",
+            "configuration-test",
+            "installer-preflight",
+            "installer-plan",
+            "lifecycle-check",
+            "lifecycle-test",
+            "lifecycle-run",
+            "lifecycle-report"
+          ],
+          "requirementRefs": [
+            "REQ-INSTALL-001",
+            "REQ-CONFIGURATION-001",
+            "REQ-LIFECYCLE-001",
+            "REQ-IDENTITY-001",
+            "REQ-POLICY-001",
+            "REQ-AUDIT-001",
+            "REQ-CREDENTIALS-001",
+            "REQ-TOOL-001",
+            "REQ-SECURITY-001",
+            "REQ-VULN-001"
+          ],
+          "owner": {
+            "subject": "oidc|sven.security",
+            "name": "Sven Security",
+            "role": "Security Officer",
+            "substitute": {
+              "subject": "oidc|bo.bertelsen",
+              "name": "Bo Bertelsen"
+            }
+          },
+          "reasons": [
+            "afventer en særskilt registreret menneskelig ejeraccept"
+          ]
+        },
+        {
+          "id": "privacy",
+          "title": "Fælles privacygate",
+          "kind": "common",
+          "applicable": true,
+          "mandatory": true,
+          "status": "unapproved",
+          "evidenceStatus": "passed",
+          "ownerAcceptanceStatus": "pending",
+          "checks": [
+            "privacy-check",
+            "privacy-test",
+            "data-register-check",
+            "data-register-test",
+            "retention-check",
+            "retention-test",
+            "logging-check",
+            "logging-test"
+          ],
+          "requirementRefs": [
+            "REQ-PRIVACY-001",
+            "REQ-PRIVACY-002",
+            "REQ-RETENTION-001",
+            "REQ-LOGGING-001"
+          ],
+          "owner": {
+            "subject": "oidc|ditte.dpo",
+            "name": "Ditte DPO",
+            "role": "Data Protection Officer",
+            "substitute": {
+              "subject": "oidc|bo.bertelsen",
+              "name": "Bo Bertelsen"
+            }
+          },
+          "reasons": [
+            "afventer en særskilt registreret menneskelig ejeraccept"
+          ]
+        },
+        {
+          "id": "restore",
+          "title": "Fælles restoregate",
+          "kind": "common",
+          "applicable": true,
+          "mandatory": true,
+          "status": "unapproved",
+          "evidenceStatus": "passed",
+          "ownerAcceptanceStatus": "pending",
+          "checks": [
+            "backup-check",
+            "backup-test",
+            "backup-target-check",
+            "backup-target-test",
+            "dr-check",
+            "dr-test",
+            "continuity-check",
+            "continuity-test",
+            "takeover-check",
+            "takeover-test",
+            "takeover-run"
+          ],
+          "requirementRefs": [
+            "REQ-BACKUP-001",
+            "REQ-BACKUP-002",
+            "REQ-DR-001",
+            "REQ-CONTINUITY-001",
+            "REQ-TAKEOVER-001"
+          ],
+          "owner": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner",
+            "substitute": {
+              "subject": "oidc|bo.bertelsen",
+              "name": "Bo Bertelsen"
+            }
+          },
+          "reasons": [
+            "afventer en særskilt registreret menneskelig ejeraccept"
+          ]
+        },
+        {
+          "id": "role",
+          "title": "Fælles rollegate",
+          "kind": "common",
+          "applicable": true,
+          "mandatory": true,
+          "status": "unapproved",
+          "evidenceStatus": "passed",
+          "ownerAcceptanceStatus": "pending",
+          "checks": [
+            "agent-registry-check",
+            "agent-registry-test",
+            "agent-conformance-test",
+            "approval-check",
+            "approval-test",
+            "runbook-check",
+            "runbook-test"
+          ],
+          "requirementRefs": [
+            "REQ-AGENT-ROLE-001",
+            "REQ-AGENT-HANDOFF-001",
+            "REQ-APPROVAL-001",
+            "REQ-CHANGE-001"
+          ],
+          "owner": {
+            "subject": "oidc|sven.security",
+            "name": "Sven Security",
+            "role": "Security Officer",
+            "substitute": {
+              "subject": "oidc|bo.bertelsen",
+              "name": "Bo Bertelsen"
+            }
+          },
+          "reasons": [
+            "afventer en særskilt registreret menneskelig ejeraccept"
+          ]
+        },
+        {
+          "id": "ha",
+          "title": "HA-gate (kun ved valgt HA-profil)",
+          "kind": "profile",
+          "applicable": false,
+          "mandatory": true,
+          "status": "not-applicable",
+          "evidenceStatus": "passed",
+          "ownerAcceptanceStatus": "not-applicable",
+          "checks": [
+            "ha-check",
+            "ha-test",
+            "ha-drill",
+            "db-ha-check",
+            "db-ha-test",
+            "db-ha-drill",
+            "messaging-check",
+            "messaging-test",
+            "storage-check",
+            "storage-test",
+            "storage-drill",
+            "dedup-check",
+            "dedup-test",
+            "dedup-drill",
+            "performance-check",
+            "performance-test",
+            "performance-drill",
+            "chaos-check",
+            "chaos-test",
+            "chaos-run",
+            "takeover-check",
+            "takeover-test",
+            "takeover-run"
+          ],
+          "requirementRefs": [
+            "REQ-HA-001",
+            "REQ-DBHA-001",
+            "REQ-MSG-001",
+            "REQ-STORAGE-001",
+            "REQ-DR-001",
+            "REQ-DEDUP-001",
+            "REQ-CAPACITY-001",
+            "REQ-CHAOS-001",
+            "REQ-TAKEOVER-001"
+          ],
+          "owner": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner",
+            "substitute": {
+              "subject": "oidc|bo.bertelsen",
+              "name": "Bo Bertelsen"
+            }
+          },
+          "reasons": []
+        },
+        {
+          "id": "host-management",
+          "title": "Host management-gate (kun ved opt-in)",
+          "kind": "profile",
+          "applicable": false,
+          "mandatory": true,
+          "status": "not-applicable",
+          "evidenceStatus": "passed",
+          "ownerAcceptanceStatus": "not-applicable",
+          "checks": [
+            "host-management-check",
+            "host-management-test",
+            "host-management-status"
+          ],
+          "requirementRefs": [
+            "REQ-HOST-001"
+          ],
+          "owner": {
+            "subject": "oidc|sven.security",
+            "name": "Sven Security",
+            "role": "Security Officer",
+            "substitute": {
+              "subject": "oidc|bo.bertelsen",
+              "name": "Bo Bertelsen"
+            }
+          },
+          "reasons": []
+        },
+        {
+          "id": "immutable",
+          "title": "Immutable-gate (kun ved valgt immutable-profil)",
+          "kind": "profile",
+          "applicable": false,
+          "mandatory": true,
+          "status": "not-applicable",
+          "evidenceStatus": "passed",
+          "ownerAcceptanceStatus": "not-applicable",
+          "checks": [
+            "data-protection-check",
+            "data-protection-test",
+            "immutable-check",
+            "immutable-test",
+            "logging-check",
+            "logging-test",
+            "audit-durability-check",
+            "audit-durability-test"
+          ],
+          "requirementRefs": [
+            "REQ-IMMUTABLE-001",
+            "REQ-RETENTION-001",
+            "REQ-LOGGING-001",
+            "REQ-AUDIT-001"
+          ],
+          "owner": {
+            "subject": "oidc|ditte.dpo",
+            "name": "Ditte DPO",
+            "role": "Data Protection Officer",
+            "substitute": {
+              "subject": "oidc|bo.bertelsen",
+              "name": "Bo Bertelsen"
+            }
+          },
+          "reasons": []
+        },
+        {
+          "id": "self-healing",
+          "title": "Self-healing-gate (kun når aktiveret)",
+          "kind": "profile",
+          "applicable": false,
+          "mandatory": true,
+          "status": "not-applicable",
+          "evidenceStatus": "passed",
+          "ownerAcceptanceStatus": "not-applicable",
+          "checks": [
+            "runbook-check",
+            "runbook-test",
+            "remediation-check",
+            "remediation-test"
+          ],
+          "requirementRefs": [
+            "REQ-REMEDIATION-001",
+            "REQ-CHANGE-001"
+          ],
+          "owner": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner",
+            "substitute": {
+              "subject": "oidc|bo.bertelsen",
+              "name": "Bo Bertelsen"
+            }
+          },
+          "reasons": []
+        }
+      ],
+      "roles": {
+        "separated": true,
+        "violations": []
+      },
+      "ownerAcceptance": {
+        "required": true,
+        "registryRef": "distribution/acceptance/owner-acceptance.json",
+        "acceptedGates": [],
+        "pendingGates": [
+          "security",
+          "privacy",
+          "restore",
+          "role"
+        ]
+      },
+      "environment": {
+        "measured": false
+      },
+      "reasons": [
+        "Den menneskelige ejeraccept er en særskilt begivenhed og er endnu ikke registreret for alle aktive gates."
+      ]
+    }
+  ]
+}

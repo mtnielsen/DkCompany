@@ -1,0 +1,30 @@
+Forudsætninger for DKC-065 (verificeret i kode, ikke i statusfelt)
+===================================================================
+OK   distribution/acceptance/scenarios.json
+OK   distribution/acceptance/gate-policy.json
+OK   distribution/src/acceptance-gate.mjs
+OK   conformance/src/acceptance.mjs
+OK   vulnerability-management/inventory.json
+OK   vulnerability-management/src/build.mjs
+OK   conformance/src/vulnerability.mjs
+OK   telemetry-api/src/server.mjs
+OK   telemetry-api/src/authz.mjs
+OK   telemetry-api/src/ingest.mjs
+OK   telemetry-api/src/query.mjs
+OK   agent-registry/src/handoff.mjs
+OK   host-management/src/broker.mjs
+OK   adapter-sdk/src/guards.mjs
+OK   storage/src/object-store.mjs
+OK   runtime/src/injection.mjs
+OK   persistence/src/redact.mjs
+OK   release/src/gate.mjs
+OK   release/src/load.mjs
+OK   release/matrix/test-matrix.json
+OK   release/matrix/threats.json
+OK   tools/baseline/registry.mjs
+
+DKC-062 gate-model: 1 aggregateAcceptance-traef
+DKC-064 fundmodel: 1 validator-traef
+DKC-066 HTTP-graense: 2 view-ruter
+
+Artefaktbinding (PROFILE_INVENTORY) digest: sha256:360668be68ec924e95e01d3d89d27ecebccaf323187ac2cd49808cbbc3bf0459

@@ -1,0 +1,21 @@
+Prerequisite chain for DKC-045 (verified in the applied stack, commit 83ad91a + dkc-001..dkc-044 overlays)
+
+OK   approvals/src/approval-service.mjs
+OK   approvals/src/binding.mjs
+OK   approvals/src/ledger.mjs
+OK   approvals/src/store.mjs
+OK   approvals/src/approval-policy.mjs
+OK   contracts/approval-request.schema.json
+OK   release/sbom/platform-sbom.cdx.json
+OK   release/artifacts.json
+OK   containers/containers.json
+OK   modules/itsm-adapter/module-manifest.json
+OK   service-registry/services.json
+OK   agent-registry/src/roles.mjs
+OK   agent-registry/src/runtime-role-guard.mjs
+OK   runtime/src/runtime.mjs
+OK   conformance/src/approval.mjs
+
+DKC-004 approvals: 10 source files, 3 test files
+DKC-044 ITSM:      19 files, service-registry 5 files
+DKC-055 roles:     ROLES=64 exported constants in roles.mjs

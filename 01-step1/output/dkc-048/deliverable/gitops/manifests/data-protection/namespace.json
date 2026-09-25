@@ -1,0 +1,13 @@
+{
+  "apiVersion": "v1",
+  "kind": "Namespace",
+  "metadata": {
+    "name": "platform-data-protection",
+    "labels": {
+      "app.kubernetes.io/name": "platform-data-protection",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "platform-data-protection",
+      "platform.example.org/environment": "data-protection"
+    }
+  }
+}

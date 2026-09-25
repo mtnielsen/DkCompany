@@ -1,0 +1,15 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "AuditActionOutcome",
+  "tenantId": "acme",
+  "idempotencyId": "task-7f3a:action-0",
+  "intentId": "2f1c7a10-9b2e-4d3a-8f6c-1a2b3c4d5e6f",
+  "verb": "upgrade.patch",
+  "outcome": "succeeded",
+  "result": { "summary": "patchet til 1.4.2" },
+  "error": null,
+  "payloadDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "personalDataDigest": null,
+  "retentionClass": "operational",
+  "recordedAt": "2025-09-23T10:00:04Z"
+}

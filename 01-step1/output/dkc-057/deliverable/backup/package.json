@@ -1,0 +1,15 @@
+{
+  "name": "@platform/backup",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "DKC-016: krypterede backups af database, objekter og konfiguration med separat nøgleadgang, isoleret gendannelse, checksums, funktionelle checks, suppressionsjournal og målt RPO/RTO. DKC-057: eksterne backupmål (S3-kompatibelt objektlager/filsystem) med preflight, canary, synk og målskift.",
+  "scripts": {
+    "test": "node --test",
+    "check": "node src/check.mjs",
+    "target-check": "node src/target-check.mjs",
+    "drill": "node src/cli.mjs drill",
+    "preflight": "node src/cli.mjs preflight backup/targets/local-filesystem.json",
+    "canary": "node src/cli.mjs canary backup/targets/local-filesystem.json"
+  }
+}

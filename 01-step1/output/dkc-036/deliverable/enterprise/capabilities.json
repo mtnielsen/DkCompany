@@ -1,0 +1,41 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "CapabilityCatalog",
+  "metadata": {
+    "name": "platform-capability-catalog",
+    "version": "1.0.0",
+    "description": "Kanonisk register over de kapabiliteter katalogkomponenterne udstiller. Registeret markerer hvilke kapabiliteter der hører til kontrolplanet, og hvilke komponenter der er den kanoniske udbyder. Enterprise- og branchepakker erklærer kapabilitetskrav mod dette register, så en pakke ikke kan opfinde en kapabilitet eller forke kontrolplanet. Registeret valideres mod de faktiske komponentmanifester af `enterprise/src/model.mjs`.",
+    "accountableHuman": {
+      "subject": "oidc|hans.hansen",
+      "name": "Hans Hansen",
+      "role": "Solution Architect",
+      "substitute": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" }
+    },
+    "labels": { "wave": "6", "task": "DKC-036" }
+  },
+  "capabilities": [
+    { "id": "control-plane", "title": "Kontrolplan", "controlPlane": true, "providedBy": ["platform-core"] },
+    { "id": "policy-decision", "title": "Policy-beslutningspunkt", "controlPlane": true, "providedBy": ["platform-core"] },
+    { "id": "job-runner", "title": "Job-runner", "controlPlane": true, "providedBy": ["platform-core"] },
+    { "id": "telemetry", "title": "Telemetri", "controlPlane": true, "providedBy": ["platform-core"] },
+    { "id": "identity-oidc", "title": "OIDC-identitet", "controlPlane": true, "providedBy": ["identity-broker"] },
+    { "id": "identity-spiffe", "title": "SPIFFE-workloadidentitet", "controlPlane": true, "providedBy": ["identity-broker"] },
+    { "id": "audit-log", "title": "Holdbar audit", "controlPlane": true, "providedBy": ["audit-service"] },
+    { "id": "messaging", "title": "Beskeder og kanaler", "controlPlane": false, "providedBy": ["communications"] },
+    { "id": "hr", "title": "HR- og medarbejderstamdata", "controlPlane": false, "providedBy": ["hr"] },
+    { "id": "bi", "title": "Forretningsindsigt", "controlPlane": false, "providedBy": ["bi", "bi-legacy"] },
+    { "id": "reporting", "title": "Rapportering", "controlPlane": false, "providedBy": ["reporting"] },
+    { "id": "finance", "title": "Økonomi/ERP", "controlPlane": false, "providedBy": ["finance"] },
+    { "id": "accounting", "title": "Bogføring", "controlPlane": false, "providedBy": ["finance"] },
+    { "id": "invoicing", "title": "Fakturering", "controlPlane": false, "providedBy": ["invoicing"] },
+    { "id": "time-tracking", "title": "Tidsregistrering", "controlPlane": false, "providedBy": ["time"] },
+    { "id": "commerce", "title": "Handel", "controlPlane": false, "providedBy": ["webshop"] },
+    { "id": "webshop", "title": "Webshop", "controlPlane": false, "providedBy": ["webshop"] },
+    { "id": "payment", "title": "Betaling", "controlPlane": false, "providedBy": ["payment"] },
+    { "id": "host-management", "title": "Host-styring", "controlPlane": false, "providedBy": ["host-management"] },
+    { "id": "sql", "title": "Relationel database", "controlPlane": false, "providedBy": ["primary-database"] },
+    { "id": "object-store", "title": "Objektlager", "controlPlane": false, "providedBy": ["object-store"] },
+    { "id": "backup", "title": "Backup", "controlPlane": false, "providedBy": ["backup-destination"] },
+    { "id": "analytics", "title": "Analytisk lager", "controlPlane": false, "providedBy": ["analytics-store"] }
+  ]
+}

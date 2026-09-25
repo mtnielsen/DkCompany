@@ -1,0 +1,23 @@
+{
+  "apiVersion": "policy/v1",
+  "kind": "PodDisruptionBudget",
+  "metadata": {
+    "name": "audit-service",
+    "namespace": "platform-ha",
+    "labels": {
+      "app.kubernetes.io/name": "audit-service",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "audit-service",
+      "platform.example.org/environment": "ha"
+    }
+  },
+  "spec": {
+    "minAvailable": 2,
+    "maxUnavailable": 1,
+    "selector": {
+      "matchLabels": {
+        "app.kubernetes.io/name": "audit-service"
+      }
+    }
+  }
+}

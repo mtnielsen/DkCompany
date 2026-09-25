@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/crm-record.schema.json",
+  "title": "CRM Record",
+  "description": "DKC-030: platformens spejling af en EspoCRM-post (virksomhed, kontakt, salgsforløb eller aktivitet). Posten bærer en tenantafgrænset stabil reference, et entydigt ejerskab, en dedup-nøgle, roller og klassifikation, så en post ikke kan læses eller overskrives på tværs af kunder.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "id", "reference", "sourceId", "tenantId", "entityType", "upstreamId", "owner", "name", "classification", "acl", "roles", "dedupKey", "version", "data", "copies", "createdAt", "updatedAt", "deletedAt"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "CrmRecord" },
+    "id": { "type": "string", "pattern": "^crm:[a-z0-9][a-z0-9-]{1,62}:[A-Za-z]+:[A-Za-z0-9._-]+$" },
+    "reference": { "type": "string", "pattern": "^crm:[a-z0-9][a-z0-9-]{1,62}:[A-Za-z]+:[A-Za-z0-9._-]+$" },
+    "sourceId": { "type": "string" },
+    "tenantId": { "type": "string" },
+    "entityType": { "enum": ["Account", "Contact", "Opportunity", "Activity"] },
+    "upstreamId": { "type": "string" },
+    "owner": {
+      "type": "object",
+      "required": ["subject", "tenantId", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string" },
+        "tenantId": { "type": "string" },
+        "role": { "type": ["string", "null"] }
+      }
+    },
+    "name": { "type": "string", "minLength": 1 },
+    "classification": { "enum": ["public", "internal", "personal", "special-category", "confidential"] },
+    "acl": {
+      "type": "object",
+      "required": ["readGroups", "readSubjects", "denyGroups", "denySubjects"],
+      "additionalProperties": false,
+      "properties": {
+        "readGroups": { "type": "array", "items": { "type": "string" } },
+        "readSubjects": { "type": "array", "items": { "type": "string" } },
+        "denyGroups": { "type": "array", "items": { "type": "string" } },
+        "denySubjects": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "roles": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+    "dedupKey": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "version": { "type": "integer", "minimum": 1 },
+    "data": { "type": "object", "additionalProperties": true },
+    "copies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["surface", "ref"],
+        "additionalProperties": false,
+        "properties": {
+          "surface": { "type": "string" },
+          "ref": { "type": "string" },
+          "digest": { "type": ["string", "null"] },
+          "expiresAt": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "deletedAt": { "type": ["string", "null"], "format": "date-time" }
+  }
+}

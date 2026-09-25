@@ -1,0 +1,1390 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ThreatRegister",
+  "metadata": {
+    "name": "platform-threat-model",
+    "version": "1.0.0",
+    "description": "Trusselmodel for de testede grænser: tenantgrænser, identiteter, agent-handoffs, privilegerede host-operationer, uforanderligt lager, telemetri og eksterne kilder.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen"
+      }
+    },
+    "lastReviewed": "2026-09-24"
+  },
+  "boundaries": [
+    {
+      "id": "tenant-boundary",
+      "title": "Tenantgrænser",
+      "description": "En tenant må ikke kunne læse, skrive eller udlede en anden tenants data gennem nogen kontrolplansflade.",
+      "requirementIds": [
+        "REQ-TENANT-001",
+        "REQ-POLICY-001",
+        "REQ-FEATURE-ACCESS-001",
+        "REQ-HA-001",
+        "REQ-MSG-001",
+        "REQ-DEDUP-001",
+        "REQ-PORTAL-001"
+      ]
+    },
+    {
+      "id": "identity",
+      "title": "Identiteter",
+      "description": "Mennesker og tjenester skal have verificerede identiteter; ingen uverificeret eller tvetydig identitet må give adgang.",
+      "requirementIds": [
+        "REQ-IDENTITY-001",
+        "REQ-CREDENTIALS-001",
+        "REQ-FEATURE-ACCESS-001",
+        "REQ-ASSURANCE-001",
+        "REQ-PORTAL-001"
+      ]
+    },
+    {
+      "id": "agent-handoff",
+      "title": "Agent-handoffs",
+      "description": "Et handoff mellem agenter må ikke ændre rolle eller eskalere privilegier.",
+      "requirementIds": [
+        "REQ-AGENT-ROLE-001",
+        "REQ-AGENT-HANDOFF-001"
+      ]
+    },
+    {
+      "id": "privileged-host-operations",
+      "title": "Privilegerede host-operationer",
+      "description": "Host-/OS-styring er separat opt-in, afgrænset og godkendt; den må ikke fjerne den eneste recoveryvej.",
+      "requirementIds": [
+        "REQ-INSTALL-001",
+        "REQ-APPROVAL-001",
+        "REQ-POLICY-001",
+        "REQ-HA-001",
+        "REQ-DBHA-001",
+        "REQ-CONFIGURATION-001",
+        "REQ-HOST-001"
+      ]
+    },
+    {
+      "id": "immutable-storage",
+      "title": "Uforanderligt lager",
+      "description": "Audit og WORM-data må ikke kunne ændres eller deaktiveres for at opnå en grøn gate.",
+      "requirementIds": [
+        "REQ-AUDIT-001",
+        "REQ-PERSIST-001",
+        "REQ-DBHA-001",
+        "REQ-RETENTION-001",
+        "REQ-DEDUP-001"
+      ]
+    },
+    {
+      "id": "telemetry",
+      "title": "Telemetri",
+      "description": "Telemetri må ikke bære hemmeligheder eller persondata uden formål og retention.",
+      "requirementIds": [
+        "REQ-OBSERVABILITY-001",
+        "REQ-COMPLIANCE-001",
+        "REQ-MONITORING-001",
+        "REQ-TELEMETRY-API-001"
+      ]
+    },
+    {
+      "id": "external-sources",
+      "title": "Eksterne kilder",
+      "description": "Ubetroet indhold fra eksterne kilder må ikke blive instruktioner, værktøjskald eller modelinput.",
+      "requirementIds": [
+        "REQ-TOOL-001",
+        "REQ-GATEWAY-001",
+        "REQ-GOVERNANCE-001",
+        "REQ-FEATURE-ACCESS-001",
+        "REQ-MSG-001",
+        "REQ-ASSURANCE-001"
+      ]
+    }
+  ],
+  "threats": [
+    {
+      "id": "THREAT-TENANT-001",
+      "boundary": "tenant-boundary",
+      "title": "Tenant-hop gennem manglende kontekst",
+      "description": "En kaldende part udgiver en anden tenants identifikator og får adgang, fordi grænsen håndhæves i applikationen i stedet for i databasen.",
+      "requirementIds": [
+        "REQ-TENANT-001"
+      ],
+      "stride": [
+        "elevation-of-privilege",
+        "information-disclosure"
+      ],
+      "residualRisk": "low",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-IDENTITY-001",
+      "boundary": "identity",
+      "title": "Forfalsket workload-identitet",
+      "description": "En kompromitteret pod udgiver sig for en anden tjeneste og kalder PDP eller et modul uden gyldig SPIFFE-identitet.",
+      "requirementIds": [
+        "REQ-IDENTITY-001",
+        "REQ-CREDENTIALS-001"
+      ],
+      "stride": [
+        "spoofing"
+      ],
+      "residualRisk": "low",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-HANDOFF-001",
+      "boundary": "agent-handoff",
+      "title": "Rolleeskalering gennem handoff",
+      "description": "En agent videresender en opgave til en agent med højere rettigheder og udfører derved en handling den ikke selv måtte.",
+      "requirementIds": [
+        "REQ-AGENT-ROLE-001",
+        "REQ-AGENT-HANDOFF-001"
+      ],
+      "stride": [
+        "elevation-of-privilege"
+      ],
+      "residualRisk": "low",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-HOST-001",
+      "boundary": "privileged-host-operations",
+      "title": "Uautoriseret host-styring",
+      "description": "Host-brokeren aktiveres implicit eller misbruges til at slette logs eller installere bagdøre.",
+      "requirementIds": [
+        "REQ-INSTALL-001",
+        "REQ-APPROVAL-001",
+        "REQ-POLICY-001"
+      ],
+      "stride": [
+        "tampering",
+        "elevation-of-privilege"
+      ],
+      "residualRisk": "medium",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-AUDIT-001",
+      "boundary": "immutable-storage",
+      "title": "Audit deaktiveres for at skjule handling",
+      "description": "En operatør eller agent deaktiverer audit eller ændrer journalen for at få en grøn gate.",
+      "requirementIds": [
+        "REQ-AUDIT-001",
+        "REQ-PERSIST-001"
+      ],
+      "stride": [
+        "tampering",
+        "repudiation"
+      ],
+      "residualRisk": "low",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-TELEMETRY-001",
+      "boundary": "telemetry",
+      "title": "Persondata lækker gennem telemetri",
+      "description": "Logs eller metrics bærer persondata eller credentials videre til et system uden formål og retention.",
+      "requirementIds": [
+        "REQ-OBSERVABILITY-001",
+        "REQ-COMPLIANCE-001"
+      ],
+      "stride": [
+        "information-disclosure"
+      ],
+      "residualRisk": "medium",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-TELEMETRY-002",
+      "boundary": "telemetry",
+      "title": "Forældet eller manglende sensordata vises som grøn sikkerhedsstatus",
+      "description": "En gammel scannerrapport eller en manglende runtime-sensor arver et grønt lys, så et reelt sårbarheds- eller driftsproblem skjules bag et tidligere pass.",
+      "requirementIds": [
+        "REQ-MONITORING-001"
+      ],
+      "stride": [
+        "repudiation",
+        "information-disclosure"
+      ],
+      "residualRisk": "medium",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-TELEMETRY-003",
+      "boundary": "telemetry",
+      "title": "Alarm uden ejer, eskalation eller med rå persondata i bred kanal",
+      "description": "En alarm leveres uden en navngivet ejer, en eskalationsstige eller en runbook, eller notifikationen bærer rå persondata til en bred kanal.",
+      "requirementIds": [
+        "REQ-MONITORING-001"
+      ],
+      "stride": [
+        "repudiation",
+        "information-disclosure"
+      ],
+      "residualRisk": "medium",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-TELEMETRY-004",
+      "boundary": "telemetry",
+      "title": "Krydskunde-telemetri gennem API, cache, link eller AI-værktøj",
+      "description": "En principal indtager under en fremmed tenant eller læser/eksporterer en andens telemetri gennem en view-forespørgsel, et cachehit, et ressource-link eller et AI-værktøj.",
+      "requirementIds": [
+        "REQ-TELEMETRY-API-001"
+      ],
+      "stride": [
+        "information-disclosure",
+        "elevation-of-privilege"
+      ],
+      "residualRisk": "medium",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-TELEMETRY-005",
+      "boundary": "telemetry",
+      "title": "Forfalsket pass, godkendelse eller healthy status gennem telemetri",
+      "description": "En sen, dubleret, replayet, malformet eller utroværdig hændelse indtages og får et view til at vise pass/healthy eller en godkendelse, den ikke har grundlag for.",
+      "requirementIds": [
+        "REQ-TELEMETRY-API-001"
+      ],
+      "stride": [
+        "spoofing",
+        "tampering",
+        "repudiation"
+      ],
+      "residualRisk": "medium",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-EXTERNAL-001",
+      "boundary": "external-sources",
+      "title": "Prompt-injection fra ekstern kilde",
+      "description": "Ubetroet indhold fra en ekstern kilde fortolkes som instruktion og udløser et privilegeret værktøjskald eller modelkald.",
+      "requirementIds": [
+        "REQ-TOOL-001",
+        "REQ-GATEWAY-001"
+      ],
+      "stride": [
+        "tampering",
+        "elevation-of-privilege"
+      ],
+      "residualRisk": "low",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-GATE-001",
+      "boundary": "external-sources",
+      "title": "Grøn gate på svagt grundlag",
+      "description": "En grøn enhedstest eller en implementørproduceret evidens bruges til at erklære produktions-, HA- eller compliance-status.",
+      "requirementIds": [
+        "REQ-GOVERNANCE-001",
+        "REQ-SECURITY-001"
+      ],
+      "stride": [
+        "repudiation"
+      ],
+      "residualRisk": "medium",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-FEATURE-001",
+      "boundary": "tenant-boundary",
+      "title": "Krydskunde-dataadgang gennem en funktionsflade",
+      "description": "En BI-, søge-, eksport-, cache- eller AI-værktøjsflade omgår funktionsprofilens default-deny og læser en anden tenants eller et ikke-bevilget HR-felt (fx løn eller helbred).",
+      "requirementIds": [
+        "REQ-FEATURE-ACCESS-001"
+      ],
+      "stride": [
+        "information-disclosure",
+        "elevation-of-privilege"
+      ],
+      "residualRisk": "medium",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-FEATURE-002",
+      "boundary": "identity",
+      "title": "Forældet token eller ufuldstændig offboarding giver fortsat adgang",
+      "description": "Et SSO-login eller et gemt creator-token accepteres som downstream-autorisation, eller en afviklet identitet beholder sessioner, API-tokens, delinger, planlagte workflows eller AI-værktøjsbevillinger efter fristen.",
+      "requirementIds": [
+        "REQ-FEATURE-ACCESS-001"
+      ],
+      "stride": [
+        "spoofing",
+        "repudiation",
+        "elevation-of-privilege"
+      ],
+      "residualRisk": "medium",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-FEATURE-003",
+      "boundary": "external-sources",
+      "title": "Vilkårlig forespørgsel med administratorcredentials gennem en connector",
+      "description": "En connector bruger admin-/root-credentials eller rå SQL til at læse uden for det aftalte scope, i stedet for en godkendt parameteriseret skabelon på en afgrænset tjenestekonto.",
+      "requirementIds": [
+        "REQ-FEATURE-ACCESS-001"
+      ],
+      "stride": [
+        "tampering",
+        "information-disclosure"
+      ],
+      "residualRisk": "medium",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-HA-001",
+      "boundary": "tenant-boundary",
+      "title": "Krydskunde-trafik omgår netværkspolitikken",
+      "description": "Et workload i én tenant når en anden tenants tjeneste, fordi en NetworkPolicy mangler, tillader et wildcard-selector, eller fordi den faktiske netværksplugin ikke håndhæver politikken.",
+      "requirementIds": [
+        "REQ-HA-001"
+      ],
+      "stride": [
+        "information-disclosure",
+        "elevation-of-privilege"
+      ],
+      "residualRisk": "medium",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-HA-002",
+      "boundary": "privileged-host-operations",
+      "title": "Split-brain eller totalt udfald efter server-/quorumtab",
+      "description": "Et quorumtab tillader to konkurrerende ledere eller usikre writes, eller tabet af én ingress-/DNS-instans giver et totalt udfald, fordi redundans og fencing kun er konfigurationsetiketter.",
+      "requirementIds": [
+        "REQ-HA-001"
+      ],
+      "stride": [
+        "tampering",
+        "denial-of-service",
+        "repudiation"
+      ],
+      "residualRisk": "medium",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-MSG-001",
+      "boundary": "tenant-boundary",
+      "title": "Begivenhed krydser tenantgrænsen eller forfalskes",
+      "description": "En begivenhed uden tenantbinding eller med en påstået tenant-id læses eller behandles af en anden tenant, eller en angriber forfalsker et event-ID og udløser en utilsigtet sideeffekt.",
+      "requirementIds": [
+        "REQ-MSG-001"
+      ],
+      "stride": [
+        "spoofing",
+        "information-disclosure"
+      ],
+      "residualRisk": "medium",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-MSG-002",
+      "boundary": "external-sources",
+      "title": "Duplikat eller ombyttet begivenhed giver dobbelt effekt",
+      "description": "En genleveret, forsinket eller ombyttet begivenhed behandles to gange eller i forkert rækkefølge, så en irreversibel ændring sker flere gange eller i en ugyldig orden.",
+      "requirementIds": [
+        "REQ-MSG-001"
+      ],
+      "stride": [
+        "tampering",
+        "repudiation"
+      ],
+      "residualRisk": "medium",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-DBHA-001",
+      "boundary": "privileged-host-operations",
+      "title": "Split-brain eller tab af bekræftede writes ved database-failover",
+      "description": "En netværkspartition eller en lang pause giver to konkurrerende primary'er, eller en promotion sker uden at den gamle primary er fenced, så to autoritative skrivere opstår og data forgrener sig.",
+      "requirementIds": [
+        "REQ-DBHA-001"
+      ],
+      "stride": [
+        "tampering",
+        "denial-of-service"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-DBHA-002",
+      "boundary": "immutable-storage",
+      "title": "Forældet replica læser godkendelser eller taber en bekræftet transaktion",
+      "description": "Godkendelser eller policy-læsning betjenes fra en replica der endnu ikke har set den seneste commit, eller en write bekræftes selv om den nødvendige sync-replika er tabt, så en bekræftet transaktion forsvinder.",
+      "requirementIds": [
+        "REQ-DBHA-001"
+      ],
+      "stride": [
+        "information-disclosure",
+        "repudiation"
+      ],
+      "residualRisk": "medium",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-STORAGE-001",
+      "boundary": "immutable-storage",
+      "title": "Silent corruption eller tabt replika giver forældede eller manglende kundedata",
+      "description": "En diskfejl eller en bit-flip ændrer et objekt uden at nogen opdager det, eller en replika forsvinder, så en læsning returnerer forældede eller korrupte kundedata uden at checksummen fanger det.",
+      "requirementIds": [
+        "REQ-STORAGE-001"
+      ],
+      "stride": [
+        "tampering",
+        "repudiation"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-STORAGE-002",
+      "boundary": "privileged-host-operations",
+      "title": "Quorumtab tillader usikre writes eller dobbelt autoritativ skriver",
+      "description": "En host- eller netværksfejl efterlader færre end skrive-quorum nåbare, men en write bekræftes alligevel, så to hosts kan komme til at holde hver sin autoritative version af samme objekt.",
+      "requirementIds": [
+        "REQ-STORAGE-001"
+      ],
+      "stride": [
+        "tampering",
+        "denial-of-service"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-IMMUTABLE-001",
+      "boundary": "immutable-storage",
+      "title": "Kompromitteret agent eller appkonto ødelægger beskyttede data eller nøgler",
+      "description": "En kompromitteret AI-agent eller app-konto sletter, overskriver eller forkorter retention på beskyttede data, skifter current-pointer eller sletter en KMS-nøgle, så audit- og WORM-data ikke længere kan bruges som bevis.",
+      "requirementIds": [
+        "REQ-IMMUTABLE-001"
+      ],
+      "stride": [
+        "tampering",
+        "repudiation"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-IMMUTABLE-002",
+      "boundary": "privileged-host-operations",
+      "title": "Indirekte adminvej eller governance-bypass omgår WORM",
+      "description": "En AI-agent bruger en indirekte adminvej (RBAC, bucket-policy, KMS-politik, serviceaccount-token) eller en menneskelig godkendelse bruges til at bryde en låst retention, så beskyttelsen omgås uden to-personers kontrol.",
+      "requirementIds": [
+        "REQ-IMMUTABLE-001"
+      ],
+      "stride": [
+        "elevation-of-privilege",
+        "tampering"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-RETENTION-001",
+      "boundary": "immutable-storage",
+      "title": "Gendannelse genindfører slettede persondata",
+      "description": "En backup fra før en sletning gendannes og frigives uden at slettebeslutningen genanvendes, så persondata som en registreret med rette har fået slettet, genopstår i det kørende miljø.",
+      "requirementIds": [
+        "REQ-RETENTION-001"
+      ],
+      "stride": [
+        "information-disclosure",
+        "tampering"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-RETENTION-002",
+      "boundary": "privileged-host-operations",
+      "title": "Sletning omgås eller et hold ignoreres",
+      "description": "En AI-agent eller en indsidder bruger en uautoriseret vej til at slette data på tværs af datalag eller til at ignorere et aktivt hold, så bevaring og slettepligt ikke håndhæves.",
+      "requirementIds": [
+        "REQ-RETENTION-001"
+      ],
+      "stride": [
+        "elevation-of-privilege",
+        "repudiation"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-LOGGING-001",
+      "boundary": "telemetry",
+      "title": "Loggen omskrives eller sletter sin egen historik",
+      "description": "En agent eller en indsidder ændrer, sletter eller trunkerer loggen, så et forløb ikke kan rekonstrueres, eller et logsvigt skjuler en ulogget mutation.",
+      "requirementIds": [
+        "REQ-LOGGING-001"
+      ],
+      "stride": [
+        "tampering",
+        "repudiation"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-LOGGING-002",
+      "boundary": "telemetry",
+      "title": "Følsomme data eller skjult modelræsonnering lækker via loggen",
+      "description": "Rå hemmeligheder, unødige persondata eller skjult intern modelræsonnering gemmes i loggen og eksponeres for en læser uden behov.",
+      "requirementIds": [
+        "REQ-LOGGING-001"
+      ],
+      "stride": [
+        "information-disclosure"
+      ],
+      "residualRisk": "medium",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-DR-001",
+      "boundary": "immutable-storage",
+      "title": "Beskyttede backups slettes eller forkortes",
+      "description": "Primærmiljøets driftscredentials eller ransomware sletter, forkorter retention på eller bytter pointer for historiske backups, så en katastrofe ikke kan genoprettes og slettejournalen omgås.",
+      "requirementIds": [
+        "REQ-DR-001"
+      ],
+      "stride": [
+        "tampering",
+        "denial-of-service",
+        "elevation-of-privilege"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-DR-002",
+      "boundary": "external-sources",
+      "title": "Forgiftet kopi genindfører ondsindet tilstand",
+      "description": "Et eksternt eller offline backupmål er kompromitteret eller forgiftet, så en gendannelse genindfører manipulerede data eller adgangsregler, eller eksponerer kundedata for en uautoriseret læser.",
+      "requirementIds": [
+        "REQ-DR-001"
+      ],
+      "stride": [
+        "tampering",
+        "information-disclosure"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-DEDUP-001",
+      "boundary": "tenant-boundary",
+      "title": "Tværkundededuplikering lækker lighed mellem kunders data",
+      "description": "Hvis chunk-adresser eller dedup-indeks deles på tværs af kunder, kan en tenant udlede en anden tenants indhold ved at observere hvilke chunks der genbruges. Dedup skal derfor være bundet til tenant, krypteringsdomæne og retentionklasse, og hver chunk skal krypteres med en domæneafgrænset nøgle.",
+      "requirementIds": [
+        "REQ-DEDUP-001"
+      ],
+      "stride": [
+        "information-disclosure",
+        "spoofing"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-DEDUP-002",
+      "boundary": "immutable-storage",
+      "title": "Prune sletter en refereret eller beskyttet chunk",
+      "description": "En fejlbehæftet eller samtidig garbage collection kan slette en chunk der stadig refereres af et andet eller et beskyttet snapshot, eller efterlade et halvt indeks efter et crash. Prune skal være retention-aware, kræve en single-writer lease og efterlade en genoprettelig tilstand.",
+      "requirementIds": [
+        "REQ-DEDUP-001"
+      ],
+      "stride": [
+        "tampering",
+        "denial-of-service"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-ASSURANCE-001",
+      "boundary": "identity",
+      "title": "Uautoriseret accept af et krav",
+      "description": "En agent, en demo-identitet eller et menneske uden accept-rolle accepterer et krav, eller kravets ejer accepterer sit eget krav, så en åben beslutning ser afsluttet ud uden en uafhængig menneskelig vurdering.",
+      "requirementIds": [
+        "REQ-ASSURANCE-001"
+      ],
+      "stride": [
+        "spoofing",
+        "repudiation",
+        "elevation-of-privilege"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-ASSURANCE-002",
+      "boundary": "external-sources",
+      "title": "Forældet eller forfalsket evidens fremstilles som grøn compliance",
+      "description": "En udløbet, artefakt-mismatchet eller manuelt ændret evidenspost, eller en udestående DPIA/overførselsvurdering, fremstilles som en bestået kontrol og et produktionsbadge, så en pilot frigives på et falsk grundlag.",
+      "requirementIds": [
+        "REQ-ASSURANCE-001"
+      ],
+      "stride": [
+        "tampering",
+        "spoofing",
+        "information-disclosure"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-PORTAL-001",
+      "boundary": "identity",
+      "title": "Uautoriseret portaladgang via en påstået tenant eller rolle",
+      "description": "En borger eller tjeneste uden den rette rolle, uden en eksplicit tenant-scope eller med en påstået tenant i URL/body får portaladgang til en anden kundes apps, forbrug eller godkendelsesindbakke, fordi UI og API vurderer rettigheder forskelligt.",
+      "requirementIds": [
+        "REQ-PORTAL-001"
+      ],
+      "stride": [
+        "spoofing",
+        "elevation-of-privilege",
+        "information-disclosure"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-PORTAL-002",
+      "boundary": "tenant-boundary",
+      "title": "Dobbeltressourcer ved genoptaget provisionering eller lækage på tværs af kunder",
+      "description": "Et delvist fejlet provisioneringsforløb genoptages og opretter en ressource to gange, eller en deterministisk ressource-ID/idempotency-key genbruges på tværs af tenants, så en kunde får en andens ressource eller en uafstemt drift.",
+      "requirementIds": [
+        "REQ-PORTAL-001"
+      ],
+      "stride": [
+        "tampering",
+        "denial-of-service",
+        "information-disclosure"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-WORKSPACE-001",
+      "boundary": "identity",
+      "title": "Offentligt delingslink eller gæsteadgang omgår kundepolitikken",
+      "description": "Et offentligt link uden adgangskode, udløb eller levetidsgrænse, eller en ekstern gæst der ikke fjernes ved ophør, giver vedvarende adgang til en kundes filer uden for den aftalte politik og uden at nogen opdager det.",
+      "requirementIds": [
+        "REQ-WORKSPACE-001"
+      ],
+      "stride": [
+        "spoofing",
+        "elevation-of-privilege",
+        "information-disclosure"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-WORKSPACE-002",
+      "boundary": "external-sources",
+      "title": "Ufuldstændig sletning efterlader persondata i upstream-kopier",
+      "description": "En DSAR-sletning fjerner filer, delinger og sessioner gennem API-et, men lader kopier i backups, versions-/papirkurvshistorik og søgeindeks stå tilbage, så svaret til den registrerede er faktuelt forkert.",
+      "requirementIds": [
+        "REQ-WORKSPACE-001"
+      ],
+      "stride": [
+        "repudiation",
+        "information-disclosure"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-ITSM-001",
+      "boundary": "identity",
+      "title": "En AI lukker en major incident eller fortsætter uden menneskelig kvittering",
+      "description": "En AI-handling fortsætter en risikofyldt ændring, eller lukker en major incident på baggrund af et grønt healthcheck, før et menneske har kvitteret. Dermed fjernes det menneskelige eskalationspunkt, og en fejl kan forværres uden nogen opdager det.",
+      "requirementIds": [
+        "REQ-ITSM-001"
+      ],
+      "stride": [
+        "spoofing",
+        "repudiation",
+        "elevation-of-privilege"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-ITSM-002",
+      "boundary": "external-sources",
+      "title": "En serviceagent kombinerer roller i serviceprocessen",
+      "description": "En enkelt AI-identitet optræder både som observatør/planlægger og som eksekverende agent, så den samme agent kan foreslå, godkende og udføre en risikofyldt ændring uden den uafhængige kontrol.",
+      "requirementIds": [
+        "REQ-ITSM-001"
+      ],
+      "stride": [
+        "repudiation",
+        "elevation-of-privilege"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-CHANGE-001",
+      "boundary": "agent-handoff",
+      "title": "Forhåndsgodkendt runbook udvides uden ny godkendelse",
+      "description": "En ny runbookversion eller et større scope genbruger en gammel forhåndsgodkendelse, så en agent kan udføre en handling som mennesket aldrig godkendte. Modvirkes ved at binde godkendelsen til den eksakte runbook-digest og ved at kræve en ny godkendelse for enhver version-/scopeændring.",
+      "requirementIds": [
+        "REQ-CHANGE-001"
+      ],
+      "stride": [
+        "tampering",
+        "elevation-of-privilege"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-CHANGE-002",
+      "boundary": "privileged-host-operations",
+      "title": "Emergency-flow bruges til at omgå A4 eller AI-immutable",
+      "description": "En emergency-change påstår at have særskilt autorisation og bruges til at ændre policy, audit eller egne rettigheder. Modvirkes ved at A4-/immutable-guarden kører uafhængigt af runbook-resolveren, og ved at emergency-autorisationen er bundet til runbook-digest, mål, miljø og kunde og forbruges pr. mutation.",
+      "requirementIds": [
+        "REQ-CHANGE-001"
+      ],
+      "stride": [
+        "elevation-of-privilege",
+        "repudiation"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-REMEDIATION-001",
+      "boundary": "agent-handoff",
+      "title": "To agenter reparerer samme ressource samtidigt",
+      "description": "To agenter griber samme hændelse og udfører hver sin reparation på samme ressource, så ændringerne overlapper eller ruller hinanden tilbage. Modvirkes ved en atomisk ressourcelease med fencing-token, cooldown efter frigivelse og et fælles budget.",
+      "requirementIds": [
+        "REQ-REMEDIATION-001"
+      ],
+      "stride": [
+        "tampering",
+        "denial-of-service"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-REMEDIATION-002",
+      "boundary": "privileged-host-operations",
+      "title": "Modeludfald eller governance-tab fortsætter blindt",
+      "description": "Når model, PDP eller audit er utilgængeligt, fortsætter agenten alligevel med en mutation uden autorisation. Modvirkes ved at AI-ændringer stopper fail-closed, mens kun foruddefinerede, sikre fallback-handlinger (pause, read-only, isolation) kan fortsætte, og irreversible handlinger altid kræver et menneske.",
+      "requirementIds": [
+        "REQ-REMEDIATION-001"
+      ],
+      "stride": [
+        "elevation-of-privilege",
+        "repudiation"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-CONFIGURATION-001",
+      "boundary": "privileged-host-operations",
+      "title": "Installer formaterer disk eller ændrer host-OS uden oplyst scope",
+      "description": "En installation antager et bredere værts-scope end det menneskeligt oplyste og formaterer en disk, overtager et eksisterende databaseskema eller ændrer host-OS. Modvirkes ved en fail-closed preflight, et eksplicit host-scope med faste forbud og en signeret plan, hvis restriktioner altid er false.",
+      "requirementIds": [
+        "REQ-CONFIGURATION-001"
+      ],
+      "stride": [
+        "tampering",
+        "elevation-of-privilege",
+        "denial-of-service"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-CONFIGURATION-002",
+      "boundary": "identity",
+      "title": "Tavs drift mellem skjulte eller modstridende konfigurationskilder",
+      "description": "UI, deklarativ fil og API bærer hver sin sandhed, så en ændring ser udført ud ét sted, men ikke har effekt. Modvirkes ved ét versioneret schema og én validerings-API, én autoritativ ønsket tilstand, synlig ønsket-vs-faktisk-tilstand og fail-closed driftdetektering.",
+      "requirementIds": [
+        "REQ-CONFIGURATION-001"
+      ],
+      "stride": [
+        "tampering",
+        "repudiation"
+      ],
+      "residualRisk": "medium",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-HOSTMGMT-001",
+      "boundary": "privileged-host-operations",
+      "title": "Agent får fri root eller ændrer broker/pakkekilde",
+      "description": "En agent eller et kompromitteret workload opnår fri root/hypervisoradgang, kører en arbitrær shell, uploader et script, installerer en usigneret pakke eller ændrer brokerens/policyens/pakkekildens konfiguration. Modvirkes ved et eksplicit menneskeligt enrollment, en lukket operation med indbygget payload, en allowlistet og signeret pakkekilde og et kortlivet, scope-bundet operationsticket, der kun udstedes til executor-rollen.",
+      "requirementIds": [
+        "REQ-HOST-001"
+      ],
+      "stride": [
+        "elevation-of-privilege",
+        "tampering",
+        "spoofing"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-HOSTMGMT-002",
+      "boundary": "immutable-storage",
+      "title": "Hostprivilegier omgår immutable-nøgler og autoritative kopier",
+      "description": "En host med høje privilegier skriver til immutable-lageret eller destruerer KMS-nøgler/autoritative kopier og omgår dermed beskyttelsen. Modvirkes ved at lægge nøgler og autoritative kopier i et separat sikkerhedsdomæne, ved at host-brokeren kun må pege på host/<id>, og ved at en operation aldrig må erklære immutable-skrivning eller nøgledestruktion.",
+      "requirementIds": [
+        "REQ-HOST-001"
+      ],
+      "stride": [
+        "tampering",
+        "information-disclosure",
+        "denial-of-service"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-PROJECT-001",
+      "boundary": "identity",
+      "title": "Projektgæst eller ændret medlemskab giver adgang til et fremmed projekt",
+      "description": "En ekstern projektgæst, et genbrugt principal-id eller et medlemskab der ikke er bundet til projektet giver adgang til et projekt i en anden tenant eller til et projekt principalen ikke er medlem af. Modvirkes ved en default-deny beslutning der kræver et dækkende medlemskab i samme tenant, ved at en gæst kun må se sit eget projekt, og ved at kun et navngivet menneske må ændre medlemskaber.",
+      "requirementIds": [
+        "REQ-PROJECT-001"
+      ],
+      "stride": [
+        "spoofing",
+        "elevation-of-privilege",
+        "information-disclosure"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-PROJECT-002",
+      "boundary": "tenant-boundary",
+      "title": "Forældet rettighedsprojektion lækker tilbagekaldt projektindhold via søgning og AI",
+      "description": "Efter en medlemskabsændring eller tilbagekaldelse svarer et cachet søge-/AI-indeks stadig ud fra den gamle rettighedsprojektion og lækker projektindhold til en principal der ikke længere har adgang. Modvirkes ved at hver rettighedsændring skubber en ny versionsstyret projektion, og ved at retrieval afviser en projektion der ikke er på den aktuelle version eller er ældre end den tilladte frist (fail-closed).",
+      "requirementIds": [
+        "REQ-PROJECT-001"
+      ],
+      "stride": [
+        "repudiation",
+        "information-disclosure"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-CAPACITY-001",
+      "boundary": "tenant-boundary",
+      "title": "En støjende tenant forbruger al kapacitet",
+      "description": "En enkelt tenant sender så mange forespørgsler eller jobs, at andre tenanter sulter eller platformen kollapser. Modvirkes ved tenantkvoter, en vægtet kø med et hårdt loft pr. tenant (maxSharePercent), reserverede connection pools og backpressure der afviser nye forespørgsler kontrolleret, så en enkelt tenant ikke kan forbruge alle ressourcer.",
+      "requirementIds": [
+        "REQ-CAPACITY-001"
+      ],
+      "stride": [
+        "denial-of-service"
+      ],
+      "residualRisk": "medium",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-CAPACITY-002",
+      "boundary": "immutable-storage",
+      "title": "Kapacitetsmangel taber kvitterede data",
+      "description": "Når kapaciteten overskrides, kvitteres eller accepteres arbejde uden at være holdbart skrevet, hvorefter det går tabt ved en fejl eller et hosttab. Modvirkes ved at en kvittering først gives efter holdbar skrivning (durableBeforeAck), ved at overskredet kapacitet afvises med en retry-vejledning i stedet for at droppe kvitteret arbejde, og ved at N+1-kapaciteten måles efter hosttab.",
+      "requirementIds": [
+        "REQ-CAPACITY-001"
+      ],
+      "stride": [
+        "denial-of-service",
+        "tampering"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-CHAOS-001",
+      "boundary": "privileged-host-operations",
+      "title": "Samtidige fejl giver split-brain eller taber kvitterede writes",
+      "description": "Hosttab, quorumtab og en netværkspartition indtræffer samtidig, hvorefter to grupper tror de er autoritative, eller en commitkvittering forsvinder. Modvirkes ved fencing og quorum-commit, ved at usikre writes ved quorumtab afvises, og ved at fejlmatrixen gentageligt måler split-brain og tabte kvitteringer (REQ-CHAOS-001).",
+      "requirementIds": [
+        "REQ-CHAOS-001"
+      ],
+      "stride": [
+        "tampering",
+        "denial-of-service"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    },
+    {
+      "id": "THREAT-CHAOS-002",
+      "boundary": "immutable-storage",
+      "title": "Kompromitteret agent omgår immutable-grænsen under en fejl",
+      "description": "En kompromitteret agent udnytter en fejl eller en healingstorm til at slette eller overskrive immutable data, omgå en COMPLIANCE-lås eller slette en beskyttet nøgle. Modvirkes ved at AI/app-konti er nægtet alle muterende operationer, at governance-bypass kræver et menneske og to-personers kontrol, at COMPLIANCE ikke kan brydes, og ved at fejlmatrixen afviser og logger hvert bypassforsøg (REQ-CHAOS-001).",
+      "requirementIds": [
+        "REQ-CHAOS-001"
+      ],
+      "stride": [
+        "elevation-of-privilege",
+        "tampering",
+        "repudiation"
+      ],
+      "residualRisk": "high",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen"
+        }
+      }
+    }
+  ]
+}

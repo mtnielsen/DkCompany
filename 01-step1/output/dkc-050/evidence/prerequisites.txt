@@ -1,0 +1,31 @@
+DKC-050 forudsætningskæde — verificeret i den anvendte stak (DKC-027-tip + DKC-050)
+Reviewbase: 5f9fa73457d22583b9948611d5cc3afffec4ae38 (5f9fa73)
+Undersøgt checkout: 83ad91a963d8055f77c29fb4361455689df95acb (83ad91a)
+Stak-tip før DKC-050: DKC-027 (dkc-027/apply.sh)
+
+DKC-012 (modelgateway og bindende budgetter):
+  FOUND  gateway -> gateway/src/gateway.mjs
+  FOUND  modelbudget-og-afregning -> gateway/src/accounting.mjs
+  FOUND  reviewer-metrics -> reviewer/src/metrics.mjs
+DKC-026 (filer og kontorsamarbejde):
+  FOUND  nextcloud-adapter -> modules/nextcloud-adapter/module-manifest.json
+DKC-027 (projektstyring):
+  FOUND  openproject-adapter -> modules/openproject-adapter/module-manifest.json
+  FOUND  projektvalidator -> conformance/src/projects.mjs
+DKC-038 (HA-klynge):
+  FOUND  HA-plan -> infrastructure/ha-plan.json
+  FOUND  HA-semantik -> infrastructure/src/ha.mjs
+DKC-039 (database-HA):
+  FOUND  database-HA-plan -> persistence/ha-plan.json
+  FOUND  replikering -> persistence/src/replication.mjs
+DKC-040 (beskeder og jobkø):
+  FOUND  beskedtopologi -> jobs/messaging.json
+  FOUND  outbox -> jobs/src/outbox.mjs
+  FOUND  topologi-semantik -> jobs/src/topology.mjs
+DKC-041 (holdbart fil- og objektlager):
+  FOUND  lagerplan -> storage/storage-plan.json
+  FOUND  objektlager -> storage/src/object-store.mjs
+Genbrugte kontroller:
+  FOUND  sensorkatalog (DKC-017) -> observability/sensors.json
+  FOUND  runbookkatalog (DKC-045) -> runbooks/registry.json
+  FOUND  serviceklasser (DKC-037) -> continuity/service-classes

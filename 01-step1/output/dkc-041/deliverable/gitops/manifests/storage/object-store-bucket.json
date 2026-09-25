@@ -1,0 +1,35 @@
+{
+  "apiVersion": "objectstore.platform.example.org/v1alpha1",
+  "kind": "ObjectStoreBucket",
+  "metadata": {
+    "name": "tenant-object-store",
+    "namespace": "platform-storage",
+    "labels": {
+      "app.kubernetes.io/name": "object-store",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "object-store",
+      "platform.example.org/environment": "storage"
+    },
+    "annotations": {
+      "platform.example.org/docs-ref": "docs/spec/storage.md#csi-og-objektlager"
+    }
+  },
+  "spec": {
+    "provider": "MinIO",
+    "version": "RELEASE.2024-12-18T13-15-44Z",
+    "s3Compatible": true,
+    "versioning": true,
+    "objectLock": {
+      "enabled": true,
+      "mode": "GOVERNANCE"
+    },
+    "failureModel": "erasure-coding",
+    "tenantScopedKeys": true,
+    "keyProvider": "external-kms",
+    "erasureCoding": {
+      "dataShards": 4,
+      "parityShards": 2,
+      "minShards": 4
+    }
+  }
+}

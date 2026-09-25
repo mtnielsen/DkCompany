@@ -1,0 +1,93 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "IntegrationCandidate",
+  "metadata": {
+    "name": "medusa-2-7-0",
+    "version": "1.0.0",
+    "description": "Kandidatvurdering af Medusa 2.7.0 (Community) som hovedløs handels-/webshopkerne. Dansk moms og godkendt betalingstjeneste er særskilte gates og ikke godkendt her.",
+    "accountableHuman": {
+      "subject": "oidc|hans.hansen",
+      "name": "Hans Hansen",
+      "role": "Solution Architect"
+    },
+    "labels": { "application": "APP-053", "adapter": "commerce-adapter", "product": "medusa" }
+  },
+  "applicationId": "APP-053",
+  "name": "Medusa",
+  "upstream": {
+    "vendor": "Medusa",
+    "projectUrl": "https://medusajs.com/",
+    "documentationUrl": "https://docs.medusajs.com/",
+    "sourceUrl": "https://github.com/medusajs/medusa"
+  },
+  "exactVersion": "2.7.0",
+  "edition": { "name": "Community", "tier": "community", "notes": "Kernen er MIT og gratis; Medusa Cloud er en betalt tjeneste." },
+  "license": {
+    "spdx": "MIT",
+    "type": "open-source",
+    "paidFeaturesRequired": false,
+    "redistributionAllowed": true,
+    "notes": "MIT-licens."
+  },
+  "hosting": {
+    "mode": "customer-self-hosted",
+    "commercialRedistribution": false,
+    "commercialHostingAllowed": true,
+    "notes": "Hostes for kunden; én database pr. installation."
+  },
+  "sso": { "capability": "partial", "supported": true, "protocols": ["oidc"], "notes": "OIDC understøttes gennem et auth-modul, ikke i selve kernen." },
+  "scim": { "capability": "none", "supported": false, "provisioningAlternative": "Brugere og roller provisioneres gennem Admin REST API og en SCIM-bro.", "notes": "Ingen SCIM." },
+  "api": {
+    "capability": "full",
+    "documented": true,
+    "protocols": ["rest"],
+    "authentication": ["api-key", "oauth2"],
+    "notes": "Admin- og Store REST API dækker produkter, ordrer, kunder og lager."
+  },
+  "isolation": {
+    "capability": "full",
+    "tenantModel": "dedicated-installation",
+    "databasePerTenant": true,
+    "notes": "Dedikeret installation pr. kunde; tenantgrænsen håndhæves i adapter og netværkspolitik."
+  },
+  "export": {
+    "capability": "full",
+    "formats": ["json", "csv"],
+    "aclPreserved": true,
+    "apiAccessible": true,
+    "notes": "Produkter og ordrer kan eksporteres gennem API'et."
+  },
+  "backup": {
+    "capability": "partial",
+    "supported": true,
+    "pointInTime": false,
+    "restoreTested": false,
+    "notes": "Databasebackup understøttes, men gendannelse er ikke testet i dette miljø."
+  },
+  "price": {
+    "model": "mixed",
+    "currency": "USD",
+    "recurring": false,
+    "priceBasis": "Kernen er gratis; hosted cloud er abonnement.",
+    "notes": "Selvhostet drift er gratis."
+  },
+  "maintenance": {
+    "vendorSupport": "commercial",
+    "releaseCadence": "Løbende patch og regelmæssige feature-udgivelser.",
+    "securityResponse": "Offentlig sikkerhedsproces og advisories.",
+    "upgradePath": "Trinvis opgradering inden for en major-serie."
+  },
+  "freeVsPaid": {
+    "documented": true,
+    "freeTierLimitations": ["Hosted cloud er en betalt tjeneste.", "Ingen indbygget dansk moms- eller betalingslogik."],
+    "requiredPaidFeatures": ["Medusa Cloud"],
+    "sourceUrl": "https://medusajs.com/pricing/"
+  },
+  "verification": {
+    "status": "candidate_not_approved",
+    "verifiedBy": { "subject": "oidc|hans.hansen", "name": "Hans Hansen", "role": "Solution Architect" },
+    "verifiedAt": "2025-01-15",
+    "evidence": ["https://docs.medusajs.com/", "https://github.com/medusajs/medusa"],
+    "notes": "Licens, SSO, API og isolation er vurderet. Kandidaten godkendes ikke endnu: dansk moms og en godkendt betalingstjeneste mangler, og en testet gendannelse er ikke gennemført."
+  }
+}

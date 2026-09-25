@@ -1,0 +1,13 @@
+{
+  "name": "@platform/itsm-adapter",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "DKC-044 ITSM-adapter: wrapper GLPI bag den fælles adapter-SDK. Korrelerer alarmer til incidents med menneskelig ejer, eskalerer manglende kvittering, opretter problemer/kendte fejl med menneskelig validering, kobler change/runbook/godkendelse/audit og nægter at lade en AI lukke en major incident.",
+  "bin": {
+    "itsm-adapter": "./src/cli.mjs"
+  },
+  "scripts": {
+    "test": "node --test"
+  }
+}

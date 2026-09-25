@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/log-access-decision.schema.json",
+  "title": "Log Access Decision",
+  "description": "DKC-049: beslutningen om at læse, eksportere eller verificere loggen. Læsning er aldrig gratis: hver adgang til loggen (også en nægtet) efterlader selv en logpost, så et udtræk af historikken er sporet. Beslutningen bærer den udledte tenant (aldrig en klientpåstand), læserens verificerede subjekt og rollen der gav adgang.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "id", "at", "reader", "scope", "action", "decision", "correlationId"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "LogAccessDecision" },
+    "id": { "type": "string", "minLength": 1 },
+    "at": { "type": "string", "format": "date-time" },
+    "reader": {
+      "type": "object",
+      "required": ["subject"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 1 },
+        "roles": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "required": ["tenantId"],
+      "additionalProperties": false,
+      "properties": {
+        "tenantId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+        "streams": { "type": "array", "items": { "type": "string" } },
+        "correlationId": { "type": ["string", "null"] },
+        "resource": { "type": ["string", "null"] }
+      }
+    },
+    "action": { "enum": ["read", "export", "verify", "reconstruct"] },
+    "decision": { "enum": ["allow", "deny"] },
+    "reason": { "type": ["string", "null"] },
+    "recordsReturned": { "type": "integer", "minimum": 0 },
+    "crossTenant": { "type": "boolean" },
+    "retentionClass": { "type": ["string", "null"], "enum": ["operational", "personal", "security", null] },
+    "correlationId": { "type": "string", "minLength": 1 },
+    "ledger": {
+      "type": "object",
+      "required": ["stream", "seq", "prevHash", "hash"],
+      "additionalProperties": false,
+      "properties": {
+        "stream": { "type": "string", "minLength": 1 },
+        "seq": { "type": "integer", "minimum": 1 },
+        "prevHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    }
+  }
+}

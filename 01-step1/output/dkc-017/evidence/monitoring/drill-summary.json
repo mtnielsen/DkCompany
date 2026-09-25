@@ -1,0 +1,92 @@
+{
+  "kind": "MonitoringDrill",
+  "generatedAt": "2026-09-23T22:46:50.269Z",
+  "scenarios": [
+    {
+      "id": "service-and-backup-failure",
+      "postureOverall": "fail",
+      "alerts": [
+        {
+          "ruleId": "service-unavailable",
+          "severity": "critical",
+          "owner": "oidc|anna.andersen",
+          "runbook": "docs/runbooks/alerting.md"
+        },
+        {
+          "ruleId": "backup-failed",
+          "severity": "critical",
+          "owner": "oidc|anna.andersen",
+          "runbook": "docs/runbooks/backup-restore.md"
+        }
+      ],
+      "delivered": [
+        {
+          "id": "notif-961f9c64-64dc-444a-89f7-b9fd560169e7",
+          "ruleId": "service-unavailable",
+          "recipient": "platform-oncall-local",
+          "receipt": "local:404d15b9e8b2e24d366ce870c3ce3452fd70b63721a847fc27b236d7874ff1d5"
+        },
+        {
+          "id": "notif-5ef3c14d-af3f-4e68-a412-532196881a5b",
+          "ruleId": "backup-failed",
+          "recipient": "platform-oncall-local",
+          "receipt": "local:5552abcf5e7d1d69c4c61d709109b052d5db5faaf3bf7f1876e94950af59a703"
+        }
+      ],
+      "notRun": []
+    },
+    {
+      "id": "stale-security-sensor",
+      "postureOverall": "stale",
+      "alerts": [
+        {
+          "ruleId": "security-data-stale",
+          "severity": "warning",
+          "owner": "oidc|cecilia.christensen",
+          "runbook": "docs/runbooks/vulnerability-response.md"
+        }
+      ],
+      "delivered": [
+        {
+          "id": "notif-a5de9b3c-6cc9-4053-b14a-ab4abea560e8",
+          "ruleId": "security-data-stale",
+          "recipient": "security-oncall-local",
+          "receipt": "local:84c92598eae25af993ca638a7c13b374ed29753671a5bdec251f3f8980c16cb2"
+        }
+      ],
+      "notRun": []
+    }
+  ],
+  "incidentTimeline": [
+    {
+      "at": "2026-09-23T22:46:50.269Z",
+      "type": "alerted",
+      "actor": "monitoring",
+      "detail": "regel 'service-unavailable': 0 < 0.999"
+    },
+    {
+      "at": "2026-09-23T22:46:50.277Z",
+      "type": "notified",
+      "actor": "monitoring",
+      "detail": "leveret til platform-oncall-local (local:404d15b9e8b2e24d366ce870c3ce3452fd70b63721a847fc27b236d7874ff1d5)"
+    },
+    {
+      "at": "2026-09-23T23:01:50.269Z",
+      "type": "escalated",
+      "actor": "monitoring",
+      "detail": "eskaleret til Bo Bertelsen efter 15 min"
+    },
+    {
+      "at": "2026-09-23T23:02:50.269Z",
+      "type": "acknowledged",
+      "actor": "oidc|bo.bertelsen",
+      "detail": "Undersøger tjenesten og backupmål"
+    },
+    {
+      "at": "2026-09-23T23:16:50.269Z",
+      "type": "resolved",
+      "actor": "oidc|anna.andersen",
+      "detail": "Tjeneste genstartet, backupmål rettet"
+    }
+  ]
+}

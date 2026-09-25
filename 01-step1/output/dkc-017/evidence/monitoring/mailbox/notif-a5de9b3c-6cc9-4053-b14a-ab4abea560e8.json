@@ -1,0 +1,48 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "AlertNotification",
+  "id": "notif-a5de9b3c-6cc9-4053-b14a-ab4abea560e8",
+  "alertId": "alert-7643b92d-10e7-4ba8-bcf2-4eb227bf2d56",
+  "ruleId": "security-data-stale",
+  "severity": "warning",
+  "signal": "security.freshness",
+  "tenantId": null,
+  "summary": "Sikkerhedssensoren er forældet eller mangler — status er ikke grøn",
+  "owner": {
+    "subject": "oidc|cecilia.christensen",
+    "name": "Cecilia Christensen",
+    "role": "Security Owner"
+  },
+  "escalation": [
+    {
+      "afterMinutes": 120,
+      "to": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      }
+    }
+  ],
+  "runbook": "docs/runbooks/vulnerability-response.md",
+  "emittedAt": "2026-09-23T22:46:50.269Z",
+  "minimized": true,
+  "personalData": {
+    "removed": [],
+    "redactions": [],
+    "digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+  },
+  "observed": {
+    "value": null,
+    "status": "stale",
+    "freshness": "stale",
+    "capturedAt": "2026-09-20T22:46:50.269Z",
+    "ageSeconds": 259200
+  },
+  "delivery": {
+    "recipientId": null,
+    "transport": null,
+    "status": "not-run",
+    "receipt": null,
+    "deliveredAt": "2026-09-23T22:46:50.269Z"
+  }
+}

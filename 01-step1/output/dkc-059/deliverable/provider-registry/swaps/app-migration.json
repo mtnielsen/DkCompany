@@ -1,0 +1,59 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ProviderSwapFixture",
+  "id": "files-app-nextcloud-to-dkc-apps",
+  "title": "Verificeret appmigration: fil-appen fra Nextcloud til platformens apps",
+  "class": "apps",
+  "from": "nextcloud",
+  "to": "dkc-apps",
+  "mode": "planned-migration",
+  "tenantId": "acme",
+  "appId": "files",
+  "migrationProof": "docs/spec/provider-contracts.md#appmigration",
+  "functionalityLoss": [
+    {
+      "entityType": "File",
+      "facet": "comments",
+      "status": "partial",
+      "note": "Nextcloud-kommentarer overføres uden @-mention-metadata; selve teksten bevares."
+    },
+    {
+      "entityType": "Folder",
+      "facet": "comments",
+      "status": "unsupported",
+      "note": "Mapper i Nextcloud har ingen kommentarfunktion; feltet er tomt og vises som tabt funktionalitet før cutover."
+    }
+  ],
+  "records": [
+    {
+      "sourceId": "nc-folder-1",
+      "entityType": "Folder",
+      "owner": { "subject": "oidc|ada.acme", "tenantId": "acme" },
+      "classification": "internal",
+      "acl": { "readSubjects": ["oidc|ada.acme"], "readGroups": ["files-users"] },
+      "links": [],
+      "references": ["mig:acme:files:Folder:nc-folder-1"],
+      "data": { "path": "/", "name": "Acme" }
+    },
+    {
+      "sourceId": "nc-file-1",
+      "entityType": "File",
+      "owner": { "subject": "oidc|ada.acme", "tenantId": "acme" },
+      "classification": "confidential",
+      "acl": { "readSubjects": ["oidc|ada.acme"], "readGroups": ["files-users"] },
+      "links": [{ "rel": "parent", "reference": "mig:acme:files:Folder:nc-folder-1" }],
+      "references": ["mig:acme:files:File:nc-file-1"],
+      "data": { "path": "/contracts", "name": "contract.pdf", "contentHash": "dd44" }
+    },
+    {
+      "sourceId": "nc-file-2",
+      "entityType": "File",
+      "owner": { "subject": "oidc|ben.acme", "tenantId": "acme" },
+      "classification": "personal",
+      "acl": { "readSubjects": ["oidc|ben.acme"], "readGroups": [] },
+      "links": [{ "rel": "parent", "reference": "mig:acme:files:Folder:nc-folder-1" }],
+      "references": ["mig:acme:files:File:nc-file-2"],
+      "data": { "path": "/contracts", "name": "draft.docx", "contentHash": "ee55" }
+    }
+  ]
+}

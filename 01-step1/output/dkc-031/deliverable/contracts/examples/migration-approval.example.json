@@ -1,0 +1,17 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "MigrationApproval",
+  "tenantId": "acme",
+  "appId": "files",
+  "approvedBy": {
+    "subject": "oidc|ada.acme",
+    "name": "Ada Acme",
+    "role": "content-admin"
+  },
+  "contentApproved": true,
+  "aclApproved": true,
+  "method": "pilot-user-sign-off",
+  "evidenceRef": "evidence://pilot/files/content-and-acl",
+  "approvedAt": "2026-03-01T00:00:00Z",
+  "operatorSubject": null
+}

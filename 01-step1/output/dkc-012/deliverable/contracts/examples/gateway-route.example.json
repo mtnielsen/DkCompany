@@ -1,0 +1,38 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "GatewayRoutes",
+  "routes": [
+    {
+      "id": "dummy-ok-upgrader-sonnet",
+      "agentRef": "dummy-ok-upgrader",
+      "provider": "anthropic",
+      "model": "claude-sonnet",
+      "modelVersion": "2025-01",
+      "dataClasses": ["public", "internal", "confidential"],
+      "approvedDataProcessing": false,
+      "maxTokens": 200000,
+      "maxCostEur": 25,
+      "maxOutputTokens": 8192,
+      "timeoutMs": 30000,
+      "costPerTokenEur": 0.000003,
+      "enabled": true
+    },
+    {
+      "id": "privacy-operator-sonnet",
+      "agentRef": "privacy-operator",
+      "provider": "anthropic",
+      "model": "claude-sonnet",
+      "modelVersion": "2025-01",
+      "dataClasses": ["internal", "confidential", "personal"],
+      "approvedDataProcessing": true,
+      "processor": "anthropic-eu",
+      "dpaRef": "dpa://platform/anthropic-eu/2025",
+      "maxTokens": 100000,
+      "maxCostEur": 10,
+      "maxOutputTokens": 4096,
+      "timeoutMs": 20000,
+      "costPerTokenEur": 0.000003,
+      "enabled": true
+    }
+  ]
+}

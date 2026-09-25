@@ -1,0 +1,72 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "RunbookRegistry",
+  "metadata": {
+    "name": "platform-runbooks",
+    "version": "1.0.0",
+    "description": "Katalog over versionsstyrede, signerede runbooks. Hver post peger på det kontraktdokument, der er kilden, og den digest den menneskelige godkendelse bindes til.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner"
+    }
+  },
+  "runbooks": [
+    {
+      "ref": "patch-dummy-ok@1.0.0",
+      "digest": "d5e9e9ad8e82093f5c00da7ff59d8ee5fc5cb8203eb60816f6b2dbe42f75fb4a",
+      "flow": "standard",
+      "contract": "contracts/examples/runbook.example.json",
+      "doc": "docs/runbooks/runbook-approval.md",
+      "service": "checkout"
+    },
+    {
+      "ref": "stateless-restart@1.0.0",
+      "digest": "deab1771bb4b70a60156bb9b571f66d232e66fb9310ab964bff4519b2df5b86a",
+      "flow": "standard",
+      "contract": "runbooks/stateless-restart.runbook.json",
+      "doc": "docs/runbooks/self-remediation.md",
+      "service": "checkout"
+    },
+    {
+      "ref": "bounded-scale@1.0.0",
+      "digest": "cb39bdb20eb27676de4f0f00e9f4f35c3514fa8534aafb7e7e4bc14a481d026e",
+      "flow": "standard",
+      "contract": "runbooks/bounded-scale.runbook.json",
+      "doc": "docs/runbooks/self-remediation.md",
+      "service": "checkout"
+    },
+    {
+      "ref": "stateful-scaling@1.0.0",
+      "digest": "46df49fdb0ef9dff088a1ff2c75847b51ba247d9d6554ce998b2f53c5ab21c05",
+      "flow": "standard",
+      "contract": "runbooks/stateful-scaling.runbook.json",
+      "doc": "docs/runbooks/stateful-scaling.md",
+      "service": "stateful"
+    },
+    {
+      "ref": "host-package-update@1.0.0",
+      "digest": "c43104666f0414b1786a2372f2bb8abc336b87eb931d82e03982dea5c7e54798",
+      "flow": "normal",
+      "contract": "runbooks/host-package-update.runbook.json",
+      "doc": "docs/operations/host-management.md",
+      "service": "host"
+    },
+    {
+      "ref": "host-drain-reboot@1.0.0",
+      "digest": "2b2474770e4aa2e688a5ab0b2d428cd91f20d3385eaf89daf4359f77d334212e",
+      "flow": "normal",
+      "contract": "runbooks/host-drain-reboot.runbook.json",
+      "doc": "docs/operations/host-management.md",
+      "service": "host"
+    },
+    {
+      "ref": "host-certificate-renew@1.0.0",
+      "digest": "657180476231aedcbac51f95afd5fe50325b18c7862dac488314b3dbef85e598",
+      "flow": "normal",
+      "contract": "runbooks/host-certificate-renew.runbook.json",
+      "doc": "docs/operations/host-management.md",
+      "service": "host"
+    }
+  ]
+}

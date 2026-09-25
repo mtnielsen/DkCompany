@@ -1,0 +1,3 @@
+61:→ changelog-check … FAIL
+273:  ✘ changelog-check (real) — exit 2
+changelog-check er en præeksisterende FAIL; den er ikke rettet i DKC-065.

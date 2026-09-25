@@ -1,0 +1,34 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "EvidenceRecord",
+  "id": "runtime-staging-dummy-ok-backup",
+  "subject": {
+    "kind": "verb",
+    "name": "dummy-ok",
+    "verb": "backup"
+  },
+  "mode": "runtime",
+  "result": "pass",
+  "commit": "83ad91a000000000000000000000000000000000",
+  "imageDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "environment": "staging",
+  "upstreamVersion": "dummy-ok@1.2.0",
+  "runId": "gh-246813579-1",
+  "capturedAt": "2026-09-23T08:00:00Z",
+  "expiresAt": "2026-10-23T08:00:00Z",
+  "producer": {
+    "type": "ci",
+    "name": "release-gate",
+    "subject": "github-actions|release-gate"
+  },
+  "command": [
+    "make",
+    "evidence-probe",
+    "ENVIRONMENT=staging"
+  ],
+  "artifact": {
+    "uri": "evidence/generated/runtime-staging-dummy-ok-backup.json",
+    "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+  },
+  "digest": "f18490faa6cd1b5de5c4727263b151d81145046fe19b55fcf3a0cd9b5df53284"
+}

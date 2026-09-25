@@ -1,0 +1,31 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "StagingCost",
+  "generatedFrom": "infrastructure/plan.json",
+  "currency": "EUR",
+  "monthlyEstimate": 96,
+  "computedMonthly": 96,
+  "items": [
+    {
+      "id": "compute",
+      "description": "k3s-server (small-vps, 4 vCPU / 16 GiB)",
+      "monthly": 32
+    },
+    {
+      "id": "storage",
+      "description": "Krypteret block-storage til applikationsdata og backups",
+      "monthly": 24
+    },
+    {
+      "id": "egress",
+      "description": "Udgående trafik til model- og backupmål",
+      "monthly": 20
+    },
+    {
+      "id": "object-store",
+      "description": "Backup-destination (S3-kompatibel)",
+      "monthly": 20
+    }
+  ],
+  "notes": "Staging bruger samme hostingprofil som prod, men med ét miljø og lavere kapacitet. Beløbet er et budget, ikke en målt regning."
+}

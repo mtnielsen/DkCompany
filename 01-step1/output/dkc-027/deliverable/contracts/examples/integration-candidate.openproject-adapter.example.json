@@ -1,0 +1,96 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "IntegrationCandidate",
+  "metadata": {
+    "name": "openproject-adapter-14-6-0",
+    "version": "1.0.0",
+    "description": "Kandidatvurdering af OpenProject 14.6.0 Enterprise som projektstyringskerne (projekter, arbejdspakker, medlemskaber, filer og statushændelser) bag den fælles adapter-SDK. Gratis/betalt-skellet er dokumenteret med kilde.",
+    "accountableHuman": {
+      "subject": "oidc|hans.hansen",
+      "name": "Hans Hansen",
+      "role": "Solution Architect"
+    },
+    "labels": { "application": "APP-046", "adapter": "openproject-adapter" }
+  },
+  "applicationId": "APP-046",
+  "name": "OpenProject",
+  "upstream": {
+    "vendor": "OpenProject GmbH",
+    "projectUrl": "https://www.openproject.org/",
+    "documentationUrl": "https://www.openproject.org/docs/",
+    "sourceUrl": "https://github.com/opf/openproject"
+  },
+  "exactVersion": "14.6.0",
+  "edition": { "name": "Enterprise", "tier": "enterprise", "notes": "Enterprise-abonnementet kræves for central OIDC/SAML-SSO, 2FA og support; kernen er GPLv3." },
+  "license": {
+    "spdx": "GPL-3.0-or-later",
+    "type": "mixed",
+    "paidFeaturesRequired": true,
+    "redistributionAllowed": true,
+    "notes": "Kernen er GPL-3.0-or-later; Enterprise-abonnementet dækker central SSO, 2FA og support. Platformen videredistribuerer ikke binæren."
+  },
+  "hosting": {
+    "mode": "customer-self-hosted",
+    "commercialRedistribution": false,
+    "commercialHostingAllowed": true,
+    "notes": "Hostes for kunden i kundens eget miljø; én instans pr. kunde."
+  },
+  "sso": { "capability": "full", "supported": true, "protocols": ["oidc", "saml2"], "notes": "OIDC/SAML via Enterprise-tilføjelsen; SCIM-lignende provisionering sker gennem API v3." },
+  "scim": { "capability": "partial", "supported": false, "provisioningAlternative": "Provisionering sker gennem API v3's brugere og medlemskaber samt en SCIM-bro; SCIM er ikke i kernen.", "notes": "Ingen SCIM i kernen; adapteren bruger API v3's medlemskabsendpoints." },
+  "api": {
+    "capability": "full",
+    "documented": true,
+    "protocols": ["rest", "webhook"],
+    "authentication": ["oauth2", "oidc", "api-key"],
+    "notes": "REST API v3 til projekter, arbejdspakker, relationer, medlemskaber og vedhæftninger."
+  },
+  "isolation": {
+    "capability": "full",
+    "tenantModel": "dedicated-installation",
+    "databasePerTenant": true,
+    "notes": "Én installation og én database pr. kunde; platformens tenantgrænse håndhæves i adapter og netværkspolitik."
+  },
+  "export": {
+    "capability": "partial",
+    "formats": ["json"],
+    "aclPreserved": true,
+    "apiAccessible": true,
+    "notes": "Projekter, arbejdspakker, relationer og medlemskaber kan eksporteres gennem API'et; vedhæftningsindhold og historik følger delvist med."
+  },
+  "backup": {
+    "capability": "partial",
+    "supported": true,
+    "pointInTime": false,
+    "restoreTested": false,
+    "notes": "Produktet understøtter database-/vedhæftningsbackup, men adapteren kan ikke garantere et konsistent snapshot af alle plugins gennem API'et; restore er ikke testet i dette miljø."
+  },
+  "price": {
+    "model": "mixed",
+    "currency": "EUR",
+    "recurring": true,
+    "priceBasis": "Pr. aktiv bruger pr. måned for Enterprise; kernen er gratis.",
+    "notes": "Der findes en gratis Community-kerne, men central SSO kræver Enterprise."
+  },
+  "maintenance": {
+    "vendorSupport": "commercial",
+    "releaseCadence": "Månedlige patch- og kvartalsvise feature-udgivelser.",
+    "securityResponse": "Offentlig sikkerhedsproces og advisories med koordineret offentliggørelse.",
+    "upgradePath": "Trinvis opgradering inden for en major-serie via dokumenterede migrations."
+  },
+  "freeVsPaid": {
+    "documented": true,
+    "freeTierLimitations": [
+      "Central OIDC/SAML-SSO og 2FA kræver Enterprise-abonnement.",
+      "Der er ingen kommerciel support på den gratis kerne."
+    ],
+    "requiredPaidFeatures": ["OIDC/SAML-SSO", "2FA", "Enterprise-support"],
+    "sourceUrl": "https://www.openproject.org/pricing/"
+  },
+  "verification": {
+    "status": "candidate_not_approved",
+    "verifiedBy": { "subject": "oidc|hans.hansen", "name": "Hans Hansen", "role": "Solution Architect" },
+    "verifiedAt": "2025-01-12",
+    "evidence": ["https://www.openproject.org/pricing/", "https://www.openproject.org/docs/api/"],
+    "notes": "Licens, SSO, API og isolation er vurderet, men kandidaten godkendes ikke endnu: en testet gendannelse af OpenProject (DKC-016) mangler i dette miljø, og Community-udgaven frigives ikke uden central SSO."
+  }
+}

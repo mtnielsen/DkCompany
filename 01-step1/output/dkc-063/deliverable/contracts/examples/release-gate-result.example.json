@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "kind": "ReleaseGateResult",
+  "generatedAt": "2026-09-24T00:00:00.000Z",
+  "matrixVersion": "1.0.0",
+  "targetCommit": "83ad91a963d8055f77c29fb4361455689df95acb",
+  "artifactDigest": "sha256:598302657e8925370916c9095fca9352f7b79793a986536e1ab4c74e7988b4d4",
+  "artifactKind": "baseline-result",
+  "producer": {
+    "type": "independent-verifier",
+    "name": "external-auditor",
+    "subject": "human|external.auditor"
+  },
+  "profile": "default",
+  "environment": {
+    "capturedAt": "2026-09-23T12:00:00Z",
+    "node": "v22.22.1",
+    "npm": "9.2.0",
+    "platform": "linux",
+    "arch": "x64",
+    "osRelease": "6.18.33.2",
+    "ci": false,
+    "github": {},
+    "git": {
+      "commit": "83ad91a963d8055f77c29fb4361455689df95acb",
+      "shortCommit": "83ad91a",
+      "branch": "main"
+    }
+  },
+  "thresholds": {
+    "requireAllMandatoryPass": true,
+    "allowImplementerEvidenceForRelease": false,
+    "maxOpenExceptions": 0,
+    "maxExceptionDays": 90,
+    "acceptedBy": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner"
+    },
+    "acceptedAt": "2026-09-23T08:00:00Z"
+  },
+  "decision": "eligible",
+  "statuses": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "notRun": 0,
+    "unsupported": 0,
+    "stale": 0,
+    "wrongArtifact": 0,
+    "missing": 0,
+    "pendingIndependentAssessment": 0,
+    "excepted": 0,
+    "blocking": 0
+  },
+  "requirements": [
+    {
+      "requirementId": "REQ-FIX-INDEP-002",
+      "title": "Krav REQ-FIX-INDEP-002",
+      "mandatory": true,
+      "releaseBlocking": true,
+      "nonExcepted": false,
+      "status": "passed",
+      "blocking": false,
+      "testTypes": [
+        "recovery"
+      ],
+      "coveredTestTypes": [
+        "recovery"
+      ],
+      "missingTestTypes": [],
+      "checks": [
+        {
+          "id": "check-unit",
+          "status": "passed",
+          "mustPass": true,
+          "testTypes": [
+            "recovery"
+          ],
+          "level": null,
+          "component": null,
+          "command": [
+            "true"
+          ],
+          "producer": "independent-verifier",
+          "commit": "83ad91a963d8055f77c29fb4361455689df95acb",
+          "artifactDigest": "sha256:598302657e8925370916c9095fca9352f7b79793a986536e1ab4c74e7988b4d4",
+          "profile": "default",
+          "environment": {
+            "node": "v22.22.1",
+            "platform": "linux",
+            "arch": "x64"
+          },
+          "startedAt": "2026-09-23T12:00:00Z",
+          "finishedAt": "2026-09-23T12:00:00Z",
+          "evidenceRef": "logs/check-unit.log",
+          "freshnessDays": 30,
+          "ageDays": 0.5,
+          "stale": false,
+          "wrongArtifact": false,
+          "reason": null,
+          "exception": null
+        }
+      ],
+      "independentAssessment": {
+        "id": "ASM-FIX-001",
+        "requirementId": "REQ-FIX-INDEP-002",
+        "kind": "live-measurement",
+        "performedBy": {
+          "subject": "oidc|external.auditor",
+          "name": "External Auditor",
+          "role": "Independent Verifier"
+        },
+        "performedAt": "2026-09-20T00:00:00Z",
+        "expiresAt": "2026-12-20T00:00:00Z",
+        "evidenceRef": "docs/security/assessments/fixture.md",
+        "scope": "Levende failover-måling på fixture-klyngen.",
+        "targetCommit": "83ad91a963d8055f77c29fb4361455689df95acb"
+      },
+      "exception": null,
+      "reasons": []
+    }
+  ],
+  "threats": [],
+  "openExceptions": [],
+  "reasons": []
+}

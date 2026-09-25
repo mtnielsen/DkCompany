@@ -1,0 +1,35 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "TelemetryRecord",
+  "id": "tel-metric-0001",
+  "signal": "metric",
+  "tenantId": "acme",
+  "source": {
+    "type": "metric",
+    "name": "prometheus",
+    "version": "2.54.1"
+  },
+  "capturedAt": "2025-09-01T10:00:00Z",
+  "subject": {
+    "kind": "service",
+    "name": "module:dummy-ok"
+  },
+  "metric": {
+    "name": "http_requests_total",
+    "value": 42,
+    "unit": "1"
+  },
+  "attributes": {
+    "module": "dummy-ok",
+    "status": "200",
+    "email": "[MINIMIZED]"
+  },
+  "minimized": true,
+  "personalData": {
+    "removed": [
+      "attributes/email"
+    ],
+    "redactions": [],
+    "digest": "dbe6efdb3950782829c630d69d6f3bd066e3889656191762b8d8af4cbfe9b4cb"
+  }
+}

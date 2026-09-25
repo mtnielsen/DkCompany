@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/autonomy-grant.schema.json",
+  "title": "AutonomyGrant",
+  "description": "Versionsstyret ejerbeslutning om hvor meget autonomi en AI-drift må have. Bevillingen er bundet til et model-/promptfingeraftryk, til et antal beståede evalueringer og til et sæt forhåndsgodkendte runbooks. Begrænset autonomi gælder kun staging og kun reversible handlinger.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "owner", "level", "scope", "evaluation", "governance", "approvedAt", "expiresAt", "changeRef", "supersedes", "history"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "AutonomyGrant" },
+    "metadata": { "$ref": "#/$defs/metadata" },
+    "owner": { "$ref": "#/$defs/human" },
+    "level": { "enum": ["observe", "propose", "shadow", "limited-autonomy"] },
+    "scope": { "$ref": "#/$defs/scope" },
+    "evaluation": { "$ref": "#/$defs/evaluation" },
+    "governance": { "$ref": "#/$defs/governance" },
+    "approvedAt": { "type": "string", "minLength": 10 },
+    "expiresAt": { "type": "string", "minLength": 10 },
+    "changeRef": { "type": "string", "minLength": 3 },
+    "supersedes": { "type": ["string", "null"] },
+    "history": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/historyEntry" } }
+  },
+  "$defs": {
+    "human": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\|[a-z0-9][a-z0-9._-]{2,}$" },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": { "$ref": "#/$defs/human" }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "labels"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "description": { "type": "string", "minLength": 10 },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "required": ["environment", "tenants", "runbooks", "verbs", "reversibilityRequired", "humanApprovalForMutations", "maxBlastRadius"],
+      "additionalProperties": false,
+      "properties": {
+        "environment": { "enum": ["replay", "staging"] },
+        "tenants": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "runbooks": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 3 } },
+        "verbs": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "reversibilityRequired": { "const": true },
+        "humanApprovalForMutations": { "const": true },
+        "maxBlastRadius": { "enum": ["single-service", "single-tenant", "platform"] }
+      }
+    },
+    "thresholds": {
+      "type": "object",
+      "required": ["maxFalseAlarmRate", "maxErrorRate", "maxEscalationRate", "maxCostEur", "maxReviewerFindings"],
+      "additionalProperties": false,
+      "properties": {
+        "maxFalseAlarmRate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "maxErrorRate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "maxEscalationRate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "maxCostEur": { "type": "number", "minimum": 0 },
+        "maxReviewerFindings": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "evaluationRun": {
+      "type": "object",
+      "required": ["runId", "fingerprint", "at", "events", "falseAlarmRate", "errorRate", "escalationRate", "costEur", "reviewerFindings", "passed", "reasons"],
+      "additionalProperties": false,
+      "properties": {
+        "runId": { "type": "string", "minLength": 1 },
+        "fingerprint": { "type": "string", "minLength": 8 },
+        "at": { "type": "string", "minLength": 10 },
+        "events": { "type": "integer", "minimum": 1 },
+        "falseAlarmRate": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+        "errorRate": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+        "escalationRate": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+        "costEur": { "type": "number", "minimum": 0 },
+        "reviewerFindings": { "type": "integer", "minimum": 0 },
+        "passed": { "type": "boolean" },
+        "reasons": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "evaluation": {
+      "type": "object",
+      "required": ["fingerprint", "modelRef", "promptDigest", "gatewayRef", "datasetRef", "minReplayEvents", "minEvaluationRuns", "thresholds", "runs", "passed"],
+      "additionalProperties": false,
+      "properties": {
+        "fingerprint": { "type": "string", "minLength": 8 },
+        "modelRef": { "type": "string", "minLength": 1 },
+        "promptDigest": { "type": "string", "minLength": 8 },
+        "gatewayRef": { "type": ["string", "null"] },
+        "datasetRef": { "type": "string", "minLength": 3 },
+        "minReplayEvents": { "type": "integer", "minimum": 1 },
+        "minEvaluationRuns": { "type": "integer", "minimum": 2 },
+        "thresholds": { "$ref": "#/$defs/thresholds" },
+        "runs": { "type": "array", "minItems": 2, "items": { "$ref": "#/$defs/evaluationRun" } },
+        "passed": { "type": "boolean" }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "required": ["requiresKillSwitch", "requiresGovernance", "killSwitchRef", "auditRef"],
+      "additionalProperties": false,
+      "properties": {
+        "requiresKillSwitch": { "const": true },
+        "requiresGovernance": { "const": true },
+        "killSwitchRef": { "type": "string", "minLength": 3 },
+        "auditRef": { "type": "string", "minLength": 3 }
+      }
+    },
+    "historyEntry": {
+      "type": "object",
+      "required": ["version", "level", "at", "by", "changeRef"],
+      "additionalProperties": false,
+      "properties": {
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "level": { "enum": ["observe", "propose", "shadow", "limited-autonomy"] },
+        "at": { "type": "string", "minLength": 10 },
+        "by": { "type": "string", "minLength": 3 },
+        "changeRef": { "type": "string", "minLength": 3 }
+      }
+    }
+  }
+}

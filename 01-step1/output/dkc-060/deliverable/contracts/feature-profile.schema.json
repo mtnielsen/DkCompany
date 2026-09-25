@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/feature-profile.schema.json",
+  "title": "Feature Access Profile",
+  "description": "Funktionsprofil for en valgfri funktionspakke (Communications, HR, BI, Reporting). Profilen samler modulvalg, et separat formål, tilladte dataklasser og felt-/rækkeregler. Feltregler er default-deny: et felt er kun læsbart hvis profilen udtrykkeligt tillader det, og følsomme/særlige kategorier kræver desuden en eksplicit bevilling. Profilen er en deklaration om adgang, ikke bevis for at en given installation er kjørbar.",
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "id",
+    "purpose",
+    "purposeDescription",
+    "modules",
+    "capabilities",
+    "allowedDataClasses",
+    "fieldRules",
+    "rowPolicy",
+    "externalSources",
+    "recipientTrust",
+    "surfaces"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "FeatureAccessProfile" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,63}$" },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "description": { "type": "string", "minLength": 20 },
+        "accountableHuman": { "$ref": "#/$defs/human" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "id": { "enum": ["communications", "hr", "bi", "reporting"] },
+    "purpose": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$" },
+    "purposeDescription": { "type": "string", "minLength": 20 },
+    "modules": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,63}$" }
+    },
+    "capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,63}$" }
+    },
+    "allowedDataClasses": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "enum": ["public", "internal", "personal", "sensitive", "special-category"] }
+    },
+    "fieldRules": {
+      "type": "object",
+      "required": ["defaultDecision", "fields"],
+      "additionalProperties": false,
+      "properties": {
+        "defaultDecision": { "const": "deny" },
+        "fields": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/fieldRule" }
+        }
+      }
+    },
+    "rowPolicy": {
+      "type": "object",
+      "required": ["tenantStrict", "selfAttribute"],
+      "additionalProperties": false,
+      "properties": {
+        "tenantStrict": { "const": true },
+        "selfAttribute": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$" },
+        "requiredAttribute": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$" },
+        "requiresGrant": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{2,63}$" }
+      }
+    },
+    "externalSources": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/externalSource" }
+    },
+    "recipientTrust": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/recipientTrust" }
+    },
+    "surfaces": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "enum": ["ui", "api", "connector", "search", "export", "cache", "ai-tool"] }
+    }
+  },
+  "$defs": {
+    "human": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": {
+          "type": "object",
+          "required": ["subject", "name"],
+          "additionalProperties": false,
+          "properties": {
+            "subject": { "type": "string", "minLength": 3 },
+            "name": { "type": "string", "minLength": 2 }
+          }
+        }
+      }
+    },
+    "fieldRule": {
+      "type": "object",
+      "required": ["field", "dataClass", "decision"],
+      "additionalProperties": false,
+      "properties": {
+        "field": { "type": "string", "pattern": "^[a-z][a-z0-9_.]{1,63}$" },
+        "dataClass": { "enum": ["public", "internal", "personal", "sensitive", "special-category"] },
+        "decision": { "enum": ["allow", "redact", "deny"] },
+        "requiresGrant": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{2,63}$" },
+        "note": { "type": "string", "minLength": 5 }
+      }
+    },
+    "externalSource": {
+      "type": "object",
+      "required": ["id", "systemOfRecord", "access", "connectorRequired", "trustRef"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,63}$" },
+        "systemOfRecord": { "type": "string", "minLength": 3 },
+        "access": { "enum": ["read-only", "write"] },
+        "connectorRequired": { "type": "boolean" },
+        "trustRef": { "type": "string", "minLength": 3 },
+        "note": { "type": "string", "minLength": 5 }
+      }
+    },
+    "recipientTrust": {
+      "type": "object",
+      "required": ["id", "kind", "revalidateAt"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,63}$" },
+        "kind": { "enum": ["human", "service", "external"] },
+        "dataSharingRef": { "type": "string", "minLength": 3 },
+        "revalidateAt": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["run", "delivery"] }
+        }
+      }
+    }
+  }
+}

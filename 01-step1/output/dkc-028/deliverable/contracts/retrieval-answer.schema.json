@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/retrieval-answer.schema.json",
+  "title": "Retrieval Answer",
+  "description": "DKC-028: et svar med kildehenvisning, usikkerhed og adgangskontrol ved læsning. Svarindhold er ubetroet data (`untrusted: true`, `executable: false`), og et dokument i kilderne kan aldrig aktivere et privilegeret værktøj (`toolProposals` er tom, `toolActivationDenied` er altid sand). Citationslisten indeholder kun dokumenter, principalen faktisk må læse.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "query", "tenantId", "subject", "answerText", "uncertainty", "citations", "untrusted", "executable", "toolProposals", "toolActivationDenied", "accessDecision"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "RetrievalAnswer" },
+    "query": { "type": "string", "minLength": 1 },
+    "tenantId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+    "subject": { "type": ["string", "null"] },
+    "answerText": { "type": "string" },
+    "uncertainty": { "$ref": "#/$defs/uncertainty" },
+    "citations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/citation" }
+    },
+    "untrusted": { "const": true },
+    "executable": { "const": false },
+    "toolProposals": { "type": "array", "maxItems": 0 },
+    "toolActivationDenied": { "const": true },
+    "accessDecision": { "$ref": "#/$defs/accessDecision" },
+    "injectionFindings": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "policyRef": { "type": ["string", "null"] }
+  },
+  "$defs": {
+    "uncertainty": {
+      "type": "object",
+      "required": ["level", "score", "reason"],
+      "additionalProperties": false,
+      "properties": {
+        "level": { "enum": ["low", "medium", "high"] },
+        "score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "reason": { "type": "string", "minLength": 10 }
+      }
+    },
+    "citation": {
+      "type": "object",
+      "required": ["documentId", "sourceId", "title", "url", "snippet", "classification"],
+      "additionalProperties": false,
+      "properties": {
+        "documentId": { "type": "string", "minLength": 1 },
+        "sourceId": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "format": "uri" },
+        "snippet": { "type": "string" },
+        "classification": { "enum": ["public", "internal", "personal", "special-category", "confidential"] }
+      }
+    },
+    "accessDecision": {
+      "type": "object",
+      "required": ["readAllowed", "filteredDocuments", "deniedDocuments"],
+      "additionalProperties": false,
+      "properties": {
+        "readAllowed": { "type": "boolean" },
+        "filteredDocuments": { "type": "integer", "minimum": 0 },
+        "deniedDocuments": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

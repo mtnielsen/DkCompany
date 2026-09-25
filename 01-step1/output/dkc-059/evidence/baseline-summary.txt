@@ -1,0 +1,13 @@
+# Baseline (DKC-059)
+
+Kørt i arbejdsklonen efter DKC-031-overlay + DKC-059-overlay.
+Resultat: FAIL — 1 kendt, præeksisterende fejl (changelog-check, manglende DCO sign-off; aldrig 'fixet').
+Kørslen muterer 31 sporede fixture-filer under modules/*/conformance; de er gendannet fra en ren reference-klon og diff -rq er tom.
+
+RESULTAT: FAIL
+  ⚠ Kørslen ændrede 31 sporede fil(er): en ren checkout forbliver ikke ren. Se matrixafsnittet om reproducerbarhed.
+
+Checks: 249 i alt, 194 PASS, 1 FAIL (changelog-check), 54 NOT RUN.
+Før DKC-059: 244 i alt, 190 PASS, 1 FAIL, 53 NOT RUN.
+
+Nye checks: provider-check (PASS), provider-test (PASS), provider-run (PASS), provider-report (PASS), integration-provider-swap-live (NOT RUN).

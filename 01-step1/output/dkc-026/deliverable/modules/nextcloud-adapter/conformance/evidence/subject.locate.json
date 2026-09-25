@@ -1,0 +1,21 @@
+{
+  "verb": "subject.locate",
+  "module": "nextcloud-adapter",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-24T10:59:05.759Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 37
+  },
+  "artifact": {
+    "uri": "s3://evidence/nextcloud-adapter/subject.locate.json",
+    "sha256": "fd18b37bcfb8a774a0248ab6ec3133ffb63a18885bd5e33ababd88bd5caf4f69"
+  }
+}

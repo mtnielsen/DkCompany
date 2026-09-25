@@ -1,0 +1,55 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ProviderSwapPolicy",
+  "metadata": {
+    "name": "platform-provider-swap-policy",
+    "version": "1.0.0",
+    "description": "Politik for providerudskiftning og -migration. Adgang er default-deny og tenantadskilt. En manglende obligatorisk capability eller en nedgradering af en sikkerhedskritisk capability stopper skiftet før nogen ændring. En forbindelsesstreng — også en identisk — kan aldrig omgå capability- eller kompatibilitetsgaten. Cutover kræver en afstemt migration, en dokumenteret rollback, at den gamle provider sættes read-only, og at dens aktive rettigheder tilbagekaldes uden at slette nødvendig evidens.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner"
+      }
+    },
+    "labels": {
+      "tier": "provider-registry",
+      "wave": "5"
+    }
+  },
+  "authorization": {
+    "defaultDeny": true,
+    "tenantIsolation": true,
+    "roleProtection": true,
+    "revalidateAtRead": true,
+    "crossTenantSwap": false
+  },
+  "negotiation": {
+    "requireAllMandatoryCapabilities": true,
+    "securityCriticalCannotDowngrade": true,
+    "unknownCapabilityDenied": true,
+    "allowDegradedOptional": false,
+    "connectionStringNeverBypassesGate": true,
+    "requireExplicitCompatibilityRow": true
+  },
+  "cutover": {
+    "requiresPreflight": true,
+    "requiresReconciliation": true,
+    "requiresMigrationProofForPlanned": true,
+    "requiresHumanApproval": true,
+    "approvalMustBeHuman": true,
+    "twoPerson": true,
+    "oldProviderReadOnly": true,
+    "requiresRollback": true,
+    "rollbackRestoresRights": true
+  },
+  "offboarding": {
+    "revokeCredentials": true,
+    "removeActiveRights": true,
+    "retainEvidence": true,
+    "evidenceRetentionDays": 365
+  }
+}

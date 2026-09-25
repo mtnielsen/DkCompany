@@ -1,0 +1,22 @@
+Files /tmp/dkc-018-ref/00-core/.github/workflows/release-gate.yml and /tmp/dkc-018/00-core/.github/workflows/release-gate.yml differ
+Files /tmp/dkc-018-ref/00-core/Makefile and /tmp/dkc-018/00-core/Makefile differ
+Only in /tmp/dkc-018/00-core/conformance/src: evidence-mode-check.mjs
+Only in /tmp/dkc-018/00-core/conformance/src: evidence-mode.mjs
+Files /tmp/dkc-018-ref/00-core/conformance/src/schemas.mjs and /tmp/dkc-018/00-core/conformance/src/schemas.mjs differ
+Files /tmp/dkc-018-ref/00-core/conformance/src/validate-schemas.mjs and /tmp/dkc-018/00-core/conformance/src/validate-schemas.mjs differ
+Only in /tmp/dkc-018/00-core/conformance/test: evidence-mode.test.mjs
+Only in /tmp/dkc-018/00-core/contracts: evidence-record.schema.json
+Only in /tmp/dkc-018/00-core/contracts/examples: evidence-record.example.json
+Files /tmp/dkc-018-ref/00-core/contracts/module-manifest.schema.json and /tmp/dkc-018/00-core/contracts/module-manifest.schema.json differ
+Only in /tmp/dkc-018/00-core/docs/adr: 0034-adskil-kontrakt-og-driftsbevis.md
+Files /tmp/dkc-018-ref/00-core/docs/adr/README.md and /tmp/dkc-018/00-core/docs/adr/README.md differ
+Files /tmp/dkc-018-ref/00-core/docs/spec/README.md and /tmp/dkc-018/00-core/docs/spec/README.md differ
+Only in /tmp/dkc-018/00-core/docs/spec: evidence-modes.md
+Files /tmp/dkc-018-ref/00-core/docs/status/implementation-matrix.md and /tmp/dkc-018/00-core/docs/status/implementation-matrix.md differ
+Files /tmp/dkc-018-ref/00-core/docs/testing/test-matrix.md and /tmp/dkc-018/00-core/docs/testing/test-matrix.md differ
+Only in /tmp/dkc-018/00-core/evidence: probes.json
+Only in /tmp/dkc-018/00-core/evidence/src: probe-cli.mjs
+Only in /tmp/dkc-018/00-core/evidence/src: probes.mjs
+Only in /tmp/dkc-018/00-core/evidence/test: probes.test.mjs
+Files /tmp/dkc-018-ref/00-core/release/matrix/test-matrix.json and /tmp/dkc-018/00-core/release/matrix/test-matrix.json differ
+Files /tmp/dkc-018-ref/00-core/tools/baseline/registry.mjs and /tmp/dkc-018/00-core/tools/baseline/registry.mjs differ

@@ -1,0 +1,825 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "PilotReadinessReport",
+  "metadata": {
+    "name": "platform-pilot-readiness-report",
+    "version": "1.0.0",
+    "description": "Deterministisk readiness-rapport for pilotforløbet: kørebare scenarier pr. virksomhedsprofil, abuse- og belastningsprober samt gate-vurderinger fra faktisk evidens.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen"
+      }
+    },
+    "labels": {
+      "wave": "5",
+      "task": "DKC-033"
+    }
+  },
+  "generatedAt": "2026-03-01T00:00:00Z",
+  "measured": false,
+  "targetCommit": "83ad91a963d8055f77c29fb4361455689df95acb",
+  "artifactDigest": "sha256:ec4f3a4858ca80e1d9fb1e8d7ea633be3011c98086debbda16ba4e3cbbd4adf5",
+  "readiness": "not-ready",
+  "profiles": [
+    {
+      "profileRef": "smv",
+      "segment": "smv",
+      "deploymentProfileRef": "small-vps",
+      "companySizeEmployees": 18,
+      "workflows": [
+        {
+          "scenarioId": "smv-login-offboarding",
+          "journey": "login-offboarding",
+          "runner": "login-offboarding",
+          "status": "passed",
+          "steps": [
+            {
+              "id": "resolve-tenant",
+              "status": "ok",
+              "detail": "tenant=globex"
+            },
+            {
+              "id": "verify-identity",
+              "status": "ok",
+              "detail": "oidc|pilot.smv"
+            },
+            {
+              "id": "offboard",
+              "status": "ok",
+              "detail": "5 handlinger"
+            },
+            {
+              "id": "verify",
+              "status": "ok",
+              "detail": null
+            }
+          ],
+          "problems": [],
+          "metrics": {
+            "subject": "oidc|medarbejder.smv",
+            "targets": 5
+          }
+        },
+        {
+          "scenarioId": "smv-daily-work",
+          "journey": "daily-work",
+          "runner": "daily-work",
+          "status": "passed",
+          "steps": [
+            {
+              "id": "resolve-tenant",
+              "status": "ok",
+              "detail": "tenant=globex"
+            },
+            {
+              "id": "authorize",
+              "status": "ok",
+              "detail": "allow=allow, deny=deny"
+            },
+            {
+              "id": "approve-mutation",
+              "status": "ok",
+              "detail": "digest=5bc801643c5c"
+            },
+            {
+              "id": "apply",
+              "status": "ok",
+              "detail": "anvendt under gyldig binding"
+            },
+            {
+              "id": "verify",
+              "status": "ok",
+              "detail": null
+            }
+          ],
+          "problems": [],
+          "metrics": {
+            "bindingDigest": "5bc801643c5ce49bf98dfbb7f5880255e2ddcb606a2623a6f25dcb665e814219"
+          }
+        },
+        {
+          "scenarioId": "smv-restore",
+          "journey": "restore",
+          "runner": "restore",
+          "status": "passed",
+          "steps": [
+            {
+              "id": "backup",
+              "status": "ok",
+              "detail": "backup oprettet og checksum verificeret"
+            },
+            {
+              "id": "restore",
+              "status": "ok",
+              "detail": "rto=0.017, rpo=0.033"
+            },
+            {
+              "id": "verify",
+              "status": "ok",
+              "detail": null
+            }
+          ],
+          "problems": [],
+          "metrics": {
+            "rpoMinutes": 0.033,
+            "rtoMinutes": 0.017
+          }
+        },
+        {
+          "scenarioId": "smv-privacy-case",
+          "journey": "privacy-case",
+          "runner": "privacy-case",
+          "status": "passed",
+          "steps": [
+            {
+              "id": "open-case",
+              "status": "ok",
+              "detail": "sag oprettet"
+            },
+            {
+              "id": "fan-out",
+              "status": "ok",
+              "detail": "partially-completed"
+            },
+            {
+              "id": "export",
+              "status": "ok",
+              "detail": "sikret eksport udstedt"
+            },
+            {
+              "id": "redeem",
+              "status": "ok",
+              "detail": "0 poster"
+            },
+            {
+              "id": "verify",
+              "status": "ok",
+              "detail": null
+            }
+          ],
+          "problems": [],
+          "metrics": {
+            "records": 0
+          }
+        },
+        {
+          "scenarioId": "smv-upgrade",
+          "journey": "upgrade",
+          "runner": "upgrade",
+          "status": "passed",
+          "steps": [
+            {
+              "id": "plan",
+              "status": "ok",
+              "detail": "impact=3"
+            },
+            {
+              "id": "approve",
+              "status": "ok",
+              "detail": null
+            },
+            {
+              "id": "upgrade",
+              "status": "ok",
+              "detail": "aktiv=1.4.0"
+            },
+            {
+              "id": "verify",
+              "status": "ok",
+              "detail": null
+            }
+          ],
+          "problems": [],
+          "metrics": {
+            "from": "1.3.0",
+            "to": "1.4.0",
+            "activeRelease": "1.4.0",
+            "deploymentProfileRef": "small-vps",
+            "components": 6
+          }
+        },
+        {
+          "scenarioId": "smv-exit",
+          "journey": "exit",
+          "runner": "exit",
+          "status": "passed",
+          "steps": [
+            {
+              "id": "export",
+              "status": "ok",
+              "detail": "2 poster"
+            },
+            {
+              "id": "verify",
+              "status": "ok",
+              "detail": null
+            }
+          ],
+          "problems": [],
+          "metrics": {
+            "tenantId": "globex",
+            "recordCount": 2
+          }
+        }
+      ],
+      "complete": true,
+      "rpoMinutes": 0.033,
+      "rtoMinutes": 0.017,
+      "monthlyCostEur": 106.1
+    },
+    {
+      "profileRef": "it-service",
+      "segment": "service",
+      "deploymentProfileRef": "ha-cluster",
+      "companySizeEmployees": 120,
+      "workflows": [
+        {
+          "scenarioId": "it-service-login-offboarding",
+          "journey": "login-offboarding",
+          "runner": "login-offboarding",
+          "status": "passed",
+          "steps": [
+            {
+              "id": "resolve-tenant",
+              "status": "ok",
+              "detail": "tenant=acme"
+            },
+            {
+              "id": "verify-identity",
+              "status": "ok",
+              "detail": "oidc|pilot.it-service"
+            },
+            {
+              "id": "offboard",
+              "status": "ok",
+              "detail": "5 handlinger"
+            },
+            {
+              "id": "verify",
+              "status": "ok",
+              "detail": null
+            }
+          ],
+          "problems": [],
+          "metrics": {
+            "subject": "oidc|medarbejder.it-service",
+            "targets": 5
+          }
+        },
+        {
+          "scenarioId": "it-service-daily-work",
+          "journey": "daily-work",
+          "runner": "daily-work",
+          "status": "passed",
+          "steps": [
+            {
+              "id": "resolve-tenant",
+              "status": "ok",
+              "detail": "tenant=acme"
+            },
+            {
+              "id": "authorize",
+              "status": "ok",
+              "detail": "allow=allow, deny=deny"
+            },
+            {
+              "id": "approve-mutation",
+              "status": "ok",
+              "detail": "digest=f3c6db2a8b9a"
+            },
+            {
+              "id": "apply",
+              "status": "ok",
+              "detail": "anvendt under gyldig binding"
+            },
+            {
+              "id": "verify",
+              "status": "ok",
+              "detail": null
+            }
+          ],
+          "problems": [],
+          "metrics": {
+            "bindingDigest": "f3c6db2a8b9a46f00385c3a2902522b7703ade19c5320ca5d26f6f0ae77cd461"
+          }
+        },
+        {
+          "scenarioId": "it-service-restore",
+          "journey": "restore",
+          "runner": "restore",
+          "status": "passed",
+          "steps": [
+            {
+              "id": "backup",
+              "status": "ok",
+              "detail": "backup oprettet og checksum verificeret"
+            },
+            {
+              "id": "restore",
+              "status": "ok",
+              "detail": "rto=0.017, rpo=0.033"
+            },
+            {
+              "id": "verify",
+              "status": "ok",
+              "detail": null
+            }
+          ],
+          "problems": [],
+          "metrics": {
+            "rpoMinutes": 0.033,
+            "rtoMinutes": 0.017
+          }
+        },
+        {
+          "scenarioId": "it-service-privacy-case",
+          "journey": "privacy-case",
+          "runner": "privacy-case",
+          "status": "passed",
+          "steps": [
+            {
+              "id": "open-case",
+              "status": "ok",
+              "detail": "sag oprettet"
+            },
+            {
+              "id": "fan-out",
+              "status": "ok",
+              "detail": "partially-completed"
+            },
+            {
+              "id": "export",
+              "status": "ok",
+              "detail": "sikret eksport udstedt"
+            },
+            {
+              "id": "redeem",
+              "status": "ok",
+              "detail": "0 poster"
+            },
+            {
+              "id": "verify",
+              "status": "ok",
+              "detail": null
+            }
+          ],
+          "problems": [],
+          "metrics": {
+            "records": 0
+          }
+        },
+        {
+          "scenarioId": "it-service-upgrade",
+          "journey": "upgrade",
+          "runner": "upgrade",
+          "status": "passed",
+          "steps": [
+            {
+              "id": "plan",
+              "status": "ok",
+              "detail": "impact=3"
+            },
+            {
+              "id": "approve",
+              "status": "ok",
+              "detail": null
+            },
+            {
+              "id": "upgrade",
+              "status": "ok",
+              "detail": "aktiv=1.4.0"
+            },
+            {
+              "id": "verify",
+              "status": "ok",
+              "detail": null
+            }
+          ],
+          "problems": [],
+          "metrics": {
+            "from": "1.3.0",
+            "to": "1.4.0",
+            "activeRelease": "1.4.0",
+            "deploymentProfileRef": "ha-cluster",
+            "components": 6
+          }
+        },
+        {
+          "scenarioId": "it-service-exit",
+          "journey": "exit",
+          "runner": "exit",
+          "status": "passed",
+          "steps": [
+            {
+              "id": "export",
+              "status": "ok",
+              "detail": "2 poster"
+            },
+            {
+              "id": "verify",
+              "status": "ok",
+              "detail": null
+            }
+          ],
+          "problems": [],
+          "metrics": {
+            "tenantId": "acme",
+            "recordCount": 2
+          }
+        }
+      ],
+      "complete": true,
+      "rpoMinutes": 0.033,
+      "rtoMinutes": 0.017,
+      "monthlyCostEur": 761.3
+    },
+    {
+      "profileRef": "enterprise",
+      "segment": "enterprise",
+      "deploymentProfileRef": "enterprise-dedicated",
+      "companySizeEmployees": 900,
+      "workflows": [
+        {
+          "scenarioId": "enterprise-login-offboarding",
+          "journey": "login-offboarding",
+          "runner": "login-offboarding",
+          "status": "passed",
+          "steps": [
+            {
+              "id": "resolve-tenant",
+              "status": "ok",
+              "detail": "tenant=initech"
+            },
+            {
+              "id": "verify-identity",
+              "status": "ok",
+              "detail": "oidc|pilot.enterprise"
+            },
+            {
+              "id": "offboard",
+              "status": "ok",
+              "detail": "5 handlinger"
+            },
+            {
+              "id": "verify",
+              "status": "ok",
+              "detail": null
+            }
+          ],
+          "problems": [],
+          "metrics": {
+            "subject": "oidc|medarbejder.enterprise",
+            "targets": 5
+          }
+        },
+        {
+          "scenarioId": "enterprise-daily-work",
+          "journey": "daily-work",
+          "runner": "daily-work",
+          "status": "passed",
+          "steps": [
+            {
+              "id": "resolve-tenant",
+              "status": "ok",
+              "detail": "tenant=initech"
+            },
+            {
+              "id": "authorize",
+              "status": "ok",
+              "detail": "allow=allow, deny=deny"
+            },
+            {
+              "id": "approve-mutation",
+              "status": "ok",
+              "detail": "digest=25bc4373b300"
+            },
+            {
+              "id": "apply",
+              "status": "ok",
+              "detail": "anvendt under gyldig binding"
+            },
+            {
+              "id": "verify",
+              "status": "ok",
+              "detail": null
+            }
+          ],
+          "problems": [],
+          "metrics": {
+            "bindingDigest": "25bc4373b3006aeb40820244f8cf916dfa152133c14e976aab1b74899c6c51c6"
+          }
+        },
+        {
+          "scenarioId": "enterprise-restore",
+          "journey": "restore",
+          "runner": "restore",
+          "status": "passed",
+          "steps": [
+            {
+              "id": "backup",
+              "status": "ok",
+              "detail": "backup oprettet og checksum verificeret"
+            },
+            {
+              "id": "restore",
+              "status": "ok",
+              "detail": "rto=0.017, rpo=0.033"
+            },
+            {
+              "id": "verify",
+              "status": "ok",
+              "detail": null
+            }
+          ],
+          "problems": [],
+          "metrics": {
+            "rpoMinutes": 0.033,
+            "rtoMinutes": 0.017
+          }
+        },
+        {
+          "scenarioId": "enterprise-privacy-case",
+          "journey": "privacy-case",
+          "runner": "privacy-case",
+          "status": "passed",
+          "steps": [
+            {
+              "id": "open-case",
+              "status": "ok",
+              "detail": "sag oprettet"
+            },
+            {
+              "id": "fan-out",
+              "status": "ok",
+              "detail": "partially-completed"
+            },
+            {
+              "id": "export",
+              "status": "ok",
+              "detail": "sikret eksport udstedt"
+            },
+            {
+              "id": "redeem",
+              "status": "ok",
+              "detail": "0 poster"
+            },
+            {
+              "id": "verify",
+              "status": "ok",
+              "detail": null
+            }
+          ],
+          "problems": [],
+          "metrics": {
+            "records": 0
+          }
+        },
+        {
+          "scenarioId": "enterprise-upgrade",
+          "journey": "upgrade",
+          "runner": "upgrade",
+          "status": "passed",
+          "steps": [
+            {
+              "id": "plan",
+              "status": "ok",
+              "detail": "impact=3"
+            },
+            {
+              "id": "approve",
+              "status": "ok",
+              "detail": null
+            },
+            {
+              "id": "upgrade",
+              "status": "ok",
+              "detail": "aktiv=1.4.0"
+            },
+            {
+              "id": "verify",
+              "status": "ok",
+              "detail": null
+            }
+          ],
+          "problems": [],
+          "metrics": {
+            "from": "1.3.0",
+            "to": "1.4.0",
+            "activeRelease": "1.4.0",
+            "deploymentProfileRef": "enterprise-dedicated",
+            "components": 6
+          }
+        },
+        {
+          "scenarioId": "enterprise-exit",
+          "journey": "exit",
+          "runner": "exit",
+          "status": "passed",
+          "steps": [
+            {
+              "id": "export",
+              "status": "ok",
+              "detail": "2 poster"
+            },
+            {
+              "id": "verify",
+              "status": "ok",
+              "detail": null
+            }
+          ],
+          "problems": [],
+          "metrics": {
+            "tenantId": "initech",
+            "recordCount": 2
+          }
+        }
+      ],
+      "complete": true,
+      "rpoMinutes": 0.033,
+      "rtoMinutes": 0.017,
+      "monthlyCostEur": 2243.6
+    }
+  ],
+  "gates": [
+    {
+      "id": "security",
+      "kind": "common",
+      "applicable": true,
+      "mandatory": true,
+      "status": "pending",
+      "reasons": [
+        "security-assessment: no-independent-assessment, no-release-decision, assessment-outstanding",
+        "independent-assessment: ingen registreret uafhængig vurdering"
+      ],
+      "evidence": [
+        {
+          "kind": "security-assessment",
+          "ref": "security-assessment/assessment.json",
+          "status": "pending",
+          "detail": "no-independent-assessment, no-release-decision, assessment-outstanding"
+        },
+        {
+          "kind": "independent-assessment",
+          "ref": "release/matrix/assessments.json",
+          "status": "pending",
+          "detail": "ingen registreret uafhængig vurdering"
+        }
+      ]
+    },
+    {
+      "id": "quality",
+      "kind": "common",
+      "applicable": true,
+      "mandatory": true,
+      "status": "passed",
+      "reasons": [],
+      "evidence": [
+        {
+          "kind": "pilot-scenarios",
+          "ref": "pilot/pilot-scenarios.json",
+          "status": "passed",
+          "detail": "18 scenarier bestået"
+        },
+        {
+          "kind": "test-matrix",
+          "ref": "release/matrix/test-matrix.json",
+          "status": "passed",
+          "detail": "68 krav"
+        }
+      ]
+    },
+    {
+      "id": "recovery",
+      "kind": "common",
+      "applicable": true,
+      "mandatory": true,
+      "status": "passed",
+      "reasons": [],
+      "evidence": [
+        {
+          "kind": "restore-drill",
+          "ref": "continuity/report/recovery-drill-report.json",
+          "status": "passed",
+          "detail": "recovery-øvelse deterministisk, 3 restore-runs"
+        }
+      ]
+    },
+    {
+      "id": "human-assessment",
+      "kind": "common",
+      "applicable": true,
+      "mandatory": true,
+      "status": "pending",
+      "reasons": [
+        "independent-assessment: ingen registreret uafhængig vurdering",
+        "customer-acceptance: ingen registreret kundcaccept"
+      ],
+      "evidence": [
+        {
+          "kind": "independent-assessment",
+          "ref": "release/matrix/assessments.json",
+          "status": "pending",
+          "detail": "ingen registreret uafhængig vurdering"
+        },
+        {
+          "kind": "customer-acceptance",
+          "ref": "pilot/customer-acceptance.json",
+          "status": "pending",
+          "detail": "ingen registreret kundcaccept"
+        }
+      ]
+    },
+    {
+      "id": "ha",
+      "kind": "profile",
+      "applicable": true,
+      "mandatory": true,
+      "status": "passed",
+      "reasons": [],
+      "evidence": [
+        {
+          "kind": "pilot-scenarios",
+          "ref": "pilot/pilot-scenarios.json",
+          "status": "passed",
+          "detail": "18 scenarier bestået"
+        },
+        {
+          "kind": "test-matrix",
+          "ref": "release/matrix/test-matrix.json",
+          "status": "passed",
+          "detail": "68 krav"
+        }
+      ]
+    },
+    {
+      "id": "cost",
+      "kind": "common",
+      "applicable": true,
+      "mandatory": true,
+      "status": "passed",
+      "reasons": [],
+      "evidence": [
+        {
+          "kind": "cost-report",
+          "ref": "metering/report/cost-report.json",
+          "status": "passed",
+          "detail": "3 tenant-omkostninger"
+        }
+      ]
+    },
+    {
+      "id": "observation",
+      "kind": "common",
+      "applicable": true,
+      "mandatory": true,
+      "status": "pending",
+      "reasons": [
+        "observation-period: status 'outstanding' (0/30 dage)"
+      ],
+      "evidence": [
+        {
+          "kind": "observation-period",
+          "ref": "pilot/observation.json",
+          "status": "pending",
+          "detail": "status 'outstanding' (0/30 dage)"
+        }
+      ]
+    }
+  ],
+  "abuse": {
+    "probes": [
+      "approval-bypass",
+      "tenant-isolation",
+      "injection"
+    ],
+    "violations": []
+  },
+  "load": {
+    "bounded": true,
+    "iterations": 64,
+    "concurrency": 8,
+    "failures": 0,
+    "bypasses": 0
+  },
+  "observation": {
+    "status": "outstanding",
+    "requiredDays": 30,
+    "observedDays": 0,
+    "startedAt": null,
+    "endedAt": null,
+    "note": "Der findes ingen levende serviceprofil og ingen 30-dages driftsperiode i dette miljø. Den deterministiske pilotkørsel er ikke en observation."
+  },
+  "customerAcceptance": {
+    "status": "pending",
+    "accepted": false,
+    "acceptedBy": null,
+    "acceptedAt": null,
+    "limitations": [],
+    "note": "Ingen navngivet kunde har endnu accepteret de kendte begrænsninger."
+  },
+  "problems": []
+}

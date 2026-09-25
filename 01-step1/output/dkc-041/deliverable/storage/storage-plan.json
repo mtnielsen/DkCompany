@@ -1,0 +1,215 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "StoragePlan",
+  "metadata": {
+    "name": "durable-storage-staging",
+    "version": "1.0.0",
+    "description": "Konkret plan for holdbart fil- og objektlager: et vedligeholdt CSI-lager med replikering og et S3-kompatibelt objektlager med erasure coding, tre hosts i tre fejldomæner, synkront skrive-quorum uden usikre writes ved quorumtab, versionsstyrede objekter med checksums og scrub/repair, kundeafgrænsede nøgler og en dataklassifikation hvor ingen nødvendig tilstand ligger på ephemeral disk.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen"
+      }
+    },
+    "labels": {
+      "segment": "data",
+      "tier": "durable"
+    }
+  },
+  "hostingProfileRef": "catalog/profiles/ha-cluster.profile.json",
+  "provider": {
+    "csi": {
+      "name": "Longhorn",
+      "version": "1.7",
+      "maintained": true,
+      "failureModel": "replicated",
+      "documented": true,
+      "docsRef": "docs/spec/storage.md#csi-og-objektlager"
+    },
+    "objectStore": {
+      "name": "MinIO",
+      "version": "RELEASE.2024-12-18T13-15-44Z",
+      "maintained": true,
+      "s3Compatible": true,
+      "versioning": true,
+      "objectLock": true,
+      "failureModel": "erasure-coding",
+      "docsRef": "docs/spec/storage.md#csi-og-objektlager"
+    }
+  },
+  "failureDomains": [
+    "fsn1-dc14",
+    "fsn1-dc15",
+    "hel1-dc2"
+  ],
+  "topology": {
+    "hosts": [
+      {
+        "id": "storage-1",
+        "failureDomain": "fsn1-dc14",
+        "disks": [
+          {
+            "id": "nvme-1",
+            "sizeBytes": 1920000000000,
+            "type": "nvme"
+          },
+          {
+            "id": "nvme-2",
+            "sizeBytes": 1920000000000,
+            "type": "nvme"
+          }
+        ]
+      },
+      {
+        "id": "storage-2",
+        "failureDomain": "fsn1-dc15",
+        "disks": [
+          {
+            "id": "nvme-1",
+            "sizeBytes": 1920000000000,
+            "type": "nvme"
+          },
+          {
+            "id": "nvme-2",
+            "sizeBytes": 1920000000000,
+            "type": "nvme"
+          }
+        ]
+      },
+      {
+        "id": "storage-3",
+        "failureDomain": "hel1-dc2",
+        "disks": [
+          {
+            "id": "nvme-1",
+            "sizeBytes": 1920000000000,
+            "type": "nvme"
+          },
+          {
+            "id": "nvme-2",
+            "sizeBytes": 1920000000000,
+            "type": "nvme"
+          }
+        ]
+      }
+    ],
+    "replicaFactor": 3,
+    "writeQuorum": 2,
+    "readQuorum": 2,
+    "quorum": 2,
+    "minFreeSpacePercent": 20,
+    "minFreeSpaceBytes": 10000000000,
+    "erasureCoding": {
+      "dataShards": 4,
+      "parityShards": 2,
+      "minShards": 4
+    },
+    "unsafeWritesOnQuorumLoss": false,
+    "ephemeralDiskRequiredState": false
+  },
+  "dataClasses": [
+    {
+      "id": "authoritative",
+      "description": "Autoritative kundedata og audit. Skal være holdbar, replikeret og aldrig afhængig af ephemeral disk.",
+      "durable": true,
+      "cache": false,
+      "rebuildable": false,
+      "ephemeral": false,
+      "tenantScopedKey": true,
+      "encryption": "aes-256-gcm",
+      "placement": "replicated"
+    },
+    {
+      "id": "object-store",
+      "description": "Autoritative objektversioner med erasure coding og object-lock; versioner og checksums bevares.",
+      "durable": true,
+      "cache": false,
+      "rebuildable": false,
+      "ephemeral": false,
+      "tenantScopedKey": true,
+      "encryption": "aes-256-gcm",
+      "placement": "erasure-coded"
+    },
+    {
+      "id": "cache",
+      "description": "Genopbyggeligt cache-lag foran det autoritative lager. Tab af cachen ændrer ikke autoritative data.",
+      "durable": false,
+      "cache": true,
+      "rebuildable": true,
+      "ephemeral": true,
+      "tenantScopedKey": true,
+      "encryption": "none",
+      "placement": "ephemeral"
+    },
+    {
+      "id": "rebuildable-index",
+      "description": "Søge- og opslagsindeks der kan genopbygges deterministisk fra autoritative objekter.",
+      "durable": false,
+      "cache": false,
+      "rebuildable": true,
+      "ephemeral": true,
+      "tenantScopedKey": true,
+      "encryption": "none",
+      "placement": "ephemeral"
+    }
+  ],
+  "checksums": {
+    "algorithm": "sha256",
+    "onWrite": true,
+    "onRead": true,
+    "scrubIntervalHours": 24
+  },
+  "scrub": {
+    "enabled": true,
+    "intervalHours": 24,
+    "detectsSilentCorruption": true,
+    "repair": true,
+    "repairSource": "healthy-replica-or-parity",
+    "maxConcurrentRepairs": 2
+  },
+  "capacity": {
+    "perHostCapacityBytes": 3840000000000,
+    "alarmThresholdPercent": 25,
+    "hardStopPercent": 5,
+    "alerts": [
+      {
+        "name": "storage-capacity-warning",
+        "atFreePercent": 20,
+        "severity": "warning"
+      },
+      {
+        "name": "storage-capacity-critical",
+        "atFreePercent": 10,
+        "severity": "critical"
+      }
+    ]
+  },
+  "keys": {
+    "tenantScoped": true,
+    "provider": "external-kms",
+    "storeContainsKey": false,
+    "rotationDays": 90,
+    "algorithm": "aes-256-gcm"
+  },
+  "relocation": {
+    "workloadStateOnEphemeral": false,
+    "stateLivesInStorage": true,
+    "preserveFilesAndPermissions": true,
+    "procedure": [
+      "attach-volume-on-new-host",
+      "verify-checksums",
+      "verify-file-modes",
+      "resume-workload",
+      "decommission-old-host-volume"
+    ]
+  },
+  "slos": {
+    "repairUnderLoadPreservesSlo": true,
+    "maxRepairSeconds": 300,
+    "maxScrubSeconds": 600,
+    "availabilityPercent": 99.9
+  }
+}

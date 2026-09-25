@@ -1,0 +1,8 @@
+node gitops/src/cli.mjs changelog --check
+✔ 20 commits i change loggen
+✘ 4 commits mangler sign-off:
+  - 83ad91a963d8 ting
+  - 76e4782085c8 Fjern GitHub Actions CI-workflow
+  - 5f9fa73457d2 Merge remote-tracking branch 'origin/main'
+  - 87768da0dc83 Initial commit
+make: *** [Makefile:973: changelog-check] Error 1

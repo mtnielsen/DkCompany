@@ -1,0 +1,26 @@
+DKC-038 — baseline (make baseline) på DKC-001..DKC-060-stakken + DKC-038
+========================================================================
+
+Checkout: 83ad91a (reviewets base: 5f9fa73)
+Node: v22.22.1
+Komplett log: baseline.log
+Total checks i registeret: 135 (hvoraf 27 external/integration)
+
+Resultat:
+  PASS:    106
+  FAIL:      1  — changelog-check (forud eksisterende; commits mangler DCO sign-off,
+                 også 83ad91a). Aldrig "rettet" eller skjult.
+  NOT RUN:  28  — eksterne integrationer uden levende system i dette miljø,
+                 inkl. DKC-038's integration-ha-failover og
+                 integration-network-policy-plugin.
+
+Nye DKC-038-checks i kørslen:
+  ha-check … PASS
+  ha-test  … PASS
+  ha-drill … PASS
+  integration-ha-failover          (integration) … NOT RUN
+  integration-network-policy-plugin (integration) … NOT RUN
+
+Bemærkning: `make baseline` muterer 30 sporede konformance-fixtures under
+modules/*/conformance (samme kendte adfærd som de øvrige tasks). De er
+nullestillet fra referenceklonen efter kørslen; se evidence/README.md.

@@ -1,0 +1,491 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-23T14:10:25.311Z",
+  "status": "pass",
+  "reports": [
+    {
+      "module": "audit-service",
+      "version": "1.0.0",
+      "suiteVersion": "0.1.0",
+      "startedAt": "2026-09-23T14:10:25.216Z",
+      "finishedAt": "2026-09-23T14:10:25.289Z",
+      "checks": [
+        {
+          "id": "C-001",
+          "title": "module-manifest.json validerer mod kontrakten",
+          "status": "pass",
+          "detail": "Manifest matcher module-manifest.schema.json",
+          "messages": []
+        },
+        {
+          "id": "C-002",
+          "title": "Alle ops- og privacy-verber er deklareret",
+          "status": "pass",
+          "detail": "15 verber deklareret",
+          "messages": []
+        },
+        {
+          "id": "C-003",
+          "title": "Conformance-niveauer er ærlige (reason på partial/unsupported)",
+          "status": "pass",
+          "detail": "15 full, 0 partial/unsupported — alle begrundede",
+          "messages": []
+        },
+        {
+          "id": "C-005",
+          "title": "Ingen lokal brugerdatabase; OIDC/SCIM/SPIFFE erklæret",
+          "status": "pass",
+          "detail": "userStore=none · spiffe://platform.example.org",
+          "messages": []
+        },
+        {
+          "id": "C-006",
+          "title": "OTel-signaler og obligatoriske CloudEvent-attributter",
+          "status": "pass",
+          "detail": "traces/metrics/logs + tenantid/traceid/principal",
+          "messages": []
+        },
+        {
+          "id": "C-004",
+          "title": "Bevisfiler for full-verber findes og validerer",
+          "status": "pass",
+          "detail": "15 fixtures verificeret",
+          "messages": []
+        },
+        {
+          "id": "C-007",
+          "title": "CloudEvent-eksempler validerer mod envelopen",
+          "status": "pass",
+          "detail": "2 events gyldige (1 human, 1 agent)",
+          "messages": []
+        },
+        {
+          "id": "C-008",
+          "title": "Privacy-verber og datakategorier hænger sammen",
+          "status": "pass",
+          "detail": "datakategorier: operational, pseudonymised, personal",
+          "messages": []
+        },
+        {
+          "id": "C-009",
+          "title": "Modulet er bundet til central PDP (fail-closed)",
+          "status": "pass",
+          "detail": "8 gatede verber · fail-closed · bundle platform@1.0.0",
+          "messages": []
+        },
+        {
+          "id": "C-010",
+          "title": "Aktiv policy-bundle er skemagyldig og signeret",
+          "status": "pass",
+          "detail": "platform@1.0.0 · 11 regler · sha256 baeeeb11cb00…",
+          "messages": []
+        },
+        {
+          "id": "C-011",
+          "title": "Compliance-kontrolpåstande er velformede og dækker persondata",
+          "status": "pass",
+          "detail": "5 kontrolpåstande · rolle 'processor' · DPIA henvist",
+          "messages": []
+        },
+        {
+          "id": "C-012",
+          "title": "Modulets kontrolpåstande findes i den regulatoriske kortlægning",
+          "status": "pass",
+          "detail": "5 kontrolpåstande kortlagt mod NIS2/GDPR/AI Act",
+          "messages": []
+        },
+        {
+          "id": "A-001",
+          "title": "Agent-manifester validerer mod agent-manifest.schema.json",
+          "status": "skip",
+          "detail": "modulet har ingen agents/*.json",
+          "messages": []
+        },
+        {
+          "id": "A-002",
+          "title": "Agent-capabilities ligger inden for scope; navngivet ansvarlig",
+          "status": "skip",
+          "detail": "modulet har ingen agents/*.json",
+          "messages": []
+        },
+        {
+          "id": "A-003",
+          "title": "Agenten er bundet til AI-gateway (ingen direkte leverandørkald)",
+          "status": "skip",
+          "detail": "modulet har ingen agents/*.json",
+          "messages": []
+        }
+      ],
+      "summary": {
+        "pass": 12,
+        "fail": 0,
+        "skip": 3,
+        "total": 15
+      },
+      "status": "pass"
+    },
+    {
+      "module": "dummy-ok",
+      "version": "1.2.0",
+      "suiteVersion": "0.1.0",
+      "startedAt": "2026-09-23T14:10:25.290Z",
+      "finishedAt": "2026-09-23T14:10:25.306Z",
+      "checks": [
+        {
+          "id": "C-001",
+          "title": "module-manifest.json validerer mod kontrakten",
+          "status": "pass",
+          "detail": "Manifest matcher module-manifest.schema.json",
+          "messages": []
+        },
+        {
+          "id": "C-002",
+          "title": "Alle ops- og privacy-verber er deklareret",
+          "status": "pass",
+          "detail": "15 verber deklareret",
+          "messages": []
+        },
+        {
+          "id": "C-003",
+          "title": "Conformance-niveauer er ærlige (reason på partial/unsupported)",
+          "status": "pass",
+          "detail": "14 full, 1 partial/unsupported — alle begrundede",
+          "messages": []
+        },
+        {
+          "id": "C-005",
+          "title": "Ingen lokal brugerdatabase; OIDC/SCIM/SPIFFE erklæret",
+          "status": "pass",
+          "detail": "userStore=none · spiffe://platform.example.org",
+          "messages": []
+        },
+        {
+          "id": "C-006",
+          "title": "OTel-signaler og obligatoriske CloudEvent-attributter",
+          "status": "pass",
+          "detail": "traces/metrics/logs + tenantid/traceid/principal",
+          "messages": []
+        },
+        {
+          "id": "C-004",
+          "title": "Bevisfiler for full-verber findes og validerer",
+          "status": "pass",
+          "detail": "14 fixtures verificeret",
+          "messages": []
+        },
+        {
+          "id": "C-007",
+          "title": "CloudEvent-eksempler validerer mod envelopen",
+          "status": "pass",
+          "detail": "2 events gyldige (1 human, 1 agent)",
+          "messages": []
+        },
+        {
+          "id": "C-008",
+          "title": "Privacy-verber og datakategorier hænger sammen",
+          "status": "pass",
+          "detail": "datakategorier: operational, pseudonymised, personal",
+          "messages": []
+        },
+        {
+          "id": "C-009",
+          "title": "Modulet er bundet til central PDP (fail-closed)",
+          "status": "pass",
+          "detail": "8 gatede verber · fail-closed · bundle platform@1.0.0",
+          "messages": []
+        },
+        {
+          "id": "C-010",
+          "title": "Aktiv policy-bundle er skemagyldig og signeret",
+          "status": "pass",
+          "detail": "platform@1.0.0 · 11 regler · sha256 baeeeb11cb00…",
+          "messages": []
+        },
+        {
+          "id": "C-011",
+          "title": "Compliance-kontrolpåstande er velformede og dækker persondata",
+          "status": "pass",
+          "detail": "4 kontrolpåstande · rolle 'processor' · DPIA henvist",
+          "messages": []
+        },
+        {
+          "id": "C-012",
+          "title": "Modulets kontrolpåstande findes i den regulatoriske kortlægning",
+          "status": "pass",
+          "detail": "4 kontrolpåstande kortlagt mod NIS2/GDPR/AI Act",
+          "messages": []
+        },
+        {
+          "id": "A-001",
+          "title": "Agent-manifester validerer mod agent-manifest.schema.json",
+          "status": "pass",
+          "detail": "1 agent-manifester gyldige",
+          "messages": []
+        },
+        {
+          "id": "A-002",
+          "title": "Agent-capabilities ligger inden for scope; navngivet ansvarlig",
+          "status": "pass",
+          "detail": "1 agenter inden for scope",
+          "messages": []
+        },
+        {
+          "id": "A-003",
+          "title": "Agenten er bundet til AI-gateway (ingen direkte leverandørkald)",
+          "status": "pass",
+          "detail": "1 agenter bundet til gateway",
+          "messages": []
+        }
+      ],
+      "summary": {
+        "pass": 15,
+        "fail": 0,
+        "skip": 0,
+        "total": 15
+      },
+      "status": "pass"
+    },
+    {
+      "module": "keycloak-adapter",
+      "version": "1.0.0",
+      "suiteVersion": "0.1.0",
+      "startedAt": "2026-09-23T14:10:25.306Z",
+      "finishedAt": "2026-09-23T14:10:25.309Z",
+      "checks": [
+        {
+          "id": "C-001",
+          "title": "module-manifest.json validerer mod kontrakten",
+          "status": "pass",
+          "detail": "Manifest matcher module-manifest.schema.json",
+          "messages": []
+        },
+        {
+          "id": "C-002",
+          "title": "Alle ops- og privacy-verber er deklareret",
+          "status": "pass",
+          "detail": "15 verber deklareret",
+          "messages": []
+        },
+        {
+          "id": "C-003",
+          "title": "Conformance-niveauer er ærlige (reason på partial/unsupported)",
+          "status": "pass",
+          "detail": "3 full, 12 partial/unsupported — alle begrundede",
+          "messages": []
+        },
+        {
+          "id": "C-005",
+          "title": "Ingen lokal brugerdatabase; OIDC/SCIM/SPIFFE erklæret",
+          "status": "pass",
+          "detail": "userStore=none · spiffe://platform.example.org",
+          "messages": []
+        },
+        {
+          "id": "C-006",
+          "title": "OTel-signaler og obligatoriske CloudEvent-attributter",
+          "status": "pass",
+          "detail": "traces/metrics/logs + tenantid/traceid/principal",
+          "messages": []
+        },
+        {
+          "id": "C-004",
+          "title": "Bevisfiler for full-verber findes og validerer",
+          "status": "pass",
+          "detail": "3 fixtures verificeret",
+          "messages": []
+        },
+        {
+          "id": "C-007",
+          "title": "CloudEvent-eksempler validerer mod envelopen",
+          "status": "pass",
+          "detail": "2 events gyldige (1 human, 1 agent)",
+          "messages": []
+        },
+        {
+          "id": "C-008",
+          "title": "Privacy-verber og datakategorier hænger sammen",
+          "status": "pass",
+          "detail": "datakategorier: operational, pseudonymised, personal",
+          "messages": []
+        },
+        {
+          "id": "C-009",
+          "title": "Modulet er bundet til central PDP (fail-closed)",
+          "status": "pass",
+          "detail": "8 gatede verber · fail-closed · bundle platform@1.0.0",
+          "messages": []
+        },
+        {
+          "id": "C-010",
+          "title": "Aktiv policy-bundle er skemagyldig og signeret",
+          "status": "pass",
+          "detail": "platform@1.0.0 · 11 regler · sha256 baeeeb11cb00…",
+          "messages": []
+        },
+        {
+          "id": "C-011",
+          "title": "Compliance-kontrolpåstande er velformede og dækker persondata",
+          "status": "pass",
+          "detail": "3 kontrolpåstande · rolle 'processor' · DPIA henvist",
+          "messages": []
+        },
+        {
+          "id": "C-012",
+          "title": "Modulets kontrolpåstande findes i den regulatoriske kortlægning",
+          "status": "pass",
+          "detail": "3 kontrolpåstande kortlagt mod NIS2/GDPR/AI Act",
+          "messages": []
+        },
+        {
+          "id": "A-001",
+          "title": "Agent-manifester validerer mod agent-manifest.schema.json",
+          "status": "skip",
+          "detail": "modulet har ingen agents/*.json",
+          "messages": []
+        },
+        {
+          "id": "A-002",
+          "title": "Agent-capabilities ligger inden for scope; navngivet ansvarlig",
+          "status": "skip",
+          "detail": "modulet har ingen agents/*.json",
+          "messages": []
+        },
+        {
+          "id": "A-003",
+          "title": "Agenten er bundet til AI-gateway (ingen direkte leverandørkald)",
+          "status": "skip",
+          "detail": "modulet har ingen agents/*.json",
+          "messages": []
+        }
+      ],
+      "summary": {
+        "pass": 12,
+        "fail": 0,
+        "skip": 3,
+        "total": 15
+      },
+      "status": "pass"
+    },
+    {
+      "module": "mattermost-adapter",
+      "version": "1.0.0",
+      "suiteVersion": "0.1.0",
+      "startedAt": "2026-09-23T14:10:25.309Z",
+      "finishedAt": "2026-09-23T14:10:25.311Z",
+      "checks": [
+        {
+          "id": "C-001",
+          "title": "module-manifest.json validerer mod kontrakten",
+          "status": "pass",
+          "detail": "Manifest matcher module-manifest.schema.json",
+          "messages": []
+        },
+        {
+          "id": "C-002",
+          "title": "Alle ops- og privacy-verber er deklareret",
+          "status": "pass",
+          "detail": "15 verber deklareret",
+          "messages": []
+        },
+        {
+          "id": "C-003",
+          "title": "Conformance-niveauer er ærlige (reason på partial/unsupported)",
+          "status": "pass",
+          "detail": "3 full, 12 partial/unsupported — alle begrundede",
+          "messages": []
+        },
+        {
+          "id": "C-005",
+          "title": "Ingen lokal brugerdatabase; OIDC/SCIM/SPIFFE erklæret",
+          "status": "pass",
+          "detail": "userStore=none · spiffe://platform.example.org",
+          "messages": []
+        },
+        {
+          "id": "C-006",
+          "title": "OTel-signaler og obligatoriske CloudEvent-attributter",
+          "status": "pass",
+          "detail": "traces/metrics/logs + tenantid/traceid/principal",
+          "messages": []
+        },
+        {
+          "id": "C-004",
+          "title": "Bevisfiler for full-verber findes og validerer",
+          "status": "pass",
+          "detail": "3 fixtures verificeret",
+          "messages": []
+        },
+        {
+          "id": "C-007",
+          "title": "CloudEvent-eksempler validerer mod envelopen",
+          "status": "pass",
+          "detail": "2 events gyldige (1 human, 1 agent)",
+          "messages": []
+        },
+        {
+          "id": "C-008",
+          "title": "Privacy-verber og datakategorier hænger sammen",
+          "status": "pass",
+          "detail": "datakategorier: operational, pseudonymised, personal",
+          "messages": []
+        },
+        {
+          "id": "C-009",
+          "title": "Modulet er bundet til central PDP (fail-closed)",
+          "status": "pass",
+          "detail": "8 gatede verber · fail-closed · bundle platform@1.0.0",
+          "messages": []
+        },
+        {
+          "id": "C-010",
+          "title": "Aktiv policy-bundle er skemagyldig og signeret",
+          "status": "pass",
+          "detail": "platform@1.0.0 · 11 regler · sha256 baeeeb11cb00…",
+          "messages": []
+        },
+        {
+          "id": "C-011",
+          "title": "Compliance-kontrolpåstande er velformede og dækker persondata",
+          "status": "pass",
+          "detail": "3 kontrolpåstande · rolle 'processor' · DPIA henvist",
+          "messages": []
+        },
+        {
+          "id": "C-012",
+          "title": "Modulets kontrolpåstande findes i den regulatoriske kortlægning",
+          "status": "pass",
+          "detail": "3 kontrolpåstande kortlagt mod NIS2/GDPR/AI Act",
+          "messages": []
+        },
+        {
+          "id": "A-001",
+          "title": "Agent-manifester validerer mod agent-manifest.schema.json",
+          "status": "skip",
+          "detail": "modulet har ingen agents/*.json",
+          "messages": []
+        },
+        {
+          "id": "A-002",
+          "title": "Agent-capabilities ligger inden for scope; navngivet ansvarlig",
+          "status": "skip",
+          "detail": "modulet har ingen agents/*.json",
+          "messages": []
+        },
+        {
+          "id": "A-003",
+          "title": "Agenten er bundet til AI-gateway (ingen direkte leverandørkald)",
+          "status": "skip",
+          "detail": "modulet har ingen agents/*.json",
+          "messages": []
+        }
+      ],
+      "summary": {
+        "pass": 12,
+        "fail": 0,
+        "skip": 3,
+        "total": 15
+      },
+      "status": "pass"
+    }
+  ]
+}

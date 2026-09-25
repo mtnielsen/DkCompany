@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/host-operation.schema.json",
+  "title": "Host Operation",
+  "description": "DKC-058 — én deterministisk, menneskeligt godkendt og signeret privilegeret host-operation. Operationen er lukket: verbet er ét af de forhåndsdefinerede, payloaden er indbygget (aldrig et uploadet script eller en arbitrær shell), en pakke skal være signeret og fra en tilladt kilde, og brokerens/policyens/konfigurationens egne felter må ikke ændres. Signaturen dækker hele det kanoniske indhold undtagen signaturfeltet.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "installationId", "tenantId", "environment", "hostRef", "operation", "payload", "approval", "safety", "scope", "restrictions", "signature"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "HostOperation" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "createdAt", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "description": { "type": "string", "minLength": 10 }
+      }
+    },
+    "installationId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+    "tenantId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+    "environment": { "enum": ["dev", "staging", "prod"] },
+    "hostRef": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+    "operation": {
+      "type": "object",
+      "required": ["id", "verb", "target", "parameters", "dryRun"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+        "verb": { "enum": ["diagnose", "package-update", "drain", "reboot", "certificate-renew", "capacity-alert"] },
+        "target": { "type": "string", "pattern": "^host/[a-z0-9][a-z0-9-]{1,62}$" },
+        "parameters": { "type": "object" },
+        "dryRun": { "type": "boolean" }
+      }
+    },
+    "package": {
+      "type": "object",
+      "required": ["source", "version", "digest", "signatureVerified", "signedBy", "sourceAllowlisted"],
+      "additionalProperties": false,
+      "properties": {
+        "source": { "type": "string", "pattern": "^[a-z0-9][a-z0-9.-]{1,62}$" },
+        "version": { "type": "string", "minLength": 1 },
+        "digest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "signatureVerified": { "const": true },
+        "signedBy": { "type": "string", "minLength": 3 },
+        "sourceAllowlisted": { "const": true }
+      }
+    },
+    "payload": {
+      "type": "object",
+      "required": ["type", "digest"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "builtin", "description": "Kun indbyggede, versionsstyrede operationer; aldrig et uploadet script." },
+        "digest": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "approval": {
+      "type": "object",
+      "required": ["humanSubject", "role", "changeId", "runbookRef", "runbookDigest", "approvedAt", "expiresAt", "decisionDigest"],
+      "additionalProperties": false,
+      "properties": {
+        "humanSubject": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\|[a-z0-9][a-z0-9._-]{2,}$" },
+        "role": { "type": "string", "minLength": 2 },
+        "changeId": { "type": "string", "minLength": 3 },
+        "runbookRef": { "type": "string", "pattern": "^[a-z0-9-]+@\\d+\\.\\d+\\.\\d+$" },
+        "runbookDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "approvedAt": { "type": "string", "format": "date-time" },
+        "expiresAt": { "type": "string", "format": "date-time" },
+        "decisionDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "required": ["stopCriteria", "recoveryConsoleRef", "backupRef", "backupVerified", "maintenanceWindowRef", "announcedDowntimeSeconds"],
+      "additionalProperties": false,
+      "properties": {
+        "stopCriteria": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 5 } },
+        "recoveryConsoleRef": { "type": "string", "minLength": 3 },
+        "backupRef": { "type": "string", "minLength": 3 },
+        "backupVerified": { "type": "boolean" },
+        "maintenanceWindowRef": { "type": "string", "minLength": 3 },
+        "announcedDowntimeSeconds": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "required": ["mode", "nodeCount", "canary"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": { "enum": ["single-server", "ha"] },
+        "nodeCount": { "type": "integer", "minimum": 1 },
+        "canary": {
+          "type": "object",
+          "required": ["hostRef", "waitSeconds"],
+          "additionalProperties": false,
+          "properties": {
+            "hostRef": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+            "waitSeconds": { "type": "integer", "minimum": 30 }
+          }
+        }
+      }
+    },
+    "restrictions": {
+      "type": "object",
+      "required": ["arbitraryShell", "uploadedScript", "brokerConfigChange", "immutableWrite", "externalKeyDestroy"],
+      "additionalProperties": false,
+      "properties": {
+        "arbitraryShell": { "const": false },
+        "uploadedScript": { "const": false },
+        "brokerConfigChange": { "const": false },
+        "immutableWrite": { "const": false },
+        "externalKeyDestroy": { "const": false }
+      }
+    },
+    "signature": {
+      "type": "object",
+      "required": ["algorithm", "keyId", "value", "signedAt"],
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": { "enum": ["hmac-sha256"] },
+        "keyId": { "type": "string", "minLength": 3 },
+        "value": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "signedAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}

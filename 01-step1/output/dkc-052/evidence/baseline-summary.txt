@@ -1,0 +1,13 @@
+Baseline: 219 checks, 170 PASS, 1 FAIL, 0 error, 48 NOT RUN
+Run: 2026-09-24T18-34-53-965Z-83ad91a.json
+Repo: /tmp/dkc-052/00-core
+
+FAIL:
+  - changelog-check: (manglende DCO sign-off, også i 83ad91a — forudgående)
+
+DKC-052-checks:
+  - takeover-check: pass
+  - takeover-test: pass
+  - takeover-run: pass
+  - takeover-report: pass
+  - integration-takeover-live: not-run

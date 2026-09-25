@@ -1,0 +1,13 @@
+{
+  "name": "@platform/portal",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "DKC-025: kundeportal og kundelivscyklus. Én indgang med SSO, appoversigt, roller, godkendelsesindbakke, driftsstatus og forbrug; versionsstyrede servicepakker med bestil, provisionér, suspendér, eksportér og afvikl; fælles autorisation for UI og API samt genoptagelig, idempotent provisionering.",
+  "bin": {
+    "portal": "./src/cli.mjs"
+  },
+  "scripts": {
+    "test": "node --test"
+  }
+}

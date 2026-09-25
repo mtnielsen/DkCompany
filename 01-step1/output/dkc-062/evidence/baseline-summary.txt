@@ -1,0 +1,14 @@
+DKC-062 baseline
+commit 83ad91a963d8055f77c29fb4361455689df95acb
+generatedAt 2026-09-24T22:47:00.326Z
+summary {"total": 259, "pass": 202, "fail": 1, "error": 0, "notRun": 56}
+
+Nye checks:
+  acceptance-check pass
+  acceptance-test pass
+  acceptance-run pass
+  acceptance-report pass
+  integration-acceptance-live not-run
+
+Kendt fejl:
+  changelog-check fail 

@@ -1,0 +1,31 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ProviderPreflight",
+  "from": "sqlite-local",
+  "to": "postgres-managed",
+  "class": "database",
+  "mode": "planned-migration",
+  "status": "supported",
+  "allowed": true,
+  "connectionString": "postgres://db.acme.example:5432/dkc",
+  "connectionStringMatches": false,
+  "connectionStringNeverBypassesGate": true,
+  "negotiation": {
+    "status": "supported",
+    "problems": [],
+    "capabilities": [
+      {
+        "id": "database.tls",
+        "mandatory": true,
+        "securityCritical": true,
+        "source": { "version": "1.0.0", "level": "advisory" },
+        "target": { "version": "16.0.0", "level": "enforced" }
+      }
+    ],
+    "degradations": [],
+    "connectionIgnored": true
+  },
+  "problems": [],
+  "requiredMappings": { "data": true, "ids": true, "acl": true, "migrationProof": true },
+  "cutover": { "requiresHumanApproval": true, "requiresRollback": true, "oldProviderReadOnly": true, "revokeCredentials": true }
+}

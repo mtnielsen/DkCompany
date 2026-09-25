@@ -1,0 +1,35 @@
+# Baseline for DKC-024 (ægte kørsel)
+
+- **Commit:** 83ad91a963d8055f77c29fb4361455689df95acb (83ad91a)
+- **Reviewets base:** 5f9fa73457d22583b9948611d5cc3afffec4ae38 (5f9fa73)
+- **Forudsætnings-overlays:** DKC-001 .. DKC-023 (via dkc-023/apply.sh)
+- **Miljø:** Node v22.22.1, WSL. Ingen rigtige Mattermost-/Keycloak-instanser,
+  ingen stagingklynge, intet Docker/cosign/trivy/tofu/kubectl.
+- **Kommando:** `make baseline`
+
+## Resultat
+
+- **88 pass, 1 fail, 0 error, 17 not run (106 checks).**
+- Den eneste FAIL er den kendte, forudgående `changelog-check`: commits mangler
+  DCO sign-off (også 83ad91a). Den er hverken "rettet" eller skjult.
+- `integration-adapter-live` (DKC-024) er **NOT RUN**: ingen rigtige
+  upstream-instanser og ingen `DKC_LIVE_*`-bindinger/credentials. Live-køreren
+  skriver `not-run` med begrundelse; et injiceret fetch-pass tæller ikke som
+  driftsbevis.
+
+## DKC-024-checks
+
+| Check | Niveau | Resultat |
+| --- | --- | --- |
+| `adapter-live-check` | contract | PASS |
+| `adapter-live-test` | real | PASS |
+| `integration-adapter-live` | integration | NOT RUN |
+
+## Fokuserede logfiler
+
+Se `evidence/logs/` for `validate`, `lint`, `adapter-live-check`,
+`adapter-live-test`, `adapter-live-plan`, `adapter-sdk-check`, `adapter-sdk-test`,
+`adapter-test`, `iam-adapter-test`, `release-check`, `release-test`,
+`supply-chain-check`, `supply-chain-test` og selve `baseline.log`.
+`evidence/baseline/` indeholder den fulde baseline (logs, artefacts, latest.json,
+kørselsrapport).

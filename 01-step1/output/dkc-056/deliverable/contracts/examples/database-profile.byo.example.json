@@ -1,0 +1,72 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "DatabaseProfile",
+  "metadata": {
+    "name": "byo-postgres",
+    "version": "1.0.0",
+    "description": "Kundens egen PostgreSQL på en understøttet version. Kundens DBA ejer patching, backup, restore og nøgler; platformen ejer kun applikationsskemaet og migrationen af det.",
+    "accountableHuman": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+    "labels": { "tier": "data", "profile": "byo" }
+  },
+  "profileType": "byo",
+  "engine": {
+    "family": "postgresql",
+    "supportedVersions": [
+      { "range": ">=15.0.0 <17.0.0", "tested": true, "notes": "Kun disse versioner understøttes for BYO." }
+    ],
+    "engineOwner": { "subject": "oidc|henrik.hansen", "name": "Henrik Hansen", "role": "Customer DBA" },
+    "noOwnEngine": true
+  },
+  "byo": {
+    "customer": { "subject": "oidc|henrik.hansen", "name": "Henrik Hansen", "role": "Customer DBA" },
+    "contractRef": "contract://customer/byo-database/2026",
+    "responsibilityAcceptedBy": { "subject": "oidc|henrik.hansen", "name": "Henrik Hansen", "role": "Customer DBA" },
+    "extensions": ["pgcrypto"]
+  },
+  "secureDefaults": {
+    "encryptionAtRest": {
+      "required": true,
+      "method": "customer-managed disk encryption",
+      "keyOwner": { "subject": "oidc|henrik.hansen", "name": "Henrik Hansen", "role": "Customer DBA" }
+    },
+    "encryptionInTransit": { "required": true, "minTlsVersion": "1.2", "certificateRotationDays": 180 },
+    "leastPrivilegeRoles": true,
+    "auditLogging": true,
+    "publicNetwork": false
+  },
+  "migrations": {
+    "strategy": "versioned-sql",
+    "ownedSchemas": ["app_dummy_ok"],
+    "foreignSchemaPolicy": "never",
+    "backupBeforeMigrate": true,
+    "destructiveChangesRequireApproval": true
+  },
+  "backup": {
+    "enabled": true,
+    "destinationRef": "customer-backup",
+    "schedule": "0 2 * * *",
+    "retentionDays": 30,
+    "verifiedRestore": true,
+    "owner": { "subject": "oidc|henrik.hansen", "name": "Henrik Hansen", "role": "Customer DBA" }
+  },
+  "monitoring": {
+    "metrics": true,
+    "alerting": true,
+    "owner": { "subject": "oidc|henrik.hansen", "name": "Henrik Hansen", "role": "Customer DBA" },
+    "notes": "Kunden overvåger selve motoren; platformen overvåger forbindelsen og applikationsskemaet."
+  },
+  "responsibilityMatrix": {
+    "patching": { "owner": "customer", "accountableHuman": { "subject": "oidc|henrik.hansen", "name": "Henrik Hansen", "role": "Customer DBA" } },
+    "backup": { "owner": "customer", "accountableHuman": { "subject": "oidc|henrik.hansen", "name": "Henrik Hansen", "role": "Customer DBA" } },
+    "restore": { "owner": "customer", "accountableHuman": { "subject": "oidc|henrik.hansen", "name": "Henrik Hansen", "role": "Customer DBA" } },
+    "keys": { "owner": "customer", "accountableHuman": { "subject": "oidc|henrik.hansen", "name": "Henrik Hansen", "role": "Customer DBA" } },
+    "costs": { "owner": "customer", "accountableHuman": { "subject": "oidc|henrik.hansen", "name": "Henrik Hansen", "role": "Customer DBA" } },
+    "monitoring": { "owner": "shared", "accountableHuman": { "subject": "oidc|henrik.hansen", "name": "Henrik Hansen", "role": "Customer DBA" } },
+    "migration": { "owner": "platform", "accountableHuman": { "subject": "oidc|david.dahl", "name": "David Dahl", "role": "Service Owner" } }
+  },
+  "tenantIsolation": {
+    "strategy": "schema-per-tenant",
+    "separateIdentity": true,
+    "evidence": "Hver tenant får sit eget schema og sin egen rolle; platformens migrationsrolle kan kun skrive i app_dummy_ok-schemaet."
+  }
+}

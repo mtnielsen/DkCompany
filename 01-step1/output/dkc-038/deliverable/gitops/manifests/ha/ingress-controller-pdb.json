@@ -1,0 +1,22 @@
+{
+  "apiVersion": "policy/v1",
+  "kind": "PodDisruptionBudget",
+  "metadata": {
+    "name": "ingress-controller",
+    "namespace": "platform-ha",
+    "labels": {
+      "app.kubernetes.io/name": "ingress-controller",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "ingress-controller",
+      "platform.example.org/environment": "ha"
+    }
+  },
+  "spec": {
+    "minAvailable": 1,
+    "selector": {
+      "matchLabels": {
+        "app.kubernetes.io/name": "ingress-controller"
+      }
+    }
+  }
+}

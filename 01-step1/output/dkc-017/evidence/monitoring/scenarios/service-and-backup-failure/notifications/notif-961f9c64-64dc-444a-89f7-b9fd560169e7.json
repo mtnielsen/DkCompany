@@ -1,0 +1,56 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "AlertNotification",
+  "id": "notif-961f9c64-64dc-444a-89f7-b9fd560169e7",
+  "alertId": "alert-0718e2e1-d44a-4861-a77a-f0bb75d05d14",
+  "ruleId": "service-unavailable",
+  "severity": "critical",
+  "signal": "service.availability",
+  "tenantId": "acme",
+  "summary": "Tjenesten er under sit tilgængelighedsmål",
+  "owner": {
+    "subject": "oidc|anna.andersen",
+    "name": "Anna Andersen",
+    "role": "Platform Owner"
+  },
+  "escalation": [
+    {
+      "afterMinutes": 10,
+      "to": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner (substitute)"
+      }
+    },
+    {
+      "afterMinutes": 30,
+      "to": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner"
+      }
+    }
+  ],
+  "runbook": "docs/runbooks/alerting.md",
+  "emittedAt": "2026-09-23T22:46:50.269Z",
+  "minimized": true,
+  "personalData": {
+    "removed": [],
+    "redactions": [],
+    "digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+  },
+  "observed": {
+    "value": 0,
+    "status": "fail",
+    "freshness": "fresh",
+    "capturedAt": "2026-09-23T22:46:50.269Z",
+    "ageSeconds": 0
+  },
+  "delivery": {
+    "recipientId": "platform-oncall-local",
+    "transport": "local-mailbox",
+    "status": "delivered",
+    "receipt": "local:404d15b9e8b2e24d366ce870c3ce3452fd70b63721a847fc27b236d7874ff1d5",
+    "deliveredAt": "2026-09-23T22:46:50.277Z"
+  }
+}

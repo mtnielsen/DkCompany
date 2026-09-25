@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/provider-swap-receipt.schema.json",
+  "title": "Provider Swap Receipt",
+  "description": "DKC-059: kvittering for et gennemført providerskift med afstemning af antal, checksums, links, autorisation og referencespor, funktionstab, old-provider-read-only, credentialrevokation og en rollback-grænse. Ved et IAM-skift dokumenteres desuden bevaret entydig identitet og historisk audit-provenance.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "swapId", "from", "to", "class", "tenantId", "appId", "mode", "at", "status", "epochBefore", "epochAfter", "rollbackAvailable", "oldProviderReadOnly", "credentials", "reconciliation", "problems"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "ProviderSwapReceipt" },
+    "swapId": { "type": "string", "minLength": 3 },
+    "from": { "type": "string", "minLength": 2 },
+    "to": { "type": "string", "minLength": 2 },
+    "class": { "enum": ["iam", "modelprovider", "database", "storage", "backup", "queue", "apps"] },
+    "tenantId": { "type": "string", "minLength": 2 },
+    "appId": { "type": "string", "minLength": 2 },
+    "mode": { "enum": ["drop-in", "planned-migration", "unsupported"] },
+    "at": { "type": "string", "minLength": 10 },
+    "status": { "enum": ["cutover", "rolled-back"] },
+    "epochBefore": { "type": "integer", "minimum": 0 },
+    "epochAfter": { "type": "integer", "minimum": 0 },
+    "restoredAt": { "type": "string" },
+    "approvalRef": { "type": ["string", "null"] },
+    "snapshotDir": { "type": "string", "minLength": 1 },
+    "rollbackAvailable": { "type": "boolean" },
+    "oldProviderReadOnly": { "type": "boolean" },
+    "migrationProof": { "type": ["string", "null"] },
+    "credentials": {
+      "type": "object",
+      "required": ["revoked", "evidenceRetained", "active"],
+      "additionalProperties": false,
+      "properties": {
+        "revoked": { "type": "array", "items": { "type": "string" } },
+        "evidenceRetained": { "const": true },
+        "active": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "reconciliation": { "$ref": "#/$defs/reconciliation" },
+    "problems": { "type": "array", "items": { "type": "object" } }
+  },
+  "$defs": {
+    "preserved": {
+      "type": "object",
+      "required": ["preserved", "problems"],
+      "additionalProperties": false,
+      "properties": {
+        "preserved": { "type": "boolean" },
+        "problems": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "reconciliation": {
+      "type": "object",
+      "required": ["apiVersion", "kind", "swapId", "from", "to", "class", "tenantId", "at", "counts", "checksums", "links", "authorization", "references", "identity", "auditProvenance", "functionalityLoss"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": { "const": "contracts.platform/v1alpha1" },
+        "kind": { "const": "ProviderReconciliation" },
+        "swapId": { "type": "string" },
+        "from": { "type": "string" },
+        "to": { "type": "string" },
+        "class": { "type": "string" },
+        "tenantId": { "type": "string" },
+        "at": { "type": "string" },
+        "counts": {
+          "type": "object",
+          "required": ["source", "mapped", "created", "failed"],
+          "additionalProperties": false,
+          "properties": {
+            "source": { "type": "integer", "minimum": 0 },
+            "mapped": { "type": "integer", "minimum": 0 },
+            "created": { "type": "integer", "minimum": 0 },
+            "failed": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "checksums": {
+          "type": "object",
+          "required": ["algorithm", "source", "target", "match"],
+          "additionalProperties": false,
+          "properties": {
+            "algorithm": { "const": "sha256" },
+            "source": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+            "target": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+            "match": { "type": "boolean" }
+          }
+        },
+        "links": { "$ref": "#/$defs/preserved" },
+        "authorization": { "$ref": "#/$defs/preserved" },
+        "references": { "$ref": "#/$defs/preserved" },
+        "identity": { "$ref": "#/$defs/preserved" },
+        "auditProvenance": { "$ref": "#/$defs/preserved" },
+        "functionalityLoss": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["entityType", "facet", "status", "note"],
+            "additionalProperties": false,
+            "properties": {
+              "entityType": { "type": "string" },
+              "facet": { "type": "string" },
+              "status": { "enum": ["partial", "unsupported"] },
+              "note": { "type": "string", "minLength": 3 }
+            }
+          }
+        }
+      }
+    }
+  }
+}

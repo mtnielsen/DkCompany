@@ -1,0 +1,15 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "LegalHold",
+  "holdId": "hold:acme:9f2c1a3b4d5e",
+  "tenantId": "acme",
+  "subjectDigest": "9f2c1a3b4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f8",
+  "dataClasses": ["personal", "pseudonymised"],
+  "moduleRef": "audit-service",
+  "reason": "Verserende retssag kræver at subjektets poster bevares indtil dommen er afsagt.",
+  "placedBy": { "subject": "oidc|pia.privat", "name": "Pia Privat", "role": "privacy-officer" },
+  "approvedBy": { "subject": "oidc|lars.lov", "name": "Lars Lov", "role": "legal-counsel" },
+  "placedAt": "2025-09-24T08:00:00Z",
+  "reviewAt": "2026-03-24T08:00:00Z",
+  "status": "active"
+}

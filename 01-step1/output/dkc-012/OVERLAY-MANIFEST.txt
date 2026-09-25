@@ -1,0 +1,77 @@
+# SHA256-manifest for DKC-012-leverancen
+# Genereret: 2026-09-23T12:03:24Z
+# Forudsætning: DKC-001 + DKC-002 + DKC-003 + DKC-004 + DKC-005 + DKC-006 + DKC-007 + DKC-008 + DKC-009 + DKC-010 + DKC-011 + DKC-013 + DKC-055
+# Reviewets base: 5f9fa73, undersøgt checkout: 83ad91a
+# Node v22.22.1. DKC-012: reel leverandøradapter, serverstyret routing, bindende budget, idempotens og model-egress.
+
+# --- deliverable/ (overlay, relative til 00-core/) ---
+6da10ba6811501f9185a82ee8e9feb5f5201a19cf0f47b006daf4846a2bd44fd  ./Makefile
+187551c78785a33ab04d44083b58a1adbd0d81cfe96f7986b0c92dad5c0e2ac3  ./conformance/test/model-gateway-conformance.test.mjs
+60bf9b8626ce7dc19ad25e778efa5bfd2ca5cb58dd9be619ad3d1088d7152b7d  ./contracts/examples/gateway-route.example.json
+871dcefc326395f3ccbf98e1547c82a59f1fca5899adf652ff6a10a3abcca10b  ./contracts/gateway-route.schema.json
+852d19d98fd2a4c3b908c9c6250fe85dd9667cb60aefce26aded7d31ca013a15  ./docs/adr/0025-modelgateway-og-bindende-budgetter.md
+e5997d9ede0c9d3ab615d270bb8ebd4d26fbd504d317e88fa8ff8efcb7959973  ./docs/adr/README.md
+2bc3cb32ea6c25e87b1c2f56b8e568215151918ffd868febc477c177e3ab713c  ./docs/spec/README.md
+2f23696d55dec029238e9365b5a8a4a63fb058926d6d4fd69d0e679af378ff2f  ./docs/spec/ai-gateway.md
+7afa092604980e28dcdc48844b1fc3e1d4114320e76c743b42df0594f0644c2d  ./docs/spec/reviewer.md
+d52770ee5b01506cf1db172256accf8df6a5377c2e578db83f9a1341ae64f86f  ./docs/status/implementation-matrix.md
+4acff4e35c8f1dc5e5977c81b194b47dfbb2412657f3fce97cb59b319a2f05dd  ./gateway/routes.json
+5a3c23ca4303c5ce39ee05f536c40feaaf63793a1510d940a37c4a0dd259b66e  ./gateway/src/accounting.mjs
+415e1097f9362f08e13ae8af5d361aa02357cc34a5ab8bfedec80987e95dff29  ./gateway/src/check.mjs
+0869f29de186e41a6968ff60edefa757801384140fc4076875b97b1c6e49a54f  ./gateway/src/cli.mjs
+44eae8139e6415f06e379b91324f0b37c2b637ee879edbda0af8d38a43275570  ./gateway/src/egress.mjs
+0c71a7c57b540b676fc2cd6cb45a6b8f8e9191730281bcd0552db8eacabd8efb  ./gateway/src/gateway.mjs
+8b8ac9bcb3311e0b04e19e636e246d0be886a689e50b54629d209e8d277c62d8  ./gateway/src/providers/openai-compatible.mjs
+c460ae6eac46bdb1ddaae4915080f5fc480ed0d7d80db2efcf4763193fcb2966  ./gateway/src/reviewer-provider.mjs
+2c0176152626da10a2753847b756b1adde917ca62648809b556d07edf674e723  ./gateway/src/routing.mjs
+492740baaab273c7a6dcdb9ef2b93cad78ef9523536a8c149a3ba966420a95f0  ./gateway/test/model-egress.test.mjs
+391eb693dc363fd4825dd22068218a4ffb50629e19ec625d0c0d53de849bb027  ./gateway/test/model-gateway.test.mjs
+f6ec0a7702776f0039c4ff8a852d1cc8f7388f535a915801935e5698fbcdfb32  ./gateway/test/provider-http.test.mjs
+85d4ed9f33e41289894809036a4135de6b04fdba79dc81edb1eb0646a09c4385  ./gitops/apps/ai-gateway-application.json
+924b2c64fcc3c84cfb972b31b245821a801f4d6a82d4236c140d182825ac28ea  ./gitops/manifests/dev/ai-gateway-config.json
+0bfc0d77d18b3d8c35423a818bda2062f83e205e9535b8c160fbbf7eafcdb29e  ./gitops/manifests/dev/ai-gateway-deployment.json
+7dba91da7d34b6da62661cc6d1d4e3187ef36baddc1ed4fa8d069f47a6f3bca8  ./gitops/manifests/dev/ai-gateway-service.json
+d3b568c167cb47890ee30d526131630c1bda374f1ad5c50077bf66e723627887  ./gitops/manifests/dev/ai-gateway-serviceaccount.json
+f21524a1e28f56b2175c1f8cadf56d2a7ec7cfb3a3a652603804d0e943f65437  ./gitops/manifests/dev/model-egress-default-deny.json
+90b8371a0635c44ec631ea65dbce95ec15b4ea24d8c3edea570cd08dba30a645  ./gitops/manifests/dev/model-egress-gateway-allow.json
+7b06560694f4975ef6001a3b26dd64c24c7437c4591210ddd0790c790b9b2898  ./gitops/src/cli.mjs
+a45c03f40617291b1fad5ae98599cf0872947ff8690ec1ae0175f270e753c12c  ./gitops/src/egress.mjs
+41546c2b8ddde87bca4e208b17f94704bbcf4beab31294d436d88d73c3b03b56  ./gitops/test/egress.test.mjs
+5bad1d004bdd93958ab09560cc6717b16991a0988a5ef026dcf522560f6a4f4d  ./persistence/migrations/0006_model_gateway_budgets.sql
+3096676fd311356740f50eb31010a7bcc68babe593baebe806529eeabaf9da23  ./persistence/src/adapters/budgets.mjs
+6d56be9a6e1f2eaa9a25b977f4b2896fc79120751cb32b4dbea77cd53402af91  ./persistence/src/adapters/gateway-calls.mjs
+7886854ece118c6fd965f5877b71f7e1c5fef7456cb44588f3fdac0ac4dbf149  ./persistence/src/db.mjs
+4692eeba6bcc310a39261f0eee7584c60c7809d286194670e9460a5cbe3a148c  ./persistence/src/index.mjs
+066de42627faf0032dbe32d6da2a20cfde64934a1aa9244b66106ffa81546e30  ./persistence/test/migrations.test.mjs
+2aaa0b3f863eedf4404ad46cddd0745c919a77d34c8a74b7b413e1f7cdba9d3d  ./persistence/test/model-gateway-budgets.test.mjs
+f78302cc7e8ff062c4d83463c6e21dc0b4418914fe76f88f456b6e141c5f79d2  ./reviewer/test/reviewer-provider.test.mjs
+341754546181edd64f1dba89428ec184dca14e9659316a4f17c9bf9304465a36  ./runtime/src/clients.mjs
+ceabbc55df297d8a1d3773ecd6fc3ee7b29e59e708ebfd075ce4b8a13bacfb88  ./runtime/test/gateway-client.test.mjs
+b133e61e6c48162733f007cbb8848d46ee82c76f740b462fea28b14139115e44  ./tools/baseline/registry.mjs
+
+# --- evidence/ ---
+d2a43c50a8aa1b0c580bb06c46f547020dcf523d0c936f11275585abeaf3f315  evidence/baseline/baseline-run.json
+1e310789ba318c59a7aac54b8f2cc21fed59f9e90152a7dfbb8fa14989961f6a  evidence/baseline/baseline.log
+95570d8833af50e8899a72af5770886e75f286da737722f8fc55b6760f77e963  evidence/logs/agent-registry-test.log
+3bff6134d74ec9ebcc2b03e82407bb64666a8b162d0eef4b9a235554c316c6cc  evidence/logs/budget-test.log
+0200273b365c22db30f5ac022b37b296f08cb0b5a57db675307d08fb47b3fd00  evidence/logs/credentials-test.log
+f09a81f2e41a1d49df855d2c8efa400fb03c95f4c71018bdd5cfa42dc398664a  evidence/logs/gateway-check.log
+6e9c82cc1c266184eebad7310ac9eb82148198c1b325fbd4e70cc637dd8885e8  evidence/logs/gateway-test.log
+7c12dc6d346899b896c787aea325040368293d8a3ea857e69801037654f024f9  evidence/logs/gitops-test.log
+5d2cdbc4192d35ef4690afe6684b3a1960eec1a5fe7e5f72c0f56167d7c57677  evidence/logs/gitops-verify.log
+e2a48a5163d20fead9155c3929ee3453ab5f4160d0a307477e0e6765ed0a6392  evidence/logs/jobs-check.log
+84c374b87f3d6db0a7c18ec36ed22fdd04838f4cb6bfec3b259b261ac40ec34b  evidence/logs/jobs-test.log
+9b310e3810f3bdf05b40d4683a40059f31c48f95c4a6bda4f7e187bd91ee7534  evidence/logs/lint.log
+2dcc647f7982811737cad11471e34d946fdc35d7d1abd2e9460afa64cc446c70  evidence/logs/model-egress-check.log
+d70dad55f6f7c476cd84ace7978c3573e18dc3c02c9b3fc2acaa0b04b6a2454e  evidence/logs/model-gateway-test.log
+74b89eabd777294edcde047f55110422eb3b08e3e5ecba8ab9ff9ffcbf4cd8f5  evidence/logs/persistence-check.log
+7bf23948aac2047557545e0f9d4da804e876ddac69746bc8fa806626b3d38393  evidence/logs/persistence-test.log
+f31499aa87b63f7f2ce583282e0968aeafa04f0623510099931644095a6711db  evidence/logs/reviewer-test.log
+dbed148ac587b99284e58ee52df83e4cf66dde899583676a59da18eddf72b291  evidence/logs/runtime-test.log
+ac352d33059c67f8f193f5b087af1b68ccf0abfd73d8c02ec08f56a5c681f529  evidence/logs/test.log
+11b8a177e962bad3fe2ad3122df272b0dfe45b713e7174b62da1130187cfef18  evidence/logs/tool-boundary-test.log
+59c01f20611703447ffa7ae8eadec374e3ac761f72c27d98d10290d6224c1d35  evidence/logs/validate.log
+
+# --- README.md, apply.sh ---
+db311ec4ebed44182e2bddbab8effc4581cb0341769fa09ac0bd9afd249ab163  ./README.md
+fc64296b7846fe91f06f4073ae486a26c91a8bf531f95bd977136f683c8e9f94  ./apply.sh

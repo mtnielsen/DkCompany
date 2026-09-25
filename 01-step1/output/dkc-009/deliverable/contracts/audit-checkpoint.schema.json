@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/audit-checkpoint.schema.json",
+  "title": "External Audit Checkpoint",
+  "description": "DKC-009: et eksternt forankret checkpoint (HMAC-signeret) over audit-kæden. Ændring, sletning eller trunkering af loggen kan påvises ved at verificere loggen mod checkpointet.",
+  "type": "object",
+  "required": ["version", "tenantId", "eventCount", "chainHash", "anchoredAt", "digest", "algorithm"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "const": 1 },
+    "tenantId": { "type": ["string", "null"] },
+    "eventCount": { "type": "integer", "minimum": 0 },
+    "chainHash": { "type": "string", "pattern": "^[a-f0-9]{64}$", "description": "Hash-kædens hoved på forankringstidspunktet." },
+    "lastEventId": { "type": ["string", "null"] },
+    "anchoredAt": { "type": "string", "format": "date-time" },
+    "digest": { "type": "string", "pattern": "^[a-f0-9]{64}$", "description": "HMAC-SHA256 over checkpointets krop; nøglen ligger uden for databasen." },
+    "algorithm": { "const": "HMAC-SHA256" }
+  }
+}

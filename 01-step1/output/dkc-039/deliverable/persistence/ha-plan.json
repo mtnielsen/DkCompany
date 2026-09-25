@@ -1,0 +1,83 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "DatabaseHA",
+  "metadata": {
+    "name": "database-ha-staging",
+    "version": "1.0.0",
+    "description": "Konkret database-HA-plan for den administrerede PostgreSQL-profil: en vedligeholdt operator styrer tre quorum-instanser i adskilte fejldomæner, kritiske writes bekræftes synkront til quorum uden tavs async-overgang, den tidligere primary fences før promotion, godkendelser læses kun fra primary, og WAL arkiveres med PITR og en dokumenteret rejoin-/failback-procedure.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+    },
+    "labels": { "segment": "data" }
+  },
+  "databaseProfileRef": "contracts/examples/database-profile.managed.example.json",
+  "engine": {
+    "family": "postgresql",
+    "versionRange": ">=16.0.0 <17.0.0",
+    "operator": "CloudNativePG",
+    "operatorVersion": "1.24",
+    "operatorMaintained": true,
+    "failoverController": "cnpg-instance-manager",
+    "noOwnEngine": true
+  },
+  "failureDomains": ["eu-west-1a", "eu-west-1b", "eu-west-1c"],
+  "topology": {
+    "primary": "pg-1",
+    "instances": [
+      { "id": "pg-1", "failureDomain": "eu-west-1a", "role": "primary" },
+      { "id": "pg-2", "failureDomain": "eu-west-1b", "role": "sync-replica" },
+      { "id": "pg-3", "failureDomain": "eu-west-1c", "role": "sync-replica" },
+      { "id": "pg-4", "failureDomain": "eu-west-1c", "role": "async-replica" }
+    ],
+    "syncReplicas": 2,
+    "asyncReplicas": 1,
+    "quorum": 2,
+    "minSyncReplicasForWrites": 1,
+    "durabilityPolicy": "sync-remote-apply",
+    "noSilentAsyncFallback": true
+  },
+  "durability": {
+    "criticalWriteMode": "synchronous_commit=remote_apply",
+    "confirmBeforeAck": true,
+    "stopWritesOnSyncReplicaLoss": true,
+    "onSyncReplicaLoss": "reject-writes",
+    "asyncReplicasAreNotAck": true
+  },
+  "fencing": {
+    "method": "operator-fence-epoch",
+    "requireFenceBeforePromotion": true,
+    "token": "monotonic-epoch",
+    "fenceOldPrimaryOnPartition": true,
+    "isolation": "revoke-writes-and-stop",
+    "allowUnsafePromotion": false
+  },
+  "readConsistency": [
+    { "flow": "approvals", "require": "primary-only", "maxStalenessMs": 0, "rationale": "En godkendelse må ikke læses fra en replica der endnu ikke har set den seneste beslutning." },
+    { "flow": "policy-decisions", "require": "primary-or-sync-committed", "maxStalenessMs": 0, "rationale": "PDP'en skal se den seneste policy- og revokationstilstand." },
+    { "flow": "audit-read", "require": "primary-or-sync-committed", "maxStalenessMs": 0, "rationale": "Audit-læsning skal se den bekræftede hændelse." },
+    { "flow": "reporting", "require": "bounded-staleness", "maxStalenessMs": 5000, "rationale": "Rapportering må læse fra en replica inden for et bundet staleness-budget." }
+  ],
+  "wal": {
+    "archiveEnabled": true,
+    "archiveTarget": "s3://platform-wal-archive/eu-west-1",
+    "pitrEnabled": true,
+    "retentionHours": 168,
+    "baseBackupSchedule": "0 0 * * *",
+    "archiveEncrypted": true
+  },
+  "failback": {
+    "procedure": ["fence-old-primary", "rejoin-as-replica", "catch-up-verify", "planned-switchover"],
+    "requiresFence": true,
+    "requiresRejoinBeforePromote": true,
+    "switchoverWindow": "maintenance"
+  },
+  "rejoin": {
+    "method": "pg-rewind",
+    "requiresFence": true,
+    "catchUpBeforePromote": true,
+    "verifyChecksums": true
+  }
+}

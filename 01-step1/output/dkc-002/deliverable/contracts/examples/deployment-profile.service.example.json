@@ -1,0 +1,75 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "DeploymentProfile",
+  "metadata": {
+    "name": "service-ha",
+    "version": "1.0.0",
+    "description": "Profil for en IT-/servicevirksomhed med flere kunder: flere servere, målt HA og valgfri afgrænset host-styring.",
+    "accountableHuman": {
+      "subject": "oidc|cecilia.christensen",
+      "name": "Cecilia Christensen",
+      "role": "Service Owner",
+      "substitute": { "subject": "oidc|david.dahl", "name": "David Dahl" }
+    },
+    "labels": { "segment": "service" }
+  },
+  "profileType": "multiple-servers",
+  "tenantModel": {
+    "mode": "shared-control-plane",
+    "applicationInstancesPerTenant": true,
+    "databasePerTenant": true,
+    "tenantBoundaryEnforcedAt": ["api", "database", "queue", "storage"],
+    "sharedComponents": ["portal", "policy-pdp", "audit-log"]
+  },
+  "highAvailability": {
+    "enabled": true,
+    "failureDomains": 3,
+    "fencing": "quorum",
+    "redundantEntrypoints": true,
+    "measuredFailureTests": ["docs/evidence/failure-tests/2026-08-service-ha.md"]
+  },
+  "hostManagement": {
+    "enabled": true,
+    "broker": "bounded-broker 1.0",
+    "allowedOperations": ["diagnostics", "certificate-renewal", "service-drain", "service-restart"],
+    "outOfBandRecovery": "Offline SSH-nøgle og konsoladgang hos hostingleverandøren, holdt uden for platformens kontrolplan."
+  },
+  "dataServices": [
+    {
+      "id": "primary-db",
+      "kind": "built-in-database",
+      "provider": "PostgreSQL 16 med streaming-replikering",
+      "responsibilityOwner": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Service Owner" },
+      "credentialsRef": "secrets/primary-db",
+      "tenantBound": true
+    },
+    {
+      "id": "offsite-backup",
+      "kind": "backup-destination",
+      "provider": "S3-kompatibelt objektlager i separat region",
+      "responsibilityOwner": { "subject": "oidc|david.dahl", "name": "David Dahl", "role": "Continuity Owner" },
+      "responsibilityAgreement": "docs/compliance/backup-responsibility.md",
+      "credentialsRef": "secrets/backup",
+      "tenantBound": true
+    }
+  ],
+  "serviceTargets": {
+    "availability": "99.9% målt pr. måned",
+    "rpoMinutes": 15,
+    "rtoMinutes": 60,
+    "measurementWindowDays": 30
+  },
+  "cost": {
+    "model": "mixed",
+    "currency": "DKK",
+    "recurring": true,
+    "monthlyEstimateMinor": 1450000,
+    "priceBasis": "pr. tenant med HA",
+    "notes": "Tre failure domains, offsite backup, overvågning og support. HA er en driftsudgift, ikke kun en konfiguration."
+  },
+  "limitations": [
+    "HA dækker ikke kundens egen internetforbindelse eller DNS.",
+    "Målte fejltest gælder den navngivne version; nye versioner kræver ny måling."
+  ],
+  "supportedModules": ["APP-003", "APP-010", "APP-016", "APP-021", "APP-039"]
+}

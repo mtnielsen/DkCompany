@@ -1,0 +1,58 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "FeatureAccessProfile",
+  "metadata": {
+    "name": "hr",
+    "version": "1.0.0",
+    "description": "HR's funktionsprofil. Formålet er personaleforvaltning; løn-, helbreds- og personalefelter kræver hver sin eksplicitte bevilling.",
+    "accountableHuman": {
+      "subject": "oidc|cecilia.christensen",
+      "name": "Cecilia Christensen",
+      "role": "Service Owner",
+      "substitute": { "subject": "oidc|david.dahl", "name": "David Dahl" }
+    },
+    "labels": { "category": "hr" }
+  },
+  "id": "hr",
+  "purpose": "hr-personnel-administration",
+  "purposeDescription": "Behandling af personaledata til ansættelse, løn, fravær og HR-administration efter et udtrykkeligt formål.",
+  "modules": ["platform-core", "identity-broker", "primary-database", "hr"],
+  "capabilities": ["hr"],
+  "allowedDataClasses": ["internal", "personal", "sensitive", "special-category"],
+  "fieldRules": {
+    "defaultDecision": "deny",
+    "fields": [
+      { "field": "employee_name", "dataClass": "personal", "decision": "allow" },
+      { "field": "department", "dataClass": "internal", "decision": "allow" },
+      { "field": "personnel_record", "dataClass": "personal", "decision": "allow", "requiresGrant": "hr.personnel.read", "note": "Personalemappen kræver en eksplicit HR-bevilling." },
+      { "field": "salary", "dataClass": "sensitive", "decision": "allow", "requiresGrant": "hr.salary.read", "note": "Lønfeltet kræver en udtrykkelig HR-lønbevilling; almindelige ledere og BI-brugere får den ikke automatisk." },
+      { "field": "health.condition", "dataClass": "special-category", "decision": "allow", "requiresGrant": "hr.health.read", "note": "Helbredsoplysninger er en særlig kategori og kræver en formålsbestemt bevilling." },
+      { "field": "national_id", "dataClass": "sensitive", "decision": "redact", "note": "Nationalt ID returneres tilbageholdt, medmindre en fremtidig regel udtrykkeligt tillader det." }
+    ]
+  },
+  "rowPolicy": {
+    "tenantStrict": true,
+    "selfAttribute": "subject",
+    "requiredAttribute": "department",
+    "requiresGrant": "hr.department.read"
+  },
+  "externalSources": [
+    {
+      "id": "erp-hr",
+      "systemOfRecord": "ERP HR",
+      "access": "read-only",
+      "connectorRequired": true,
+      "trustRef": "docs/compliance/data-services.md#erp-hr",
+      "note": "HR-data kan læses gennem en read-only connector; kilden forbliver autoritativ."
+    }
+  ],
+  "recipientTrust": [
+    {
+      "id": "external-payroll",
+      "kind": "external",
+      "dataSharingRef": "docs/compliance/data-sharing.md#external-payroll",
+      "revalidateAt": ["run", "delivery"]
+    }
+  ],
+  "surfaces": ["ui", "api", "connector", "search", "export", "cache", "ai-tool"]
+}

@@ -1,0 +1,5 @@
+Baseline efter DKC-036
+status: fail
+summary: {"total":279,"pass":218,"fail":1,"error":0,"notRun":60}
+FAIL: changelog-check
+enterprise: enterprise-check=pass, enterprise-test=pass, enterprise-run=pass, enterprise-report=pass, integration-enterprise-live=not-run

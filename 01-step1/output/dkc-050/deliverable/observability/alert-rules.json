@@ -1,0 +1,127 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "AlertRuleSet",
+  "rules": [
+    {
+      "id": "service-unavailable",
+      "signal": "service.availability",
+      "sensor": "service-availability",
+      "severity": "critical",
+      "condition": { "operator": "lt", "threshold": 0.999 },
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "escalation": [
+        { "afterMinutes": 10, "to": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Platform Owner (substitute)" } },
+        { "afterMinutes": 30, "to": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Security Owner" } }
+      ],
+      "runbook": "docs/runbooks/alerting.md",
+      "recipients": [
+        { "id": "platform-oncall-local", "type": "local-mailbox" },
+        { "id": "platform-oncall-webhook", "type": "webhook", "urlEnv": "DKC_ALERT_WEBHOOK_URL" }
+      ],
+      "tenantScoped": true,
+      "summary": "Tjenesten er under sit tilgængelighedsmål"
+    },
+    {
+      "id": "backup-failed",
+      "signal": "backup.status",
+      "sensor": "backup-drill",
+      "severity": "critical",
+      "condition": { "operator": "not-pass" },
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "escalation": [
+        { "afterMinutes": 15, "to": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Platform Owner (substitute)" } }
+      ],
+      "runbook": "docs/runbooks/backup-restore.md",
+      "recipients": [
+        { "id": "platform-oncall-local", "type": "local-mailbox" },
+        { "id": "platform-oncall-webhook", "type": "webhook", "urlEnv": "DKC_ALERT_WEBHOOK_URL" }
+      ],
+      "tenantScoped": false,
+      "summary": "Backup eller gennemført gendannelsesøvelse fejlede"
+    },
+    {
+      "id": "security-data-stale",
+      "signal": "security.freshness",
+      "sensor": "trivy-fs",
+      "severity": "warning",
+      "condition": { "operator": "stale" },
+      "owner": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Security Owner" },
+      "escalation": [
+        { "afterMinutes": 120, "to": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" } }
+      ],
+      "runbook": "docs/runbooks/vulnerability-response.md",
+      "recipients": [{ "id": "security-oncall-local", "type": "local-mailbox" }],
+      "tenantScoped": false,
+      "summary": "Sikkerhedssensoren er forældet eller mangler — status er ikke grøn"
+    },
+    {
+      "id": "audit-log-failure",
+      "signal": "audit.durability",
+      "sensor": "audit-journal",
+      "severity": "critical",
+      "condition": { "operator": "not-pass" },
+      "owner": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Security Owner" },
+      "escalation": [
+        { "afterMinutes": 5, "to": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" } }
+      ],
+      "runbook": "docs/runbooks/alerting.md",
+      "recipients": [
+        { "id": "security-oncall-local", "type": "local-mailbox" },
+        { "id": "security-oncall-webhook", "type": "webhook", "urlEnv": "DKC_ALERT_WEBHOOK_URL" }
+      ],
+      "tenantScoped": false,
+      "summary": "Audit-journalen er utilgængelig; privilegerede handlinger er stoppet"
+    },
+    {
+      "id": "credential-revocation-failed",
+      "signal": "credentials.revocation",
+      "sensor": "credential-revocation",
+      "severity": "warning",
+      "condition": { "operator": "not-pass" },
+      "owner": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Security Owner" },
+      "escalation": [
+        { "afterMinutes": 30, "to": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" } }
+      ],
+      "runbook": "docs/runbooks/key-management.md",
+      "recipients": [{ "id": "security-oncall-local", "type": "local-mailbox" }],
+      "tenantScoped": false,
+      "summary": "Øvelse i nøglerevokation/nødstop fejlede"
+    },
+    {
+      "id": "capacity-saturation",
+      "signal": "capacity.saturation",
+      "sensor": "capacity-saturation",
+      "severity": "warning",
+      "condition": { "operator": "gt", "threshold": 80 },
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "escalation": [
+        { "afterMinutes": 15, "to": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Platform Owner (substitute)" } }
+      ],
+      "runbook": "docs/runbooks/stateful-scaling.md",
+      "recipients": [
+        { "id": "platform-oncall-local", "type": "local-mailbox" },
+        { "id": "platform-oncall-webhook", "type": "webhook", "urlEnv": "DKC_ALERT_WEBHOOK_URL" }
+      ],
+      "tenantScoped": true,
+      "summary": "Et workload er over 80 % af sin målkapacitet"
+    },
+    {
+      "id": "queue-backpressure",
+      "signal": "queue.oldest_age",
+      "sensor": "capacity-saturation",
+      "severity": "critical",
+      "condition": { "operator": "gt", "threshold": 300 },
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "escalation": [
+        { "afterMinutes": 10, "to": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Security Owner" } }
+      ],
+      "runbook": "docs/runbooks/stateful-scaling.md",
+      "recipients": [
+        { "id": "platform-oncall-local", "type": "local-mailbox" },
+        { "id": "platform-oncall-webhook", "type": "webhook", "urlEnv": "DKC_ALERT_WEBHOOK_URL" }
+      ],
+      "tenantScoped": true,
+      "summary": "Den ældste køpost overskrider 300 s; nye forespørgsler afvises kontrolleret"
+    }
+  ]
+}

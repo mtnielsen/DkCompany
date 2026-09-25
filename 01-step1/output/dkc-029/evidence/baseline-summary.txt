@@ -1,0 +1,16 @@
+Baseline: 234 checks, 182 PASS, 1 FAIL, 0 error, 51 NOT RUN
+Run: 2026-09-24T19-41-56-433Z-83ad91a.json
+Repo: /tmp/dkc-029/00-core
+
+FAIL:
+  - changelog-check: (manglende DCO sign-off, også i 83ad91a — forudgående)
+
+DKC-029-checks:
+  - helpdesk-check … PASS
+  - helpdesk-test … PASS
+  - helpdesk-run … PASS
+  - helpdesk-report … PASS
+  - integration-zammad-live … NOT-RUN
+
+Bemaerk: den forrige stak (DKC-028) havde 229 checks (178 PASS, 1 FAIL, 50 NOT RUN).
+DKC-029 tilfoejer 5 checks: 4 passer, 1 integration er NOT RUN.

@@ -1,0 +1,33 @@
+{
+  "apiVersion": "governance.platform.example.org/v1alpha1",
+  "kind": "ApprovalPolicy",
+  "metadata": {
+    "name": "immutable-two-person",
+    "namespace": "platform-data-protection",
+    "labels": {
+      "app.kubernetes.io/name": "two-person",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "two-person",
+      "platform.example.org/environment": "data-protection"
+    }
+  },
+  "spec": {
+    "controls": [
+      {
+        "id": "protectionPolicy",
+        "required": true,
+        "requesterMayNotApprove": true
+      },
+      {
+        "id": "recoveryAccess",
+        "required": true,
+        "requesterMayNotApprove": true
+      },
+      {
+        "id": "governanceBypass",
+        "required": true,
+        "requesterMayNotApprove": true
+      }
+    ]
+  }
+}

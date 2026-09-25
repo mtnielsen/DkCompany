@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/job.schema.json",
+  "title": "Job",
+  "description": "DKC-013: et holdbart, genoptageligt og idempotent job. Et job har en eksplicit tilstand, en handlingsklasse (read/reversibel/irreversibel), en idempotency-key, begrænsede forsøg og en lease med fencing-token. Irreversible skrivninger gentages aldrig blindt; de reconcileres og eskaleres ellers til dead-letter.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "id", "tenantId", "jobKind", "classification", "status", "attempts", "maxAttempts"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "Job" },
+    "id": { "type": "string" },
+    "tenantId": { "type": "string", "description": "Kunden jobbet kører for. Tenant-isoleret i databasen." },
+    "jobKind": { "type": "string", "description": "Jobtype (fx 'task' eller 'compensation')." },
+    "classification": {
+      "enum": ["read", "reversible-write", "irreversible-write"],
+      "description": "Handlingsklasse. En blandet opgave arver den mest risikable handling."
+    },
+    "idempotencyKey": {
+      "type": "string",
+      "description": "Stabil nøgle pr. logisk job. Samme nøgle leveret to gange opretter ikke et nyt job og udfører derfor ikke en irreversibel ændring to gange."
+    },
+    "status": {
+      "enum": ["queued", "leased", "running", "retry-scheduled", "unknown", "completed", "failed", "dead-letter", "cancelled"]
+    },
+    "attempts": { "type": "integer", "minimum": 0, "description": "Antal leases/forsøg indtil nu." },
+    "maxAttempts": { "type": "integer", "minimum": 1, "description": "Øvre grænse for automatiske forsøg." },
+    "nextAttemptAt": { "type": "string", "format": "date-time", "description": "Tidligste tidspunkt for næste forsøg (backoff)." },
+    "payload": { "type": "object", "description": "Jobbets payload. For en agentopgave en AgentTask." },
+    "lease": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "workerId": { "type": "string" },
+        "token": { "type": "integer", "minimum": 1, "description": "Fencing-token. Et gammelt token kan ikke afslutte jobbet." },
+        "until": { "type": "string", "format": "date-time" }
+      }
+    },
+    "deadLetter": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "reason": { "type": "string" },
+        "at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "compensationFor": { "type": "string", "description": "Job-ID for det job denne kompensationshandling hører til." },
+    "parentId": { "type": "string" }
+  }
+}

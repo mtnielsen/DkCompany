@@ -1,0 +1,13 @@
+{
+  "name": "@platform/feature-access",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "DKC-060: tværgående IAM og dataadgang for Communications, HR, BI og Reporting. Funktionsprofiler, ressource-/række-/feltkontrol, gæste- og tjenestekontoadgang, offboarding, rapportering med revalideret adgang og en beskyttet datakildeconnector.",
+  "bin": {
+    "feature-access": "./src/cli.mjs"
+  },
+  "scripts": {
+    "test": "node --test"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@platform/dedup",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "DKC-043: sikker deduplikering og kontrolleret oprydning. Separat design for backupblokke, primære objekter, jobhændelser og forretningsposter med tenant-/krypteringsdomæne-/retentiongrænse, referencekæde, retention-aware garbage collection med single-writer lease, korruptionssporing og en besparelsesgate der kun aktiveres efter bestået integritets- og restoretest.",
+  "exports": {
+    ".": "./src/index.mjs"
+  },
+  "scripts": {
+    "test": "node --test",
+    "check": "node src/check.mjs",
+    "write": "node src/cli.mjs write",
+    "drill": "node src/cli.mjs drill"
+  }
+}

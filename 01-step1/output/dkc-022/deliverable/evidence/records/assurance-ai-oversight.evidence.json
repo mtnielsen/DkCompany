@@ -1,0 +1,32 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "EvidenceRecord",
+  "id": "assurance-ai-oversight",
+  "subject": {
+    "kind": "component",
+    "name": "ai-oversight"
+  },
+  "mode": "fixture",
+  "result": "pass",
+  "commit": "83ad91a963d8055f77c29fb4361455689df95acb",
+  "imageDigest": null,
+  "environment": "local",
+  "upstreamVersion": "platform@1.0.0",
+  "runId": "assurance-assurance-ai-oversight",
+  "capturedAt": "2026-09-24T10:00:00Z",
+  "expiresAt": "2026-10-24T10:00:00Z",
+  "producer": {
+    "type": "ci",
+    "name": "runtime-suite",
+    "subject": "ci|runtime"
+  },
+  "command": [
+    "make",
+    "runtime-test"
+  ],
+  "artifact": {
+    "uri": "runtime/src/runtime.mjs",
+    "sha256": "f8154cd59ef5ff15d6fc59c1d890def98ad707286a7ec7267934f0dc87cd7b0d"
+  },
+  "digest": "1c856028002f4ef279bf75d87cf169319e47d8e11c111dd0872f95e4f028458a"
+}

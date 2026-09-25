@@ -1,0 +1,157 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ArtifactManifest",
+  "metadata": {
+    "name": "platform-release-artifacts",
+    "version": "1.0.0",
+    "description": "Den kanoniske fortegnelse over hvilke artefakter CI har bygget, deres digests og hvilken signatur der dækker dem.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner"
+    }
+  },
+  "sourceCommit": "83ad91a963d8055f77c29fb4361455689df95acb",
+  "trustAnchor": {
+    "keys": [
+      {
+        "keyId": "8042494d66640bc7",
+        "algorithm": "ed25519",
+        "publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAv36/L5+oOZJuaPd5IAyaGsOpJeU/ZxKmX5cVkA0CnCw=\n-----END PUBLIC KEY-----\n",
+        "owner": {
+          "subject": "oidc|cecilia.christensen",
+          "name": "Cecilia Christensen",
+          "role": "Security Owner"
+        }
+      }
+    ]
+  },
+  "policy": {
+    "requirePinnedDigest": true,
+    "requireSignature": true,
+    "requireSbom": true,
+    "requireProvenance": true
+  },
+  "artifacts": [
+    {
+      "name": "platform-sbom",
+      "type": "sbom",
+      "status": "built-unsigned",
+      "reason": "SBOM'en genereres deterministisk lokalt; releasesignaturnøglen ligger i CI-hemmeligheden og er ikke tilgængelig i dette miljø.",
+      "builder": "supply-chain/src/sbom.mjs",
+      "sourceCommit": "83ad91a963d8055f77c29fb4361455689df95acb",
+      "builtAt": "1970-01-01T00:00:00.000Z",
+      "digest": "dc69548ceb22b024f2792026be49d5248484f1400a56150ce855b2c9ff2faad8",
+      "signature": null,
+      "sbom": {
+        "ref": "release/sbom/platform-sbom.cdx.json",
+        "sha256": "dc69548ceb22b024f2792026be49d5248484f1400a56150ce855b2c9ff2faad8"
+      },
+      "provenance": null
+    },
+    {
+      "name": "ghcr.io/example/platform-pdp",
+      "type": "container-image",
+      "status": "not-built",
+      "reason": "Docker er ikke tilgængelig i dette miljø; containerbilledet kan ikke bygges eller signeres her.",
+      "repository": "ghcr.io/example/platform-pdp",
+      "builder": "containers/pdp/Dockerfile",
+      "sourceCommit": "83ad91a963d8055f77c29fb4361455689df95acb",
+      "digest": null,
+      "signature": null,
+      "sbom": null,
+      "provenance": null
+    },
+    {
+      "name": "ghcr.io/example/platform-ai-gateway",
+      "type": "container-image",
+      "status": "not-built",
+      "reason": "Docker er ikke tilgængelig i dette miljø; containerbilledet kan ikke bygges eller signeres her.",
+      "repository": "ghcr.io/example/platform-ai-gateway",
+      "builder": "containers/ai-gateway/Dockerfile",
+      "sourceCommit": "83ad91a963d8055f77c29fb4361455689df95acb",
+      "digest": null,
+      "signature": null,
+      "sbom": null,
+      "provenance": null
+    },
+    {
+      "name": "ghcr.io/example/audit-service",
+      "type": "container-image",
+      "status": "not-built",
+      "reason": "Docker er ikke tilgængelig i dette miljø; containerbilledet kan ikke bygges eller signeres her.",
+      "repository": "ghcr.io/example/audit-service",
+      "builder": "containers/audit-service/Dockerfile",
+      "sourceCommit": "83ad91a963d8055f77c29fb4361455689df95acb",
+      "digest": null,
+      "signature": null,
+      "sbom": null,
+      "provenance": null
+    },
+    {
+      "name": "ghcr.io/example/mattermost-adapter",
+      "type": "container-image",
+      "status": "not-built",
+      "reason": "Docker er ikke tilgængelig i dette miljø; containerbilledet kan ikke bygges eller signeres her.",
+      "repository": "ghcr.io/example/mattermost-adapter",
+      "builder": "containers/mattermost-adapter/Dockerfile",
+      "sourceCommit": "83ad91a963d8055f77c29fb4361455689df95acb",
+      "digest": null,
+      "signature": null,
+      "sbom": null,
+      "provenance": null
+    },
+    {
+      "name": "ghcr.io/example/keycloak-adapter",
+      "type": "container-image",
+      "status": "not-built",
+      "reason": "Docker er ikke tilgængelig i dette miljø; containerbilledet kan ikke bygges eller signeres her.",
+      "repository": "ghcr.io/example/keycloak-adapter",
+      "builder": "containers/keycloak-adapter/Dockerfile",
+      "sourceCommit": "83ad91a963d8055f77c29fb4361455689df95acb",
+      "digest": null,
+      "signature": null,
+      "sbom": null,
+      "provenance": null
+    },
+    {
+      "name": "ghcr.io/example/nextcloud-adapter",
+      "type": "container-image",
+      "status": "not-built",
+      "reason": "Docker er ikke tilgængelig i dette miljø; containerbilledet kan ikke bygges eller signeres her.",
+      "repository": "ghcr.io/example/nextcloud-adapter",
+      "builder": "containers/nextcloud-adapter/Dockerfile",
+      "sourceCommit": "83ad91a963d8055f77c29fb4361455689df95acb",
+      "digest": null,
+      "signature": null,
+      "sbom": null,
+      "provenance": null
+    },
+    {
+      "name": "ghcr.io/example/platform-approvals",
+      "type": "container-image",
+      "status": "not-built",
+      "reason": "Docker er ikke tilgængelig i dette miljø; containerbilledet kan ikke bygges eller signeres her.",
+      "repository": "ghcr.io/example/platform-approvals",
+      "builder": "containers/approvals/Dockerfile",
+      "sourceCommit": "83ad91a963d8055f77c29fb4361455689df95acb",
+      "digest": null,
+      "signature": null,
+      "sbom": null,
+      "provenance": null
+    },
+    {
+      "name": "ghcr.io/example/platform-runtime",
+      "type": "container-image",
+      "status": "not-built",
+      "reason": "Docker er ikke tilgængelig i dette miljø; containerbilledet kan ikke bygges eller signeres her.",
+      "repository": "ghcr.io/example/platform-runtime",
+      "builder": "containers/runtime/Dockerfile",
+      "sourceCommit": "83ad91a963d8055f77c29fb4361455689df95acb",
+      "digest": null,
+      "signature": null,
+      "sbom": null,
+      "provenance": null
+    }
+  ]
+}

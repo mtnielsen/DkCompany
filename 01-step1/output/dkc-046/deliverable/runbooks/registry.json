@@ -1,0 +1,40 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "RunbookRegistry",
+  "metadata": {
+    "name": "platform-runbooks",
+    "version": "1.0.0",
+    "description": "Katalog over versionsstyrede, signerede runbooks. Hver post peger på det kontraktdokument, der er kilden, og den digest den menneskelige godkendelse bindes til.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner"
+    }
+  },
+  "runbooks": [
+    {
+      "ref": "patch-dummy-ok@1.0.0",
+      "digest": "d5e9e9ad8e82093f5c00da7ff59d8ee5fc5cb8203eb60816f6b2dbe42f75fb4a",
+      "flow": "standard",
+      "contract": "contracts/examples/runbook.example.json",
+      "doc": "docs/runbooks/runbook-approval.md",
+      "service": "checkout"
+    },
+    {
+      "ref": "stateless-restart@1.0.0",
+      "digest": "deab1771bb4b70a60156bb9b571f66d232e66fb9310ab964bff4519b2df5b86a",
+      "flow": "standard",
+      "contract": "runbooks/stateless-restart.runbook.json",
+      "doc": "docs/runbooks/self-remediation.md",
+      "service": "checkout"
+    },
+    {
+      "ref": "bounded-scale@1.0.0",
+      "digest": "cb39bdb20eb27676de4f0f00e9f4f35c3514fa8534aafb7e7e4bc14a481d026e",
+      "flow": "standard",
+      "contract": "runbooks/bounded-scale.runbook.json",
+      "doc": "docs/runbooks/self-remediation.md",
+      "service": "checkout"
+    }
+  ]
+}

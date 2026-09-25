@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/privacy-export.schema.json",
+  "title": "Privacy Export",
+  "description": "DKC-020: en sikret eksport af en registrerets egne data. Eksporten er bundet til tenant, sag, modtager, udløb og et artefakt med SHA-256. Selve persondataene ligger i artefaktet, ikke i dette metadata-dokument.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "exportId", "tenantId", "caseId", "verb", "recipient", "status", "recordCount", "dropped", "createdAt", "expiresAt", "artifact", "auditRef"],
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "PrivacyExport" },
+    "exportId": { "type": "string", "format": "uuid" },
+    "tenantId": { "type": "string", "minLength": 1 },
+    "caseId": { "type": "string", "minLength": 1 },
+    "verb": {
+      "enum": ["subject.locate", "subject.export", "subject.erase", "subject.legal_hold", "retention.policy"]
+    },
+    "recipient": { "type": "string", "minLength": 1, "description": "Den navngivne modtager linket er bundet til." },
+    "status": { "enum": ["active", "redeemed", "revoked", "expired"] },
+    "recordCount": { "type": "integer", "minimum": 0 },
+    "dropped": { "type": "integer", "minimum": 0, "description": "Poster der blev udeladt, fordi de tilhørte en anden person eller tenant." },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "expiresAt": { "type": "string", "format": "date-time" },
+    "redeemedAt": { "type": ["string", "null"], "format": "date-time" },
+    "revokedAt": { "type": ["string", "null"], "format": "date-time" },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["uri", "sha256", "bytes"],
+      "properties": {
+        "uri": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "bytes": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "auditRef": { "type": "string", "minLength": 1 }
+  }
+}

@@ -1,0 +1,64 @@
+# SHA256-manifest for DKC-037-leverancen
+# Genereret: 2026-09-23T13:13:20Z
+# Forudsætning: DKC-001 + DKC-002 + DKC-003 + DKC-004 + DKC-005 + DKC-006 + DKC-007 + DKC-008 + DKC-009 + DKC-010 + DKC-011 + DKC-013 + DKC-055 + DKC-012
+# Reviewets base: 5f9fa73, undersøgt checkout: 83ad91a
+# Node v22.22.1. DKC-037: serviceklasser, fejldomaener, N+1, recoverymaal og menneskelig vedtagelse.
+
+# --- deliverable/ (overlay, relative til 00-core/) ---
+c933521a552f1abf258a5318152ca99426379a937a912b609398939717520a47  ./Makefile
+48cbe18179fb7f70ea817e158e460dc582774ee9cc6f5c203ce352c09c199c13  ./conformance/src/schemas.mjs
+884b0fc08ba57dd6c7dd0b953ebcea19766f95704186c547fceb37bc81c409e1  ./conformance/src/service-classes.mjs
+355b272a2d8acc8c985d2a7d99ac233371b3b88bb1aea9c7b8d0230cfd45a66c  ./conformance/src/validate-schemas.mjs
+ffc692f645695e7a4f074215671e29ed5c1ec57ce29190b439b2839b6eec5739  ./conformance/test/fixtures/service-class/service-class.ha-single-server.invalid.json
+27843342744c0e098b3dbf5823935d80918d605e249e4d1f2297095986828348  ./conformance/test/fixtures/service-class/service-class.multiwriter.invalid.json
+900187beeec3b7f9150a32d6540e2e29e73ea1f1b6b1ee0e8a2fe6ad18810bcd  ./conformance/test/service-class-conformance.test.mjs
+68345d816c120e5ee416785d9e1c4f17c8b82fc1d4475bc2073306e629ddfaea  ./continuity/package.json
+ca9d83033411f8bc1ae4f4f84604ce8006acac5d118e312915f65c260fd44de0  ./continuity/service-classes/audit-service.service-class.json
+9e7b21a68b0713c0425ecfe1fb22d92d4dab7bda70a5f7a562196a0705110878  ./continuity/service-classes/dummy-ok.service-class.json
+21470844b942603f9887fc85dbb50acaca633e27653e21c3e07d7925d57a9de2  ./continuity/service-classes/keycloak-adapter.service-class.json
+7690a15a13b1818f88653a6bc567d74ddcdc3fc65b7b22bff649c40f37d6d631  ./continuity/service-classes/mattermost-adapter.service-class.json
+06de43d8a863c1aabcfece3ee7e1e69e329873de83ad47a3421c9d8a95447640  ./continuity/src/check.mjs
+2a68d11d486e8779e8d3c9f077f28f5c8b1f527071bc5d3897f32ca60e4a90c9  ./continuity/src/classes.mjs
+e3d5e822d46cb99c0dbbe769d9d3efe85472bad95296cc5c01ac8d05ba223c21  ./continuity/src/profile-check.mjs
+b3a042d928140fe8cb1b4a13238cf1822e5aa4c5fd75f1dfd35206bba8e47105  ./continuity/src/recovery.mjs
+644d4e45769370e29dad761100f1a4790831da04a3dc7e6b3ff8d133cb3fc657  ./continuity/src/report.mjs
+f40e3b635bd4ec94ea9abff67aca1e2166c7878c50b74756f07a728c74d0f28f  ./continuity/test/recovery.test.mjs
+ab8e65361cbf6b0662a37a923bced99d03bf427580f5b24edc9fafae8f065f5f  ./continuity/test/service-classes.test.mjs
+3542d46b56d37266e0d70918e0ae29e202be9144ad7f150cab39627edc7ef24b  ./contracts/examples/service-class.example.json
+f8b4617116e587606e316bb9d9a1bb818fda48e43d62e4b4afeaaecbc577da78  ./contracts/module-manifest.schema.json
+73add809d5d75cc95b75eb07a021b8215d7056f9bec5e6a608f380ef47d69d29  ./contracts/service-class.schema.json
+3f3a5ebb21ca91ee57b557b7045a9ea762bac53020daad51acc1ca05d13949b8  ./docs/adr/0026-fejlomraader-n-plus-1-og-recovery.md
+0300f474ff8f194a1d3346d8c08fe6efff5b1058e843922e5bfffa94cdc3c994  ./docs/adr/README.md
+2af64375846f6e5df96b914e0f9f55804d206f42260fc35b5236c77da28beeff  ./docs/continuity/bia.md
+b4532c8a284154e03ed18b53b29baa060fc5b1d57b07de74fb0024c11f48fe90  ./docs/spec/README.md
+4774130ef77e6b22e4a20d3e6f0565018b7b5fd70e4df29eba6c5fe912ad67c0  ./docs/spec/service-classes.md
+0138b3bb82d74b1d2eb7ef042d3d0c4e98e18a75bf8a89f8ba3e7d61d903b0cd  ./docs/status/implementation-matrix.md
+29c66bc3075b1166f2bddbc4894048b068dfb66cd31eefbb4043e78104193357  ./modules/audit-service/module-manifest.json
+c472f06f75d64e9dd148daab79bf991626cc310b576be1fb42a3fb03b7c11f27  ./modules/dummy-ok/module-manifest.json
+829466e66700c2c863ca3cfe831c13cbf4bc16a3d2d7b616131f2474d20349c4  ./modules/keycloak-adapter/module-manifest.json
+e4fc4af1fb3d050223705ba99c84d7b35d31469532ead726c7ee1f6d15be6b38  ./modules/mattermost-adapter/module-manifest.json
+aa39c6f7485c030b562d1a1dc0f0ef6de71fb7668a926aa03f5d7fb0c03d6870  ./tools/baseline/registry.mjs
+
+# --- evidence/ ---
+a904def7c61ac6d81012828f56a2d419e90ad453e2e9eb0b84c41f85c6860ba6  evidence/baseline/baseline-run.json
+00158645456e8f75d455e2805beba6f036d05ed5353d7ea1fe78fab689d2cd6a  evidence/baseline/baseline.log
+840c9add61aaeba5c40edbe20e79127617f9e3864dcfc0b261e90cb222e80cad  evidence/logs/agent-conformance-test.log
+bf68192e7f4618ef1fcd652c807437332c5db7eea718bb8779aa9730f1e2acd2  evidence/logs/architecture-check.log
+e3b007f4c56121e2eaea37c170fa5e0c5451c3c926576ad830829483e47efa08  evidence/logs/architecture-test.log
+e6b24bb64ffd1174168edca2aa0b4e07128c68dea9f4fb2def8957bebb8190cf  evidence/logs/continuity-check.log
+7763e8ac0de2970a5afd9f863c52c3a239abe9c268e8efba39f2b11b51f16266  evidence/logs/continuity-report.json
+475e054a4079e0012b7dbc70ab36450ea291702ed48b89a2c31f234dfbcc7a7c  evidence/logs/continuity-report.md
+e44555f31c4943de07acb5f41ec18f232454d44fb448a11864c66657b39b0506  evidence/logs/continuity-test.log
+285549d4c189d3ac9a63d2326b19870ea1eb5282d0174624b201aa545e6d3e65  evidence/logs/gateway-test.log
+5d2cdbc4192d35ef4690afe6684b3a1960eec1a5fe7e5f72c0f56167d7c57677  evidence/logs/gitops-verify.log
+c577b878f78885b83465320e5e61677a45ffa950951cc188032d15f742503b69  evidence/logs/lint.log
+dcfa94327db21ceafee5a57e950165c8ebfa959e5d40223997ec17c00fa8dd65  evidence/logs/observability-check.log
+1d2a9a1d41db27978f7064eaaf7fcba38b54ebac99158f6cfc48d2dbfc18c47f  evidence/logs/persistence-test.log
+7751fa35ae2d78b5cb9c9bf94a573a8b7075bf8ff117772646e4daf2f669da97  evidence/logs/runtime-test.log
+f15d202308745d1c7df31af957f4c14b51d6b99c6ab0272638d42893a105f8ee  evidence/logs/tenant-test.log
+af469150ef372c02adfca17cbf81277dc90c19b862e52bb019f0f5de62f15338  evidence/logs/test.log
+bf68192e7f4618ef1fcd652c807437332c5db7eea718bb8779aa9730f1e2acd2  evidence/logs/validate.log
+
+# --- README.md, apply.sh ---
+f9441d31dd3a6901eafff24249c842076856412908aaf8d9b538059fb8d29989  ./README.md
+2e6d7b100c4a8a34171560c178bb1e84afd57bf2f4e8f5693de33c1ccf279e78  ./apply.sh

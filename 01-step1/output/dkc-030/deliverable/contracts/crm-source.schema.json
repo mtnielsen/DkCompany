@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/crm-source.schema.json",
+  "title": "CRM Source",
+  "description": "DKC-030: en CRM-kilde (EspoCRM som første kandidat) med tenantbinding, secretreference, et entydigt ejerskabsfelt, entitetstyper, roller, dedup-nøgler og retention. EspoCRM forbliver system-of-record, og hver post spejles med en tenantafgrænset stabil reference.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "sources"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "CrmSource" },
+    "metadata": { "$ref": "#/$defs/metadata" },
+    "sources": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/source" } }
+  },
+  "$defs": {
+    "human": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\|[a-z0-9][a-z0-9._-]{2,}$" },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": { "$ref": "#/$defs/human" }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman", "labels"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/human" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "role": {
+      "type": "object",
+      "required": ["read", "write", "entityTypes"],
+      "additionalProperties": false,
+      "properties": {
+        "read": { "type": "boolean" },
+        "write": { "type": "boolean" },
+        "entityTypes": { "type": "array", "minItems": 1, "items": { "enum": ["Account", "Contact", "Opportunity", "Activity"] } }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["id", "type", "tenantId", "baseUrl", "secretRef", "systemOfRecord", "writeMode", "ownerField", "defaultOwner", "entityTypes", "roles", "dedupKeys", "retention"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$" },
+        "type": { "const": "espocrm" },
+        "tenantId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+        "baseUrl": { "type": "string", "format": "uri" },
+        "secretRef": { "type": "string", "pattern": "^(vault|k8s|env|file|kms):[A-Za-z0-9_./#:-]{3,200}$" },
+        "systemOfRecord": { "const": "upstream" },
+        "writeMode": { "const": "adapter-mediated" },
+        "ownerField": { "type": "string", "minLength": 1 },
+        "defaultOwner": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\|[a-z0-9][a-z0-9._-]{2,}$" },
+        "entityTypes": { "type": "array", "minItems": 1, "items": { "enum": ["Account", "Contact", "Opportunity", "Activity"] } },
+        "roles": { "type": "object", "minProperties": 1, "additionalProperties": { "$ref": "#/$defs/role" } },
+        "dedupKeys": {
+          "type": "object",
+          "required": ["Account", "Contact", "Opportunity", "Activity"],
+          "additionalProperties": false,
+          "properties": {
+            "Account": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+            "Contact": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+            "Opportunity": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+            "Activity": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+          }
+        },
+        "retention": {
+          "type": "object",
+          "required": ["contactDays", "activityDays", "copyDays"],
+          "additionalProperties": false,
+          "properties": {
+            "contactDays": { "type": "integer", "minimum": 1 },
+            "activityDays": { "type": "integer", "minimum": 1 },
+            "copyDays": { "type": "integer", "minimum": 1 }
+          }
+        }
+      }
+    }
+  }
+}

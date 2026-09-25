@@ -1,0 +1,50 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "DisasterRecoveryDrillReport",
+  "drillId": "11111111-1111-4111-8111-111111111111",
+  "planRef": "platform-disaster-recovery",
+  "tenantId": "acme",
+  "primaryClusterAvailable": false,
+  "isolatedRecoveryEnvironment": {
+    "isolated": true,
+    "noPrimaryDependency": true,
+    "networkIsolation": "dedicated-recovery-vpc-without-peering-to-primary",
+    "manifests": ["gitops/manifests/recovery/isolated-recovery-environment.json"]
+  },
+  "startedAt": "2026-09-28T02:00:00Z",
+  "finishedAt": "2026-09-28T02:01:00Z",
+  "restore": {
+    "backupId": "dr-example-001",
+    "knownCleanPoint": true,
+    "integrityOk": true,
+    "checksumsVerified": true,
+    "components": ["database:database", "config:config", "objects:report.json"]
+  },
+  "dependencyRecovery": [
+    { "component": "iam", "recovered": true, "method": "restore-identity-table-from-pitr-and-rebind-trust" },
+    { "component": "dns", "recovered": true, "method": "rebuild-zone-from-config-and-reexport" },
+    { "component": "secret-store", "recovered": true, "method": "recover-keys-from-separate-custody" },
+    { "component": "database", "recovered": true, "method": "pitr-to-known-clean-point" },
+    { "component": "object-storage", "recovered": true, "method": "restore-versioned-objects-and-preserve-locks" }
+  ],
+  "deletionJournal": { "applied": true, "entries": 2, "recordsErased": 1, "ledgerOk": true },
+  "measurements": {
+    "userFlowId": "F3",
+    "stepsRestored": 4,
+    "fullFlowRestoreMs": 42000,
+    "measuredRtoMinutes": 0.7,
+    "measuredRpoMinutes": 0,
+    "rpoTargetMinutes": 0,
+    "rtoTargetMinutes": 60,
+    "databaseOnlyRtoMinutes": 0.4
+  },
+  "functionalChecks": [
+    { "name": "database-integrity", "status": "pass", "detail": "databaseintegriteten er ok" },
+    { "name": "tenant-isolation", "status": "pass", "detail": "1 tenant er afgrænset gennem tenant-viewet" },
+    { "name": "acl-reconciliation", "status": "pass", "detail": "ACL afstemmer efter PITR" },
+    { "name": "full-user-flow", "status": "pass", "detail": "samlet brugerflow gendannet" }
+  ],
+  "measured": false,
+  "gate": { "status": "pass", "reasons": [] },
+  "auditRef": "audit:dr.drill.11111111-1111-4111-8111-111111111111"
+}

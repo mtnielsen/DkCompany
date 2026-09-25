@@ -1,0 +1,21 @@
+{
+  "apiVersion": "policy/v1",
+  "kind": "PodDisruptionBudget",
+  "metadata": {
+    "name": "database-ha-staging-pdb",
+    "namespace": "platform-data",
+    "labels": {
+      "app.kubernetes.io/name": "database-ha-staging",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/environment": "staging"
+    }
+  },
+  "spec": {
+    "minAvailable": 2,
+    "selector": {
+      "matchLabels": {
+        "app.kubernetes.io/name": "database-ha-staging"
+      }
+    }
+  }
+}

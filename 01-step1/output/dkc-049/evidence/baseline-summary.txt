@@ -1,0 +1,30 @@
+Baseline for DKC-049 (kumulativ overlay oven på DKC-021, checkout 83ad91a)
+============================================================================
+
+Kommando:  make baseline
+Checkout:  83ad91a (reviewets base 5f9fa73)
+Node:      v22.22.1
+
+Resultat:  FAIL
+  - 120 PASS
+  -   1 FAIL   (changelog-check — kendt, allerede til stede før DKC-049:
+              commit 83ad91a mangler DCO sign-off; aldrig "fixet" eller skjult)
+  -  34 NOT RUN (alle eksterne integrationer; bl.a. den nye
+              integration-logging-live)
+
+Nye checks tilføjet af DKC-049:
+  - logging-check … PASS
+  - logging-test … PASS
+  - integration-logging-live … NOT RUN
+      Begrundelse: Der findes ingen levende agent-/serverflåde eller rigtige
+      OTel-/WORM-tjenester i dette miljø. Korrelation, provenance-adskillelse,
+      holdbar kvittering, WORM-arkivering og rekonstruktion er efterprøvet
+      deterministisk på den rigtige SQLite-ledger og fillager-model; en målt
+      strøm fra produktion kræver uafhængig driftsverifikation.
+
+Reproducerbarhed: baseline-kørslen muterede 30 sporede filer under
+`modules/*/conformance` (samme kendte fixture-adfærd som de øvrige pakker).
+Filerne blev snappet før kørslen og gendannet byte-identisk bagefter;
+`diff -rq` mod snapshotet er tomt. Dette er rapporteret ærligt og ikke skjult.
+
+Fuld log: evidence/baseline.log

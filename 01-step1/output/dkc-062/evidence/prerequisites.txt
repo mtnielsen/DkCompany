@@ -1,0 +1,22 @@
+# DKC-062 forudsætninger verificeret i kode (ikke i et statusfelt)
+# Genereret: 2026-10-07
+
+OK   DKC-022 assurance: compliance/assurance-register.json
+OK   DKC-022 assurance-kontrakt: contracts/assurance-register.schema.json
+OK   DKC-053 distribution profiles: distribution/src/resolver.mjs
+OK   DKC-053 katalog: catalog/profiles/small-vps.profile.json
+OK   DKC-054 installer plan: installer/src/plan.mjs
+OK   DKC-054 installer preflight: installer/src/preflight.mjs
+OK   DKC-054 configuration: configuration/desired-state.json
+OK   DKC-055 agent-registry: agent-registry/src/roles.mjs
+OK   DKC-055 handoff: agent-registry/src/handoff.mjs
+OK   DKC-057 backup targets: backup/targets
+OK   DKC-060 feature-access: feature-access/profiles
+OK   DKC-061 lifecycle: installer/src/lifecycle-update.mjs
+OK   DKC-061 katalog: catalog/releases.json
+OK   DKC-063 testmatrix: release/matrix/test-matrix.json
+OK   DKC-063 gate: release/src/gate.mjs
+OK   DKC-064 vulnerability: vulnerability-management/inventory.json
+OK   DKC-066 telemetry-api: telemetry-api/src
+
+# Forudsætningskæde: dkc-061/apply.sh → dkc-059/apply.sh → dkc-031/apply.sh → … → dkc-001/apply.sh

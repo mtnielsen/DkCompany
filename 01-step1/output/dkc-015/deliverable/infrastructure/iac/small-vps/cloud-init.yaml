@@ -1,0 +1,8 @@
+#cloud-config
+# DKC-015 — bootstrap af k3s på den valgte hostingprofil.
+package_update: true
+packages:
+  - curl
+runcmd:
+  - curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="${k3s_version}" sh -s - server --write-kubeconfig-mode 0644 --disable traefik
+  - mkdir -p /var/lib/platform-data

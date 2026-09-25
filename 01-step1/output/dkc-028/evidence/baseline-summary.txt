@@ -1,0 +1,16 @@
+Baseline: 229 checks, 178 PASS, 1 FAIL, 0 error, 50 NOT RUN
+Run: 2026-09-24T19-26-32-245Z-83ad91a.json
+Repo: /tmp/dkc-028/00-core
+
+FAIL:
+  - changelog-check: (manglende DCO sign-off, også i 83ad91a — forudgående)
+
+DKC-028-checks:
+  - search-check: pass
+  - search-test: pass
+  - search-run: pass
+  - search-report: pass
+  - integration-bookstack-live: not-run
+
+Bemaerk: den forrige stak havde 224 checks (174 PASS, 1 FAIL, 49 NOT RUN).
+DKC-028 tilfoejer 5 checks: 4 passer, 1 integration er NOT RUN.

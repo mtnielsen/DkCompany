@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "1.0",
+  "kind": "LogRecord",
+  "id": "4f1d2c3a-1111-4a2b-9c3d-000000000002",
+  "occurredAt": "2026-09-16T21:12:01.100Z",
+  "recordedAt": "2026-09-16T21:12:01.130Z",
+  "correlation": {
+    "correlationId": "corr-2026-09-16-0001",
+    "executionId": "exec-2026-09-16-0001",
+    "incidentId": "res://acme/incident/INC-0042",
+    "changeId": "res://acme/change/CHG-4711",
+    "traceId": "c4fa324a9f793f3ff42b7aaca7813da6",
+    "parentId": "4f1d2c3a-1111-4a2b-9c3d-000000000001"
+  },
+  "scope": {
+    "tenantId": "acme",
+    "environment": "dev",
+    "service": "runtime",
+    "resource": "res://acme/service/runtime"
+  },
+  "provenance": "model",
+  "model": {
+    "provider": "platform-gateway",
+    "name": "ops-copilot",
+    "modelVersion": "2026-09",
+    "promptVersion": "prompt-17",
+    "responseDigest": "b93bd14ba7194fa690a5ab0af9516a3db93bd14ba7194fa690a5ab0af9516a3d",
+    "decisionSummary": "Foreslår at skalere læse-replikaen og genstarte den fejlende pod."
+  },
+  "action": {
+    "mutating": true,
+    "tool": {
+      "name": "kubectl.scale",
+      "verb": "scale",
+      "target": "res://acme/deployment/checkout-api",
+      "parameters": { "replicas": 4 },
+      "redactions": []
+    },
+    "policy": "policies/ops-scale.rego",
+    "policyDigest": "c93bd14ba7194fa690a5ab0af9516a3db93bd14ba7194fa690a5ab0af9516a3d",
+    "approvalDigest": "d93bd14ba7194fa690a5ab0af9516a3db93bd14ba7194fa690a5ab0af9516a3d",
+    "runbookDigest": "e93bd14ba7194fa690a5ab0af9516a3db93bd14ba7194fa690a5ab0af9516a3d",
+    "before": { "replicas": 2 },
+    "after": { "replicas": 4 },
+    "retry": 0,
+    "fallback": null
+  },
+  "receipt": {
+    "intentId": "11111111-2222-4333-8444-555555555555",
+    "idempotencyId": "scale-checkout-api-2026-09-16",
+    "state": "pending",
+    "auditEventId": "f93bd14b-a719-4fa6-90a5-ab0af9516a3d",
+    "hash": "f93bd14ba7194fa690a5ab0af9516a3db93bd14ba7194fa690a5ab0af9516a3d",
+    "anchored": true
+  },
+  "dataClassification": "operational",
+  "retentionClass": "operational",
+  "minimized": true,
+  "redactions": []
+}

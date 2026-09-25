@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/platform-configuration.schema.json",
+  "title": "Platform Configuration",
+  "description": "DKC-054 — den ene, versionerede ønskede tilstand for installation, tenant og modul. Samme schema og validerings-API bruges af den deklarative fil, af portalen (UI) og af API'et. Indstillinger omfatter logniveau, debug-TTL, retention pr. dataklasse, backups, modelruter og ressourcegrænser. Ændringer kræver en navngiven menneskelig autorisation bundet til en ramme; installatøren må ikke formatere diske, overtage et eksisterende databaseskema eller ændre host-OS uden et konkret oplyst scope.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "schemaVersion", "installation", "overrides", "authorization", "enforcement"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "PlatformConfiguration" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "installationId", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$" },
+        "installationId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+        "description": { "type": "string", "minLength": 10 },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "schemaVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$", "description": "Version for selve konfigurationsschemaet; en ændring af formen kræver ny version." },
+    "installation": {
+      "description": "Den fulde, installationsdækkende ønskede tilstand.",
+      "allOf": [{ "$ref": "#/$defs/settings" }],
+      "required": ["logLevel", "debug", "retention", "backups", "modelRoutes", "resourceLimits"]
+    },
+    "overrides": {
+      "type": "array",
+      "description": "Delvise tilsidesættelser pr. tenant eller modul. De arver installationens værdier og må aldrig svække en sikkerhedsgrænse.",
+      "items": { "$ref": "#/$defs/override" }
+    },
+    "authorization": { "$ref": "#/$defs/authorization" },
+    "enforcement": {
+      "type": "object",
+      "required": ["singleSource", "driftPolicy", "auditTrailImmutable", "secretRedaction"],
+      "additionalProperties": false,
+      "properties": {
+        "singleSource": { "const": true, "description": "Der findes kun én autoritativ ønsket tilstand." },
+        "driftPolicy": { "const": "fail-closed" },
+        "auditTrailImmutable": { "const": true, "description": "Revisionssporet kan ikke deaktiveres via logniveau." },
+        "secretRedaction": { "const": true, "description": "Hemmeligheder vises ikke i preview, CLI-argumenter, Git eller supportbundle." }
+      }
+    }
+  },
+  "$defs": {
+    "settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "logLevel": { "enum": ["trace", "debug", "info", "warn", "error"] },
+        "debug": {
+          "type": "object",
+          "required": ["enabled", "expiresAt", "reason", "requestedBy"],
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "expiresAt": { "type": ["string", "null"], "format": "date-time", "description": "Absolut TTL. Et aktivt debug skal udløbe; null er kun tilladt når enabled=false." },
+            "reason": { "type": "string", "minLength": 10 },
+            "requestedBy": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\|[a-z0-9._@-]+$" }
+          }
+        },
+        "retention": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["dataClass", "retentionDays", "legalHold", "worm", "basis"],
+            "additionalProperties": false,
+            "properties": {
+              "dataClass": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$" },
+              "retentionDays": { "type": "integer", "minimum": 1 },
+              "legalHold": { "type": "boolean" },
+              "worm": { "type": "boolean" },
+              "basis": { "type": "string", "minLength": 5, "description": "Formålsbestemt, ejerbesluttet behandlingsgrundlag." }
+            }
+          }
+        },
+        "backups": {
+          "type": "object",
+          "required": ["enabled", "schedule", "external", "targetSetRef", "retentionDays"],
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "schedule": { "type": "string", "pattern": "^([0-9]+[smhd])+$", "description": "Interval, fx '6h' eller '30m'." },
+            "external": { "type": "boolean" },
+            "targetSetRef": { "type": ["string", "null"] },
+            "retentionDays": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "modelRoutes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["dataClass", "routeRef", "provider", "egressApproved"],
+            "additionalProperties": false,
+            "properties": {
+              "dataClass": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$" },
+              "routeRef": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,63}$" },
+              "provider": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$" },
+              "egressApproved": { "type": "boolean" }
+            }
+          }
+        },
+        "resourceLimits": {
+          "type": "object",
+          "required": ["cpuMillicores", "memoryMiB", "storageGiB", "maxReplicas"],
+          "additionalProperties": false,
+          "properties": {
+            "cpuMillicores": { "type": "integer", "minimum": 50 },
+            "memoryMiB": { "type": "integer", "minimum": 64 },
+            "storageGiB": { "type": "integer", "minimum": 1 },
+            "maxReplicas": { "type": "integer", "minimum": 1, "maximum": 64 }
+          }
+        }
+      }
+    },
+    "override": {
+      "type": "object",
+      "required": ["scope", "target", "reason", "settings"],
+      "additionalProperties": false,
+      "properties": {
+        "scope": { "enum": ["tenant", "module"] },
+        "target": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$", "description": "tenantId eller modul-id." },
+        "reason": { "type": "string", "minLength": 10 },
+        "settings": { "$ref": "#/$defs/settings" }
+      }
+    },
+    "authorization": {
+      "type": "object",
+      "required": ["humanSubject", "role", "grantedAt", "expiresAt", "frameRef", "approvalRef", "decisionDigest"],
+      "additionalProperties": false,
+      "properties": {
+        "humanSubject": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\|[a-z0-9._@-]+$", "description": "Verificeret, navngiven menneskelig identitet." },
+        "role": { "type": "string", "minLength": 2 },
+        "grantedAt": { "type": "string", "format": "date-time" },
+        "expiresAt": { "type": "string", "format": "date-time" },
+        "frameRef": { "type": "string", "minLength": 3, "description": "Menneskeligt vedtaget ramme for retention/ændringer." },
+        "approvalRef": { "type": "string", "minLength": 3 },
+        "decisionDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    }
+  }
+}

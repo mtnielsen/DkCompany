@@ -1,0 +1,33 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "PitrReconciliation",
+  "recoveryId": "pitr-example-001",
+  "engine": "postgresql",
+  "baseBackupId": "clean-2026-09-28T020000Z",
+  "baseBackupAt": "2026-09-28T02:00:00Z",
+  "walArchiveTarget": "s3://platform-wal-archive/eu-west-1",
+  "targetTime": "2026-09-28T02:04:30Z",
+  "appliedSegments": 3,
+  "lastAppliedAt": "2026-09-28T02:04:00Z",
+  "withinRecoveryWindow": true,
+  "data": {
+    "tables": ["acl_entries", "recovery_data"],
+    "rowCounts": { "acl_entries": 2, "recovery_data": 3 },
+    "digest": "bd2f5a0f8a2f2c9a2e6b1f0b6a2f0f9b0e7c3a1d4f6b8c0a2e4f6b8c0a2e4f6b"
+  },
+  "acl": {
+    "reconciled": true,
+    "subject": "acl_entries",
+    "expected": { "oidc|anna.andersen": "platform-owner", "oidc|cont.officer": "continuity-officer" },
+    "actual": { "oidc|anna.andersen": "platform-owner", "oidc|cont.officer": "continuity-officer" },
+    "differences": []
+  },
+  "applicationConsistency": {
+    "quiesced": true,
+    "includes": ["database", "config"],
+    "maxPauseSeconds": 30
+  },
+  "measured": false,
+  "status": "pass",
+  "reasons": []
+}

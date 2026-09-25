@@ -1,0 +1,100 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ProtectedDataRegister",
+  "metadata": {
+    "name": "example-protected-data",
+    "version": "1.0.0",
+    "description": "Eksempel på beskyttede dataklasser: ai-read-only og retention-locked (WORM) med no-AI-access som separat flag og ærlig lagerhåndhævelse.",
+    "lastReviewed": "2025-09-01"
+  },
+  "records": [
+    {
+      "id": "tenant-records",
+      "name": "Kundens forretningsdata",
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "versionId": "tenant-records@1.0.0",
+      "dataClass": "ai-read-only",
+      "noAiAccess": false,
+      "dataCategories": ["operational", "personal"],
+      "authoritativePointer": "tenants/acme/records/current",
+      "keyDomain": "platform-data",
+      "reclassifiers": [
+        { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" }
+      ],
+      "prohibitions": [
+        "direct-change",
+        "indirect-change",
+        "alias-pointer",
+        "authoritative-pointer",
+        "policy",
+        "lifecycle",
+        "keys",
+        "deletion"
+      ],
+      "retention": {
+        "purpose": "Drift af kundens forretningsdata",
+        "maxDays": 730,
+        "trigger": "contract-end",
+        "hold": { "status": "none" },
+        "assessedBy": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+        "assessedAt": "2025-09-01"
+      },
+      "humanProcess": {
+        "newVersion": { "ref": "docs/data-protection/new-version.md", "responsible": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" } },
+        "legalDeletion": { "ref": "docs/data-protection/legal-deletion.md", "responsible": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" } },
+        "retentionAssessment": { "ref": "docs/data-protection/retention.md", "responsible": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" } }
+      },
+      "storageEnforcement": {
+        "status": "unsupported",
+        "reason": "Fuld lager-/nøglehåndhævelse leveres af DKC-048. Indtil da er beskyttelsen en adgangs- og transitionskontrol, ikke en fysisk WORM-lås.",
+        "deliveredBy": "DKC-048"
+      },
+      "consumerModules": ["dummy-ok", "audit-service"],
+      "evidence": ["conformance/test/protected-data-conformance.test.mjs"]
+    },
+    {
+      "id": "worm-personal",
+      "name": "Persondata under lovbestemt WORM",
+      "owner": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Operations Lead" },
+      "versionId": "worm-personal@1.0.0",
+      "dataClass": "retention-locked",
+      "noAiAccess": true,
+      "dataCategories": ["personal"],
+      "authoritativePointer": "legal/worm/personal/current",
+      "keyDomain": "legal-hold",
+      "reclassifiers": [
+        { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Operations Lead" }
+      ],
+      "prohibitions": [
+        "direct-change",
+        "indirect-change",
+        "alias-pointer",
+        "authoritative-pointer",
+        "policy",
+        "lifecycle",
+        "keys",
+        "deletion"
+      ],
+      "retention": {
+        "purpose": "Lovpligtig bogføring",
+        "maxDays": 1825,
+        "trigger": "legal-deadline",
+        "hold": { "status": "active", "ref": "legal-hold://case/2025-1" },
+        "assessedBy": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Operations Lead" },
+        "assessedAt": "2025-09-01"
+      },
+      "humanProcess": {
+        "newVersion": { "ref": "docs/data-protection/new-version.md", "responsible": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Operations Lead" } },
+        "legalDeletion": { "ref": "docs/data-protection/legal-deletion.md", "responsible": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Operations Lead" } },
+        "retentionAssessment": { "ref": "docs/data-protection/retention.md", "responsible": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Operations Lead" } }
+      },
+      "storageEnforcement": {
+        "status": "unsupported",
+        "reason": "Fuld lager-/nøglehåndhævelse leveres af DKC-048. WORM-fristen er vurderet og endelig, men den fysiske lås er ikke implementeret endnu.",
+        "deliveredBy": "DKC-048"
+      },
+      "consumerModules": ["audit-service"],
+      "evidence": ["conformance/test/protected-data-conformance.test.mjs"]
+    }
+  ]
+}

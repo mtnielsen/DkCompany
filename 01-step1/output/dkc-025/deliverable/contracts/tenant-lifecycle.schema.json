@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/tenant-lifecycle.schema.json",
+  "title": "Tenant Lifecycle",
+  "description": "En kundes livscyklus med det hash-kædede revisionsspor. Hver tilstandsovergang bærer en aktør og en begrundelse; kæden kan efterprøves med verifyAuditTrail.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "tenantId", "name", "state", "createdAt", "updatedAt", "auditTrail"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "TenantLifecycle" },
+    "tenantId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+    "customerId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+    "name": { "type": "string", "minLength": 2 },
+    "state": { "enum": ["created", "active", "suspended", "winding-down", "closed"] },
+    "packageId": { "type": ["string", "null"] },
+    "packageVersion": { "type": ["string", "null"] },
+    "createdAt": { "type": "string", "minLength": 10 },
+    "updatedAt": { "type": "string", "minLength": 10 },
+    "windingDown": {
+      "type": ["object", "null"],
+      "required": ["exportCompleted", "deletionCompleted"],
+      "additionalProperties": false,
+      "properties": {
+        "startedBy": { "$ref": "#/$defs/actor" },
+        "startedAt": { "type": "string" },
+        "exportCompleted": { "type": "boolean" },
+        "deletionCompleted": { "type": "boolean" }
+      }
+    },
+    "auditTrail": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["seq", "at", "type", "hash"],
+        "additionalProperties": false,
+        "properties": {
+          "seq": { "type": "integer", "minimum": 1 },
+          "at": { "type": "string", "minLength": 10 },
+          "type": { "type": "string", "minLength": 3 },
+          "tenantId": { "type": "string" },
+          "actor": { "anyOf": [{ "$ref": "#/$defs/actor" }, { "type": "null" }] },
+          "from": { "type": ["string", "null"] },
+          "to": { "type": ["string", "null"] },
+          "detail": { "type": ["object", "null"] },
+          "prevHash": { "type": ["string", "null"] },
+          "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "actor": {
+      "type": "object",
+      "required": ["subject", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": ["string", "null"] }
+      }
+    }
+  }
+}

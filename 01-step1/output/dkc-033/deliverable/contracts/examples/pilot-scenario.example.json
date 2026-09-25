@@ -1,0 +1,771 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "PilotScenarioSet",
+  "metadata": {
+    "name": "platform-pilot-scenarios",
+    "version": "1.0.0",
+    "description": "Kørebare end-to-end pilotscenarier for de tre virksomhedsprofiler. Hver profil gennemfører login/offboarding, dagligt arbejde, restore, privacy-sag, opgradering og exit mod sin valgte installationsprofil. En deterministisk fixture-kørsel er ikke en målt produktionsobservation og ikke en kundeaccept.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen"
+      }
+    },
+    "labels": {
+      "wave": "5",
+      "task": "DKC-033"
+    }
+  },
+  "scenarios": [
+    {
+      "id": "smv-login-offboarding",
+      "title": "Login og offboarding af en navngiven medarbejder (Solo Håndværk ApS)",
+      "profileRef": "smv",
+      "deploymentProfileRef": "small-vps",
+      "journey": "login-offboarding",
+      "runner": "login-offboarding",
+      "selection": [],
+      "steps": [
+        {
+          "id": "resolve-tenant",
+          "action": "resolve-tenant",
+          "expected": "ok"
+        },
+        {
+          "id": "verify-identity",
+          "action": "verify-identity",
+          "expected": "ok"
+        },
+        {
+          "id": "offboard",
+          "action": "offboard",
+          "expected": "ok"
+        },
+        {
+          "id": "verify",
+          "action": "verify",
+          "expected": "ok"
+        }
+      ],
+      "abuseCase": null,
+      "evidenceLevel": "fixture",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      }
+    },
+    {
+      "id": "smv-daily-work",
+      "title": "Dagligt arbejde med tenant-scoped adgang og godkendt mutation (Solo Håndværk ApS)",
+      "profileRef": "smv",
+      "deploymentProfileRef": "small-vps",
+      "journey": "daily-work",
+      "runner": "daily-work",
+      "selection": [],
+      "steps": [
+        {
+          "id": "resolve-tenant",
+          "action": "resolve-tenant",
+          "expected": "ok"
+        },
+        {
+          "id": "authorize",
+          "action": "authorize",
+          "expected": "ok"
+        },
+        {
+          "id": "approve-mutation",
+          "action": "approve-mutation",
+          "expected": "ok",
+          "humanApproval": true
+        },
+        {
+          "id": "apply",
+          "action": "apply",
+          "expected": "ok"
+        },
+        {
+          "id": "verify",
+          "action": "verify",
+          "expected": "ok"
+        }
+      ],
+      "abuseCase": "approval-bypass",
+      "evidenceLevel": "fixture",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      }
+    },
+    {
+      "id": "smv-restore",
+      "title": "Backup og isoleret gendannelse med målt RPO/RTO (Solo Håndværk ApS)",
+      "profileRef": "smv",
+      "deploymentProfileRef": "small-vps",
+      "journey": "restore",
+      "runner": "restore",
+      "selection": [],
+      "steps": [
+        {
+          "id": "backup",
+          "action": "backup",
+          "expected": "ok"
+        },
+        {
+          "id": "restore",
+          "action": "restore",
+          "expected": "ok"
+        },
+        {
+          "id": "verify",
+          "action": "verify",
+          "expected": "ok"
+        }
+      ],
+      "abuseCase": null,
+      "evidenceLevel": "fixture",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      }
+    },
+    {
+      "id": "smv-privacy-case",
+      "title": "Privacy-sag fra anmodning til sikret eksport (Solo Håndværk ApS)",
+      "profileRef": "smv",
+      "deploymentProfileRef": "small-vps",
+      "journey": "privacy-case",
+      "runner": "privacy-case",
+      "selection": [],
+      "steps": [
+        {
+          "id": "open-case",
+          "action": "open-case",
+          "expected": "ok"
+        },
+        {
+          "id": "fan-out",
+          "action": "fan-out",
+          "expected": "ok"
+        },
+        {
+          "id": "export",
+          "action": "export",
+          "expected": "ok"
+        },
+        {
+          "id": "redeem",
+          "action": "redeem",
+          "expected": "ok"
+        },
+        {
+          "id": "verify",
+          "action": "verify",
+          "expected": "ok"
+        }
+      ],
+      "abuseCase": "cross-tenant-access",
+      "evidenceLevel": "fixture",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      }
+    },
+    {
+      "id": "smv-upgrade",
+      "title": "Signeret opgradering med menneskelig godkendelse (Solo Håndværk ApS)",
+      "profileRef": "smv",
+      "deploymentProfileRef": "small-vps",
+      "journey": "upgrade",
+      "runner": "upgrade",
+      "selection": [],
+      "steps": [
+        {
+          "id": "plan",
+          "action": "plan",
+          "expected": "ok"
+        },
+        {
+          "id": "approve",
+          "action": "approve",
+          "expected": "ok",
+          "humanApproval": true
+        },
+        {
+          "id": "upgrade",
+          "action": "upgrade",
+          "expected": "ok"
+        },
+        {
+          "id": "verify",
+          "action": "verify",
+          "expected": "ok"
+        }
+      ],
+      "abuseCase": null,
+      "evidenceLevel": "fixture",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      }
+    },
+    {
+      "id": "smv-exit",
+      "title": "Exit-eksport der kan læses uden platformen (Solo Håndværk ApS)",
+      "profileRef": "smv",
+      "deploymentProfileRef": "small-vps",
+      "journey": "exit",
+      "runner": "exit",
+      "selection": [],
+      "steps": [
+        {
+          "id": "export",
+          "action": "export",
+          "expected": "ok"
+        },
+        {
+          "id": "verify",
+          "action": "verify",
+          "expected": "ok"
+        }
+      ],
+      "abuseCase": null,
+      "evidenceLevel": "fixture",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen"
+        }
+      }
+    },
+    {
+      "id": "it-service-login-offboarding",
+      "title": "Login og offboarding af en navngiven medarbejder (Team Viden A/S)",
+      "profileRef": "it-service",
+      "deploymentProfileRef": "ha-cluster",
+      "journey": "login-offboarding",
+      "runner": "login-offboarding",
+      "selection": [],
+      "steps": [
+        {
+          "id": "resolve-tenant",
+          "action": "resolve-tenant",
+          "expected": "ok"
+        },
+        {
+          "id": "verify-identity",
+          "action": "verify-identity",
+          "expected": "ok"
+        },
+        {
+          "id": "offboard",
+          "action": "offboard",
+          "expected": "ok"
+        },
+        {
+          "id": "verify",
+          "action": "verify",
+          "expected": "ok"
+        }
+      ],
+      "abuseCase": null,
+      "evidenceLevel": "fixture",
+      "owner": {
+        "subject": "oidc|sofia.sorensen",
+        "name": "Sofia Sørensen",
+        "role": "Service Delivery Owner",
+        "substitute": {
+          "subject": "oidc|sven.svendsen",
+          "name": "Sven Svendsen"
+        }
+      }
+    },
+    {
+      "id": "it-service-daily-work",
+      "title": "Dagligt arbejde med tenant-scoped adgang og godkendt mutation (Team Viden A/S)",
+      "profileRef": "it-service",
+      "deploymentProfileRef": "ha-cluster",
+      "journey": "daily-work",
+      "runner": "daily-work",
+      "selection": [],
+      "steps": [
+        {
+          "id": "resolve-tenant",
+          "action": "resolve-tenant",
+          "expected": "ok"
+        },
+        {
+          "id": "authorize",
+          "action": "authorize",
+          "expected": "ok"
+        },
+        {
+          "id": "approve-mutation",
+          "action": "approve-mutation",
+          "expected": "ok",
+          "humanApproval": true
+        },
+        {
+          "id": "apply",
+          "action": "apply",
+          "expected": "ok"
+        },
+        {
+          "id": "verify",
+          "action": "verify",
+          "expected": "ok"
+        }
+      ],
+      "abuseCase": "approval-bypass",
+      "evidenceLevel": "fixture",
+      "owner": {
+        "subject": "oidc|sofia.sorensen",
+        "name": "Sofia Sørensen",
+        "role": "Service Delivery Owner",
+        "substitute": {
+          "subject": "oidc|sven.svendsen",
+          "name": "Sven Svendsen"
+        }
+      }
+    },
+    {
+      "id": "it-service-restore",
+      "title": "Backup og isoleret gendannelse med målt RPO/RTO (Team Viden A/S)",
+      "profileRef": "it-service",
+      "deploymentProfileRef": "ha-cluster",
+      "journey": "restore",
+      "runner": "restore",
+      "selection": [],
+      "steps": [
+        {
+          "id": "backup",
+          "action": "backup",
+          "expected": "ok"
+        },
+        {
+          "id": "restore",
+          "action": "restore",
+          "expected": "ok"
+        },
+        {
+          "id": "verify",
+          "action": "verify",
+          "expected": "ok"
+        }
+      ],
+      "abuseCase": null,
+      "evidenceLevel": "fixture",
+      "owner": {
+        "subject": "oidc|sofia.sorensen",
+        "name": "Sofia Sørensen",
+        "role": "Service Delivery Owner",
+        "substitute": {
+          "subject": "oidc|sven.svendsen",
+          "name": "Sven Svendsen"
+        }
+      }
+    },
+    {
+      "id": "it-service-privacy-case",
+      "title": "Privacy-sag fra anmodning til sikret eksport (Team Viden A/S)",
+      "profileRef": "it-service",
+      "deploymentProfileRef": "ha-cluster",
+      "journey": "privacy-case",
+      "runner": "privacy-case",
+      "selection": [],
+      "steps": [
+        {
+          "id": "open-case",
+          "action": "open-case",
+          "expected": "ok"
+        },
+        {
+          "id": "fan-out",
+          "action": "fan-out",
+          "expected": "ok"
+        },
+        {
+          "id": "export",
+          "action": "export",
+          "expected": "ok"
+        },
+        {
+          "id": "redeem",
+          "action": "redeem",
+          "expected": "ok"
+        },
+        {
+          "id": "verify",
+          "action": "verify",
+          "expected": "ok"
+        }
+      ],
+      "abuseCase": "cross-tenant-access",
+      "evidenceLevel": "fixture",
+      "owner": {
+        "subject": "oidc|sofia.sorensen",
+        "name": "Sofia Sørensen",
+        "role": "Service Delivery Owner",
+        "substitute": {
+          "subject": "oidc|sven.svendsen",
+          "name": "Sven Svendsen"
+        }
+      }
+    },
+    {
+      "id": "it-service-upgrade",
+      "title": "Signeret opgradering med menneskelig godkendelse (Team Viden A/S)",
+      "profileRef": "it-service",
+      "deploymentProfileRef": "ha-cluster",
+      "journey": "upgrade",
+      "runner": "upgrade",
+      "selection": [],
+      "steps": [
+        {
+          "id": "plan",
+          "action": "plan",
+          "expected": "ok"
+        },
+        {
+          "id": "approve",
+          "action": "approve",
+          "expected": "ok",
+          "humanApproval": true
+        },
+        {
+          "id": "upgrade",
+          "action": "upgrade",
+          "expected": "ok"
+        },
+        {
+          "id": "verify",
+          "action": "verify",
+          "expected": "ok"
+        }
+      ],
+      "abuseCase": null,
+      "evidenceLevel": "fixture",
+      "owner": {
+        "subject": "oidc|sofia.sorensen",
+        "name": "Sofia Sørensen",
+        "role": "Service Delivery Owner",
+        "substitute": {
+          "subject": "oidc|sven.svendsen",
+          "name": "Sven Svendsen"
+        }
+      }
+    },
+    {
+      "id": "it-service-exit",
+      "title": "Exit-eksport der kan læses uden platformen (Team Viden A/S)",
+      "profileRef": "it-service",
+      "deploymentProfileRef": "ha-cluster",
+      "journey": "exit",
+      "runner": "exit",
+      "selection": [],
+      "steps": [
+        {
+          "id": "export",
+          "action": "export",
+          "expected": "ok"
+        },
+        {
+          "id": "verify",
+          "action": "verify",
+          "expected": "ok"
+        }
+      ],
+      "abuseCase": null,
+      "evidenceLevel": "fixture",
+      "owner": {
+        "subject": "oidc|sofia.sorensen",
+        "name": "Sofia Sørensen",
+        "role": "Service Delivery Owner",
+        "substitute": {
+          "subject": "oidc|sven.svendsen",
+          "name": "Sven Svendsen"
+        }
+      }
+    },
+    {
+      "id": "enterprise-login-offboarding",
+      "title": "Login og offboarding af en navngiven medarbejder (Enterprise Nord A/S)",
+      "profileRef": "enterprise",
+      "deploymentProfileRef": "enterprise-dedicated",
+      "journey": "login-offboarding",
+      "runner": "login-offboarding",
+      "selection": [],
+      "steps": [
+        {
+          "id": "resolve-tenant",
+          "action": "resolve-tenant",
+          "expected": "ok"
+        },
+        {
+          "id": "verify-identity",
+          "action": "verify-identity",
+          "expected": "ok"
+        },
+        {
+          "id": "offboard",
+          "action": "offboard",
+          "expected": "ok"
+        },
+        {
+          "id": "verify",
+          "action": "verify",
+          "expected": "ok"
+        }
+      ],
+      "abuseCase": null,
+      "evidenceLevel": "fixture",
+      "owner": {
+        "subject": "oidc|erik.eriksen",
+        "name": "Erik Eriksen",
+        "role": "Enterprise Delivery Owner",
+        "substitute": {
+          "subject": "oidc|freja.fischer",
+          "name": "Freja Fischer"
+        }
+      }
+    },
+    {
+      "id": "enterprise-daily-work",
+      "title": "Dagligt arbejde med tenant-scoped adgang og godkendt mutation (Enterprise Nord A/S)",
+      "profileRef": "enterprise",
+      "deploymentProfileRef": "enterprise-dedicated",
+      "journey": "daily-work",
+      "runner": "daily-work",
+      "selection": [],
+      "steps": [
+        {
+          "id": "resolve-tenant",
+          "action": "resolve-tenant",
+          "expected": "ok"
+        },
+        {
+          "id": "authorize",
+          "action": "authorize",
+          "expected": "ok"
+        },
+        {
+          "id": "approve-mutation",
+          "action": "approve-mutation",
+          "expected": "ok",
+          "humanApproval": true
+        },
+        {
+          "id": "apply",
+          "action": "apply",
+          "expected": "ok"
+        },
+        {
+          "id": "verify",
+          "action": "verify",
+          "expected": "ok"
+        }
+      ],
+      "abuseCase": "approval-bypass",
+      "evidenceLevel": "fixture",
+      "owner": {
+        "subject": "oidc|erik.eriksen",
+        "name": "Erik Eriksen",
+        "role": "Enterprise Delivery Owner",
+        "substitute": {
+          "subject": "oidc|freja.fischer",
+          "name": "Freja Fischer"
+        }
+      }
+    },
+    {
+      "id": "enterprise-restore",
+      "title": "Backup og isoleret gendannelse med målt RPO/RTO (Enterprise Nord A/S)",
+      "profileRef": "enterprise",
+      "deploymentProfileRef": "enterprise-dedicated",
+      "journey": "restore",
+      "runner": "restore",
+      "selection": [],
+      "steps": [
+        {
+          "id": "backup",
+          "action": "backup",
+          "expected": "ok"
+        },
+        {
+          "id": "restore",
+          "action": "restore",
+          "expected": "ok"
+        },
+        {
+          "id": "verify",
+          "action": "verify",
+          "expected": "ok"
+        }
+      ],
+      "abuseCase": null,
+      "evidenceLevel": "fixture",
+      "owner": {
+        "subject": "oidc|erik.eriksen",
+        "name": "Erik Eriksen",
+        "role": "Enterprise Delivery Owner",
+        "substitute": {
+          "subject": "oidc|freja.fischer",
+          "name": "Freja Fischer"
+        }
+      }
+    },
+    {
+      "id": "enterprise-privacy-case",
+      "title": "Privacy-sag fra anmodning til sikret eksport (Enterprise Nord A/S)",
+      "profileRef": "enterprise",
+      "deploymentProfileRef": "enterprise-dedicated",
+      "journey": "privacy-case",
+      "runner": "privacy-case",
+      "selection": [],
+      "steps": [
+        {
+          "id": "open-case",
+          "action": "open-case",
+          "expected": "ok"
+        },
+        {
+          "id": "fan-out",
+          "action": "fan-out",
+          "expected": "ok"
+        },
+        {
+          "id": "export",
+          "action": "export",
+          "expected": "ok"
+        },
+        {
+          "id": "redeem",
+          "action": "redeem",
+          "expected": "ok"
+        },
+        {
+          "id": "verify",
+          "action": "verify",
+          "expected": "ok"
+        }
+      ],
+      "abuseCase": "cross-tenant-access",
+      "evidenceLevel": "fixture",
+      "owner": {
+        "subject": "oidc|erik.eriksen",
+        "name": "Erik Eriksen",
+        "role": "Enterprise Delivery Owner",
+        "substitute": {
+          "subject": "oidc|freja.fischer",
+          "name": "Freja Fischer"
+        }
+      }
+    },
+    {
+      "id": "enterprise-upgrade",
+      "title": "Signeret opgradering med menneskelig godkendelse (Enterprise Nord A/S)",
+      "profileRef": "enterprise",
+      "deploymentProfileRef": "enterprise-dedicated",
+      "journey": "upgrade",
+      "runner": "upgrade",
+      "selection": [],
+      "steps": [
+        {
+          "id": "plan",
+          "action": "plan",
+          "expected": "ok"
+        },
+        {
+          "id": "approve",
+          "action": "approve",
+          "expected": "ok",
+          "humanApproval": true
+        },
+        {
+          "id": "upgrade",
+          "action": "upgrade",
+          "expected": "ok"
+        },
+        {
+          "id": "verify",
+          "action": "verify",
+          "expected": "ok"
+        }
+      ],
+      "abuseCase": null,
+      "evidenceLevel": "fixture",
+      "owner": {
+        "subject": "oidc|erik.eriksen",
+        "name": "Erik Eriksen",
+        "role": "Enterprise Delivery Owner",
+        "substitute": {
+          "subject": "oidc|freja.fischer",
+          "name": "Freja Fischer"
+        }
+      }
+    },
+    {
+      "id": "enterprise-exit",
+      "title": "Exit-eksport der kan læses uden platformen (Enterprise Nord A/S)",
+      "profileRef": "enterprise",
+      "deploymentProfileRef": "enterprise-dedicated",
+      "journey": "exit",
+      "runner": "exit",
+      "selection": [],
+      "steps": [
+        {
+          "id": "export",
+          "action": "export",
+          "expected": "ok"
+        },
+        {
+          "id": "verify",
+          "action": "verify",
+          "expected": "ok"
+        }
+      ],
+      "abuseCase": null,
+      "evidenceLevel": "fixture",
+      "owner": {
+        "subject": "oidc|erik.eriksen",
+        "name": "Erik Eriksen",
+        "role": "Enterprise Delivery Owner",
+        "substitute": {
+          "subject": "oidc|freja.fischer",
+          "name": "Freja Fischer"
+        }
+      }
+    }
+  ]
+}

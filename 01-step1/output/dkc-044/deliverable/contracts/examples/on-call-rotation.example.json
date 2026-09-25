@@ -1,0 +1,24 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "OnCallRotationSet",
+  "metadata": {
+    "name": "example-on-call",
+    "version": "1.0.0",
+    "description": "Eksempel på on-call-rotation med menneskelig primær, sekundær, manager og en stigende eskalationskæde."
+  },
+  "rotations": [
+    {
+      "id": "checkout-primary",
+      "serviceId": "checkout",
+      "timezone": "Europe/Copenhagen",
+      "ackMinutes": 15,
+      "primary": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "On-call Engineer", "channel": "phone", "contact": "+45 20 00 00 01" },
+      "secondary": { "subject": "oidc|maja.mortensen", "name": "Maja Mortensen", "role": "Service Owner", "channel": "phone", "contact": "+45 20 00 00 02" },
+      "manager": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner", "channel": "phone", "contact": "+45 20 00 00 03" },
+      "escalation": [
+        { "afterMinutes": 15, "to": { "subject": "oidc|maja.mortensen", "name": "Maja Mortensen", "role": "Service Owner", "channel": "phone", "contact": "+45 20 00 00 02" } },
+        { "afterMinutes": 30, "to": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner", "channel": "phone", "contact": "+45 20 00 00 03" } }
+      ]
+    }
+  ]
+}

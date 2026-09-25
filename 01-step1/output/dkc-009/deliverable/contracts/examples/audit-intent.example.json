@@ -1,0 +1,18 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "AuditActionIntent",
+  "tenantId": "acme",
+  "idempotencyId": "task-7f3a:action-0",
+  "intentId": "2f1c7a10-9b2e-4d3a-8f6c-1a2b3c4d5e6f",
+  "verb": "upgrade.patch",
+  "target": "dummy-ok",
+  "environment": "staging",
+  "actor": "spiffe://platform.example.org/agents/dummy-ok-executor",
+  "state": "pending",
+  "requestDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "retentionClass": "operational",
+  "createdAt": "2025-09-23T10:00:00Z",
+  "updatedAt": "2025-09-23T10:00:00Z",
+  "outcomeAt": null,
+  "attempts": 0
+}

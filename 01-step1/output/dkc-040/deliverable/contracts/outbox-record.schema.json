@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/outbox-record.schema.json",
+  "title": "Event Outbox Record",
+  "description": "DKC-040: den vedvarende outbox-række for én begivenhed. Rækken bærer den fulde CloudEvent-envelope plus leveringsmetadata (status, forsøg, fencing-token og idempotency-key). En begivenhed skrives i samme transaktion som den forretningsmæssige ændring og markeres først 'confirmed' når brokeren har kvitteret.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "tenantId", "eventId", "eventType", "source", "resource", "status", "attempts", "idempotencyKey", "createdAt", "updatedAt", "deliveryGuarantee", "event"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "EventOutboxRecord" },
+    "tenantId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+    "eventId": { "type": "string", "minLength": 1 },
+    "eventType": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*(\\.[a-z0-9][a-z0-9-]*)+$" },
+    "source": { "type": "string", "minLength": 1 },
+    "resource": {
+      "type": "object",
+      "required": ["type", "id", "version"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "type": "string", "minLength": 2 },
+        "id": { "type": "string", "minLength": 1 },
+        "version": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "status": { "enum": ["pending", "confirmed", "failed"] },
+    "attempts": { "type": "integer", "minimum": 0 },
+    "leaseToken": { "type": "integer", "minimum": 0 },
+    "idempotencyKey": { "type": "string", "minLength": 1 },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "confirmedAt": { "type": "string", "format": "date-time" },
+    "lastError": { "type": "string" },
+    "deliveryGuarantee": { "const": "at-least-once" },
+    "event": {
+      "type": "object",
+      "required": ["specversion", "id", "source", "type", "time", "tenantid", "traceid", "principal"],
+      "additionalProperties": true,
+      "properties": {
+        "specversion": { "const": "1.0" },
+        "id": { "type": "string", "minLength": 1 },
+        "source": { "type": "string", "minLength": 1 },
+        "type": { "type": "string", "minLength": 3 },
+        "time": { "type": "string", "format": "date-time" },
+        "tenantid": { "type": "string", "minLength": 1 },
+        "traceid": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
+        "principal": { "type": "object" }
+      }
+    }
+  }
+}

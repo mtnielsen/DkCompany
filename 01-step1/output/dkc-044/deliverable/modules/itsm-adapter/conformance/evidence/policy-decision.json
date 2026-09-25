@@ -1,0 +1,16 @@
+{
+  "decision": "deny",
+  "pdp": {
+    "name": "platform-pdp",
+    "version": "1.0.0",
+    "bundleName": "platform",
+    "bundleVersion": "1.0.0",
+    "bundleSha256": "baeeeb11cb003454ccd12473856966c8769388870d74f30428dfc9bd20ba2d86"
+  },
+  "matchedRules": [],
+  "reasons": [
+    "Ingen regel matchede; default er deny (fail-closed)."
+  ],
+  "evaluatedAt": "2026-09-24T11:12:35.870Z",
+  "inputSha256": "501c604e94c338c5bda000598ea6242a9e18f671fd72d66721826ad5c7c6a742"
+}

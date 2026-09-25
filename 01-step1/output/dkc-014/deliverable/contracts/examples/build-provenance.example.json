@@ -1,0 +1,47 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "BuildProvenance",
+  "_type": "https://in-toto.io/Statement/v1",
+  "predicateType": "https://slsa.dev/provenance/v1",
+  "subject": [
+    {
+      "name": "ghcr.io/example/platform-pdp",
+      "digest": {
+        "sha256": "377ea5eed0e3bca68708e9807404988cfeb9f0828826170c9005026bc93be3f9"
+      }
+    }
+  ],
+  "predicate": {
+    "buildDefinition": {
+      "buildType": "https://example.org/build-types/container/v1",
+      "buildTypeVersion": "1.0.0",
+      "externalParameters": {
+        "sourceCommit": "83ad91a963d8055f77c29fb4361455689df95acb",
+        "profile": "ha-cluster",
+        "reproducible": true,
+        "artifactName": "platform-pdp"
+      },
+      "resolvedDependencies": [
+        {
+          "uri": "git+https://example.org/dkcompany@83ad91a963d8055f77c29fb4361455689df95acb",
+          "digest": {
+            "sha256": "3172c96248973aef134d4e6b6042c7d2607fb0f220f8fb3737487adadc865f95"
+          }
+        }
+      ]
+    },
+    "runDetails": {
+      "builder": { "id": "https://github.com/mtnielsen/DkCompany/.github/workflows/container-build.yml", "version": "1.0.0" },
+      "metadata": {
+        "invocationId": "build-0001",
+        "startedOn": "2026-09-23T09:00:00.000Z",
+        "finishedOn": "2026-09-23T09:04:12.000Z"
+      }
+    }
+  },
+  "signature": {
+    "algorithm": "ed25519",
+    "keyId": "0123456789abcdef",
+    "value": "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8="
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "KnowledgeDocument",
+  "id": "bookstack-acme:page-architecture",
+  "sourceId": "bookstack-acme",
+  "tenantId": "acme",
+  "externalId": "page-architecture",
+  "title": "Arkitektur-overblik",
+  "classification": "internal",
+  "acl": {
+    "readGroups": [
+      "acme"
+    ],
+    "readSubjects": [],
+    "denyGroups": [],
+    "denySubjects": [],
+    "ownerSubject": "oidc|erik.eriksen"
+  },
+  "contentSha256": "49761510b82c4280e12cc5fd73e03144dc0187d7b2b040f4778f42d4ffdc5975",
+  "updatedAt": "2026-02-12T09:00:00Z",
+  "deletedAt": null,
+  "content": "Platformen består af en kontrolplan, en dataplan og en række moduler. Alle ændringer går gennem git og en central PDP. Tenantadskillelse håndhæves ved identitetsgrænsen.",
+  "bookstack": {
+    "book": "Teknisk dokumentation",
+    "chapter": "Arkitektur",
+    "slug": "arkitektur-overblik",
+    "url": "https://knowledge.acme.example/books/Teknisk%20dokumentation/page/arkitektur-overblik"
+  }
+}

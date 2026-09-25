@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/kill-switch.schema.json",
+  "title": "Emergency Stop",
+  "description": "DKC-010: nødstop pr. agent, pr. kunde eller globalt. Kun et verificeret menneske med en eksplicit rolle kan aktivere/ophæve. Verifikationssiden afviser nye handlinger inden for fem sekunder i staging.",
+  "type": "object",
+  "required": ["scope", "subjectId", "active", "activatedBy", "activatedAt"],
+  "additionalProperties": false,
+  "properties": {
+    "scope": { "enum": ["agent", "tenant", "global"] },
+    "subjectId": { "type": ["string", "null"], "description": "spiffeId for 'agent', tenantId for 'tenant', null for 'global'." },
+    "active": { "type": "boolean" },
+    "reason": { "type": ["string", "null"] },
+    "activatedBy": { "type": "string", "description": "OIDC-sub for det verificerede menneske." },
+    "activatedAt": { "type": "string", "format": "date-time" },
+    "clearedBy": { "type": ["string", "null"] },
+    "clearedAt": { "type": ["string", "null"] }
+  }
+}

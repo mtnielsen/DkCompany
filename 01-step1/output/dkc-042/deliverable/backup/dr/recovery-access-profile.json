@@ -1,0 +1,66 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "RecoveryAccessProfile",
+  "metadata": {
+    "name": "platform-recovery-access",
+    "version": "1.0.0",
+    "description": "Separat backup- og recovery-adgang: recovery-identiteten er adskilt fra primærklyngens driftscredentials, aktiveres kun af et verificeret menneske med to-personers godkendelse og tidsbegrænsning, og nøgler, konfiguration, katalog og images holdes uden for backup-lageret og pinnes på digest.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+    },
+    "lastReviewed": "2026-09-28",
+    "labels": { "segment": "continuity", "tier": "p0" }
+  },
+  "primaryOperations": {
+    "credentialsRef": "vault:secret/data/platform/primary-cluster-ops#token",
+    "roleId": "platform-primary-ops",
+    "forbiddenOnProtectedBackups": ["delete", "retention-shorten", "pointer-switch", "key-delete", "recovery-access"]
+  },
+  "recoveryIdentity": {
+    "subjectRef": "oidc|cont.officer",
+    "separateFromPrimary": true,
+    "humanVerifiedOnly": true,
+    "standingAccess": false,
+    "activationRequiresTwoPerson": true,
+    "breakGlass": true,
+    "approval": {
+      "approver1": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "approver2": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Security Owner" },
+      "requesterMayNotApprove": true,
+      "maxDurationMinutes": 120
+    }
+  },
+  "keys": {
+    "keyRef": "kms:alias/platform-backup",
+    "provider": "kms",
+    "separateFromBackupStore": true,
+    "rotationDays": 365,
+    "custody": "security-admin-with-two-person-control"
+  },
+  "configuration": {
+    "sourceRef": "gitops/manifests/recovery/isolated-recovery-environment.json",
+    "vaultPath": "vault:secret/data/backup/recovery-config",
+    "redactedInBackup": true
+  },
+  "catalog": {
+    "ref": "release/catalog/platform-components.json",
+    "digest": "eec0766469e24c43075d9a6e0ef6f548c02debcbbbd8d2c6fea8be170fa51fc9",
+    "signed": true
+  },
+  "images": [
+    {
+      "name": "audit-service",
+      "ref": "registry.example.org/platform/audit-service",
+      "digest": "sha256:4666f6071b66b53107d23b7294c198c1272fbcb31ad01b15a53158078472a268",
+      "signedBy": "cosign:platform-release"
+    }
+  ],
+  "accessPolicy": {
+    "defaultDeny": true,
+    "allowedRoles": ["continuity-officer", "security-admin"],
+    "deniedRoles": ["platform-primary-ops", "agent", "workload"]
+  }
+}

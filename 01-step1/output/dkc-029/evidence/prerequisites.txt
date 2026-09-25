@@ -1,0 +1,21 @@
+Forudsætningskæde for DKC-029 (verificeret i den anvendte stak)
+Stak-tip: DKC-028 (01-step1/output/dkc-028/apply.sh)
+Reviewets base: 5f9fa73457d22583b9948611d5cc3afffec4ae38
+Undersøgt checkout: 83ad91a963d8055f77c29fb4361455689df95acb
+Node: v22.22.1
+
+Formelle afhængigheder (depends_on: DKC-021, DKC-023, DKC-025):
+  [OK]   DKC-021 sletning, legal hold og gendannelsesregler -> retention/src/deletion-service.mjs
+  [OK]   DKC-021 legal hold (subjectDigestOf, buildHold, holdCovers) -> retention/src/holds.mjs
+  [OK]   DKC-021 sletteflader -> retention/src/surfaces.mjs
+  [OK]   DKC-023 fælles adapter-SDK -> adapter-sdk/src/sdk.mjs
+  [OK]   DKC-023 idempotens -> adapter-sdk/src/idempotency.mjs
+  [OK]   DKC-023 demo-værn -> adapter-sdk/src/guards.mjs
+  [OK]   DKC-025 kundens livscyklus -> portal/src/lifecycle.mjs
+  [OK]   DKC-025 portalautorisation -> portal/src/authorization.mjs
+
+Genbrugte (ikke-formelle) forudsætninger:
+  [OK]   DKC-011 ubetroet indhold -> runtime/src/untrusted.mjs
+  [OK]   DKC-011 injektionssignal -> runtime/src/injection.mjs
+  [OK]   DKC-006 tenant-kontekst -> identity/src/tenant.mjs
+  [OK]   DKC-007 deterministisk digest -> runtime/src/digest.mjs

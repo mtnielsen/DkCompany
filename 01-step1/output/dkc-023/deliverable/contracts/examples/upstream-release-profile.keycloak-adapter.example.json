@@ -1,0 +1,138 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "UpstreamReleaseProfile",
+  "metadata": {
+    "name": "keycloak-26-0-0",
+    "version": "1.0.0",
+    "description": "Releaseprofil for Keycloak 26.0.0 (upstream).",
+    "accountableHuman": {
+      "subject": "oidc|hans.hansen",
+      "name": "Hans Hansen",
+      "role": "Solution Architect"
+    }
+  },
+  "upstream": {
+    "vendor": "Red Hat / CNCF",
+    "product": "Keycloak",
+    "exactVersion": "26.0.0",
+    "edition": "upstream",
+    "tier": "community"
+  },
+  "candidateRef": "keycloak-adapter-26-0-0.json",
+  "negotiation": {
+    "supportedRanges": [
+      "^26.0.0"
+    ],
+    "supportedEditions": [
+      "upstream"
+    ],
+    "onUnsupported": "refuse"
+  },
+  "verbMatrix": {
+    "backup": {
+      "conformance": "unsupported",
+      "reason": "Keycloaks backup er en database- og konfigurationsdump på driftniveau; adapteren har ingen API-adgang til at tage den."
+    },
+    "restore": {
+      "conformance": "unsupported",
+      "reason": "Gendannelse af Keycloak sker ved at genskabe databasen og konfigurationen og kan ikke udføres gennem Admin API'et."
+    },
+    "verify-restore": {
+      "conformance": "unsupported",
+      "reason": "Der findes ingen API til at verificere en gendannelse; det kræver adgang til backup- og databaselaget."
+    },
+    "drain": {
+      "conformance": "partial",
+      "reason": "Adapteren kan afvise nye login ved at deaktivere realm-adgang, men kan ikke afbryde aktive sessioner i andre klienter."
+    },
+    "upgrade.dry-run": {
+      "conformance": "partial",
+      "reason": "Adapteren kan rapportere nuværende Keycloak-version og ønsket version, men Keycloak tilbyder ikke en egentlig dry-run."
+    },
+    "upgrade": {
+      "conformance": "unsupported",
+      "reason": "Keycloak opgraderes ved at udskifte containeren og migrere databasen; det ligger uden for adapterens verbkontrakt."
+    },
+    "migrate": {
+      "conformance": "unsupported",
+      "reason": "Keycloak kører sine egne database-migrationer ved opstart; adapteren kan ikke styre eller rulle dem tilbage."
+    },
+    "rollback": {
+      "conformance": "unsupported",
+      "reason": "Rollback af en IAM-ændring kræver gendannelse fra backup og er derfor ikke mulig gennem adapteren."
+    },
+    "health": {
+      "conformance": "full",
+      "endpoint": "https://keycloak-adapter.example.org/healthz",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/health.json"
+      }
+    },
+    "slo": {
+      "conformance": "partial",
+      "reason": "Adapteren måler sin egen svartid, men Keycloaks oppetid og fejlbudget ligger hos upstream-drift."
+    }
+  },
+  "privacyMatrix": {
+    "subject.locate": {
+      "conformance": "full",
+      "endpoint": "https://keycloak-adapter.example.org/v1/privacy/locate",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/subject.locate.json"
+      }
+    },
+    "subject.export": {
+      "conformance": "full",
+      "endpoint": "https://keycloak-adapter.example.org/v1/privacy/export",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/subject.export.json"
+      }
+    },
+    "subject.erase": {
+      "conformance": "partial",
+      "reason": "Adapteren kan slette brugeren gennem Admin API'et, men ikke event-store, backups eller cachede tokens; det skal håndteres af upstream-drift."
+    },
+    "subject.legal_hold": {
+      "conformance": "partial",
+      "reason": "Adapteren kan deaktivere kontoen for at forhindre ændringer, men kan ikke garantere at en administrator ikke sletter brugeren alligevel."
+    },
+    "retention.policy": {
+      "conformance": "partial",
+      "reason": "Keycloak har globale opbevaringsindstillinger for hændelser, men de kan ikke sættes eller rapporteres pr. subjekt gennem adapteren."
+    }
+  },
+  "nativeAdmin": {
+    "exposed": false,
+    "protectedBy": [
+      "adapter",
+      "pdp",
+      "network-policy"
+    ],
+    "evidence": [
+      "gitops/manifests/dev/model-egress-default-deny.json",
+      "infrastructure/src/netpol.mjs"
+    ]
+  },
+  "approvalGate": {
+    "requiredSso": true,
+    "licenseType": "open-source",
+    "status": "approved",
+    "blockers": []
+  },
+  "verification": {
+    "status": "approved",
+    "verifiedBy": {
+      "subject": "oidc|hans.hansen",
+      "name": "Hans Hansen",
+      "role": "Solution Architect"
+    },
+    "verifiedAt": "2025-01-10",
+    "evidence": [
+      "https://www.keycloak.org/documentation",
+      "https://github.com/keycloak/keycloak"
+    ]
+  }
+}

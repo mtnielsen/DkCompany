@@ -1,0 +1,440 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "AssuranceRegister",
+  "metadata": {
+    "name": "platform-assurance-register",
+    "version": "1.0.0",
+    "description": "Evidens- og risikoregister for platformen. Knytter krav til kontroller, ansvarlige personer og verificeret evidens; beskriver DPIA-screening, databehandleraftaler, underdatabehandlere og overførselsvurdering, AI Act-/NIS2-anvendelighed, incidentproces, adgangsrevision, informationspligt og kundens exitprocedure. Registeret er en påstand om mekanismer og beslutninger — ikke en certificering.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner"
+    },
+    "lastReviewed": "2026-09-24",
+    "certificationClaim": false
+  },
+  "roleStatement": {
+    "issuer": "Platformen stiller kontrakter, konformanstests og evidensmaskineri til rådighed og beviser dem i CI. Det gør ikke organisationen compliant.",
+    "deployer": "Den ansvarlige organisation konfigurerer, driver og overvåger mekanismen, fører tilsyn og indberetter hændelser. Den bærer det juridiske ansvar.",
+    "shared": "Ansvaret er delt: platformen leverer mekanismen, men den virker kun, hvis deployeren aktiverer den og reagerer på signalerne."
+  },
+  "applicability": [
+    {
+      "framework": "nis2",
+      "use": "Drift af en multi-tenant AI- og automatiseringsplatform for kunder",
+      "sector": "digital-infrastructure",
+      "role": "deployer",
+      "applicable": true,
+      "assessedBy": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner"
+      },
+      "assessedAt": "2026-09-24",
+      "rationale": "Platformen leverer en digital tjeneste i en sektor der er omfattet, og deployeren er en vigtig enhed. Anvendeligheden afhænger af kundens sektor og størrelse."
+    },
+    {
+      "framework": "ai-act",
+      "use": "AI-assisteret sagsbehandling og beslutningsstøtte med menneskeligt tilsyn",
+      "sector": "horizontal",
+      "role": "shared",
+      "applicable": true,
+      "assessedBy": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      },
+      "assessedAt": "2026-09-24",
+      "rationale": "Visse brugsscenarier kan være højrisiko efter brug og rolle; platformen stiller logning, transparens og menneskeligt tilsyn til rådighed, men klassifikationen er kundespecifik."
+    },
+    {
+      "framework": "gdpr",
+      "use": "Behandling af persondata på vegne af kunder som databehandler",
+      "sector": "cross-sector",
+      "role": "deployer",
+      "applicable": true,
+      "assessedBy": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      },
+      "assessedAt": "2026-09-24",
+      "rationale": "Persondata behandles for kunder, så GDPR er anvendelig. Den konkrete behandling, grundlag og retention er dokumenteret i dataregisteret."
+    }
+  ],
+  "dataProtection": {
+    "dpiaScreenings": [
+      {
+        "id": "dpia-audit-service",
+        "processingRef": "audit-service",
+        "criteria": [
+          "systematisk overvågning",
+          "behandling af persondata i skala",
+          "ny teknologi (AI)"
+        ],
+        "outcome": "pending",
+        "reason": "DPO-vurdering udestår. Behandlingen omfatter persondata og AI-genereret logning, så en fuld DPIA kan være påkrævet.",
+        "dpiaRef": null,
+        "assessedBy": null,
+        "assessedAt": null,
+        "pendingBlocker": true
+      },
+      {
+        "id": "dpia-dummy-ok",
+        "processingRef": "dummy-ok",
+        "criteria": [
+          "ingen særlige kategorier",
+          "ingen systematisk overvågning"
+        ],
+        "outcome": "not-required",
+        "reason": "Referencemodulet behandler kun syntetiske data og udfører ingen vurdering med retsvirkning for den registrerede.",
+        "dpiaRef": null,
+        "assessedBy": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "assessedAt": "2026-09-24",
+        "pendingBlocker": false
+      },
+      {
+        "id": "dpia-privacy-operator",
+        "processingRef": "privacy-operator",
+        "criteria": [
+          "registreredes rettigheder",
+          "behandling af identifikatorer"
+        ],
+        "outcome": "not-required",
+        "reason": "Operatøren behandler DSAR-metadata, ikke selve persondataene; sletning og eksport sker i kildesystemerne.",
+        "dpiaRef": null,
+        "assessedBy": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "assessedAt": "2026-09-24",
+        "pendingBlocker": false
+      }
+    ],
+    "processorAgreements": [
+      {
+        "id": "platform-processor",
+        "party": "Platformen",
+        "dpaRef": "contracts/dpa/platform-processor.md",
+        "approvedBy": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "approvedAt": "2026-09-24",
+        "subprocessorRefs": [
+          "anthropic-eu",
+          "openai-eu"
+        ]
+      }
+    ],
+    "transferAssessments": [
+      {
+        "id": "anthropic-eu-transfer",
+        "subprocessorRef": "anthropic-eu",
+        "status": "present",
+        "mechanisms": [
+          "scc"
+        ],
+        "assessedBy": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "assessedAt": "2026-09-24",
+        "note": "EU-hosting, men moderselskabets support kan tilgå data fra USA. Overførslen er vurderet og dækket af SCC."
+      },
+      {
+        "id": "openai-eu-transfer",
+        "subprocessorRef": "openai-eu",
+        "status": "pending",
+        "mechanisms": [],
+        "assessedBy": null,
+        "assessedAt": null,
+        "note": "Den endelige overførselsvurdering for supportadgang udestår og er en blokerende uafklaret beslutning."
+      }
+    ]
+  },
+  "incidentAndExit": {
+    "incidentProcessRef": "docs/runbooks/incident-response.md",
+    "notificationDuties": [
+      {
+        "id": "gdpr-breach-72h",
+        "regime": "gdpr-art33",
+        "deadlineHours": 72,
+        "recipient": "tilsynsmyndigheden",
+        "owner": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "procedureRef": "docs/runbooks/incident-response.md#indberetning"
+      },
+      {
+        "id": "nis2-early-warning-24h",
+        "regime": "nis2-art23",
+        "deadlineHours": 24,
+        "recipient": "CSIRT",
+        "owner": {
+          "subject": "oidc|cecilia.christensen",
+          "name": "Cecilia Christensen",
+          "role": "Security Owner"
+        },
+        "procedureRef": "docs/runbooks/incident-response.md#nis2"
+      }
+    ],
+    "accessReview": {
+      "frequencyDays": 90,
+      "lastReviewedAt": "2026-07-01",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner"
+      },
+      "procedureRef": "docs/compliance/incident-access-exit.md#adgangsrevision",
+      "findingsSummary": "Ingen kritiske fund. To inaktive servicekonti blev lukket; næste revision følger den dokumenterede kadence."
+    },
+    "informationDuty": {
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      },
+      "procedureRef": "docs/compliance/incident-access-exit.md#informationspligt",
+      "description": "Kunden informeres uden unødig forsinkelse når en hændelse påvirker kundens data, sammen med kendte konsekvenser og afhjælpende tiltag."
+    },
+    "exitProcedure": {
+      "documented": true,
+      "procedureRef": "docs/runbooks/customer-exit.md",
+      "dataExport": true,
+      "deletion": true,
+      "transitionDays": 90,
+      "owner": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Operations Lead"
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "REQ-NIS2-001",
+      "title": "Hændelseshåndtering og indberetning",
+      "source": "nis2-art21-2b",
+      "sourceDate": "2026-09-24",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner"
+      },
+      "status": "verified",
+      "lastReviewedAt": "2026-09-24",
+      "controlRef": "si-4",
+      "evidenceRefs": [
+        "assurance-incident-drill"
+      ],
+      "riskRefs": [],
+      "decisionRef": null
+    },
+    {
+      "id": "REQ-GDPR-001",
+      "title": "Behandlingsfortegnelse og DPIA-screening",
+      "source": "gdpr-art30",
+      "sourceDate": "2026-09-24",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      },
+      "status": "implemented",
+      "lastReviewedAt": "2026-09-24",
+      "controlRef": "si-12",
+      "evidenceRefs": [
+        "assurance-data-register"
+      ],
+      "riskRefs": [
+        "RISK-ASSURANCE-001"
+      ],
+      "decisionRef": "DEC-001"
+    },
+    {
+      "id": "REQ-GDPR-002",
+      "title": "Tredjelandsoverførsel for underdatabehandlere",
+      "source": "gdpr-art44",
+      "sourceDate": "2026-09-24",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      },
+      "status": "implemented",
+      "lastReviewedAt": "2026-09-24",
+      "controlRef": "si-12",
+      "evidenceRefs": [
+        "assurance-transfer-vurdering"
+      ],
+      "riskRefs": [],
+      "decisionRef": "DEC-002"
+    },
+    {
+      "id": "REQ-AIACT-001",
+      "title": "Menneskeligt tilsyn og logning",
+      "source": "ai-act-art14",
+      "sourceDate": "2026-09-24",
+      "owner": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Operations Lead"
+      },
+      "status": "open",
+      "lastReviewedAt": null,
+      "controlRef": "au-2",
+      "evidenceRefs": [
+        "assurance-ai-oversight"
+      ],
+      "riskRefs": [
+        "RISK-ASSURANCE-001"
+      ],
+      "decisionRef": null
+    },
+    {
+      "id": "REQ-NIS2-002",
+      "title": "Adgangsrevision",
+      "source": "nis2-art21-2i",
+      "sourceDate": "2026-09-24",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner"
+      },
+      "status": "verified",
+      "lastReviewedAt": "2026-09-24",
+      "controlRef": "ac-2",
+      "evidenceRefs": [
+        "assurance-access-review"
+      ],
+      "riskRefs": [],
+      "decisionRef": "DEC-003"
+    }
+  ],
+  "risks": [
+    {
+      "id": "RISK-ASSURANCE-001",
+      "title": "Uafklaret DPIA og overførselsvurdering blokerer persondatapilot",
+      "category": "privacy",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      },
+      "inherent": {
+        "likelihood": "high",
+        "impact": "critical"
+      },
+      "residualRisk": "high",
+      "status": "open",
+      "mitigation": "Pilot med persondata er spærret, indtil DPIA og overførselsvurdering er gennemført og godkendt af et navngivet menneske.",
+      "assessmentRef": null,
+      "requirementRefs": [
+        "REQ-GDPR-001",
+        "REQ-GDPR-002",
+        "REQ-AIACT-001"
+      ],
+      "material": true,
+      "blocksPersonalDataPilot": true
+    },
+    {
+      "id": "RISK-ASSURANCE-002",
+      "title": "Manglende produktionsevidence kan forveksles med certificering",
+      "category": "assurance",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner"
+      },
+      "inherent": {
+        "likelihood": "medium",
+        "impact": "high"
+      },
+      "residualRisk": "medium",
+      "status": "mitigated",
+      "mitigation": "Evidenspakken skelner mellem fixture/contract og integration/runtime og kan aldrig sætte et badge til production uden driftsbevis.",
+      "assessmentRef": "release/matrix/assessments.json",
+      "requirementRefs": [
+        "REQ-NIS2-001"
+      ],
+      "material": false,
+      "blocksPersonalDataPilot": false
+    }
+  ],
+  "decisions": [
+    {
+      "id": "DEC-001",
+      "kind": "legal",
+      "title": "DPIA for AI-assisteret behandling af persondata",
+      "status": "open",
+      "responsible": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      },
+      "ownerDecision": null,
+      "rationale": "DPO og Platform Owner skal vurdere behandlingen, før en pilot med persondata kan frigives. Beslutningen er ikke truffet.",
+      "requirementRefs": [
+        "REQ-GDPR-001"
+      ],
+      "blocksPersonalDataPilot": true
+    },
+    {
+      "id": "DEC-002",
+      "kind": "legal",
+      "title": "Overførselsmekanisme for modelunderleverandører",
+      "status": "decided",
+      "responsible": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      },
+      "ownerDecision": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "date": "2026-09-24",
+        "decisionRef": "docs/compliance/dpia-and-transfers.md#dec-002"
+      },
+      "rationale": "EU-hosting er ikke i sig selv fravær af tredjelandsoverførsel; SCC anvendes hvor supportadgang kan ske fra tredjeland.",
+      "requirementRefs": [
+        "REQ-GDPR-002"
+      ],
+      "blocksPersonalDataPilot": false
+    },
+    {
+      "id": "DEC-003",
+      "kind": "organisational",
+      "title": "Kadence og ejerskab for adgangsrevision",
+      "status": "accepted",
+      "responsible": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner"
+      },
+      "ownerDecision": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "date": "2026-07-01",
+        "decisionRef": "docs/compliance/incident-access-exit.md#dec-003"
+      },
+      "rationale": "Adgangsrevision hvert 90. dag med Security Owner som ansvarlig.",
+      "requirementRefs": [
+        "REQ-NIS2-002"
+      ],
+      "blocksPersonalDataPilot": false
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+# Baseline (DKC-061)
+
+Kørt i arbejdsklonen efter DKC-059-stakken + DKC-061-overlayen.
+Resultat: FAIL — 1 kendt, præeksisterende fejl (changelog-check, manglende DCO
+sign-off; aldrig "fixet").
+Kørslen muterer 31 sporede fixture-filer under modules/*/conformance; de er
+gendannet fra en ren reference-klon (kun DKC-059-stakken) og `diff -rq` er tom.
+
+RESULTAT: FAIL
+  ⚠ Kørslen ændrede 31 sporede fil(er): en ren checkout forbliver ikke ren.
+
+Checks: 254 i alt, 198 PASS, 1 FAIL (changelog-check), 55 NOT RUN.
+Før DKC-061: 249 i alt, 194 PASS, 1 FAIL, 54 NOT RUN.
+
+Nye checks: lifecycle-check (PASS), lifecycle-test (PASS), lifecycle-run (PASS),
+lifecycle-report (PASS), integration-lifecycle-live (NOT RUN).

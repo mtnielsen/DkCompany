@@ -1,0 +1,10 @@
+{
+  "name": "dkcompany-shadow",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "DKC-032: AI i skyggetilstand og begrænset autonomi. Måler falske alarmer, fejl, eskalationer, omkostning og reviewerens ekstra fund, før AI'en får ret til at ændre kundernes systemer.",
+  "scripts": {
+    "test": "node --test"
+  }
+}

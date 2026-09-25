@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/retention-deletion-policy.schema.json",
+  "title": "Retention Deletion Policy",
+  "description": "DKC-021: dokumenteret sletningsdækning pr. datalag (primærlager, indeks, cache, afledte AI-data og backups). Politikken gør sletning til en håndhævet, godkendt proces: et hold kræver begrundelse og en separat godkender, sletning blokeres af aktive holds, og gendannelse må ikke frigive et miljø før slettebeslutninger er genanvendt. En flade der ikke kan slette fysisk skal stå som 'partial' eller 'unsupported' med en præcis begrundelse — den må ikke påstå fuld dækning.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "principals", "surfaces", "rules", "approvedBy", "approvedAt"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "RetentionDeletionPolicy" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "lastReviewed"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{3,63}$" },
+        "version": { "type": "string", "description": "Politikversionens semantiske version." },
+        "description": { "type": "string", "minLength": 10 },
+        "lastReviewed": { "type": "string", "format": "date" }
+      }
+    },
+    "principals": {
+      "type": "object",
+      "description": "Hvem må anmode om sletning, hvem må godkende et hold, og at AI aldrig må udføre hverken sletning eller hold.",
+      "required": ["deletionRoles", "holdApproverRoles", "aiDenied"],
+      "additionalProperties": false,
+      "properties": {
+        "deletionRoles": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 2 } },
+        "holdApproverRoles": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 2 } },
+        "aiDenied": {
+          "type": "boolean",
+          "description": "Sand betyder at AI-agenter/app-konti aldrig kan slette eller lægge hold, uanset rolle."
+        }
+      }
+    },
+    "surfaces": {
+      "type": "array",
+      "minItems": 5,
+      "description": "Én post pr. datalag. primary, index, cache, derived-ai og backup er obligatoriske; upstream er valgfri.",
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "title", "coverage", "dataClasses", "deleteMechanism", "retentionDays", "trigger", "legalHoldSupported", "owner"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$" },
+          "kind": { "enum": ["primary", "index", "cache", "derived-ai", "backup", "upstream"] },
+          "title": { "type": "string", "minLength": 3 },
+          "coverage": {
+            "enum": ["full", "partial", "unsupported"],
+            "description": "Kun 'full' betyder at fladen kan gennemføre sletningen selv. 'partial' og 'unsupported' kræver en begrundelse."
+          },
+          "dataClasses": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 2 } },
+          "deleteMechanism": { "type": "string", "minLength": 3 },
+          "retentionDays": { "type": "integer", "minimum": 1 },
+          "trigger": { "enum": ["account-deletion", "contract-end", "purpose-fulfilled", "legal-deadline", "event-age", "manual-review", "dsar-erasure"] },
+          "legalHoldSupported": { "type": "boolean" },
+          "external": { "type": "boolean", "description": "Sand når fladen ligger uden for platformens kontrol." },
+          "reason": { "type": "string", "minLength": 3, "description": "Præcis begrundelse; påkrævet for partial/unsupported." },
+          "owner": {
+            "type": "object",
+            "required": ["subject", "name", "role"],
+            "additionalProperties": false,
+            "properties": {
+              "subject": { "type": "string" },
+              "name": { "type": "string", "minLength": 2 },
+              "role": { "type": "string", "minLength": 2 }
+            }
+          }
+        }
+      }
+    },
+    "rules": {
+      "type": "object",
+      "description": "De ufravigelige regler. Alle skal være sande; en politik der slår en af dem fra afvises.",
+      "required": [
+        "defaultDeny",
+        "holdRequiresJustification",
+        "holdRequiresSeparateApprover",
+        "holdBlocksDeletion",
+        "restoreRequiresDeletionDecisions",
+        "auditReceiptBeforeMutation",
+        "receiptStoresSubjectDigestOnly"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "defaultDeny": { "const": true },
+        "holdRequiresJustification": { "const": true },
+        "holdRequiresSeparateApprover": { "const": true },
+        "holdBlocksDeletion": { "const": true },
+        "restoreRequiresDeletionDecisions": { "const": true },
+        "auditReceiptBeforeMutation": { "const": true },
+        "receiptStoresSubjectDigestOnly": { "const": true }
+      }
+    },
+    "approvedBy": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string" },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 }
+      }
+    },
+    "approvedAt": { "type": "string", "format": "date" }
+  }
+}

@@ -1,0 +1,31 @@
+DKC-032 forudsætningskæde — verificeret i den anvendte stak (83ad91a + dkc-051 + DKC-032)
+======================================================================================
+
+Stak-tip der lægges før DKC-032: dkc-051/apply.sh
+Kæde: dkc-051 -> dkc-050 -> dkc-027 -> dkc-058 -> ... -> dkc-001
+
+DKC       Nøgleartefakt                                       Status
+DKC-005   runtime/src/runtime.mjs                              findes
+DKC-005   runtime/src/boundary.mjs                             findes
+DKC-010   credentials/src/kill-switch.mjs                      findes
+DKC-010   contracts/kill-switch.schema.json                    findes
+DKC-011   runtime/src/tools.mjs                                findes
+DKC-011   runtime/src/injection.mjs                            findes
+DKC-012   gateway/src/gateway.mjs                              findes
+DKC-012   gateway/routes.json                                  findes
+DKC-013   runtime/src/reconcile.mjs                            findes
+DKC-013   jobs/src/outbox.mjs                                  findes
+DKC-017   observability/sensors.json                           findes
+DKC-017   observability/alert-rules.json                       findes
+DKC-024   modules/keycloak-adapter/module-manifest.json        findes
+DKC-024   modules/mattermost-adapter/module-manifest.json      findes
+DKC-046   runtime/src/remediation.mjs                          findes
+DKC-046   runbooks/stateless-restart.runbook.json              findes
+DKC-049   logging/src/ledger.mjs                               findes
+DKC-049   contracts/log-record.schema.json                     findes
+
+DKC-032 genbruger desuden:
+DKC-045   approvals/src/runbook.mjs                            findes
+DKC-045   runbooks/bounded-scale.runbook.json                  findes
+
+Bemærk: DKC-024's live-integrationer (integration-keycloak/-mattermost) er NOT RUN i dette miljø.

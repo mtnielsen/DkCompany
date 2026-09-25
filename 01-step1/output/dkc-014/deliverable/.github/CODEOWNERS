@@ -1,0 +1,26 @@
+# DKC-014 — kodeejere for beskyttede stier.
+#
+# Sidste matchende regel vinder, som git gør. Ejere er navngivne mennesker eller
+# menneskelige teams; en agent må aldrig eje eller godkende en beskyttet sti.
+# Ændringer her kræver selv CODEOWNERS-review.
+
+# Kontrakter og skemaer
+/contracts/            @cecilia-christensen @platform-security
+/contracts/examples/   @cecilia-christensen @platform-security
+
+# Policy og den signerede bundle
+/policy/               @cecilia-christensen @platform-security
+
+# Sikkerhed, trusselmodel og branch protection
+/security/             @cecilia-christensen @platform-security
+
+# CI, workflows og DCO-håndhævelse
+/.github/              @cecilia-christensen @platform-security
+
+# Releaseværktøj, testmatrix og artefaktmanifest
+/release/              @anna-andersen @platform-release
+/supply-chain/         @anna-andersen @platform-security
+/containers/           @anna-andersen @platform-security
+
+# Fald-tilbage: alt ejes af platformen
+*                      @anna-andersen

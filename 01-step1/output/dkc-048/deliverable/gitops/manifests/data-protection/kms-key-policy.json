@@ -1,0 +1,28 @@
+{
+  "apiVersion": "kms.platform.example.org/v1alpha1",
+  "kind": "KeyPolicy",
+  "metadata": {
+    "name": "protect-kms-keys",
+    "namespace": "platform-data-protection",
+    "labels": {
+      "app.kubernetes.io/name": "kms-key-policy",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "kms-key-policy",
+      "platform.example.org/environment": "data-protection"
+    }
+  },
+  "spec": {
+    "keyResources": [
+      {
+        "id": "policy-signing-key",
+        "ref": "kms://platform-kms/policy-signing",
+        "deletionProtected": true,
+        "keyDomain": "kms-root"
+      }
+    ],
+    "denyAiDelete": true,
+    "denyAiRotate": false,
+    "deletionRequiresTwoPerson": true,
+    "retainOldVersions": true
+  }
+}

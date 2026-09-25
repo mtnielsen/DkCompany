@@ -1,0 +1,223 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ModuleManifest",
+  "metadata": {
+    "name": "openproject-adapter",
+    "version": "1.0.0",
+    "description": "Projektstyringsadapter. Wrapper OpenProject uændret (projekter, arbejdspakker, medlemskaber, filer og statushændelser) bag den fælles adapter-SDK. Default-deny projekttilgang, projektgæst isoleret til eget projekt, ACL-bevidst søge-/AI-projektion der invalideres ved rettighedsændringer, og ærlig partial/unsupported for backup, sletning og legal hold.",
+    "owner": {
+      "team": "platform",
+      "contact": "platform@example.org"
+    },
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "role": "Platform Owner"
+    },
+    "labels": {
+      "tier": "adapter",
+      "wave": "4",
+      "upstream": "openproject"
+    }
+  },
+  "identity": {
+    "userStore": "none",
+    "oidc": {
+      "issuer": "https://id.example.org/realms/platform",
+      "clientId": "openproject-adapter",
+      "scopes": ["openid", "profile", "email", "groups"],
+      "claimMapping": {
+        "subject": "sub",
+        "email": "email",
+        "groups": "groups",
+        "tenant": "tenant_id"
+      },
+      "pkceRequired": true,
+      "tokenAudience": "openproject-adapter"
+    },
+    "scim": {
+      "version": "2.0",
+      "endpoint": "https://id.example.org/scim/v2",
+      "mode": "consumer",
+      "supportsPatch": true,
+      "supportsBulk": false
+    },
+    "spiffe": {
+      "spiffeId": "spiffe://platform.example.org/modules/openproject-adapter",
+      "trustDomain": "platform.example.org",
+      "credentialMode": "just-in-time",
+      "maxCredentialTtlSeconds": 900
+    },
+    "audit": {
+      "authenticationEventsTo": "dk.platform.identity.authn.",
+      "retainDays": 365
+    }
+  },
+  "telemetry": {
+    "serviceName": "openproject-adapter",
+    "otel": {
+      "exporter": "otlp-grpc",
+      "endpoint": "https://otel-collector.platform.example.org:4317",
+      "signals": ["traces", "metrics", "logs"],
+      "resourceAttributes": {
+        "service.name": "openproject-adapter",
+        "service.version": "1.0.0",
+        "deployment.environment": "dev"
+      },
+      "sampling": {
+        "strategy": "parentbased-traceidratio",
+        "ratio": 0.2
+      }
+    },
+    "cloudEvents": {
+      "source": "urn:platform:module:openproject-adapter",
+      "typePrefix": "dk.platform.openproject-adapter.",
+      "sink": "https://events.platform.example.org/events",
+      "requiredAttributes": ["tenantid", "traceid", "principal"],
+      "dataClassificationRequired": true
+    },
+    "retention": {
+      "logsDays": 90,
+      "tracesDays": 30,
+      "metricsDays": 400,
+      "eventsDays": 400
+    }
+  },
+  "policy": {
+    "pdp": {
+      "endpoint": "https://pdp.platform.example.org/v1/data/platform/ops/decision",
+      "protocol": "http-json",
+      "decisionTtlSeconds": 60
+    },
+    "bundle": {
+      "name": "platform",
+      "version": "1.0.0",
+      "sha256": "baeeeb11cb003454ccd12473856966c8769388870d74f30428dfc9bd20ba2d86"
+    },
+    "failMode": "closed",
+    "gatedVerbs": [
+      "restore",
+      "upgrade",
+      "migrate",
+      "rollback",
+      "drain",
+      "subject.erase",
+      "subject.export",
+      "subject.legal_hold",
+      "project.list",
+      "project.read",
+      "workpackage.create",
+      "workpackage.update",
+      "project.member.add",
+      "project.member.remove",
+      "project.guest.invite",
+      "project.export",
+      "project.import",
+      "project.search.scope",
+      "project.ai.retrieve",
+      "project.edition.assess"
+    ],
+    "decisionCacheSeconds": 30,
+    "evidence": {
+      "kind": "fixture",
+      "ref": "conformance/evidence/policy-decision.json",
+      "capturedAt": "2025-09-01T07:55:00Z"
+    }
+  },
+  "verbs": {
+    "backup": {
+      "conformance": "partial",
+      "reason": "OpenProject kan tage database- og vedhæftningsbackup, men adapteren kan ikke garantere et konsistent snapshot af alle plugins gennem API'et."
+    },
+    "restore": {
+      "conformance": "unsupported",
+      "reason": "Gendannelse sker på database-/volumeniveau og kan ikke udføres gennem OpenProject API v3."
+    },
+    "verify-restore": {
+      "conformance": "unsupported",
+      "reason": "Verifikation af en gendannelse kræver adgang til backup- og databaselaget."
+    },
+    "drain": {
+      "conformance": "partial",
+      "reason": "Adapteren kan sætte OpenProject i vedligeholdelsestilstand, men kan ikke dræne aktive klient-/webhook-forbindelser."
+    },
+    "upgrade.dry-run": {
+      "conformance": "partial",
+      "reason": "Adapteren kan rapportere nuværende og ønsket version samt manglende migrationer, men OpenProject tilbyder ikke en egentlig dry-run."
+    },
+    "upgrade": {
+      "conformance": "unsupported",
+      "reason": "OpenProject opgraderes ved at udskifte containeren/appen og køre sin egen migrationsproces; det ligger uden for adapterens verbkontrakt."
+    },
+    "migrate": {
+      "conformance": "unsupported",
+      "reason": "OpenProject kører sine egne database- og plugin-migrationer ved opstart; adapteren kan ikke styre dem."
+    },
+    "rollback": {
+      "conformance": "unsupported",
+      "reason": "Rollback kræver gendannelse fra backup og er derfor ikke mulig gennem adapteren."
+    },
+    "health": {
+      "conformance": "full",
+      "endpoint": "https://openproject-adapter.example.org/healthz",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/health.json"
+      }
+    },
+    "slo": {
+      "conformance": "partial",
+      "reason": "Adapteren måler sin egen svartid og projektionens friskhed, men OpenProjects SLO og fejlbudget ligger hos upstream-drift."
+    }
+  },
+  "privacy": {
+    "subject.locate": {
+      "conformance": "partial",
+      "reason": "Adapteren kan lokalisere projektmedlemskaber og tildelte arbejdspakker ud fra principal/e-mail, men e-mail er ikke en verificeret subjektnøgle, og audit-/backupkopier dækkes ikke."
+    },
+    "subject.export": {
+      "conformance": "partial",
+      "reason": "Adapteren eksporterer medlemskaber og arbejdspakker, men ikke vedhæftningsindhold, audit- og backupkopier; hele DSAR-eksporten koordineres af DKC-020."
+    },
+    "subject.erase": {
+      "conformance": "partial",
+      "reason": "Adapteren fjerner medlemskaber og afknytter arbejdspakker gennem API'et, men backups, søgeindeks og revisionsspor kræver en godkendt upstream-oprydning (DKC-021).",
+      "endpoint": "https://openproject-adapter.example.org/v1/privacy/erase",
+      "evidence": {
+        "kind": "declared",
+        "ref": "docs/spec/openproject-adapter.md",
+        "notes": "Begrænsningen er dokumenteret og afspejlet i API-svaret."
+      }
+    },
+    "subject.legal_hold": {
+      "conformance": "unsupported",
+      "reason": "OpenProject har ingen legal hold-API; et hold håndteres af retention-modulet (DKC-021) og en manuel upstream-indgriben."
+    },
+    "retention.policy": {
+      "conformance": "partial",
+      "reason": "OpenProject har globale opbevaringsindstillinger pr. projekt, men de kan ikke sættes eller rapporteres pr. subjekt gennem adapteren."
+    },
+    "dataCategories": ["operational", "pseudonymised", "personal"],
+    "dsarEndpoint": "https://openproject-adapter.example.org/v1/privacy"
+  },
+  "slo": {
+    "availability": 99.9,
+    "latencyP95Ms": 400,
+    "errorBudgetRef": "docs/slo/openproject-adapter.md"
+  },
+  "serviceClassRef": "continuity/service-classes/openproject-adapter.service-class.json",
+  "dataProtection": {
+    "supportedClasses": ["ordinary", "ai-read-only", "append-only", "retention-locked"],
+    "noAiAccessSupported": true,
+    "reclassificationRequiresHuman": true,
+    "storageEnforcement": {
+      "status": "full",
+      "reason": "Fuld lager-/nøglehåndhævelse leveres af DKC-048 (object-lock, rollematrix, beskyttet nøglebutik og to-personers kontrol). Modulet håndhæver fortsat adgangs- og transitionsregler.",
+      "deliveredBy": "DKC-048"
+    }
+  },
+  "compliance": {
+    "controlRefs": ["ac-2", "au-2", "si-12"],
+    "dpiaRef": "docs/dpia/openproject-adapter.md",
+    "dataProcessingRole": "processor"
+  }
+}

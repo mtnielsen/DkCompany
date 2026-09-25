@@ -1,0 +1,62 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "CollectorRegistry",
+  "sources": [
+    {
+      "id": "otel-collector",
+      "kind": "otel",
+      "trusted": true,
+      "required": true,
+      "expectedIntervalSeconds": 30,
+      "maxAgeSeconds": 300,
+      "views": ["operations"],
+      "description": "OTel-collector for metrics, logs og traces."
+    },
+    {
+      "id": "trivy-ci",
+      "kind": "scanner",
+      "trusted": true,
+      "required": true,
+      "expectedIntervalSeconds": 86400,
+      "maxAgeSeconds": 172800,
+      "views": ["vulnerabilities"],
+      "description": "Trivy-scanning; fund indgår som strukturerede findings."
+    },
+    {
+      "id": "release-gate",
+      "kind": "ci",
+      "trusted": true,
+      "required": true,
+      "expectedIntervalSeconds": 86400,
+      "maxAgeSeconds": 2592000,
+      "views": ["test-release"],
+      "description": "Release-gate og testkørsler."
+    },
+    {
+      "id": "backup-drill",
+      "kind": "backup",
+      "trusted": true,
+      "required": true,
+      "expectedIntervalSeconds": 604800,
+      "maxAgeSeconds": 1209600,
+      "views": ["recovery"],
+      "description": "Backup-/gendannelsesøvelse og recovery-status."
+    },
+    {
+      "id": "agent-runtime",
+      "kind": "agent",
+      "trusted": true,
+      "required": true,
+      "expectedIntervalSeconds": 300,
+      "maxAgeSeconds": 900,
+      "views": ["ai"],
+      "description": "Agenthandlinger, godkendelser og omkostning."
+    }
+  ],
+  "bounds": {
+    "maxEnvelopesPerSecond": 500,
+    "maxBuffer": 10000,
+    "maxCardinality": 2000,
+    "maxEnvelopeBytes": 262144
+  }
+}

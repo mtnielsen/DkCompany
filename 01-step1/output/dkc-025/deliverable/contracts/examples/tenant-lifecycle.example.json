@@ -1,0 +1,288 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "TenantLifecycle",
+  "tenantId": "acme",
+  "customerId": "acme",
+  "name": "Acme ApS",
+  "state": "closed",
+  "packageId": "hr-suite",
+  "packageVersion": "1.0.0",
+  "createdAt": "2026-09-24T08:00:00.000Z",
+  "updatedAt": "2026-09-24T08:00:00.000Z",
+  "windingDown": {
+    "startedBy": {
+      "subject": "oidc|carol.customer",
+      "name": "Carol Customer",
+      "role": null
+    },
+    "startedAt": "2026-09-24T08:00:00.000Z",
+    "exportCompleted": true,
+    "deletionCompleted": true
+  },
+  "auditTrail": [
+    {
+      "seq": 1,
+      "at": "2026-09-24T08:00:00.000Z",
+      "tenantId": "acme",
+      "type": "customer.created",
+      "actor": {
+        "subject": "oidc|ops.olsen",
+        "name": "Ops Olsen",
+        "role": null
+      },
+      "from": null,
+      "to": "created",
+      "detail": {
+        "name": "Acme ApS"
+      },
+      "prevHash": null,
+      "hash": "be1767901dad4e80a9992f25505861c8a9ca58cd53799b03557c861e6f7c1fa5"
+    },
+    {
+      "seq": 2,
+      "at": "2026-09-24T08:00:00.000Z",
+      "tenantId": "acme",
+      "type": "order.created",
+      "actor": {
+        "subject": "oidc|carol.customer",
+        "name": "Carol Customer",
+        "role": null
+      },
+      "from": null,
+      "to": null,
+      "detail": {
+        "orderId": "acme-hr-suite-1.0.0",
+        "packageId": "hr-suite",
+        "version": "1.0.0",
+        "monthly": 3600
+      },
+      "prevHash": "be1767901dad4e80a9992f25505861c8a9ca58cd53799b03557c861e6f7c1fa5",
+      "hash": "9e2f892fd5fe0d8e2ae0215400fc99c049792ddd711df113f20d8f011f0e82d3"
+    },
+    {
+      "seq": 3,
+      "at": "2026-09-24T08:00:00.000Z",
+      "tenantId": "acme",
+      "type": "order.approved",
+      "actor": {
+        "subject": "oidc|ada.approver",
+        "name": "Ada Approver",
+        "role": null
+      },
+      "from": "requested",
+      "to": "approved",
+      "detail": {
+        "orderId": "acme-hr-suite-1.0.0",
+        "reason": "godkendt til provisionering"
+      },
+      "prevHash": "9e2f892fd5fe0d8e2ae0215400fc99c049792ddd711df113f20d8f011f0e82d3",
+      "hash": "303291535371ca6c67a5b4b8e57f47ffa20659ea7739866c7d7683cceb98bed1"
+    },
+    {
+      "seq": 4,
+      "at": "2026-09-24T08:00:00.000Z",
+      "tenantId": "acme",
+      "type": "order.provisioning",
+      "actor": {
+        "subject": "oidc|ada.approver",
+        "name": "Ada Approver",
+        "role": null
+      },
+      "from": "approved",
+      "to": "provisioning",
+      "detail": {
+        "orderId": "acme-hr-suite-1.0.0"
+      },
+      "prevHash": "303291535371ca6c67a5b4b8e57f47ffa20659ea7739866c7d7683cceb98bed1",
+      "hash": "36b74b78cb7785afb8cbd3d4c6d71aa2a3cc37f4460c2b3fa8de5c5ee11ea407"
+    },
+    {
+      "seq": 5,
+      "at": "2026-09-24T08:00:00.000Z",
+      "tenantId": "acme",
+      "type": "order.step-succeeded",
+      "actor": {
+        "subject": "oidc|ada.approver",
+        "name": "Ada Approver",
+        "role": null
+      },
+      "from": null,
+      "to": null,
+      "detail": {
+        "orderId": "acme-hr-suite-1.0.0",
+        "stepId": "audit-service",
+        "resourceRef": "res://acme/module/hr-suite-audit-service"
+      },
+      "prevHash": "36b74b78cb7785afb8cbd3d4c6d71aa2a3cc37f4460c2b3fa8de5c5ee11ea407",
+      "hash": "4d28c9a0c7f8c6bd7ffacf3901e65082b6cb4cf3f09c93612a20ed5c13b3ba50"
+    },
+    {
+      "seq": 6,
+      "at": "2026-09-24T08:00:00.000Z",
+      "tenantId": "acme",
+      "type": "order.step-succeeded",
+      "actor": {
+        "subject": "oidc|ada.approver",
+        "name": "Ada Approver",
+        "role": null
+      },
+      "from": null,
+      "to": null,
+      "detail": {
+        "orderId": "acme-hr-suite-1.0.0",
+        "stepId": "hr",
+        "resourceRef": "res://acme/module/hr-suite-hr"
+      },
+      "prevHash": "4d28c9a0c7f8c6bd7ffacf3901e65082b6cb4cf3f09c93612a20ed5c13b3ba50",
+      "hash": "e8c977cbd775f3d3671bd2b027cb2f40261d9152838c035e584e1f82b3dca721"
+    },
+    {
+      "seq": 7,
+      "at": "2026-09-24T08:00:00.000Z",
+      "tenantId": "acme",
+      "type": "order.step-succeeded",
+      "actor": {
+        "subject": "oidc|ada.approver",
+        "name": "Ada Approver",
+        "role": null
+      },
+      "from": null,
+      "to": null,
+      "detail": {
+        "orderId": "acme-hr-suite-1.0.0",
+        "stepId": "identity-broker",
+        "resourceRef": "res://acme/module/hr-suite-identity-broker"
+      },
+      "prevHash": "e8c977cbd775f3d3671bd2b027cb2f40261d9152838c035e584e1f82b3dca721",
+      "hash": "c0a94596ccda02cde8623318ea29b450beeb1f3e72c953b9c13b4b44ce92c770"
+    },
+    {
+      "seq": 8,
+      "at": "2026-09-24T08:00:00.000Z",
+      "tenantId": "acme",
+      "type": "order.step-succeeded",
+      "actor": {
+        "subject": "oidc|ada.approver",
+        "name": "Ada Approver",
+        "role": null
+      },
+      "from": null,
+      "to": null,
+      "detail": {
+        "orderId": "acme-hr-suite-1.0.0",
+        "stepId": "platform-core",
+        "resourceRef": "res://acme/module/hr-suite-platform-core"
+      },
+      "prevHash": "c0a94596ccda02cde8623318ea29b450beeb1f3e72c953b9c13b4b44ce92c770",
+      "hash": "c2e9ac0a1029e11fb1b7565c54a5c65087b1b755001b296e1b9d6c4c22d60cb8"
+    },
+    {
+      "seq": 9,
+      "at": "2026-09-24T08:00:00.000Z",
+      "tenantId": "acme",
+      "type": "order.active",
+      "actor": {
+        "subject": "oidc|ada.approver",
+        "name": "Ada Approver",
+        "role": null
+      },
+      "from": "provisioning",
+      "to": "active",
+      "detail": {
+        "orderId": "acme-hr-suite-1.0.0"
+      },
+      "prevHash": "c2e9ac0a1029e11fb1b7565c54a5c65087b1b755001b296e1b9d6c4c22d60cb8",
+      "hash": "02df8ec7990446c3c0521749cdbed88869e6a8767cc082ada2deddba212e49ea"
+    },
+    {
+      "seq": 10,
+      "at": "2026-09-24T08:00:00.000Z",
+      "tenantId": "acme",
+      "type": "customer.activated",
+      "actor": {
+        "subject": "oidc|ada.approver",
+        "name": "Ada Approver",
+        "role": null
+      },
+      "from": "created",
+      "to": "active",
+      "detail": {
+        "orderId": "acme-hr-suite-1.0.0"
+      },
+      "prevHash": "02df8ec7990446c3c0521749cdbed88869e6a8767cc082ada2deddba212e49ea",
+      "hash": "3e8cffea709e2b0ebe3122245e359f24f5dff89fd4d0affec386b6b47f195d04"
+    },
+    {
+      "seq": 11,
+      "at": "2026-09-24T08:00:00.000Z",
+      "tenantId": "acme",
+      "type": "customer.winding-down",
+      "actor": {
+        "subject": "oidc|carol.customer",
+        "name": "Carol Customer",
+        "role": null
+      },
+      "from": "active",
+      "to": "winding-down",
+      "detail": {
+        "reason": "kunden opsiger abonnementet"
+      },
+      "prevHash": "3e8cffea709e2b0ebe3122245e359f24f5dff89fd4d0affec386b6b47f195d04",
+      "hash": "4b27828478e95040d93970e9481c2553cc33eff9f4495facbacd17c5a7c72d67"
+    },
+    {
+      "seq": 12,
+      "at": "2026-09-24T08:00:00.000Z",
+      "tenantId": "acme",
+      "type": "customer.winddown-export",
+      "actor": {
+        "subject": "oidc|ops.olsen",
+        "name": "Ops Olsen",
+        "role": null
+      },
+      "from": null,
+      "to": null,
+      "detail": {
+        "reason": "eksport leveret"
+      },
+      "prevHash": "4b27828478e95040d93970e9481c2553cc33eff9f4495facbacd17c5a7c72d67",
+      "hash": "84a8bac29f1731f8443d5b711411021dca2a48196c6f98b748b2d4ff83f9c113"
+    },
+    {
+      "seq": 13,
+      "at": "2026-09-24T08:00:00.000Z",
+      "tenantId": "acme",
+      "type": "customer.winddown-deletion",
+      "actor": {
+        "subject": "oidc|ops.olsen",
+        "name": "Ops Olsen",
+        "role": null
+      },
+      "from": null,
+      "to": null,
+      "detail": {
+        "reason": "data slettet"
+      },
+      "prevHash": "84a8bac29f1731f8443d5b711411021dca2a48196c6f98b748b2d4ff83f9c113",
+      "hash": "42cbedbc7a4f6be94b9fe74fbbfcd99a02f5f318c8aa7fe11308a4e0963fab04"
+    },
+    {
+      "seq": 14,
+      "at": "2026-09-24T08:00:00.000Z",
+      "tenantId": "acme",
+      "type": "customer.closed",
+      "actor": {
+        "subject": "oidc|scoped.olsen",
+        "name": "Scoped Olsen",
+        "role": null
+      },
+      "from": "winding-down",
+      "to": "closed",
+      "detail": {
+        "reason": "afvikling gennemført"
+      },
+      "prevHash": "42cbedbc7a4f6be94b9fe74fbbfcd99a02f5f318c8aa7fe11308a4e0963fab04",
+      "hash": "d0d982a55635341005a10d6f0a576ed6f84e324ddc25cfbb0621ed8bc6d04c2a"
+    }
+  ]
+}

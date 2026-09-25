@@ -1,0 +1,27 @@
+DKC-028 forudsætningskæde — verificeret i den anvendre stak (83ad91a + dkc-034 + DKC-028)
+========================================================================================
+
+Stak-tip der lægges før DKC-028: dkc-034/apply.sh
+Kæde: dkc-034 -> dkc-052 -> dkc-032 -> dkc-051 -> ... -> dkc-001
+
+DKC       Nøgleartefakt                                             Status
+DKC-011   runtime/src/untrusted.mjs                                  findes
+DKC-011   runtime/src/injection.mjs                                  findes
+DKC-011   runtime/src/tools.mjs                                      findes
+DKC-012   gateway/src/accounting.mjs                                 findes
+DKC-012   gateway/src/routing.mjs                                    findes
+DKC-012   gateway/src/egress.mjs                                     findes
+DKC-021   retention/src/deletion-service.mjs                         findes
+DKC-021   retention/src/holds.mjs                                    findes
+DKC-021   data-protection/src/classes.mjs                            findes
+DKC-023   adapter-sdk/src/sdk.mjs                                    findes
+DKC-023   adapter-sdk/src/harness.mjs                                findes
+DKC-025   portal/src/lifecycle.mjs                                   findes
+DKC-025   contracts/service-package.schema.json                      findes
+
+DKC-028 genbruger desuden:
+DKC-006   identity/src/tenant.mjs                                 findes
+DKC-048   data-protection/src/classes.mjs                         findes
+
+Bemaerk: DKC-028's maalte slettefrist på en levende BookStack er
+integration-bookstack-live og er NOT RUN i dette miljoe.

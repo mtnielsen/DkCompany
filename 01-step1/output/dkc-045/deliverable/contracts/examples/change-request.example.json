@@ -1,0 +1,52 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ChangeRequest",
+  "id": "chg-018f3c2a-1b2c-7def-8a01-454545454545",
+  "tenantId": "acme",
+  "flow": "standard",
+  "state": "implemented",
+  "runbook": {
+    "ref": "patch-dummy-ok@1.0.0",
+    "digest": "d5e9e9ad8e82093f5c00da7ff59d8ee5fc5cb8203eb60816f6b2dbe42f75fb4a"
+  },
+  "scope": {
+    "verbs": ["upgrade.patch"],
+    "targets": ["dummy-ok"],
+    "environments": ["staging"]
+  },
+  "parameters": {
+    "library": "libfoo",
+    "to": "1.2.0",
+    "maxDurationSeconds": 120
+  },
+  "window": {
+    "start": "2025-09-01T22:00:00Z",
+    "end": "2025-09-01T23:00:00Z",
+    "maintenanceWindowId": "mw-staging-001"
+  },
+  "approval": {
+    "requiredApprovals": 2,
+    "eligibleGroups": ["platform-approvers"],
+    "preApprovalId": "pre-018f3c2a-1b2c-7def-8a01-616161616161",
+    "preApprovalBindingDigest": "64bc408a223fb853d4ac0a0c17c6466f0a689bdd9b4d74f1a015d9278419d0f1"
+  },
+  "authorization": {
+    "kind": "pre-approval",
+    "humanSubject": "oidc|anna.andersen",
+    "role": "Platform Owner",
+    "grantedAt": "2025-09-01T09:05:00Z",
+    "expiresAt": "2025-09-03T09:05:00Z"
+  },
+  "conflicts": [],
+  "lockOwner": null,
+  "requestedBy": {
+    "subject": "spiffe://platform.example.org/agents/dummy-ok-upgrader",
+    "kind": "agent"
+  },
+  "createdAt": "2025-09-01T21:50:00Z",
+  "postchecks": [
+    { "id": "tests-after", "check": "tests", "expect": "green", "onFailure": "rollback" },
+    { "id": "health-after", "check": "healthcheck", "expect": "green", "onFailure": "rollback" }
+  ],
+  "auditId": "018f3c2a-1b2c-7def-8a01-727272727272"
+}

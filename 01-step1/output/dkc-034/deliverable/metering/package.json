@@ -1,0 +1,10 @@
+{
+  "name": "dkcompany-metering",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "DKC-034: forbrugs- og driftsomkostningsmåling med prisbog, forbrugsjournal, autoriseret rapport pr. tenant, prognose, stopgrænser, TCO-sammenligning og afstemning mod driftsudgifter.",
+  "scripts": {
+    "test": "node --test"
+  }
+}

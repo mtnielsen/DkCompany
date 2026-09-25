@@ -1,0 +1,64 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "SupportTicket",
+  "id": "zammad-example:1001",
+  "sourceId": "zammad-example",
+  "tenantId": "example",
+  "externalId": "1001",
+  "number": "example-1001",
+  "queueId": "support",
+  "queue": {
+    "id": "support",
+    "name": "Support",
+    "classification": "internal",
+    "externalVisible": true,
+    "acl": {
+      "readGroups": ["support"],
+      "readSubjects": [],
+      "denyGroups": [],
+      "denySubjects": []
+    }
+  },
+  "subject": "Kan ikke logge ind",
+  "requester": {
+    "subject": "oidc|ada.example",
+    "name": "Ada Example",
+    "email": "ada@example.org",
+    "tenantId": "example"
+  },
+  "channel": "email",
+  "priority": "high",
+  "status": "open",
+  "classification": "internal",
+  "acl": {
+    "readGroups": ["support"],
+    "readSubjects": [],
+    "denyGroups": [],
+    "denySubjects": []
+  },
+  "sla": {
+    "firstResponseDueAt": "2026-03-01T01:00:00Z",
+    "resolutionDueAt": "2026-03-01T08:00:00Z"
+  },
+  "createdAt": "2026-03-01T00:00:00Z",
+  "updatedAt": "2026-03-01T00:05:00Z",
+  "closedAt": null,
+  "messages": [
+    {
+      "id": "inbound-0",
+      "direction": "inbound",
+      "author": "ada@example.org",
+      "body": "Jeg kan ikke logge ind efter password-skift.",
+      "untrusted": true,
+      "executable": false,
+      "at": "2026-03-01T00:00:00Z"
+    }
+  ],
+  "attachments": [],
+  "history": [],
+  "upstream": {
+    "state": "open",
+    "group": "support",
+    "contentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ServicePackage",
+  "metadata": {
+    "name": "hr-suite",
+    "version": "1.0.0",
+    "description": "Starter plus HR: medarbejderdata, funktionsprofiler og adgangsstyring med beskyttede felter.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+    },
+    "labels": { "segment": "smv" }
+  },
+  "category": "hr",
+  "modules": [
+    { "id": "platform-core", "versionRange": ">=1.0.0 <2.0.0", "required": true, "reason": "Kontrolplan, policy og job-runner er obligatorisk." },
+    { "id": "identity-broker", "versionRange": ">=1.0.0 <2.0.0", "required": true, "reason": "Verificeret SSO for HR-brugere." },
+    { "id": "audit-service", "versionRange": ">=1.0.0 <2.0.0", "required": true, "reason": "Revisionsspor for adgang til medarbejderdata." },
+    { "id": "hr", "versionRange": ">=1.0.0 <2.0.0", "required": true, "reason": "Medarbejder- og organisationsdata er pakkens formål." }
+  ],
+  "price": {
+    "currency": "DKK",
+    "monthly": 3600,
+    "implementation": 12000,
+    "components": [
+      { "id": "platform-core", "moduleId": "platform-core", "monthly": 900, "unit": "md", "note": "Delt kontrolplan." },
+      { "id": "identity-broker", "moduleId": "identity-broker", "monthly": 300, "unit": "md", "note": "Identitetsbroker pr. kunde." },
+      { "id": "audit-service", "moduleId": "audit-service", "monthly": 300, "unit": "md", "note": "Holdbar audit." },
+      { "id": "hr", "moduleId": "hr", "monthly": 2100, "unit": "md", "note": "HR-applikation." }
+    ]
+  },
+  "consequences": [
+    {
+      "id": "personal-data",
+      "severity": "material",
+      "description": "HR-pakken behandler medarbejderpersondata, herunder beskyttede kategorier, og kræver den godkendte databehandleraftale.",
+      "requiresAcknowledgment": true
+    },
+    {
+      "id": "access-review",
+      "severity": "material",
+      "description": "Kunden skal gennemføre den aftalte adgangsrevision og udpege en navngiven ejer for HR-adgang.",
+      "requiresAcknowledgment": true
+    },
+    {
+      "id": "shared-control-plane",
+      "severity": "notice",
+      "description": "HR-data er tenantadskilt; kontrolplanen er fælles driftet."
+    }
+  ],
+  "dataProcessing": {
+    "personalData": true,
+    "subprocessorRefs": ["anthropic-eu", "openai-eu"]
+  },
+  "supportProfile": {
+    "tier": "supported",
+    "supportWindow": "12 måneder fra GA",
+    "escalation": "Platform Owner via platform@example.org"
+  },
+  "lifecycle": { "orderable": true }
+}

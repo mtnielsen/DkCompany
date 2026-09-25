@@ -1,0 +1,29 @@
+DKC-052 forudsætningskæde — verificeret i den anvendte stak (83ad91a + dkc-032 + DKC-052)
+======================================================================================
+
+Stak-tip der lægges før DKC-052: dkc-032/apply.sh
+Kæde: dkc-032 -> dkc-051 -> dkc-050 -> dkc-027 -> dkc-058 -> ... -> dkc-001
+
+DKC       Nøgleartefakt                                           Status
+DKC-022   compliance/assurance-register.json                       findes
+DKC-022   compliance/src/assurance.mjs                             findes
+DKC-022   compliance/src/incident-drill.mjs                        findes
+DKC-032   shadow/autonomy-policy.json                              findes
+DKC-032   shadow/src/shadow.mjs                                    findes
+DKC-044   modules/itsm-adapter/module-manifest.json                findes
+DKC-044   service-registry/oncall.json                             findes
+DKC-045   approvals/src/runbook.mjs                                findes
+DKC-045   runbooks/stateless-restart.runbook.json                  findes
+DKC-051   chaos/failure-matrix.json                                findes
+DKC-051   chaos/src/probes.mjs                                     findes
+
+DKC-052 genbruger desuden:
+DKC-038   infrastructure/ha-plan.json                              findes
+DKC-039   persistence/ha-plan.json                                 findes
+DKC-041   storage/storage-plan.json                                findes
+DKC-042   backup/dr/recovery-access-profile.json                   findes
+DKC-042   backup/dr/disaster-recovery-plan.json                    findes
+DKC-037   continuity/service-classes/audit-service.service-class.json findes
+
+Bemærk: DKC-052's målte øvelse (levende hosts, uafhængig kanal, menneskelige
+operatører) er integration-takeover-live og er NOT RUN i dette miljø.

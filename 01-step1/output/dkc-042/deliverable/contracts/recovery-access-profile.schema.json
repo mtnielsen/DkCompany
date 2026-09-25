@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/recovery-access-profile.schema.json",
+  "title": "Recovery Access Profile",
+  "description": "DKC-042: den separate backup- og recovery-adgang. Profilen kræver en recovery-identitet der er adskilt fra primærklyngens driftscredentials, at kun et verificeret menneske kan aktivere adgangen, at aktivering kræver to-personers godkendelse, og at der ikke findes stående adgang. Krypteringsnøgler, konfiguration, katalog og image-referencer holdes adskilt fra backup-lageret og pinnes på digest. Skemaet håndfører formen; backup/src/dr/access.mjs håndhæver beslutningerne.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "metadata", "primaryOperations", "recoveryIdentity", "keys", "configuration", "catalog", "images", "accessPolicy"],
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "RecoveryAccessProfile" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman", "lastReviewed"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$" },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "description": { "type": "string", "minLength": 20 },
+        "accountableHuman": { "$ref": "#/$defs/human" },
+        "lastReviewed": { "type": "string", "format": "date" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "primaryOperations": {
+      "type": "object",
+      "required": ["credentialsRef", "roleId", "forbiddenOnProtectedBackups"],
+      "additionalProperties": false,
+      "properties": {
+        "credentialsRef": { "type": "string", "minLength": 3 },
+        "roleId": { "type": "string", "minLength": 2 },
+        "forbiddenOnProtectedBackups": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "recoveryIdentity": {
+      "type": "object",
+      "required": ["subjectRef", "separateFromPrimary", "humanVerifiedOnly", "standingAccess", "activationRequiresTwoPerson", "breakGlass", "approval"],
+      "additionalProperties": false,
+      "properties": {
+        "subjectRef": { "type": "string", "minLength": 3 },
+        "separateFromPrimary": { "const": true },
+        "humanVerifiedOnly": { "const": true },
+        "standingAccess": { "const": false },
+        "activationRequiresTwoPerson": { "const": true },
+        "breakGlass": { "type": "boolean" },
+        "approval": {
+          "type": "object",
+          "required": ["approver1", "approver2", "requesterMayNotApprove", "maxDurationMinutes"],
+          "additionalProperties": false,
+          "properties": {
+            "approver1": { "$ref": "#/$defs/human" },
+            "approver2": { "$ref": "#/$defs/human" },
+            "requesterMayNotApprove": { "const": true },
+            "maxDurationMinutes": { "type": "integer", "minimum": 1 }
+          }
+        }
+      }
+    },
+    "keys": {
+      "type": "object",
+      "required": ["keyRef", "provider", "separateFromBackupStore", "rotationDays", "custody"],
+      "additionalProperties": false,
+      "properties": {
+        "keyRef": { "type": "string", "minLength": 3 },
+        "provider": { "type": "string", "minLength": 2 },
+        "separateFromBackupStore": { "const": true },
+        "rotationDays": { "type": "integer", "minimum": 1 },
+        "custody": { "type": "string", "minLength": 3 }
+      }
+    },
+    "configuration": {
+      "type": "object",
+      "required": ["sourceRef", "vaultPath", "redactedInBackup"],
+      "additionalProperties": false,
+      "properties": {
+        "sourceRef": { "type": "string", "minLength": 3 },
+        "vaultPath": { "type": "string", "minLength": 3 },
+        "redactedInBackup": { "const": true }
+      }
+    },
+    "catalog": {
+      "type": "object",
+      "required": ["ref", "digest", "signed"],
+      "additionalProperties": false,
+      "properties": {
+        "ref": { "type": "string", "minLength": 3 },
+        "digest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "signed": { "const": true }
+      }
+    },
+    "images": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "ref", "digest", "signedBy"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string", "minLength": 2 },
+          "ref": { "type": "string", "minLength": 3 },
+          "digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+          "signedBy": { "type": "string", "minLength": 2 }
+        }
+      }
+    },
+    "accessPolicy": {
+      "type": "object",
+      "required": ["defaultDeny", "allowedRoles", "deniedRoles"],
+      "additionalProperties": false,
+      "properties": {
+        "defaultDeny": { "const": true },
+        "allowedRoles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 2 }
+        },
+        "deniedRoles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 2 }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "human": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": {
+          "type": "object",
+          "required": ["subject", "name"],
+          "additionalProperties": false,
+          "properties": {
+            "subject": { "type": "string", "minLength": 3 },
+            "name": { "type": "string", "minLength": 2 }
+          }
+        }
+      }
+    }
+  }
+}

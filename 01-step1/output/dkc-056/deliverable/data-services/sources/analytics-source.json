@@ -1,0 +1,56 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "DataSource",
+  "metadata": {
+    "name": "analytics-source",
+    "version": "1.0.0",
+    "description": "Read-only analyseinput fra kundens analyticslager. Bruges til rapportering efter aftalt scope; indeholder ikke rå persondata.",
+    "dataOwner": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Service Owner" },
+    "labels": { "tier": "external", "source": "analytics" }
+  },
+  "sourceType": "analytics",
+  "engine": { "family": "postgresql", "version": "16.4" },
+  "connection": {
+    "host": "analytics.customer.example.org",
+    "port": 5432,
+    "database": "analytics",
+    "tls": { "mode": "verify-full", "minVersion": "1.3", "certSha256": "74fa8fac5150b169aa92fc4ec5942b112f41af8339c927352cd567215f187103" },
+    "secretRef": "vault:secret/data/analytics/readonly#password"
+  },
+  "access": {
+    "readOnly": true,
+    "allowedSchemas": ["reporting"],
+    "allowedTables": ["reporting.metrics_daily", "reporting.dim_department"],
+    "denyWrites": true,
+    "denyDdl": true,
+    "maxRows": 5000
+  },
+  "tenantBinding": {
+    "required": true,
+    "source": "principal",
+    "strategy": "per-tenant-view"
+  },
+  "schemaDiscovery": {
+    "enabled": true,
+    "includeSchemas": ["reporting"],
+    "discoveredAt": "2026-09-23T00:00:00.000Z",
+    "snapshotRef": "analytics-source:2026-09-23"
+  },
+  "dataOwnership": {
+    "owner": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Service Owner" },
+    "classification": "pseudonymised",
+    "agreementRef": "dpa://customer/analytics-source/2026",
+    "purpose": "Aggregeret rapportering og ledelsesinformation."
+  },
+  "externalPolicy": {
+    "treatAsOwnDatabase": false,
+    "autoMigrate": false,
+    "autoBackup": false,
+    "scopeAgreementRef": "scope://customer/analytics-source/read-only-2026"
+  },
+  "auditTrail": {
+    "enabled": true,
+    "events": ["connect", "schema-discovery", "query", "denied", "disconnect"],
+    "sink": "audit://platform/data-source-access"
+  }
+}

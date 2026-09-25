@@ -1,0 +1,30 @@
+Files /tmp/dkc-015-ref/00-core/Makefile and /tmp/dkc-015/00-core/Makefile differ
+Only in /tmp/dkc-015/00-core/conformance/src: infrastructure.mjs
+Files /tmp/dkc-015-ref/00-core/conformance/src/schemas.mjs and /tmp/dkc-015/00-core/conformance/src/schemas.mjs differ
+Files /tmp/dkc-015-ref/00-core/conformance/src/validate-schemas.mjs and /tmp/dkc-015/00-core/conformance/src/validate-schemas.mjs differ
+Only in /tmp/dkc-015/00-core/containers: approvals
+Files /tmp/dkc-015-ref/00-core/containers/containers.json and /tmp/dkc-015/00-core/containers/containers.json differ
+Only in /tmp/dkc-015/00-core/containers: runtime
+Only in /tmp/dkc-015/00-core/contracts/examples: infrastructure-plan.example.json
+Only in /tmp/dkc-015/00-core/contracts: infrastructure-plan.schema.json
+Only in /tmp/dkc-015/00-core/docs/adr: 0033-reproducerbar-staging-og-iac.md
+Files /tmp/dkc-015-ref/00-core/docs/adr/README.md and /tmp/dkc-015/00-core/docs/adr/README.md differ
+Only in /tmp/dkc-015/00-core/docs: costs
+Only in /tmp/dkc-015/00-core/docs: runbooks
+Files /tmp/dkc-015-ref/00-core/docs/spec/README.md and /tmp/dkc-015/00-core/docs/spec/README.md differ
+Files /tmp/dkc-015-ref/00-core/docs/spec/gitops.md and /tmp/dkc-015/00-core/docs/spec/gitops.md differ
+Only in /tmp/dkc-015/00-core/docs/spec: staging.md
+Files /tmp/dkc-015-ref/00-core/docs/status/implementation-matrix.md and /tmp/dkc-015/00-core/docs/status/implementation-matrix.md differ
+Files /tmp/dkc-015-ref/00-core/docs/status/supply-chain.md and /tmp/dkc-015/00-core/docs/status/supply-chain.md differ
+Files /tmp/dkc-015-ref/00-core/docs/testing/test-matrix.md and /tmp/dkc-015/00-core/docs/testing/test-matrix.md differ
+Only in /tmp/dkc-015/00-core/gitops/apps: prod
+Only in /tmp/dkc-015/00-core/gitops/apps: staging
+Only in /tmp/dkc-015/00-core/gitops/manifests: prod
+Only in /tmp/dkc-015/00-core/gitops/manifests: staging
+Files /tmp/dkc-015-ref/00-core/gitops/src/cli.mjs and /tmp/dkc-015/00-core/gitops/src/cli.mjs differ
+Files /tmp/dkc-015-ref/00-core/gitops/src/verify.mjs and /tmp/dkc-015/00-core/gitops/src/verify.mjs differ
+Only in /tmp/dkc-015/00-core: infrastructure
+Files /tmp/dkc-015-ref/00-core/release/artifacts.json and /tmp/dkc-015/00-core/release/artifacts.json differ
+Files /tmp/dkc-015-ref/00-core/release/matrix/test-matrix.json and /tmp/dkc-015/00-core/release/matrix/test-matrix.json differ
+Files /tmp/dkc-015-ref/00-core/release/sbom/platform-sbom.cdx.json and /tmp/dkc-015/00-core/release/sbom/platform-sbom.cdx.json differ
+Files /tmp/dkc-015-ref/00-core/tools/baseline/registry.mjs and /tmp/dkc-015/00-core/tools/baseline/registry.mjs differ

@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/identity-trust.schema.json",
+  "title": "Identity Trust",
+  "description": "Versioneret tillidskontrakt for identitet: OIDC til mennesker, verificeret workload-identitet til tjenester og lokalt skygge-ID uden lokale passwords hvor en upstream kræver det. Ukendte trust roots afvises, og tvetydig identitet afvises frem for at gætte.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "userAuthentication", "workloadIdentity", "shadowIdentity", "trustRoots", "tenantBinding", "ambiguityPolicy"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "IdentityTrust" },
+
+    "metadata": { "$ref": "#/$defs/metadata" },
+
+    "userAuthentication": {
+      "type": "object",
+      "description": "Mennesker autentificeres udelukkende gennem OIDC. MFA og PKCE er krav, ikke tilvalg.",
+      "required": ["protocol", "issuer", "clientId", "mfa", "pkceRequired"],
+      "additionalProperties": false,
+      "properties": {
+        "protocol": { "const": "oidc" },
+        "issuer": { "type": "string", "format": "uri", "pattern": "^https://" },
+        "clientId": { "type": "string", "minLength": 1 },
+        "mfa": { "enum": ["required", "risk-based"] },
+        "pkceRequired": { "const": true },
+        "subjectClaim": { "type": "string", "default": "sub" },
+        "groupsClaim": { "type": "string", "default": "groups" }
+      }
+    },
+
+    "workloadIdentity": {
+      "type": "object",
+      "description": "Tjenester autentificeres med verificeret workload-identitet. Delte servicekonti er forbudt.",
+      "required": ["protocol", "trustDomain", "credentialMode", "maxCredentialTtlSeconds"],
+      "additionalProperties": false,
+      "properties": {
+        "protocol": { "const": "spiffe" },
+        "trustDomain": { "type": "string", "minLength": 1 },
+        "credentialMode": { "const": "just-in-time" },
+        "maxCredentialTtlSeconds": { "type": "integer", "minimum": 60, "maximum": 3600 },
+        "audience": { "type": "string" }
+      }
+    },
+
+    "shadowIdentity": {
+      "type": "object",
+      "description": "Lokalt skygge-ID til upstreams der kræver en lokal brugerrække. Skygge-ID'et må aldrig eje et password.",
+      "required": ["enabled", "passwordMode", "localPasswordStore"],
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "passwordMode": { "enum": ["none", "broker-managed"] },
+        "localPasswordStore": { "const": false },
+        "upstreams": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "De upstream-systemer, der kræver det lokale skygge-ID."
+        },
+        "justification": { "type": "string" },
+        "lifecycle": {
+          "enum": ["created-on-demand", "provisioned-with-user", "disabled"],
+          "description": "Hvordan skygge-ID'et oprettes, opdateres og fjernes sammen med den centrale identitet."
+        }
+      }
+    },
+
+    "trustRoots": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Den udtømmende liste over accepterede tillidskilder. Alt andet afvises.",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "uri", "owner"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]{3,63}$" },
+          "type": { "enum": ["oidc-issuer", "spiffe-trust-domain", "x509-ca"] },
+          "uri": { "type": "string", "minLength": 1 },
+          "owner": { "$ref": "#/$defs/accountableHuman" },
+          "purpose": { "type": "string" },
+          "revocationUrl": { "type": "string", "format": "uri" }
+        }
+      }
+    },
+
+    "tenantBinding": {
+      "type": "object",
+      "description": "Hvordan en identitet bindes til præcis én tenant. Tenant må ikke kunne vælges frit af klienten.",
+      "required": ["source", "claim", "requireTenantClaim", "clientSelectable"],
+      "additionalProperties": false,
+      "properties": {
+        "source": { "enum": ["oidc-claim", "workload-registration", "signed-mapping"] },
+        "claim": { "type": "string", "minLength": 1 },
+        "requireTenantClaim": { "const": true },
+        "clientSelectable": { "const": false }
+      }
+    },
+
+    "ambiguityPolicy": {
+      "const": "reject",
+      "description": "Tvetydig identitet (flere match, manglende tenant, ukendt trust root) afvises. Der gættes ikke."
+    },
+
+    "breakGlass": {
+      "type": "object",
+      "description": "Menneskelig nødadgang, der virker når IAM/kontrolplanen er nede. Adskilt fra normal login-vej.",
+      "required": ["procedure", "owner", "audited"],
+      "additionalProperties": false,
+      "properties": {
+        "procedure": { "type": "string", "minLength": 10 },
+        "owner": { "$ref": "#/$defs/accountableHuman" },
+        "audited": { "const": true },
+        "offlineInstructions": { "type": "string" }
+      }
+    }
+  },
+
+  "$defs": {
+    "accountableHuman": {
+      "type": "object",
+      "required": ["subject", "role", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{3,63}$" },
+        "version": { "type": "string" },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/accountableHuman" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    }
+  }
+}

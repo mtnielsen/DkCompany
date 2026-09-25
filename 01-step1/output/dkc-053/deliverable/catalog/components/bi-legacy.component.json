@@ -1,0 +1,89 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ComponentManifest",
+  "requires": [
+    {
+      "ref": "platform-core",
+      "range": "^1.0.0",
+      "reason": "BI Classic bruger den fælles kontrolplan."
+    }
+  ],
+  "optionalRequires": [],
+  "conflicts": [
+    {
+      "ref": "bi",
+      "reason": "BI og det forældede BI Classic må ikke installeres samtidigt; de deler modelnavne og datakilder."
+    }
+  ],
+  "dataServices": [],
+  "migrations": [],
+  "download": [
+    {
+      "artifact": "bi-legacy-2.0.0.tar.zst",
+      "sizeMiB": 350,
+      "source": "registry.example.org/legacy/bi-classic:2.0.0",
+      "verified": true
+    }
+  ],
+  "operations": [
+    "backup",
+    "restore",
+    "upgrade",
+    "health",
+    "slo"
+  ],
+  "implementation": {
+    "status": "catalog-only",
+    "notes": "Katalogpost; det implementerende modul er endnu ikke bygget."
+  },
+  "metadata": {
+    "name": "bi-legacy",
+    "version": "2.0.0",
+    "description": "Forældet BI Classic. Bevares i kataloget for at kunne afvise konflikter og planlægge udfasning.",
+    "accountableHuman": {
+      "subject": "oidc|cecilia.christensen",
+      "name": "Cecilia Christensen",
+      "role": "Service Owner",
+      "substitute": {
+        "subject": "oidc|david.dahl",
+        "name": "David Dahl"
+      }
+    },
+    "labels": {
+      "tier": "app",
+      "category": "bi",
+      "lifecycle": "deprecated"
+    }
+  },
+  "componentType": "application",
+  "category": "bi",
+  "securityCore": false,
+  "provides": {
+    "capabilities": [
+      "bi"
+    ],
+    "dataServices": []
+  },
+  "supportProfile": {
+    "tier": "community",
+    "supportWindow": "Udfases; ingen nye features",
+    "escalation": "Service Owner"
+  },
+  "platforms": {
+    "os": [
+      "linux"
+    ],
+    "arch": [
+      "x64"
+    ],
+    "runtime": [
+      "node>=22 <23"
+    ]
+  },
+  "resources": {
+    "cpuMillicores": 900,
+    "memoryMiB": 2048,
+    "storageGiB": 60,
+    "nodes": 0
+  }
+}

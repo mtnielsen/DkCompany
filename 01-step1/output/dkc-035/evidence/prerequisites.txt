@@ -1,0 +1,15 @@
+DKC-035 forudsætningskæde (verificeret i den anvendte stak)
+Overlay-kæde: dkc-033/apply.sh -> dkc-065/apply.sh -> dkc-062/apply.sh -> ... -> dkc-001/apply.sh
+
+Formelle forudsætninger og deres leverancer i stakken:
+  DKC-022: OK (compliance/assurance-register.json compliance/src/assurance.mjs compliance/src/assurance-cli.mjs contracts/assurance-register.schema.json)
+  DKC-023: OK (adapter-sdk/src/candidates.mjs contracts/integration-candidate.schema.json adapter-sdk/live-targets.json)
+  DKC-030: OK (crm/sources.json crm/src/candidate-check.mjs contracts/crm-source.schema.json)
+  DKC-033: OK (pilot/business-profiles.json pilot/src/readiness.mjs pilot/report/pilot-readiness-report.json)
+  DKC-034: OK (metering/price-book.json metering/src/report.mjs metering/report/cost-report.json)
+
+Relevante genbrugte API'er:
+  - adapter-sdk/src/candidates.mjs#assessCandidateGate (kandidatgate)
+  - distribution/src/{catalog,resolver,profiles}.mjs (resolver-integration)
+  - continuity/src/classes.mjs#loadServiceClasses (profil-sikkerhed)
+  - conformance/src/architecture.mjs#isNamedHuman (navngivet menneske)

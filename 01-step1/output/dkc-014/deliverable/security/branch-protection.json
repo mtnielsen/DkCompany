@@ -1,0 +1,28 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "BranchProtection",
+  "metadata": {
+    "name": "release-vej-beskyttelse",
+    "version": "1.0.0",
+    "description": "Beskyttelse af hovedgrenen og de stier der bærer kontrakter, policy, sikkerhed og releaseværktøj. DCO-sign-off er en sign-off-linje, ikke kryptografisk commitsignering.",
+    "accountableHuman": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Security Owner" }
+  },
+  "protectedPaths": ["contracts/", "policy/", "security/", ".github/", "release/", "supply-chain/", "containers/"],
+  "policies": [
+    {
+      "pattern": "main",
+      "requirePullRequest": true,
+      "requiredApprovingReviewCount": 2,
+      "requireCodeOwnerReviews": true,
+      "dismissStaleReviews": true,
+      "requireConversationResolution": true,
+      "requiredStatusChecks": ["validate", "lint", "release-check", "release-test", "supply-chain-check", "supply-chain-test", "supply-chain-vuln-check"],
+      "requireDcoSignoff": true,
+      "enforceAdmins": true,
+      "allowForcePushes": false,
+      "allowDeletions": false,
+      "requireSignedCommits": false,
+      "cryptoSigningClaimed": false
+    }
+  ]
+}

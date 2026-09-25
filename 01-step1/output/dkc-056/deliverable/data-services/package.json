@@ -1,0 +1,10 @@
+{
+  "name": "dkcompany-data-services",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "DKC-056: administrerede og BYO-databaseprofiler, read-only datakildeconnectorer, migrationsscope, recovery og ejerskab.",
+  "scripts": {
+    "test": "node --test"
+  }
+}

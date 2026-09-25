@@ -1,0 +1,58 @@
+# SHA256-manifest for DKC-008-leverancen
+# Genereret: 2026-09-23T10:14:41Z
+# Forudsætning: DKC-001 + DKC-002 + DKC-003 + DKC-004 + DKC-005 + DKC-006 + DKC-007
+# Reviewets base: 5f9fa73, undersøgt checkout: 83ad91a
+# Node v22.22.1 (node:sqlite). DKC-055 er ikke implementeret; se README'ens blokeringsafsnit.
+
+# --- deliverable/ (overlay, relative til 00-core/) ---
+8f32e724b4ec7ae5caad176ae150c3ae590752efeabc71077f85e7fdb63215a5  ./Makefile
+590707152463439794c120f12673ecac9838fdc43541224ece67cf84793bdaec  ./conformance/test/persistence-conformance.test.mjs
+53425d91e1beb00fb0b16c1e6fa921d4dc66db6b45957cc105d64c73ce512003  ./docs/adr/0019-holdbar-tilstand-og-migrationer.md
+07d69ac83c119a58011641f29068f26155e4c5f0e574af83ef11606b3a492023  ./docs/adr/README.md
+f85cf2c1bfbd5048aee71053793e5ca885823bfd3fa05f81d45ded952879938e  ./docs/spec/README.md
+33fd7cf827273c5a17d405489c15556d48e71b22c5dd542a95e04d532ac87879  ./docs/spec/persistence.md
+9c2225885966e87b2cc40c7a1a271b4171a7a03cfe88fe533406f35594c43a46  ./docs/status/implementation-matrix.md
+3b804bb36bbd228c92039df1ab124acc9cba2a4563f074005696cbc37e10f092  ./persistence/fixtures/persistence-worker.mjs
+a0d763158174ea587020243ebdff5b5f8d2fa59f5f745dee4c35cd3fe1f81058  ./persistence/migrations/0001_initial.sql
+d33a69e8c39b5adfc134893c5d5b0cfad9a08b7e533713e7765b06e3a2cd3b01  ./persistence/migrations/0002_upgrade_and_hardening.sql
+2d9a9fe42fa32cd92d8133ad8b6cd1a69db6dd827abd017232d347e617ad5fce  ./persistence/package.json
+bcfce015abeb7bed5cc343dd8243135da472a7bb862b8767c54b37b5dd732e22  ./persistence/src/adapters/approval-ledger.mjs
+c82bcc29c12a74ef8367a1012f89a44bffb25cdf81d785eb3931d1bbaa81481f  ./persistence/src/adapters/approvals.mjs
+245aca45c492f20cb111f4882d640c798f6c438ced0ed588c0c4530db30bda0b  ./persistence/src/adapters/audit.mjs
+7e812411b8d36a6ac9eea037a9f27d33949b45c1c7ae1161a12a9b26aa7ac63b  ./persistence/src/adapters/budgets.mjs
+d46f18efd2989d0abd158c1b1dbc5b02b9229c41bf72904ebc67bc6d4bc37889  ./persistence/src/adapters/jobs.mjs
+bff3ef40932ff7c6f78ca12c668a6e716aebec552abb823fbef91087a7926320  ./persistence/src/backup.mjs
+66fc6f8035146c315b19403e0ef3b1b7f821c2ed889aac062c77331cebd49d83  ./persistence/src/check.mjs
+6dc7645a580f8f6d081457c6e299448caba0a1f4008cb0bb5897d182a6ae4004  ./persistence/src/db.mjs
+db5e4703965829ef25a9d64c2a1dc141480ef56370c8e7b43eb70156c46c71e0  ./persistence/src/identities.mjs
+f1b4a60196b07bac321d193ed53f593890fabc6934aa6754129cff4182702ea3  ./persistence/src/index.mjs
+b9752ab6924d899c55f1e7c22da329af8a161e44dba10ad9310d60a4525f6256  ./persistence/src/migrations.mjs
+7df3aeb4ecf020785a6145f74f7bf14063e4ddb087bf420704b05b8d72ab9083  ./persistence/test/adapters.test.mjs
+2a3046279f69189c221327047a5e87fd9d13df94f8df16233624b7259bd5149c  ./persistence/test/approval-service-restart.test.mjs
+ebd693d71c55a9f0b87af2e7ce7eb7c9826f0c8ff804d697e77c2f2d3f69d040  ./persistence/test/backup.test.mjs
+c94e96b9e457aef8d77f610044d71452566a38d62e6e76d3bffe93de60fe6aa6  ./persistence/test/concurrency.test.mjs
+247bb36ed2228c459dba9d0c252d1261a5db86b3c2bbe41fbe64457382ca6ca6  ./persistence/test/migrations.test.mjs
+4e5b652e0f22337945b8a658b57f08a9c3db52cac5cbd20ddeb1ac8256414c62  ./persistence/test/restart.test.mjs
+49d180955454b48e0aa4419c2cb9de83d9a615db6b1341e3a6e094d2624b8732  ./persistence/test/runtime-jobs.test.mjs
+97b79473513389bfad624f03ea381a54091989b69adedc1f5f4a6a2d91d37b8f  ./runtime/src/runtime.mjs
+92939db2656d8814e6fc372f1a7d678c26ab762ac27a8cbe40bedf91dc4ae7f1  ./tools/baseline/registry.mjs
+
+# --- evidence/ ---
+8dccad23c44a667f200d063523f7cc45b664c8d0c369a1598fa1a96c03eeafe4  evidence/baseline/baseline-83ad91a.json
+cb1cbd455b96167acd425878bd4c6df6f715c08beda52af42ae7421124bd1a26  evidence/logs/agent-conformance-test.log
+30b3b067c6fbd5b6f35fc34e1d28c453041ed42721d9ab3e1c6071f526e50e05  evidence/logs/approval-test.log
+7d0640b1019513a0fe3341429c0e4fe440d68c5473eab6d59d0ece65b223ddd1  evidence/logs/architecture-test.log
+3663e362197f05c4ec809a4b45ddf72101f759e8f74a311d4fbf60764649bd7c  evidence/logs/baseline-test.log
+76a1352fc0db6c8f2d0e398dc7554e9d352244bba4a37ab9aceafbccbe60de5a  evidence/logs/baseline.log
+c554af09fddb2444491709cb7a59d8bcbb4a8b2eea6e90efc8ee734a0df7eda7  evidence/logs/boundary-test.log
+17128f5a9f80085001bd3bdc2824f9d600b31aee517a02922be66b533e371f63  evidence/logs/lint.log
+f91008e944d040d6ab399e5f4bb604b09154cd9568aa0df330261bf1b804a82e  evidence/logs/persistence-check.log
+ffdea865295a073b6913c818233a4888a1965f02a0fcf09cc7aedea430e81902  evidence/logs/persistence-test.log
+874fa0c370df88274261eb0964768e565099a381942d22cdc92aab51c96c947d  evidence/logs/runtime-test.log
+e0b5535038fd748a4be37ebec60b62cba3cfc27b0e4939b6c26ff5c518aa6d47  evidence/logs/tenant-test.log
+db2cd97e3d0331b836ee848f4f33a89181f3a86dddae37319f1215ce3ebe2bc4  evidence/logs/test.log
+b558db5c9477f2bfb9d2795dd0dedcbfde6ad854fd68ca115cdb99718ee41dd7  evidence/logs/validate.log
+
+# --- README.md, apply.sh ---
+38de00195781012c351f349404e72b6ec521485e8bebc7d5a1d56bcc19345d4b  ./README.md
+67a7b4e7a966844af6cf2822a051b9de7b653a1d03f5053a2a6ac4d2c3d6ec43  ./apply.sh

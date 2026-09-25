@@ -1,0 +1,341 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "CapacityPlan",
+  "metadata": {
+    "name": "horizontal-scaling-example",
+    "version": "1.0.0",
+    "description": "Eksempel på en kapacitets- og skaleringsplan med tre kundestørrelser, tre hosts i tre fejldomæner, autoskalering, tenantkvoter, fairness, connection pools, backpressure og enhedspris. Tallene er syntetiske.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner (substitute)"
+      }
+    },
+    "labels": {
+      "segment": "platform",
+      "tier": "capacity"
+    }
+  },
+  "hostingProfileRef": "catalog/profiles/ha-cluster.profile.json",
+  "failureDomains": [
+    "fsn1-dc14",
+    "fsn1-dc15",
+    "hel1-dc2"
+  ],
+  "topology": {
+    "hosts": [
+      {
+        "id": "app-1",
+        "failureDomain": "fsn1-dc14",
+        "cpuMillicores": 16000,
+        "memoryMb": 65536,
+        "networkMbps": 2500,
+        "diskGb": 800
+      },
+      {
+        "id": "app-2",
+        "failureDomain": "fsn1-dc15",
+        "cpuMillicores": 16000,
+        "memoryMb": 65536,
+        "networkMbps": 2500,
+        "diskGb": 800
+      },
+      {
+        "id": "app-3",
+        "failureDomain": "hel1-dc2",
+        "cpuMillicores": 16000,
+        "memoryMb": 65536,
+        "networkMbps": 2500,
+        "diskGb": 800
+      }
+    ],
+    "hostCount": 3,
+    "nPlusOne": true
+  },
+  "loadProfiles": [
+    {
+      "id": "small",
+      "name": "Lille kunde",
+      "concurrentUsers": 50,
+      "requestsPerSecond": 25,
+      "jobsPerSecond": 2,
+      "filesPerDay": 500,
+      "dataGb": 20,
+      "aiCallsPerDay": 500
+    },
+    {
+      "id": "medium",
+      "name": "Mellemstor kunde",
+      "concurrentUsers": 500,
+      "requestsPerSecond": 250,
+      "jobsPerSecond": 20,
+      "filesPerDay": 5000,
+      "dataGb": 500,
+      "aiCallsPerDay": 25000
+    },
+    {
+      "id": "large",
+      "name": "Stor kunde",
+      "concurrentUsers": 5000,
+      "requestsPerSecond": 2500,
+      "jobsPerSecond": 200,
+      "filesPerDay": 50000,
+      "dataGb": 5000,
+      "aiCallsPerDay": 250000
+    }
+  ],
+  "baselineProfileId": "medium",
+  "workloads": [
+    {
+      "id": "api",
+      "kind": "stateless",
+      "moduleRef": "runtime",
+      "replicas": {
+        "min": 4,
+        "max": 16
+      },
+      "capacityPerReplica": {
+        "requestsPerSecond": 120
+      },
+      "latency": {
+        "baseP95Ms": 45,
+        "baseP99Ms": 95
+      },
+      "resourceLimits": {
+        "cpu": "500m",
+        "memory": "512Mi"
+      },
+      "connectionPoolRef": "api-db",
+      "autoscale": {
+        "mode": "cpu",
+        "targetUtilizationPercent": 65,
+        "minReplicas": 4,
+        "maxReplicas": 16,
+        "scaleUpCooldownSeconds": 60,
+        "scaleDownCooldownSeconds": 300
+      }
+    },
+    {
+      "id": "queue-worker",
+      "kind": "stateless",
+      "moduleRef": "jobs",
+      "replicas": {
+        "min": 3,
+        "max": 15
+      },
+      "capacityPerReplica": {
+        "jobsPerSecond": 25
+      },
+      "latency": {
+        "baseP95Ms": 120,
+        "baseP99Ms": 260
+      },
+      "resourceLimits": {
+        "cpu": "500m",
+        "memory": "512Mi"
+      },
+      "autoscale": {
+        "mode": "queue-depth",
+        "targetQueueDepth": 100,
+        "minReplicas": 3,
+        "maxReplicas": 15,
+        "scaleUpCooldownSeconds": 30,
+        "scaleDownCooldownSeconds": 600
+      }
+    },
+    {
+      "id": "ai-gateway",
+      "kind": "stateless",
+      "moduleRef": "gateway",
+      "replicas": {
+        "min": 3,
+        "max": 12
+      },
+      "capacityPerReplica": {
+        "aiCallsPerSecond": 6
+      },
+      "latency": {
+        "baseP95Ms": 900,
+        "baseP99Ms": 2200
+      },
+      "resourceLimits": {
+        "cpu": "750m",
+        "memory": "1Gi"
+      },
+      "connectionPoolRef": "gateway-budget",
+      "autoscale": {
+        "mode": "cpu",
+        "targetUtilizationPercent": 70,
+        "minReplicas": 3,
+        "maxReplicas": 12,
+        "scaleUpCooldownSeconds": 120,
+        "scaleDownCooldownSeconds": 600
+      }
+    },
+    {
+      "id": "database",
+      "kind": "stateful",
+      "moduleRef": "persistence",
+      "replicas": {
+        "min": 3,
+        "max": 3
+      },
+      "capacityPerReplica": {
+        "writesPerSecond": 900,
+        "readsPerSecond": 4500
+      },
+      "latency": {
+        "baseP95Ms": 12,
+        "baseP99Ms": 32
+      },
+      "resourceLimits": {
+        "cpu": "2",
+        "memory": "4Gi"
+      },
+      "connectionPoolRef": "api-db",
+      "statefulScaling": {
+        "mode": "runbook-only",
+        "runbookRef": "stateful-scaling@1.0.0",
+        "multiActive": false,
+        "activeWriters": 1,
+        "replication": {
+          "mode": "synchronous",
+          "replicationLagMs": 8,
+          "replicas": 2
+        }
+      }
+    },
+    {
+      "id": "broker",
+      "kind": "stateful",
+      "moduleRef": "jobs",
+      "replicas": {
+        "min": 3,
+        "max": 3
+      },
+      "capacityPerReplica": {
+        "messagesPerSecond": 4000
+      },
+      "latency": {
+        "baseP95Ms": 20,
+        "baseP99Ms": 60
+      },
+      "resourceLimits": {
+        "cpu": "1",
+        "memory": "2Gi"
+      },
+      "statefulScaling": {
+        "mode": "runbook-only",
+        "runbookRef": "stateful-scaling@1.0.0",
+        "multiActive": true,
+        "activeWriters": 3,
+        "replication": {
+          "mode": "synchronous",
+          "replicationLagMs": 15,
+          "replicas": 2
+        }
+      }
+    },
+    {
+      "id": "object-store",
+      "kind": "stateful",
+      "moduleRef": "storage",
+      "replicas": {
+        "min": 3,
+        "max": 3
+      },
+      "capacityPerReplica": {
+        "writesPerSecond": 600,
+        "readsPerSecond": 3000
+      },
+      "latency": {
+        "baseP95Ms": 35,
+        "baseP99Ms": 120
+      },
+      "resourceLimits": {
+        "cpu": "1",
+        "memory": "2Gi"
+      },
+      "statefulScaling": {
+        "mode": "runbook-only",
+        "runbookRef": "stateful-scaling@1.0.0",
+        "multiActive": true,
+        "activeWriters": 3,
+        "replication": {
+          "mode": "synchronous",
+          "replicationLagMs": 25,
+          "replicas": 2
+        }
+      }
+    }
+  ],
+  "tenantQuotas": {
+    "default": {
+      "maxRequestsPerSecond": 400,
+      "maxConcurrentJobs": 50,
+      "maxStorageGb": 500,
+      "maxAiCallsPerDay": 20000,
+      "maxConnections": 100
+    },
+    "maxSharePercent": 40,
+    "fairness": {
+      "algorithm": "weighted-fair-queue",
+      "defaultWeight": 1,
+      "reservationPercent": 5
+    },
+    "onExceed": "reject"
+  },
+  "connectionPools": [
+    {
+      "id": "api-db",
+      "target": "database",
+      "maxConnectionsPerReplica": 20,
+      "reservedAdminConnections": 2,
+      "connectionTimeoutMs": 500,
+      "maxOverflow": 0
+    },
+    {
+      "id": "gateway-budget",
+      "target": "database",
+      "maxConnectionsPerReplica": 8,
+      "reservedAdminConnections": 1,
+      "connectionTimeoutMs": 750,
+      "maxOverflow": 0
+    }
+  ],
+  "backpressure": {
+    "queueDepthWarn": 750,
+    "queueDepthCritical": 1000,
+    "maxOldestAgeSeconds": 300,
+    "strategy": "pause-publishers",
+    "visible": true,
+    "onOverflow": "reject",
+    "durableBeforeAck": true
+  },
+  "cost": {
+    "currency": "DKK",
+    "perVcpuHour": 0.35,
+    "perGbMonth": 0.9,
+    "perAiCall": 0.02,
+    "perMillionRequests": 1.5,
+    "perMillionJobs": 8
+  },
+  "capacityReport": {
+    "scalingFactors": [
+      1,
+      2,
+      5
+    ],
+    "measurement": {
+      "mode": "deterministic-simulation",
+      "measured": false,
+      "reason": "Der findes ingen levende klynge, lastgenerator eller rigtige hosts i dette miljø. Modellen er deterministisk og bærer measured=false; en faktisk lasttest på mindst tre hosts kræver ekstern infrastruktur og en navngivet ejers godkendelse.",
+      "requiresLiveLoadTest": true
+    },
+    "liveEvidenceRef": "docs/capacity/live-load-test.md"
+  }
+}

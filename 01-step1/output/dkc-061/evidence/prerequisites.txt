@@ -1,0 +1,29 @@
+# Forudsætningskæde for DKC-061
+
+DKC-061 afhænger formelt af: DKC-014, DKC-031, DKC-053, DKC-054, DKC-057, DKC-059.
+Alle er verificeret i den anvendte stak (stak-tip DKC-059). Stakken lægges med
+dkc-059/apply.sh, som kæder dkc-031/apply.sh → dkc-030/apply.sh → … → dkc-001/apply.sh.
+Kæden fra DKC-059 dækker alle 60 gennemførte opgaver.
+
+Verificeret i kode:
+- DKC-014 (reproducerbare artefakter/signeret releasevej): release/artifacts.json,
+  release/trust/release-keys.json, supply-chain/, contracts/artifact-manifest.schema.json.
+- DKC-031 (migrations- og exitværktøjer): migration/{sources.json,policy.json,corpus/,
+  report/}, migration/src/*.mjs, docs/spec/migration.md.
+- DKC-053 (installationsprofiler og dependency-resolver): catalog/components/,
+  catalog/profiles/, catalog/platforms.json, distribution/src/resolver.mjs.
+- DKC-054 (installer og fælles konfiguration): installer/src/*.mjs,
+  configuration/{desired-state.json,host-scope.json,dev-keyring.json}.
+- DKC-057 (eksterne backupmål): backup/targets/, backup/src/target-*.mjs,
+  contracts/backup-target.schema.json.
+- DKC-059 (providerkontrakter og migrationskontrol): provider-registry/,
+  migration/src/provider-*.mjs, contracts/provider-*.schema.json.
+
+DKC-061 bygger ovenpå:
+- releasekatalog + EOL/revoked-håndtering ovenpå DKC-014/DKC-053.
+- opdateringsplan med migrationskontrol ovenpå distribution-resolveren (DKC-053),
+  installatøren (DKC-054) og migration/provider (DKC-031/DKC-059).
+- fjernelse med reverse-dependency-kontrol ovenpå distribution/src/resolver.mjs
+  (analyzeRemoval) og backup (DKC-057).
+- supportbundle ovenpå installer/src/diagnostics.mjs (DKC-054).
+- offlinepakke ovenpå gateway/routes.json (model-afhængigheder) og kataloget.

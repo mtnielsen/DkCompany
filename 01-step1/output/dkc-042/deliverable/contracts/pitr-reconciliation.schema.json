@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/pitr-reconciliation.schema.json",
+  "title": "Point-in-Time Recovery Reconciliation",
+  "description": "DKC-042: resultatet af en deterministisk PITR-rekonstruktion. Rapporten viser at et valgt tidspunkt rammes: hvilken base-backup der blev valgt, hvilke WAL-segmenter der blev afspillet, det sidste anvendte tidspunkt, datatabellenes rækkeantal og digest, samt en ACL-afstemning mellem den rekonstruerede tilstand og den forventede adgangsmatrix. En PITR der ikke rammer det valgte tidspunkt, eller hvor data og ACL ikke stemmer, giver en 'blocked'-status med en begrundelse. Rapporten er en deterministisk model og bærer `measured: false`.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "apiVersion",
+    "kind",
+    "recoveryId",
+    "engine",
+    "baseBackupId",
+    "baseBackupAt",
+    "walArchiveTarget",
+    "targetTime",
+    "appliedSegments",
+    "lastAppliedAt",
+    "withinRecoveryWindow",
+    "data",
+    "acl",
+    "applicationConsistency",
+    "measured",
+    "status",
+    "reasons"
+  ],
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "PitrReconciliation" },
+    "recoveryId": { "type": "string", "minLength": 3 },
+    "engine": { "enum": ["postgresql", "mysql", "mariadb"] },
+    "baseBackupId": { "type": "string", "minLength": 3 },
+    "baseBackupAt": { "type": "string", "format": "date-time" },
+    "walArchiveTarget": { "type": "string", "minLength": 3 },
+    "targetTime": { "type": "string", "format": "date-time" },
+    "appliedSegments": { "type": "integer", "minimum": 0 },
+    "lastAppliedAt": { "type": ["string", "null"], "format": "date-time" },
+    "withinRecoveryWindow": { "type": "boolean" },
+    "data": {
+      "type": "object",
+      "required": ["tables", "rowCounts", "digest"],
+      "additionalProperties": false,
+      "properties": {
+        "tables": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "rowCounts": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } },
+        "digest": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "acl": {
+      "type": "object",
+      "required": ["reconciled", "subject", "expected", "actual", "differences"],
+      "additionalProperties": false,
+      "properties": {
+        "reconciled": { "type": "boolean" },
+        "subject": { "type": "string", "minLength": 1 },
+        "expected": { "type": "object", "additionalProperties": { "type": "string" } },
+        "actual": { "type": "object", "additionalProperties": { "type": "string" } },
+        "differences": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 3 }
+        }
+      }
+    },
+    "applicationConsistency": {
+      "type": "object",
+      "required": ["quiesced", "includes", "maxPauseSeconds"],
+      "additionalProperties": false,
+      "properties": {
+        "quiesced": { "type": "boolean" },
+        "includes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["database", "objects", "config", "queue"] }
+        },
+        "maxPauseSeconds": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "measured": { "const": false },
+    "status": { "enum": ["pass", "blocked"] },
+    "reasons": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 3 }
+    }
+  }
+}

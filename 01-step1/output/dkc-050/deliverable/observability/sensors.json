@@ -1,0 +1,110 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "SensorRegistry",
+  "sensors": [
+    {
+      "id": "trivy-fs",
+      "kind": "scanner",
+      "source": "trivy",
+      "owner": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Security Owner" },
+      "scope": "platform",
+      "tenantScoped": false,
+      "required": true,
+      "expectedIntervalSeconds": 86400,
+      "maxAgeSeconds": 172800,
+      "runbook": "docs/runbooks/vulnerability-response.md",
+      "description": "Trivy filesystem- og image-scan. Forældede fund tælles ikke som grøn sikkerhedsstatus."
+    },
+    {
+      "id": "falco-runtime",
+      "kind": "runtime",
+      "source": "falco",
+      "owner": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Security Owner" },
+      "scope": "platform",
+      "tenantScoped": false,
+      "required": true,
+      "expectedIntervalSeconds": 300,
+      "maxAgeSeconds": 900,
+      "runbook": "docs/runbooks/vulnerability-response.md",
+      "description": "Falco runtime-sensor i klyngen."
+    },
+    {
+      "id": "wazuh-siem",
+      "kind": "runtime",
+      "source": "wazuh",
+      "owner": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Security Owner" },
+      "scope": "platform",
+      "tenantScoped": false,
+      "required": true,
+      "expectedIntervalSeconds": 300,
+      "maxAgeSeconds": 900,
+      "runbook": "docs/runbooks/vulnerability-response.md",
+      "description": "Wazuh SIEM-korrelation af logsignaler."
+    },
+    {
+      "id": "service-availability",
+      "kind": "metrics",
+      "source": "prometheus",
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "scope": "tenant",
+      "tenantScoped": true,
+      "required": true,
+      "expectedIntervalSeconds": 60,
+      "maxAgeSeconds": 300,
+      "runbook": "docs/runbooks/alerting.md",
+      "description": "Tilgængelighedsratio pr. tenant fra den kørende installation."
+    },
+    {
+      "id": "backup-drill",
+      "kind": "backup",
+      "source": "backup",
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "scope": "platform",
+      "tenantScoped": false,
+      "required": true,
+      "expectedIntervalSeconds": 604800,
+      "maxAgeSeconds": 1209600,
+      "runbook": "docs/runbooks/backup-restore.md",
+      "description": "Seneste gennemførte backup-/gendannelsesøvelse. En blokeret gate giver alarm."
+    },
+    {
+      "id": "audit-journal",
+      "kind": "log",
+      "source": "audit-journal",
+      "owner": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Security Owner" },
+      "scope": "platform",
+      "tenantScoped": false,
+      "required": true,
+      "expectedIntervalSeconds": 300,
+      "maxAgeSeconds": 900,
+      "runbook": "docs/runbooks/alerting.md",
+      "description": "Audit-journalens holdbarhed. Et logsvigt er fail-closed og giver alarm."
+    },
+    {
+      "id": "credential-revocation",
+      "kind": "credentials",
+      "source": "credentials",
+      "owner": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Security Owner" },
+      "scope": "platform",
+      "tenantScoped": false,
+      "required": true,
+      "expectedIntervalSeconds": 86400,
+      "maxAgeSeconds": 172800,
+      "runbook": "docs/runbooks/key-management.md",
+      "description": "Øvelse i nøglerevokation og nødstop. En fejlet revokation giver alarm."
+    },
+    {
+      "id": "capacity-saturation",
+      "kind": "metrics",
+      "source": "prometheus",
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "scope": "tenant",
+      "tenantScoped": true,
+      "required": true,
+      "expectedIntervalSeconds": 60,
+      "maxAgeSeconds": 300,
+      "runbook": "docs/runbooks/stateful-scaling.md",
+      "description": "Kapacitets- og køutilisering pr. workload og tenant. Et faresignal udløser backpressure, aldrig en automatisk mutation."
+    }
+  ]
+}

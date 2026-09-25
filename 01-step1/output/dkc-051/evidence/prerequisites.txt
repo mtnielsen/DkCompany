@@ -1,0 +1,26 @@
+DKC-051 forudsætningskæde — verificeret i den anvendte stak (DKC-050-tip + DKC-051)
+Reviewbase: 5f9fa73457d22583b9948611d5cc3afffec4ae38 (5f9fa73)
+Undersøgt checkout: 83ad91a963d8055f77c29fb4361455689df95acb (83ad91a)
+Stak-tip før DKC-051: DKC-050 (dkc-050/apply.sh)
+
+DKC-042 (uafhængig backup, PITR og katastrofegendannelse):
+  FOUND  DR-plan -> backup/dr/disaster-recovery-plan.json
+  FOUND  DR-øvelse -> backup/src/dr/drill.mjs
+  FOUND  PITR -> backup/src/dr/pitr.mjs
+DKC-043 (sikker deduplikering og kontrolleret oprydning):
+  FOUND  dedup-politik -> dedup/dedup-policy.json
+  FOUND  dedup-store med prune -> dedup/src/store.mjs
+DKC-046 (begrænset selvreparation):
+  FOUND  remediation state machine/budget -> runtime/src/remediation.mjs
+DKC-049 (komplet logging):
+  FOUND  loggepolitik -> logging/logging-policy.json
+  FOUND  log-ledger -> logging/src/ledger.mjs
+DKC-050 (kapacitet og vandret skalering):
+  FOUND  kapacitetsplan -> performance/capacity-plan.json
+  FOUND  kapacitetsprojektion -> performance/src/projection.mjs
+Genbrugte fejlmodeller:
+  FOUND  HA-plan (DKC-038) -> infrastructure/ha-plan.json
+  FOUND  database-HA-plan (DKC-039) -> persistence/ha-plan.json
+  FOUND  beskedtopologi (DKC-040) -> jobs/messaging.json
+  FOUND  lagerplan (DKC-041) -> storage/storage-plan.json
+  FOUND  immutable-politik (DKC-048) -> data-protection/enforcement/immutable-policy.json

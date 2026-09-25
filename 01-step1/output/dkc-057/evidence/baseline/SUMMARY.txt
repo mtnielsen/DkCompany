@@ -1,0 +1,15 @@
+DKC-057 baseline — DKC-001 .. DKC-016 + DKC-057
+================================================
+Commit: 83ad91a963d8055f77c29fb4361455689df95acb
+Node:   v22.22.1
+Result: FAIL — 94 pass, 1 fail, 20 not run, 0 error (115 checks)
+
+Den ene FAIL er den kendte, forudgående `changelog-check` (manglende DCO
+sign-off, inkl. 83ad91a). Den er dokumenteret og ikke ændret i DKC-057.
+
+Nye checks i DKC-057:
+  backup-target-check                 PASS (contract)
+  backup-target-test                  PASS (mock)
+  integration-backup-external-target  NOT RUN (integration, external)
+
+Kilde: .conformance-out/baseline/latest.json (runs/ og logs/ følger med).

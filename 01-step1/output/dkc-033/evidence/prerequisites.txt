@@ -1,0 +1,76 @@
+DKC-016 (backup/restore)
+  OK  backup/src/drill.mjs
+  OK  backup/src/restore.mjs
+  OK  backup/test/drill.test.mjs
+
+DKC-017 (observability)
+  OK  observability/src/sensors.mjs
+  OK  observability/sensors.json
+  OK  observability/test/sensors.test.mjs
+
+DKC-018 (evidence modes)
+  OK  evidence/src/probes.mjs
+  OK  conformance/src/evidence-mode.mjs
+  OK  contracts/evidence-record.schema.json
+
+DKC-022 (assurance/evidence register)
+  OK  compliance/src/assurance.mjs
+  OK  compliance/assurance-register.json
+  OK  evidence/records/assurance-access-review.evidence.json
+
+DKC-024 (adapter live)
+  OK  adapter-sdk/src/live-cli.mjs
+  OK  adapter-sdk/test/live.test.mjs
+  OK  contracts/upstream-upgrade-plan.schema.json
+
+DKC-025 (portal/customer lifecycle)
+  OK  portal/src/cli.mjs
+  OK  contracts/tenant-lifecycle.schema.json
+  OK  contracts/customer-order.schema.json
+
+DKC-026 (nextcloud adapter)
+  OK  modules/nextcloud-adapter/service/src
+  OK  conformance/test/nextcloud-adapter-conformance.test.mjs
+  OK  continuity/service-classes/nextcloud-adapter.service-class.json
+
+DKC-027 (openproject adapter)
+  OK  modules/openproject-adapter/service/src
+  OK  conformance/test/openproject-adapter-conformance.test.mjs
+  OK  continuity/service-classes/openproject-adapter.service-class.json
+
+DKC-028 (search)
+  OK  search/src/cli.mjs
+  OK  contracts/knowledge-document.schema.json
+  OK  conformance/src/search.mjs
+
+DKC-029 (helpdesk)
+  OK  helpdesk/src/cli.mjs
+  OK  contracts/support-ticket.schema.json
+  OK  conformance/src/helpdesk.mjs
+
+DKC-030 (crm)
+  OK  crm/src/cli.mjs
+  OK  contracts/crm-record.schema.json
+  OK  conformance/src/crm.mjs
+
+DKC-031 (migration/exit)
+  OK  migration/src/import.mjs
+  OK  migration/src/export.mjs
+  OK  conformance/test/migration-conformance.test.mjs
+
+DKC-032 (shadow autonomy)
+  OK  shadow/src/cli.mjs
+  OK  contracts/autonomy-grant.schema.json
+  OK  conformance/test/shadow-conformance.test.mjs
+
+DKC-062 (installation acceptance)
+  OK  distribution/src/acceptance-gate.mjs
+  OK  distribution/acceptance/gate-policy.json
+  OK  conformance/test/acceptance-conformance.test.mjs
+
+DKC-065 (security assessment)
+  OK  security-assessment/src/harness.mjs
+  OK  security-assessment/assessment.json
+  OK  conformance/test/pentest-conformance.test.mjs
+
+Konklusion: alle forudsætningers leverancer findes.

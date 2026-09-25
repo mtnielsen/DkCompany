@@ -1,0 +1,261 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "CrmReport",
+  "metadata": {
+    "name": "platform-crm-report",
+    "version": "1.0.0",
+    "description": "Deterministisk rapport for CRM med entydigt ejerskab af kundedata: kandidatcheck, stabil tenantafgrænset reference, import/opdatering/eksport, idempotent retry, dublethåndtering uden automatisk fletning, rollebeskyttelse, tværgående sletning med retention og kopier samt backup/gendannelse.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner"
+      }
+    },
+    "labels": {
+      "tier": "adapter",
+      "upstream": "espocrm",
+      "wave": "4"
+    }
+  },
+  "generatedAt": "2026-03-01T00:00:00Z",
+  "measured": false,
+  "persistedStoreReloaded": true,
+  "activityDigest": "1ac9c60e195a841257dae9af8cc249643da401ffb4e70ee25d6c94f22796e83f",
+  "totals": {
+    "records": 2,
+    "tenants": 1,
+    "contacts": 1,
+    "accounts": 1,
+    "opportunities": 0,
+    "activities": 3
+  },
+  "scenarios": [
+    {
+      "id": "candidate-check",
+      "problems": [],
+      "principal": "platform:architecture",
+      "tenant": null,
+      "visible": [
+        "espocrm:8",
+        "erpnext:6"
+      ],
+      "hidden": [],
+      "selected": "espocrm"
+    },
+    {
+      "id": "import-update-export",
+      "problems": [],
+      "principal": "oidc|ada.acme",
+      "tenant": "acme",
+      "visible": [
+        "crm:acme:Contact:9001"
+      ],
+      "hidden": [],
+      "reference": "crm:acme:Contact:9001"
+    },
+    {
+      "id": "retry-no-duplicates",
+      "problems": [],
+      "principal": "platform:import",
+      "tenant": "acme",
+      "visible": [
+        "crm:acme:Contact:9002"
+      ],
+      "hidden": []
+    },
+    {
+      "id": "dedup-conflict-not-merged",
+      "problems": [],
+      "principal": "platform:dedup",
+      "tenant": "acme",
+      "visible": [
+        "crm:acme:Contact:9003"
+      ],
+      "hidden": [
+        "crm:acme:Contact:2999"
+      ],
+      "dedupKey": "5d7a32e1e85177b4bed1ab3ae880aa9c1467074e98c7bf33d3ebb37fa0eda4b6"
+    },
+    {
+      "id": "role-protection-and-isolation",
+      "problems": [],
+      "principal": "oidc|ada.acme + oidc|gus.globex",
+      "tenant": "acme/globex",
+      "visible": [
+        "crm:acme:Account:1001",
+        "crm:acme:Account:1002",
+        "crm:acme:Contact:2001",
+        "crm:acme:Contact:2002",
+        "crm:acme:Opportunity:3001",
+        "crm:acme:Activity:4001",
+        "crm:acme:Contact:9001",
+        "crm:acme:Contact:9002",
+        "crm:acme:Contact:9003"
+      ],
+      "hidden": [
+        "crm:globex:Account:5001"
+      ]
+    },
+    {
+      "id": "cross-cutting-deletion",
+      "problems": [],
+      "principal": "oidc|ada.acme",
+      "tenant": "acme",
+      "visible": [],
+      "hidden": [
+        "crm:acme:Account:1001",
+        "crm:acme:Account:1002"
+      ],
+      "deletion": {
+        "status": "partial",
+        "remainingCopies": 1
+      }
+    },
+    {
+      "id": "backup-and-recovery",
+      "problems": [],
+      "principal": "platform:backup",
+      "tenant": "acme",
+      "visible": [],
+      "hidden": []
+    }
+  ],
+  "candidateSample": {
+    "candidates": [
+      {
+        "product": "espocrm",
+        "file": "integration-candidate.espocrm.example.json",
+        "name": "EspoCRM",
+        "exactVersion": "8.4.2",
+        "score": 8,
+        "reasons": [
+          "OIDC-SSO",
+          "dokumenteret REST-API",
+          "dedikeret database pr. tenant",
+          "API-eksport",
+          "fri/åben kerne"
+        ],
+        "gateStatus": "blocked",
+        "blockers": [
+          "kandidaten er ikke godkendt af et navngivet menneske"
+        ]
+      },
+      {
+        "product": "erpnext",
+        "file": "integration-candidate.erpnext.example.json",
+        "name": "ERPNext",
+        "exactVersion": "15.42.0",
+        "score": 6,
+        "reasons": [
+          "OIDC-SSO",
+          "dokumenteret REST-API",
+          "API-eksport",
+          "fri/åben kerne"
+        ],
+        "gateStatus": "blocked",
+        "blockers": [
+          "kandidaten er ikke godkendt af et navngivet menneske"
+        ]
+      }
+    ],
+    "selected": "espocrm",
+    "selectedScore": 8,
+    "matchesDeclaration": true
+  },
+  "recordSample": {
+    "apiVersion": "contracts.platform/v1alpha1",
+    "kind": "CrmRecord",
+    "id": "crm:acme:Contact:9001",
+    "reference": "crm:acme:Contact:9001",
+    "sourceId": "espocrm-acme",
+    "tenantId": "acme",
+    "entityType": "Contact",
+    "upstreamId": "9001",
+    "owner": {
+      "subject": "oidc|ada.acme",
+      "tenantId": "acme",
+      "role": null
+    },
+    "name": "Dora Dublet Jensen",
+    "classification": "personal",
+    "acl": {
+      "readGroups": [],
+      "readSubjects": [],
+      "denyGroups": [],
+      "denySubjects": []
+    },
+    "roles": [
+      "sales",
+      "support"
+    ],
+    "dedupKey": "401ba3bef3d6444d7182212754248b20301bc4878aa66d89a5e99e1e8403fddb",
+    "version": 2,
+    "data": {
+      "id": "9001",
+      "version": 2,
+      "createdAt": "2026-03-01T00:00:00Z",
+      "updatedAt": "2026-03-01T00:00:00Z",
+      "name": "Dora Dublet Jensen",
+      "emailAddress": "dora@acme-nord.example",
+      "accountId": "1001",
+      "classification": "personal",
+      "assignedUser": "oidc|ada.acme"
+    },
+    "copies": [],
+    "createdAt": "2026-03-01T00:00:00Z",
+    "updatedAt": "2026-03-01T00:00:00Z",
+    "deletedAt": "2026-03-01T00:00:00Z"
+  },
+  "deletionSample": {
+    "apiVersion": "contracts.platform/v1alpha1",
+    "kind": "CrmDeletionReceipt",
+    "tenantId": "acme",
+    "accountReference": "crm:acme:Account:1001",
+    "entityType": "Account",
+    "reason": "kundeanmodning",
+    "status": "partial",
+    "legalHoldId": null,
+    "relatedRecords": 6,
+    "surfaces": {
+      "primary": {
+        "status": "full",
+        "recordsAffected": 7
+      },
+      "activities": {
+        "status": "full",
+        "recordsAffected": 8
+      },
+      "index": {
+        "status": "full",
+        "recordsAffected": 7
+      },
+      "copies": {
+        "status": "full",
+        "recordsAffected": 1
+      },
+      "backup": {
+        "status": "partial",
+        "recordsAffected": 0
+      }
+    },
+    "remainingCopies": [
+      {
+        "kind": "backup",
+        "resource": "copies/backup/crm_acme_Account_1001.json",
+        "reason": "WORM-låst backup indtil retentionen udløber",
+        "expiresAt": "2026-05-30T00:00:00.000Z"
+      }
+    ],
+    "createdAt": "2026-03-01T00:00:00Z"
+  },
+  "backup": {
+    "ok": true,
+    "recordsBefore": 2,
+    "recordsAfter": 2
+  },
+  "policyRef": "crm/policy.json"
+}

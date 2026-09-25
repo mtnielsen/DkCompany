@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "1.0",
+  "kind": "TelemetryEnvelope",
+  "id": "env-metric-0001",
+  "occurredAt": "2025-09-01T10:00:00Z",
+  "signal": "metric",
+  "source": {
+    "id": "otel-collector",
+    "kind": "otel",
+    "version": "0.110.0"
+  },
+  "scope": {
+    "tenantId": "acme",
+    "environment": "staging",
+    "service": "dummy-ok"
+  },
+  "resource": "res://acme/service/dummy-ok",
+  "relations": {
+    "environment": "res://platform/environment/staging",
+    "version": "res://acme/version/1.4.2",
+    "trace": "res://acme/trace/0123456789abcdef0123456789abcdef"
+  },
+  "dataClassification": "operational",
+  "otel": {
+    "metric": {
+      "name": "http_requests_total",
+      "value": 1200,
+      "unit": "1"
+    },
+    "attributes": {
+      "status": "200"
+    }
+  },
+  "labels": {
+    "module": "dummy-ok",
+    "status": "200"
+  }
+}

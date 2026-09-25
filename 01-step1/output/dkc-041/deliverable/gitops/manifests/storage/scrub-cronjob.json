@@ -1,0 +1,55 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "CronJob",
+  "metadata": {
+    "name": "storage-scrub",
+    "namespace": "platform-storage",
+    "labels": {
+      "app.kubernetes.io/name": "storage-scrub",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "storage-scrub",
+      "platform.example.org/environment": "storage"
+    }
+  },
+  "spec": {
+    "schedule": "0 */24 * * *",
+    "concurrencyPolicy": "Forbid",
+    "jobTemplate": {
+      "spec": {
+        "template": {
+          "metadata": {
+            "labels": {
+              "app.kubernetes.io/name": "storage-scrub",
+              "app.kubernetes.io/managed-by": "argocd",
+              "platform.example.org/module": "storage-scrub",
+              "platform.example.org/environment": "storage"
+            }
+          },
+          "spec": {
+            "restartPolicy": "OnFailure",
+            "containers": [
+              {
+                "name": "scrub",
+                "image": "ghcr.io/example/platform-storage@sha256:0000000000000000000000000000000000000000000000000000000000000000",
+                "args": [
+                  "scrub",
+                  "--repair"
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "100m",
+                    "memory": "128Mi"
+                  },
+                  "limits": {
+                    "cpu": "500m",
+                    "memory": "512Mi"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

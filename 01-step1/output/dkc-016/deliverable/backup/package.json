@@ -1,0 +1,12 @@
+{
+  "name": "@platform/backup",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "DKC-016: krypterede backups af database, objekter og konfiguration med separat nøgleadgang, isoleret gendannelse, checksums, funktionelle checks, suppressionsjournal og målt RPO/RTO.",
+  "scripts": {
+    "test": "node --test",
+    "check": "node src/check.mjs",
+    "drill": "node src/cli.mjs drill"
+  }
+}

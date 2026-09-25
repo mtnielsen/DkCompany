@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/provider-preflight.schema.json",
+  "title": "Provider Preflight",
+  "description": "DKC-059: resultatet af en versionsforhandling og kompatibilitetsklassificering før et providerskift. Preflight'en afgør om skiftet er tilladt, hvilke obligatoriske capabilities der mangler, om en sikkerhedskritisk semantik nedgraderes, og hvilke mappings, godkendelser og rollback der kræves. En forbindelsesstreng — også en identisk — ændrer aldrig afgørelsen.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "from", "to", "class", "mode", "status", "allowed", "connectionStringMatches", "connectionStringNeverBypassesGate", "negotiation", "problems", "requiredMappings", "cutover"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "ProviderPreflight" },
+    "from": { "type": "string", "minLength": 2 },
+    "to": { "type": "string", "minLength": 2 },
+    "class": { "enum": ["iam", "modelprovider", "database", "storage", "backup", "queue", "apps", null] },
+    "mode": { "enum": ["drop-in", "planned-migration", "unsupported"] },
+    "status": { "enum": ["supported", "degraded", "unsupported"] },
+    "allowed": { "type": "boolean" },
+    "connectionString": { "type": ["string", "null"] },
+    "connectionStringMatches": { "type": "boolean" },
+    "connectionStringNeverBypassesGate": { "const": true },
+    "negotiation": { "$ref": "#/$defs/negotiation" },
+    "problems": { "type": "array", "items": { "$ref": "#/$defs/problem" } },
+    "requiredMappings": {
+      "type": "object",
+      "required": ["data", "ids", "acl", "migrationProof"],
+      "additionalProperties": false,
+      "properties": {
+        "data": { "type": "boolean" },
+        "ids": { "type": "boolean" },
+        "acl": { "type": "boolean" },
+        "migrationProof": { "type": "boolean" }
+      }
+    },
+    "cutover": {
+      "type": "object",
+      "required": ["requiresHumanApproval", "requiresRollback", "oldProviderReadOnly", "revokeCredentials"],
+      "additionalProperties": false,
+      "properties": {
+        "requiresHumanApproval": { "type": "boolean" },
+        "requiresRollback": { "type": "boolean" },
+        "oldProviderReadOnly": { "type": "boolean" },
+        "revokeCredentials": { "type": "boolean" }
+      }
+    }
+  },
+  "$defs": {
+    "problem": {
+      "type": "object",
+      "required": ["code", "message"],
+      "additionalProperties": true,
+      "properties": {
+        "code": { "type": "string", "minLength": 2 },
+        "message": { "type": "string", "minLength": 3 }
+      }
+    },
+    "negotiation": {
+      "type": "object",
+      "required": ["status", "problems", "capabilities", "degradations", "connectionIgnored"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "enum": ["supported", "degraded", "unsupported"] },
+        "problems": { "type": "array", "items": { "$ref": "#/$defs/problem" } },
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "mandatory", "securityCritical", "source", "target"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string" },
+              "mandatory": { "type": "boolean" },
+              "securityCritical": { "type": "boolean" },
+              "source": { "type": ["object", "null"] },
+              "target": { "type": ["object", "null"] }
+            }
+          }
+        },
+        "degradations": { "type": "array", "items": { "type": "object" } },
+        "connectionIgnored": { "type": "boolean" }
+      }
+    }
+  }
+}

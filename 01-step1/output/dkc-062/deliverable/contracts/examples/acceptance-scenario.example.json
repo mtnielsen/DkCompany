@@ -1,0 +1,39 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "AcceptanceScenarioSet",
+  "metadata": {
+    "name": "acceptance-scenario-example",
+    "version": "1.0.0",
+    "description": "Eksempel på en kørbar brugerrejse for en ren installation på en lokal server.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+    }
+  },
+  "scenarios": [
+    {
+      "id": "install-clean-small-vps-local",
+      "title": "Ren installation på lokal server (small-vps)",
+      "journey": "install",
+      "profileRef": "small-vps",
+      "platformRef": "linux-amd64-node22",
+      "target": "local-server",
+      "selection": [],
+      "steps": [
+        { "id": "preflight", "action": "preflight", "expected": "ok" },
+        { "id": "plan", "action": "plan", "expected": "ok" },
+        { "id": "install", "action": "install", "expected": "ok", "humanApproval": true },
+        { "id": "verify", "action": "verify", "expected": "ok" }
+      ],
+      "evidenceLevel": "fixture",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+      }
+    }
+  ]
+}

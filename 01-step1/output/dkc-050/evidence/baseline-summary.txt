@@ -1,0 +1,13 @@
+Baseline: 204 checks, 158 PASS, 1 FAIL, 0 error, 45 NOT RUN
+Run: 2026-09-24T13-22-00-990Z-83ad91a.json
+Repo: /tmp/dkc-050/00-core
+
+FAIL:
+  - changelog-check: 
+
+DKC-050-checks:
+  - performance-check: pass
+  - performance-test: pass
+  - performance-drill: pass
+  - performance-render: pass
+  - integration-live-load-test: not-run

@@ -1,0 +1,501 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ModuleRegistrationReport",
+  "metadata": {
+    "name": "platform-module-registration-report",
+    "version": "1.0.0",
+    "description": "Deterministisk modulregistrering for økonomi, HR, tid, fakturering og handel: familier, kandidatrapporter, dækningsmatrix for dansk lokalisering, adaptergrænseflader, resolver-integration og fail-closed gates. Rapporten registrerer katalogposter — den erklærer ikke en fungerende forretningsapplikation.",
+    "accountableHuman": {
+      "subject": "oidc|cecilia.christensen",
+      "name": "Cecilia Christensen",
+      "role": "Service Owner",
+      "substitute": {
+        "subject": "oidc|david.dahl",
+        "name": "David Dahl",
+        "role": "Service Owner"
+      }
+    },
+    "labels": {
+      "tier": "business-modules",
+      "wave": "6"
+    }
+  },
+  "generatedAt": "2026-03-01T00:00:00Z",
+  "measured": false,
+  "families": [
+    {
+      "id": "finance",
+      "title": "Økonomi/ERP",
+      "order": 1,
+      "familyStatus": "pending-legal-review",
+      "danishReady": false,
+      "components": [
+        "finance"
+      ],
+      "adapterInterface": "finance-ledger",
+      "candidate": {
+        "selected": "Tryton",
+        "gateStatus": "blocked",
+        "matchesDeclaration": true,
+        "candidates": [
+          {
+            "product": "Tryton",
+            "candidateRef": "integration-candidate.tryton.example.json",
+            "declaredSelected": true,
+            "score": 8,
+            "reasons": [
+              "OIDC-SSO",
+              "dokumenteret REST-API",
+              "dedikeret database pr. tenant",
+              "API-eksport",
+              "fri/åben kerne"
+            ],
+            "gateStatus": "blocked",
+            "blockers": [
+              "kandidaten er ikke godkendt af et navngivet menneske"
+            ]
+          },
+          {
+            "product": "ERPNext",
+            "candidateRef": "integration-candidate.erpnext.example.json",
+            "declaredSelected": false,
+            "score": 6,
+            "reasons": [
+              "OIDC-SSO",
+              "dokumenteret REST-API",
+              "API-eksport",
+              "fri/åben kerne"
+            ],
+            "gateStatus": "blocked",
+            "blockers": [
+              "kandidaten er ikke godkendt af et navngivet menneske"
+            ]
+          }
+        ]
+      },
+      "pendingGates": [
+        {
+          "id": "accounting",
+          "status": "unreviewed"
+        },
+        {
+          "id": "vat",
+          "status": "unreviewed"
+        },
+        {
+          "id": "payment",
+          "status": "unreviewed"
+        }
+      ],
+      "advisoryGates": [
+        {
+          "id": "agreements",
+          "status": "unreviewed"
+        },
+        {
+          "id": "authoritative-registers",
+          "status": "unreviewed"
+        }
+      ],
+      "payment": {
+        "gate": "pending",
+        "approved": false,
+        "allowedScopes": [
+          "payments:read",
+          "payments:write",
+          "refunds:write"
+        ],
+        "deniedScopes": [
+          "bank:full-access",
+          "accounts:full-access",
+          "payments:admin",
+          "cards:read"
+        ]
+      },
+      "interfaceProblems": []
+    },
+    {
+      "id": "invoicing",
+      "title": "Fakturering",
+      "order": 2,
+      "familyStatus": "pending-legal-review",
+      "danishReady": false,
+      "components": [
+        "invoicing"
+      ],
+      "adapterInterface": "invoicing",
+      "candidate": {
+        "selected": "Invoice Ninja",
+        "gateStatus": "blocked",
+        "matchesDeclaration": true,
+        "candidates": [
+          {
+            "product": "Invoice Ninja",
+            "candidateRef": "integration-candidate.invoiceninja.example.json",
+            "declaredSelected": true,
+            "score": 7,
+            "reasons": [
+              "OIDC-SSO",
+              "dokumenteret REST-API",
+              "dedikeret database pr. tenant",
+              "API-eksport"
+            ],
+            "gateStatus": "blocked",
+            "blockers": [
+              "kandidaten er ikke godkendt af et navngivet menneske"
+            ]
+          }
+        ]
+      },
+      "pendingGates": [
+        {
+          "id": "e-invoicing",
+          "status": "unreviewed"
+        },
+        {
+          "id": "vat",
+          "status": "unreviewed"
+        },
+        {
+          "id": "accounting",
+          "status": "unreviewed"
+        },
+        {
+          "id": "payment",
+          "status": "unreviewed"
+        }
+      ],
+      "advisoryGates": [
+        {
+          "id": "agreements",
+          "status": "unreviewed"
+        }
+      ],
+      "payment": {
+        "gate": "pending",
+        "approved": false,
+        "allowedScopes": [
+          "payments:read",
+          "payments:write",
+          "refunds:write"
+        ],
+        "deniedScopes": [
+          "bank:full-access",
+          "accounts:full-access",
+          "payments:admin",
+          "cards:read"
+        ]
+      },
+      "interfaceProblems": []
+    },
+    {
+      "id": "hr",
+      "title": "HR og personaledata",
+      "order": 3,
+      "familyStatus": "pending-legal-review",
+      "danishReady": false,
+      "components": [
+        "hr"
+      ],
+      "adapterInterface": "payroll",
+      "candidate": {
+        "selected": "Frappe HR",
+        "gateStatus": "blocked",
+        "matchesDeclaration": true,
+        "candidates": [
+          {
+            "product": "Frappe HR",
+            "candidateRef": "integration-candidate.frappe-hr.example.json",
+            "declaredSelected": true,
+            "score": 8,
+            "reasons": [
+              "OIDC-SSO",
+              "dokumenteret REST-API",
+              "dedikeret database pr. tenant",
+              "API-eksport",
+              "fri/åben kerne"
+            ],
+            "gateStatus": "blocked",
+            "blockers": [
+              "kandidaten er ikke godkendt af et navngivet menneske"
+            ]
+          }
+        ]
+      },
+      "pendingGates": [
+        {
+          "id": "payroll",
+          "status": "unreviewed"
+        }
+      ],
+      "advisoryGates": [
+        {
+          "id": "agreements",
+          "status": "unreviewed"
+        },
+        {
+          "id": "authoritative-registers",
+          "status": "unreviewed"
+        }
+      ],
+      "payment": null,
+      "interfaceProblems": []
+    },
+    {
+      "id": "time",
+      "title": "Tid",
+      "order": 4,
+      "familyStatus": "registered",
+      "danishReady": false,
+      "components": [
+        "time"
+      ],
+      "adapterInterface": "time-tracking",
+      "candidate": {
+        "selected": "Kimai",
+        "gateStatus": "blocked",
+        "matchesDeclaration": true,
+        "candidates": [
+          {
+            "product": "Kimai",
+            "candidateRef": "integration-candidate.kimai.example.json",
+            "declaredSelected": true,
+            "score": 8,
+            "reasons": [
+              "OIDC-SSO",
+              "dokumenteret REST-API",
+              "dedikeret database pr. tenant",
+              "API-eksport",
+              "fri/åben kerne"
+            ],
+            "gateStatus": "blocked",
+            "blockers": [
+              "kandidaten er ikke godkendt af et navngivet menneske"
+            ]
+          }
+        ]
+      },
+      "pendingGates": [],
+      "advisoryGates": [
+        {
+          "id": "agreements",
+          "status": "unreviewed"
+        },
+        {
+          "id": "authoritative-registers",
+          "status": "unreviewed"
+        }
+      ],
+      "payment": null,
+      "interfaceProblems": []
+    },
+    {
+      "id": "commerce",
+      "title": "Handel/webshop",
+      "order": 5,
+      "familyStatus": "pending-legal-review",
+      "danishReady": false,
+      "components": [
+        "webshop"
+      ],
+      "adapterInterface": "commerce-catalog",
+      "candidate": {
+        "selected": "Medusa",
+        "gateStatus": "blocked",
+        "matchesDeclaration": true,
+        "candidates": [
+          {
+            "product": "Medusa",
+            "candidateRef": "integration-candidate.medusa.example.json",
+            "declaredSelected": true,
+            "score": 8,
+            "reasons": [
+              "OIDC-SSO",
+              "dokumenteret REST-API",
+              "dedikeret database pr. tenant",
+              "API-eksport",
+              "fri/åben kerne"
+            ],
+            "gateStatus": "blocked",
+            "blockers": [
+              "kandidaten er ikke godkendt af et navngivet menneske"
+            ]
+          }
+        ]
+      },
+      "pendingGates": [
+        {
+          "id": "vat",
+          "status": "unreviewed"
+        },
+        {
+          "id": "payment",
+          "status": "unreviewed"
+        }
+      ],
+      "advisoryGates": [
+        {
+          "id": "agreements",
+          "status": "unreviewed"
+        }
+      ],
+      "payment": {
+        "gate": "pending",
+        "approved": false,
+        "allowedScopes": [
+          "payments:read",
+          "payments:write",
+          "refunds:write"
+        ],
+        "deniedScopes": [
+          "bank:full-access",
+          "accounts:full-access",
+          "payments:admin",
+          "cards:read"
+        ]
+      },
+      "interfaceProblems": []
+    }
+  ],
+  "coverageMatrix": [
+    {
+      "family": "commerce",
+      "requirement": "agreements",
+      "status": "unsupported",
+      "reviewStatus": "unreviewed",
+      "blocksDanishReady": false
+    },
+    {
+      "family": "commerce",
+      "requirement": "payment",
+      "status": "unsupported",
+      "reviewStatus": "unreviewed",
+      "blocksDanishReady": true
+    },
+    {
+      "family": "commerce",
+      "requirement": "vat",
+      "status": "unsupported",
+      "reviewStatus": "unreviewed",
+      "blocksDanishReady": true
+    },
+    {
+      "family": "finance",
+      "requirement": "accounting",
+      "status": "unsupported",
+      "reviewStatus": "unreviewed",
+      "blocksDanishReady": true
+    },
+    {
+      "family": "finance",
+      "requirement": "agreements",
+      "status": "unsupported",
+      "reviewStatus": "unreviewed",
+      "blocksDanishReady": false
+    },
+    {
+      "family": "finance",
+      "requirement": "authoritative-registers",
+      "status": "unsupported",
+      "reviewStatus": "unreviewed",
+      "blocksDanishReady": false
+    },
+    {
+      "family": "finance",
+      "requirement": "payment",
+      "status": "unsupported",
+      "reviewStatus": "unreviewed",
+      "blocksDanishReady": true
+    },
+    {
+      "family": "finance",
+      "requirement": "vat",
+      "status": "unsupported",
+      "reviewStatus": "unreviewed",
+      "blocksDanishReady": true
+    },
+    {
+      "family": "hr",
+      "requirement": "agreements",
+      "status": "unsupported",
+      "reviewStatus": "unreviewed",
+      "blocksDanishReady": false
+    },
+    {
+      "family": "hr",
+      "requirement": "authoritative-registers",
+      "status": "unsupported",
+      "reviewStatus": "unreviewed",
+      "blocksDanishReady": false
+    },
+    {
+      "family": "hr",
+      "requirement": "payroll",
+      "status": "unsupported",
+      "reviewStatus": "unreviewed",
+      "blocksDanishReady": true
+    },
+    {
+      "family": "invoicing",
+      "requirement": "accounting",
+      "status": "unsupported",
+      "reviewStatus": "unreviewed",
+      "blocksDanishReady": true
+    },
+    {
+      "family": "invoicing",
+      "requirement": "agreements",
+      "status": "unsupported",
+      "reviewStatus": "unreviewed",
+      "blocksDanishReady": false
+    },
+    {
+      "family": "invoicing",
+      "requirement": "e-invoicing",
+      "status": "unsupported",
+      "reviewStatus": "unreviewed",
+      "blocksDanishReady": true
+    },
+    {
+      "family": "invoicing",
+      "requirement": "payment",
+      "status": "unsupported",
+      "reviewStatus": "unreviewed",
+      "blocksDanishReady": true
+    },
+    {
+      "family": "invoicing",
+      "requirement": "vat",
+      "status": "unsupported",
+      "reviewStatus": "unreviewed",
+      "blocksDanishReady": true
+    },
+    {
+      "family": "time",
+      "requirement": "agreements",
+      "status": "unsupported",
+      "reviewStatus": "unreviewed",
+      "blocksDanishReady": false
+    },
+    {
+      "family": "time",
+      "requirement": "authoritative-registers",
+      "status": "unsupported",
+      "reviewStatus": "unreviewed",
+      "blocksDanishReady": false
+    }
+  ],
+  "summary": {
+    "families": 5,
+    "pendingLegalReview": 4,
+    "registered": 1,
+    "danishReady": 0,
+    "coverage": {
+      "full": 0,
+      "partial": 0,
+      "unsupported": 18
+    },
+    "resolvable": 5,
+    "unresolved": 0
+  }
+}

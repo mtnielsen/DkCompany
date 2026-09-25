@@ -1,0 +1,23 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "LogAccessDecision",
+  "id": "7f1d2c3a-1111-4a2b-9c3d-000000000010",
+  "at": "2026-09-16T21:20:00.000Z",
+  "reader": {
+    "subject": "oidc|auditor@example.org",
+    "roles": ["auditor"]
+  },
+  "scope": {
+    "tenantId": "acme",
+    "streams": ["acme/exec-2026-09-16-0001"],
+    "correlationId": "corr-2026-09-16-0001",
+    "resource": "res://acme/service/runtime"
+  },
+  "action": "reconstruct",
+  "decision": "allow",
+  "reason": null,
+  "recordsReturned": 3,
+  "crossTenant": false,
+  "retentionClass": "operational",
+  "correlationId": "corr-2026-09-16-0001"
+}

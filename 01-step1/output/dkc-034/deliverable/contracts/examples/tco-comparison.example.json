@@ -1,0 +1,249 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "TcoComparison",
+  "metadata": {
+    "name": "platform-tco-comparison-example",
+    "version": "1.0.0",
+    "description": "TCO-sammenligning for tre virksomhedsprofiler med kundens faktiske udgangspunkt og den meterede platformpris. Tallene er en model, ikke en målt besparelse.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner"
+      }
+    },
+    "labels": {
+      "wave": "3",
+      "task": "DKC-034"
+    }
+  },
+  "generatedAt": "2026-03-01T00:00:00Z",
+  "currency": "EUR",
+  "baselineSource": "synthetic-vendor-invoices-2025",
+  "measured": false,
+  "profiles": [
+    {
+      "id": "solo",
+      "name": "Solo Håndværk ApS",
+      "companySize": "18 medarbejdere",
+      "currentMonthlyCost": 355,
+      "currentCostSource": "vendor-invoices-2025",
+      "platformMonthlyCost": 106.1,
+      "migrationOneTimeCost": 3200,
+      "twelveMonthTco": 4473.2,
+      "savingsMonthly": 248.9,
+      "savingsPercent": 70.11,
+      "costLines": [
+        {
+          "meter": "backup",
+          "currentCost": 10,
+          "platformCost": 0,
+          "note": "Cloudbackup pr. måned"
+        },
+        {
+          "meter": "compute",
+          "currentCost": 0,
+          "platformCost": 14.7,
+          "note": "Platformsmålt forbrug fra forbrugsjournalen"
+        },
+        {
+          "meter": "integrations",
+          "currentCost": 30,
+          "platformCost": 13,
+          "note": "To SaaS-integrationer"
+        },
+        {
+          "meter": "migration",
+          "currentCost": 0,
+          "platformCost": 0,
+          "note": "Ingen registreret omkostning"
+        },
+        {
+          "meter": "model-calls",
+          "currentCost": 0,
+          "platformCost": 8,
+          "note": "Platformsmålt forbrug fra forbrugsjournalen"
+        },
+        {
+          "meter": "runtime",
+          "currentCost": 0,
+          "platformCost": 0,
+          "note": "Ingen registreret omkostning"
+        },
+        {
+          "meter": "storage",
+          "currentCost": 15,
+          "platformCost": 5.4,
+          "note": "Fildeling pr. måned"
+        },
+        {
+          "meter": "support",
+          "currentCost": 120,
+          "platformCost": 65,
+          "note": "Ekstern IT-support"
+        },
+        {
+          "meter": "upstream-features",
+          "currentCost": 180,
+          "platformCost": 0,
+          "note": "Seats i CRM og helpdesk"
+        }
+      ],
+      "estimationNote": "Kundens udgangspunkt er syntetiske listepriser fra 2025 og er ikke en faktura; platformprisen er en model, ikke en målt besparelse."
+    },
+    {
+      "id": "team",
+      "name": "Team Viden A/S",
+      "companySize": "120 medarbejdere",
+      "currentMonthlyCost": 1450,
+      "currentCostSource": "vendor-invoices-2025",
+      "platformMonthlyCost": 761.3,
+      "migrationOneTimeCost": 6400,
+      "twelveMonthTco": 15535.6,
+      "savingsMonthly": 688.7,
+      "savingsPercent": 47.5,
+      "costLines": [
+        {
+          "meter": "backup",
+          "currentCost": 90,
+          "platformCost": 9.9,
+          "note": "Cloudbackup pr. måned"
+        },
+        {
+          "meter": "compute",
+          "currentCost": 0,
+          "platformCost": 67.2,
+          "note": "Platformsmålt forbrug fra forbrugsjournalen"
+        },
+        {
+          "meter": "integrations",
+          "currentCost": 240,
+          "platformCost": 39,
+          "note": "Fem SaaS-integrationer"
+        },
+        {
+          "meter": "migration",
+          "currentCost": 0,
+          "platformCost": 0,
+          "note": "Ingen registreret omkostning"
+        },
+        {
+          "meter": "model-calls",
+          "currentCost": 0,
+          "platformCost": 50,
+          "note": "Platformsmålt forbrug fra forbrugsjournalen"
+        },
+        {
+          "meter": "runtime",
+          "currentCost": 0,
+          "platformCost": 28.8,
+          "note": "Platformsmålt forbrug fra forbrugsjournalen"
+        },
+        {
+          "meter": "storage",
+          "currentCost": 120,
+          "platformCost": 32.4,
+          "note": "Fildeling pr. måned"
+        },
+        {
+          "meter": "support",
+          "currentCost": 480,
+          "platformCost": 390,
+          "note": "Support og on-call"
+        },
+        {
+          "meter": "upstream-features",
+          "currentCost": 520,
+          "platformCost": 144,
+          "note": "Seats i CRM, helpdesk og vidensbase"
+        }
+      ],
+      "estimationNote": "Kundens udgangspunkt er syntetiske listepriser fra 2025 og er ikke en faktura; platformprisen er en model, ikke en målt besparelse."
+    },
+    {
+      "id": "enterprise",
+      "name": "Enterprise Nord A/S",
+      "companySize": "900 medarbejdere",
+      "currentMonthlyCost": 12500,
+      "currentCostSource": "vendor-invoices-2025",
+      "platformMonthlyCost": 2243.6,
+      "migrationOneTimeCost": 32000,
+      "twelveMonthTco": 58923.2,
+      "savingsMonthly": 10256.4,
+      "savingsPercent": 82.05,
+      "costLines": [
+        {
+          "meter": "backup",
+          "currentCost": 700,
+          "platformCost": 35.2,
+          "note": "Cloudbackup pr. måned"
+        },
+        {
+          "meter": "compute",
+          "currentCost": 2500,
+          "platformCost": 205.8,
+          "note": "Compute- og driftskapacitet pr. måned"
+        },
+        {
+          "meter": "integrations",
+          "currentCost": 1800,
+          "platformCost": 91,
+          "note": "Fjorten SaaS-integrationer"
+        },
+        {
+          "meter": "migration",
+          "currentCost": 900,
+          "platformCost": 400,
+          "note": "Løbende migrerings- og integrationsarbejde"
+        },
+        {
+          "meter": "model-calls",
+          "currentCost": 0,
+          "platformCost": 180,
+          "note": "Platformsmålt forbrug fra forbrugsjournalen"
+        },
+        {
+          "meter": "runtime",
+          "currentCost": 0,
+          "platformCost": 86.4,
+          "note": "Platformsmålt forbrug fra forbrugsjournalen"
+        },
+        {
+          "meter": "storage",
+          "currentCost": 900,
+          "platformCost": 115.2,
+          "note": "Fildeling og arkiv pr. måned"
+        },
+        {
+          "meter": "support",
+          "currentCost": 3600,
+          "platformCost": 650,
+          "note": "Support, on-call og patchvinduer"
+        },
+        {
+          "meter": "upstream-features",
+          "currentCost": 2100,
+          "platformCost": 480,
+          "note": "Seats og betalte upstreamfeatures"
+        }
+      ],
+      "estimationNote": "Kundens udgangspunkt er syntetiske listepriser fra 2025 og er ikke en faktura; platformprisen er en model, ikke en målt besparelse."
+    }
+  ],
+  "claims": {
+    "savingsClaimed": false,
+    "comparableDataRef": null,
+    "documentationRefs": [
+      "metering/price-book.json",
+      "metering/usage-ledger.json",
+      "metering/operating-costs.json",
+      "docs/costs/cost-report.md"
+    ],
+    "noFreeOperation": true,
+    "notFullSaasReplacement": true,
+    "rationale": "Drift er ikke gratis: platformen har compute-, storage-, backup-, model-, integrations-, runtime- og supportomkostninger. Platformen er ikke en fuld SaaS-erstatning uden dokumenteret dækning, og der fremsættes ingen målt besparelsespåstand uden rigtige sammenlignelige data."
+  }
+}

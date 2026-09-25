@@ -1,0 +1,1516 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "DataRegister",
+  "metadata": {
+    "name": "platform-data-register",
+    "version": "1.0.0",
+    "description": "Kanonisk dataregister for platformens pilotmoduler og modelroutes. Behandlingsgrundlag er ejerbesluttet; retention er formålsbestemt og versioneret; EU-hosting er ikke automatisk fravær af tredjelandsoverførsel.",
+    "lastReviewed": "2025-09-01"
+  },
+  "subprocessors": [
+    {
+      "id": "anthropic-eu",
+      "name": "Anthropic EU",
+      "purpose": "model-inference",
+      "hostingRegion": "eu-eea",
+      "countryCodes": [
+        "DE"
+      ],
+      "dpaRef": "contracts/dpa/anthropic-eu.md",
+      "contractRef": "contracts/dpa/anthropic-eu.md",
+      "approvedBy": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      },
+      "approvedAt": "2025-09-01",
+      "thirdCountryTransfer": {
+        "assessed": true,
+        "status": "present",
+        "mechanisms": [
+          "scc"
+        ],
+        "assessedBy": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "assessedAt": "2025-09-01",
+        "note": "Data hostes i EU/EEA, men moderselskabets support kan tilgå dem fra USA; SCC dækker overførslen. EU-hosting er ikke i sig selv fravær af overførsel."
+      }
+    },
+    {
+      "id": "openai-eu",
+      "name": "OpenAI EU",
+      "purpose": "model-inference",
+      "hostingRegion": "eu-eea",
+      "countryCodes": [
+        "IE"
+      ],
+      "dpaRef": "contracts/dpa/openai-eu.md",
+      "contractRef": "contracts/dpa/openai-eu.md",
+      "approvedBy": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      },
+      "approvedAt": "2025-09-01",
+      "thirdCountryTransfer": {
+        "assessed": true,
+        "status": "present",
+        "mechanisms": [
+          "scc"
+        ],
+        "assessedBy": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "assessedAt": "2025-09-01",
+        "note": "EU-hosting med understøttende support i USA; SCC dækker overførslen."
+      }
+    }
+  ],
+  "entries": [
+    {
+      "id": "audit-service",
+      "title": "Audit-service",
+      "status": "approved",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      },
+      "moduleRef": "audit-service",
+      "routeRef": "audit-service-operator-sonnet",
+      "dataCategories": [
+        "operational",
+        "pseudonymised",
+        "personal"
+      ],
+      "sources": [
+        {
+          "name": "Ops-verber og DSAR",
+          "description": "Verbevidens og privacy-fan-out indeholder persondata fra kundens systemer.",
+          "dataCategories": [
+            "personal"
+          ]
+        }
+      ],
+      "purposes": [
+        {
+          "id": "audit-ops",
+          "name": "Revisionsspor og DSAR",
+          "description": "Dokumentere handlinger og besvare rettighedsanmodninger."
+        }
+      ],
+      "legalBasis": {
+        "status": "owner-decided",
+        "ground": "legitimate-interests",
+        "decidedBy": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "decidedAt": "2025-09-01",
+        "decisionRef": "docs/compliance/owner-decisions.md#audit-service",
+        "note": "Ejerbesluttet grundlag for den behandling posten dækker."
+      },
+      "roles": {
+        "controller": {
+          "organisation": "Platformens kunder (dataansvarlige)",
+          "contractRef": "contracts/dpa/controller-template.md"
+        },
+        "processor": {
+          "name": "Platformen",
+          "contractRef": "contracts/dpa/platform-processor.md"
+        }
+      },
+      "location": {
+        "hostingRegion": "eu-eea",
+        "countryCodes": [
+          "DK"
+        ],
+        "supportAccess": {
+          "remoteAccess": true,
+          "fromCountries": [
+            "DK",
+            "US"
+          ],
+          "note": "Support kan tilgå data fra DK og US efter godkendelse."
+        },
+        "thirdCountryTransfer": {
+          "assessed": true,
+          "status": "present",
+          "mechanisms": [
+            "scc"
+          ],
+          "assessedBy": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "assessedAt": "2025-09-01",
+          "note": "Eksplicit tredjelandsvurdering trods EU-hosting, fordi support- og modeladgang kan ske fra USA."
+        }
+      },
+      "recipients": [
+        {
+          "name": "Anthropic EU",
+          "role": "subprocessor",
+          "contractRef": "contracts/dpa/anthropic-eu.md"
+        }
+      ],
+      "subprocessorRefs": [
+        "anthropic-eu"
+      ],
+      "assets": [
+        {
+          "kind": "prompts",
+          "description": "audit-service: prompts gemmes kun til fejlfinding og slettes efter den formålsbestemte frist.",
+          "dataCategories": [
+            "personal"
+          ]
+        },
+        {
+          "kind": "embeddings",
+          "description": "audit-service: embeddings pseudonymiseres og kan ikke føres tilbage til den registrerede uden nøgle.",
+          "dataCategories": [
+            "pseudonymised"
+          ]
+        },
+        {
+          "kind": "support-access",
+          "description": "audit-service: supportadgang er logget og kræver en ejer-godkendt procedure.",
+          "dataCategories": [
+            "personal"
+          ]
+        },
+        {
+          "kind": "logs",
+          "description": "audit-service: driftslogs bærer tenant-id, principal og trace-id men ikke promptindhold.",
+          "dataCategories": [
+            "operational"
+          ]
+        },
+        {
+          "kind": "backups",
+          "description": "audit-service: krypterede backups omfattes af samme slettefrist og crypto-shredding.",
+          "dataCategories": [
+            "personal"
+          ]
+        },
+        {
+          "kind": "model-provider-usage",
+          "description": "audit-service: databehandleraftalen forbyder træning på kundedata; brug logges pr. kald.",
+          "dataCategories": [
+            "personal"
+          ]
+        }
+      ],
+      "retention": {
+        "policyId": "audit-service-retention",
+        "version": "1.0.0",
+        "purposeRef": "audit-ops",
+        "maxDays": 1825,
+        "trigger": "legal-deadline",
+        "basis": "Audit-sporet opbevares efter den lovpligtige revisionsfrist; persondata minimeres.",
+        "legalHold": {
+          "supported": true,
+          "mechanism": "hold-flag",
+          "note": "Aktivt hold blokerer sletning."
+        },
+        "approvedBy": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "approvedAt": "2025-09-01",
+        "deleteMechanism": "Fan-out subject.erase til moduler og crypto-shredding af backups."
+      },
+      "contractRefs": [
+        "contracts/dpa/platform-processor.md",
+        "contracts/dpa/anthropic-eu.md"
+      ],
+      "evidence": [
+        "docs/compliance/data-register.md"
+      ]
+    },
+    {
+      "id": "dummy-ok",
+      "title": "Dummy-ok referencedummy",
+      "status": "approved",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      },
+      "moduleRef": "dummy-ok",
+      "routeRef": "dummy-ok-upgrader-sonnet",
+      "dataCategories": [
+        "operational",
+        "pseudonymised",
+        "personal"
+      ],
+      "sources": [
+        {
+          "name": "Upgrade- og driftsevidens",
+          "description": "Evidensfiler og logs fra opgraderingsforløb.",
+          "dataCategories": [
+            "personal"
+          ]
+        }
+      ],
+      "purposes": [
+        {
+          "id": "upgrade-ops",
+          "name": "Vedligeholdelse af dummy-ok",
+          "description": "Planlægge, godkende og udføre opgraderinger."
+        }
+      ],
+      "legalBasis": {
+        "status": "owner-decided",
+        "ground": "legitimate-interests",
+        "decidedBy": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "decidedAt": "2025-09-01",
+        "decisionRef": "docs/compliance/owner-decisions.md#dummy-ok",
+        "note": "Ejerbesluttet grundlag for den behandling posten dækker."
+      },
+      "roles": {
+        "controller": {
+          "organisation": "Platformens kunder (dataansvarlige)",
+          "contractRef": "contracts/dpa/controller-template.md"
+        },
+        "processor": {
+          "name": "Platformen",
+          "contractRef": "contracts/dpa/platform-processor.md"
+        }
+      },
+      "location": {
+        "hostingRegion": "eu-eea",
+        "countryCodes": [
+          "DK"
+        ],
+        "supportAccess": {
+          "remoteAccess": true,
+          "fromCountries": [
+            "DK",
+            "US"
+          ],
+          "note": "Support kan tilgå data fra DK og US efter godkendelse."
+        },
+        "thirdCountryTransfer": {
+          "assessed": true,
+          "status": "present",
+          "mechanisms": [
+            "scc"
+          ],
+          "assessedBy": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "assessedAt": "2025-09-01",
+          "note": "Eksplicit tredjelandsvurdering trods EU-hosting, fordi support- og modeladgang kan ske fra USA."
+        }
+      },
+      "recipients": [
+        {
+          "name": "Anthropic EU",
+          "role": "subprocessor",
+          "contractRef": "contracts/dpa/anthropic-eu.md"
+        }
+      ],
+      "subprocessorRefs": [
+        "anthropic-eu"
+      ],
+      "assets": [
+        {
+          "kind": "prompts",
+          "description": "dummy-ok: prompts gemmes kun til fejlfinding og slettes efter den formålsbestemte frist.",
+          "dataCategories": [
+            "personal"
+          ]
+        },
+        {
+          "kind": "embeddings",
+          "description": "dummy-ok: embeddings pseudonymiseres og kan ikke føres tilbage til den registrerede uden nøgle.",
+          "dataCategories": [
+            "pseudonymised"
+          ]
+        },
+        {
+          "kind": "support-access",
+          "description": "dummy-ok: supportadgang er logget og kræver en ejer-godkendt procedure.",
+          "dataCategories": [
+            "personal"
+          ]
+        },
+        {
+          "kind": "logs",
+          "description": "dummy-ok: driftslogs bærer tenant-id, principal og trace-id men ikke promptindhold.",
+          "dataCategories": [
+            "operational"
+          ]
+        },
+        {
+          "kind": "backups",
+          "description": "dummy-ok: krypterede backups omfattes af samme slettefrist og crypto-shredding.",
+          "dataCategories": [
+            "personal"
+          ]
+        },
+        {
+          "kind": "model-provider-usage",
+          "description": "dummy-ok: databehandleraftalen forbyder træning på kundedata; brug logges pr. kald.",
+          "dataCategories": [
+            "personal"
+          ]
+        }
+      ],
+      "retention": {
+        "policyId": "dummy-ok-retention",
+        "version": "1.0.0",
+        "purposeRef": "upgrade-ops",
+        "maxDays": 365,
+        "trigger": "purpose-fulfilled",
+        "basis": "Slettes når formålet er opfyldt og en eventuel lovpligtig frist er udløbet.",
+        "legalHold": {
+          "supported": true,
+          "mechanism": "hold-flag",
+          "note": "Aktivt hold blokerer sletning."
+        },
+        "approvedBy": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "approvedAt": "2025-09-01",
+        "deleteMechanism": "Fan-out subject.erase til moduler og crypto-shredding af backups."
+      },
+      "contractRefs": [
+        "contracts/dpa/platform-processor.md",
+        "contracts/dpa/anthropic-eu.md"
+      ],
+      "evidence": [
+        "docs/compliance/data-register.md"
+      ]
+    },
+    {
+      "id": "keycloak-adapter",
+      "title": "Keycloak-adapter (IAM)",
+      "status": "approved",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      },
+      "moduleRef": "keycloak-adapter",
+      "dataCategories": [
+        "operational",
+        "pseudonymised",
+        "personal"
+      ],
+      "sources": [
+        {
+          "name": "IAM-brugere og grupper",
+          "description": "Brugerkonti, grupper og sessioner fra Keycloak.",
+          "dataCategories": [
+            "personal"
+          ]
+        }
+      ],
+      "purposes": [
+        {
+          "id": "iam-ops",
+          "name": "Identitets- og adgangsstyring",
+          "description": "Provisionere og administrere identiteter."
+        }
+      ],
+      "legalBasis": {
+        "status": "owner-decided",
+        "ground": "legitimate-interests",
+        "decidedBy": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "decidedAt": "2025-09-01",
+        "decisionRef": "docs/compliance/owner-decisions.md#keycloak-adapter",
+        "note": "Ejerbesluttet grundlag for den behandling posten dækker."
+      },
+      "roles": {
+        "controller": {
+          "organisation": "Platformens kunder (dataansvarlige)",
+          "contractRef": "contracts/dpa/controller-template.md"
+        },
+        "processor": {
+          "name": "Platformen",
+          "contractRef": "contracts/dpa/platform-processor.md"
+        }
+      },
+      "location": {
+        "hostingRegion": "eu-eea",
+        "countryCodes": [
+          "DK"
+        ],
+        "supportAccess": {
+          "remoteAccess": true,
+          "fromCountries": [
+            "DK",
+            "US"
+          ],
+          "note": "Support kan tilgå data fra DK og US efter godkendelse."
+        },
+        "thirdCountryTransfer": {
+          "assessed": true,
+          "status": "present",
+          "mechanisms": [
+            "scc"
+          ],
+          "assessedBy": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "assessedAt": "2025-09-01",
+          "note": "Eksplicit tredjelandsvurdering trods EU-hosting, fordi support- og modeladgang kan ske fra USA."
+        }
+      },
+      "recipients": [
+        {
+          "name": "Anthropic EU",
+          "role": "subprocessor",
+          "contractRef": "contracts/dpa/anthropic-eu.md"
+        }
+      ],
+      "subprocessorRefs": [
+        "anthropic-eu"
+      ],
+      "assets": [
+        {
+          "kind": "prompts",
+          "description": "keycloak-adapter: prompts gemmes kun til fejlfinding og slettes efter den formålsbestemte frist.",
+          "dataCategories": [
+            "personal"
+          ]
+        },
+        {
+          "kind": "embeddings",
+          "description": "keycloak-adapter: embeddings pseudonymiseres og kan ikke føres tilbage til den registrerede uden nøgle.",
+          "dataCategories": [
+            "pseudonymised"
+          ]
+        },
+        {
+          "kind": "support-access",
+          "description": "keycloak-adapter: supportadgang er logget og kræver en ejer-godkendt procedure.",
+          "dataCategories": [
+            "personal"
+          ]
+        },
+        {
+          "kind": "logs",
+          "description": "keycloak-adapter: driftslogs bærer tenant-id, principal og trace-id men ikke promptindhold.",
+          "dataCategories": [
+            "operational"
+          ]
+        },
+        {
+          "kind": "backups",
+          "description": "keycloak-adapter: krypterede backups omfattes af samme slettefrist og crypto-shredding.",
+          "dataCategories": [
+            "personal"
+          ]
+        },
+        {
+          "kind": "model-provider-usage",
+          "description": "keycloak-adapter: databehandleraftalen forbyder træning på kundedata; brug logges pr. kald.",
+          "dataCategories": [
+            "personal"
+          ]
+        }
+      ],
+      "retention": {
+        "policyId": "keycloak-adapter-retention",
+        "version": "1.0.0",
+        "purposeRef": "iam-ops",
+        "maxDays": 1095,
+        "trigger": "contract-end",
+        "basis": "Konto opbevares så længe kundeforholdet består; slettes ved aftalens ophør.",
+        "legalHold": {
+          "supported": true,
+          "mechanism": "hold-flag",
+          "note": "Aktivt hold blokerer sletning."
+        },
+        "approvedBy": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "approvedAt": "2025-09-01",
+        "deleteMechanism": "Fan-out subject.erase til moduler og crypto-shredding af backups."
+      },
+      "contractRefs": [
+        "contracts/dpa/platform-processor.md",
+        "contracts/dpa/anthropic-eu.md"
+      ],
+      "evidence": [
+        "docs/compliance/data-register.md"
+      ]
+    },
+    {
+      "id": "mattermost-adapter",
+      "title": "Mattermost-adapter",
+      "status": "approved",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      },
+      "moduleRef": "mattermost-adapter",
+      "dataCategories": [
+        "operational",
+        "pseudonymised",
+        "personal"
+      ],
+      "sources": [
+        {
+          "name": "Besked- og kanaldata",
+          "description": "Opslag, kanaler og vedhæftninger fra Mattermost.",
+          "dataCategories": [
+            "personal"
+          ]
+        }
+      ],
+      "purposes": [
+        {
+          "id": "chat-ops",
+          "name": "Teamkommunikation",
+          "description": "Formidle beskeder og kanaler."
+        }
+      ],
+      "legalBasis": {
+        "status": "owner-decided",
+        "ground": "legitimate-interests",
+        "decidedBy": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "decidedAt": "2025-09-01",
+        "decisionRef": "docs/compliance/owner-decisions.md#mattermost-adapter",
+        "note": "Ejerbesluttet grundlag for den behandling posten dækker."
+      },
+      "roles": {
+        "controller": {
+          "organisation": "Platformens kunder (dataansvarlige)",
+          "contractRef": "contracts/dpa/controller-template.md"
+        },
+        "processor": {
+          "name": "Platformen",
+          "contractRef": "contracts/dpa/platform-processor.md"
+        }
+      },
+      "location": {
+        "hostingRegion": "eu-eea",
+        "countryCodes": [
+          "DK"
+        ],
+        "supportAccess": {
+          "remoteAccess": true,
+          "fromCountries": [
+            "DK",
+            "US"
+          ],
+          "note": "Support kan tilgå data fra DK og US efter godkendelse."
+        },
+        "thirdCountryTransfer": {
+          "assessed": true,
+          "status": "present",
+          "mechanisms": [
+            "scc"
+          ],
+          "assessedBy": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "assessedAt": "2025-09-01",
+          "note": "Eksplicit tredjelandsvurdering trods EU-hosting, fordi support- og modeladgang kan ske fra USA."
+        }
+      },
+      "recipients": [
+        {
+          "name": "Anthropic EU",
+          "role": "subprocessor",
+          "contractRef": "contracts/dpa/anthropic-eu.md"
+        }
+      ],
+      "subprocessorRefs": [
+        "anthropic-eu"
+      ],
+      "assets": [
+        {
+          "kind": "prompts",
+          "description": "mattermost-adapter: prompts gemmes kun til fejlfinding og slettes efter den formålsbestemte frist.",
+          "dataCategories": [
+            "personal"
+          ]
+        },
+        {
+          "kind": "embeddings",
+          "description": "mattermost-adapter: embeddings pseudonymiseres og kan ikke føres tilbage til den registrerede uden nøgle.",
+          "dataCategories": [
+            "pseudonymised"
+          ]
+        },
+        {
+          "kind": "support-access",
+          "description": "mattermost-adapter: supportadgang er logget og kræver en ejer-godkendt procedure.",
+          "dataCategories": [
+            "personal"
+          ]
+        },
+        {
+          "kind": "logs",
+          "description": "mattermost-adapter: driftslogs bærer tenant-id, principal og trace-id men ikke promptindhold.",
+          "dataCategories": [
+            "operational"
+          ]
+        },
+        {
+          "kind": "backups",
+          "description": "mattermost-adapter: krypterede backups omfattes af samme slettefrist og crypto-shredding.",
+          "dataCategories": [
+            "personal"
+          ]
+        },
+        {
+          "kind": "model-provider-usage",
+          "description": "mattermost-adapter: databehandleraftalen forbyder træning på kundedata; brug logges pr. kald.",
+          "dataCategories": [
+            "personal"
+          ]
+        }
+      ],
+      "retention": {
+        "policyId": "mattermost-adapter-retention",
+        "version": "1.0.0",
+        "purposeRef": "chat-ops",
+        "maxDays": 730,
+        "trigger": "account-deletion",
+        "basis": "Beskeder slettes ved konto- eller aftaleafslutning, medmindre et aktivt hold består.",
+        "legalHold": {
+          "supported": true,
+          "mechanism": "hold-flag",
+          "note": "Aktivt hold blokerer sletning."
+        },
+        "approvedBy": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "approvedAt": "2025-09-01",
+        "deleteMechanism": "Fan-out subject.erase til moduler og crypto-shredding af backups."
+      },
+      "contractRefs": [
+        "contracts/dpa/platform-processor.md",
+        "contracts/dpa/anthropic-eu.md"
+      ],
+      "evidence": [
+        "docs/compliance/data-register.md"
+      ]
+    },
+    {
+      "id": "privacy-operator",
+      "title": "Privacy-operator (modelroute)",
+      "status": "approved",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      },
+      "routeRef": "privacy-operator-sonnet",
+      "dataCategories": [
+        "internal",
+        "personal"
+      ],
+      "sources": [
+        {
+          "name": "Rettighedsanmodninger",
+          "description": "Anmodninger og bilag fra registrerede.",
+          "dataCategories": [
+            "personal"
+          ]
+        }
+      ],
+      "purposes": [
+        {
+          "id": "dsar-answer",
+          "name": "Behandle rettighedsanmodninger",
+          "description": "Lokalisere, eksportere og slette persondata."
+        }
+      ],
+      "legalBasis": {
+        "status": "owner-decided",
+        "ground": "legitimate-interests",
+        "decidedBy": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "decidedAt": "2025-09-01",
+        "decisionRef": "docs/compliance/owner-decisions.md#privacy-operator",
+        "note": "Ejerbesluttet grundlag for den behandling posten dækker."
+      },
+      "roles": {
+        "controller": {
+          "organisation": "Platformens kunder (dataansvarlige)",
+          "contractRef": "contracts/dpa/controller-template.md"
+        },
+        "processor": {
+          "name": "Platformen",
+          "contractRef": "contracts/dpa/platform-processor.md"
+        }
+      },
+      "location": {
+        "hostingRegion": "eu-eea",
+        "countryCodes": [
+          "DK"
+        ],
+        "supportAccess": {
+          "remoteAccess": true,
+          "fromCountries": [
+            "DK",
+            "US"
+          ],
+          "note": "Support kan tilgå data fra DK og US efter godkendelse."
+        },
+        "thirdCountryTransfer": {
+          "assessed": true,
+          "status": "present",
+          "mechanisms": [
+            "scc"
+          ],
+          "assessedBy": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "assessedAt": "2025-09-01",
+          "note": "Eksplicit tredjelandsvurdering trods EU-hosting, fordi support- og modeladgang kan ske fra USA."
+        }
+      },
+      "recipients": [
+        {
+          "name": "Anthropic EU",
+          "role": "subprocessor",
+          "contractRef": "contracts/dpa/anthropic-eu.md"
+        }
+      ],
+      "subprocessorRefs": [
+        "anthropic-eu"
+      ],
+      "assets": [
+        {
+          "kind": "prompts",
+          "description": "privacy-operator: prompts gemmes kun til fejlfinding og slettes efter den formålsbestemte frist.",
+          "dataCategories": [
+            "personal"
+          ]
+        },
+        {
+          "kind": "embeddings",
+          "description": "privacy-operator: embeddings pseudonymiseres og kan ikke føres tilbage til den registrerede uden nøgle.",
+          "dataCategories": [
+            "pseudonymised"
+          ]
+        },
+        {
+          "kind": "support-access",
+          "description": "privacy-operator: supportadgang er logget og kræver en ejer-godkendt procedure.",
+          "dataCategories": [
+            "personal"
+          ]
+        },
+        {
+          "kind": "logs",
+          "description": "privacy-operator: driftslogs bærer tenant-id, principal og trace-id men ikke promptindhold.",
+          "dataCategories": [
+            "operational"
+          ]
+        },
+        {
+          "kind": "backups",
+          "description": "privacy-operator: krypterede backups omfattes af samme slettefrist og crypto-shredding.",
+          "dataCategories": [
+            "personal"
+          ]
+        },
+        {
+          "kind": "model-provider-usage",
+          "description": "privacy-operator: databehandleraftalen forbyder træning på kundedata; brug logges pr. kald.",
+          "dataCategories": [
+            "personal"
+          ]
+        }
+      ],
+      "retention": {
+        "policyId": "privacy-operator-retention",
+        "version": "1.0.0",
+        "purposeRef": "dsar-answer",
+        "maxDays": 365,
+        "trigger": "purpose-fulfilled",
+        "basis": "Slettes når formålet er opfyldt og en eventuel lovpligtig frist er udløbet.",
+        "legalHold": {
+          "supported": true,
+          "mechanism": "hold-flag",
+          "note": "Aktivt hold blokerer sletning."
+        },
+        "approvedBy": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "approvedAt": "2025-09-01",
+        "deleteMechanism": "Fan-out subject.erase til moduler og crypto-shredding af backups."
+      },
+      "contractRefs": [
+        "contracts/dpa/platform-processor.md",
+        "contracts/dpa/anthropic-eu.md"
+      ],
+      "evidence": [
+        "docs/compliance/data-register.md"
+      ]
+    },
+    {
+      "id": "dummy-ok-reviewer",
+      "title": "Dummy-ok reviewer (modelroute)",
+      "status": "approved",
+      "owner": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Operations Lead"
+      },
+      "routeRef": "dummy-ok-reviewer-gpt",
+      "dataCategories": [
+        "public",
+        "internal",
+        "confidential"
+      ],
+      "sources": [
+        {
+          "name": "Review-input",
+          "description": "Kode- og evidenspakker uden personhenførbare data."
+        }
+      ],
+      "purposes": [
+        {
+          "id": "adversarial-review",
+          "name": "Adversarielt review",
+          "description": "Uafhængigt gennemse foreslåede ændringer."
+        }
+      ],
+      "legalBasis": {
+        "status": "owner-decided",
+        "ground": "legitimate-interests",
+        "decidedBy": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen",
+          "role": "Operations Lead"
+        },
+        "decidedAt": "2025-09-01",
+        "decisionRef": "docs/compliance/owner-decisions.md#dummy-ok-reviewer"
+      },
+      "roles": {
+        "controller": null,
+        "processor": {
+          "name": "Platformen",
+          "contractRef": "contracts/dpa/platform-processor.md"
+        }
+      },
+      "location": {
+        "hostingRegion": "eu-eea",
+        "countryCodes": [
+          "IE"
+        ],
+        "supportAccess": {
+          "remoteAccess": true,
+          "fromCountries": [
+            "IE",
+            "US"
+          ],
+          "note": "Support kan tilgå reviewdata fra IE og US."
+        },
+        "thirdCountryTransfer": {
+          "assessed": true,
+          "status": "present",
+          "mechanisms": [
+            "scc"
+          ],
+          "assessedBy": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Operations Lead"
+          },
+          "assessedAt": "2025-09-01",
+          "note": "OpenAI-hostet i EU, men support i USA; SCC dækker overførslen."
+        }
+      },
+      "recipients": [
+        {
+          "name": "OpenAI EU",
+          "role": "subprocessor",
+          "contractRef": "contracts/dpa/openai-eu.md"
+        }
+      ],
+      "subprocessorRefs": [
+        "openai-eu"
+      ],
+      "assets": [
+        {
+          "kind": "prompts",
+          "description": "Review-prompts indeholder ingen personhenførbare data.",
+          "dataCategories": [
+            "internal"
+          ]
+        },
+        {
+          "kind": "logs",
+          "description": "Review-logs med tenant-id og trace-id.",
+          "dataCategories": [
+            "operational"
+          ]
+        },
+        {
+          "kind": "backups",
+          "description": "Review-evidens i backup uden personhenførbare data.",
+          "dataCategories": [
+            "operational"
+          ]
+        }
+      ],
+      "retention": {
+        "policyId": "dummy-ok-reviewer-retention",
+        "version": "1.0.0",
+        "purposeRef": "adversarial-review",
+        "maxDays": 90,
+        "trigger": "event-age",
+        "basis": "Review-evidens er kun nødvendig for den korte release-horisont.",
+        "legalHold": {
+          "supported": false
+        },
+        "approvedBy": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen",
+          "role": "Operations Lead"
+        },
+        "approvedAt": "2025-09-01",
+        "deleteMechanism": "Rulles automatisk med release-artefakterne."
+      },
+      "contractRefs": [
+        "contracts/dpa/platform-processor.md",
+        "contracts/dpa/openai-eu.md"
+      ],
+      "evidence": [
+        "docs/compliance/data-register.md"
+      ]
+    },
+    {
+      "id": "nextcloud-adapter",
+      "title": "Arbejdspladsmodulet (Nextcloud)",
+      "status": "approved",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      },
+      "moduleRef": "nextcloud-adapter",
+      "dataCategories": [
+        "operational",
+        "pseudonymised",
+        "personal"
+      ],
+      "sources": [
+        {
+          "name": "Filer, delinger og kalenderdata",
+          "description": "Filer, delinger, kalendere og kontordokumenter fra Nextcloud.",
+          "dataCategories": [
+            "personal"
+          ]
+        }
+      ],
+      "purposes": [
+        {
+          "id": "workspace-collaboration",
+          "name": "Arbejdspladssamarbejde",
+          "description": "Dele og redigere filer samt planlægge i kalenderen."
+        }
+      ],
+      "legalBasis": {
+        "status": "owner-decided",
+        "ground": "legitimate-interests",
+        "decidedBy": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "decidedAt": "2025-09-01",
+        "decisionRef": "docs/compliance/owner-decisions.md#nextcloud-adapter",
+        "note": "Ejerbesluttet grundlag for den behandling posten dækker."
+      },
+      "roles": {
+        "controller": {
+          "organisation": "Platformens kunder (dataansvarlige)",
+          "contractRef": "contracts/dpa/controller-template.md"
+        },
+        "processor": {
+          "name": "Platformen",
+          "contractRef": "contracts/dpa/platform-processor.md"
+        }
+      },
+      "location": {
+        "hostingRegion": "eu-eea",
+        "countryCodes": [
+          "DK"
+        ],
+        "supportAccess": {
+          "remoteAccess": true,
+          "fromCountries": [
+            "DK",
+            "US"
+          ],
+          "note": "Support kan tilgå data fra DK og US efter godkendelse."
+        },
+        "thirdCountryTransfer": {
+          "assessed": true,
+          "status": "present",
+          "mechanisms": [
+            "scc"
+          ],
+          "assessedBy": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "assessedAt": "2025-09-01",
+          "note": "Eksplicit tredjelandsvurdering trods EU-hosting, fordi support- og modeladgang kan ske fra USA."
+        }
+      },
+      "recipients": [
+        {
+          "name": "Anthropic EU",
+          "role": "subprocessor",
+          "contractRef": "contracts/dpa/anthropic-eu.md"
+        }
+      ],
+      "subprocessorRefs": [
+        "anthropic-eu"
+      ],
+      "assets": [
+        {
+          "kind": "prompts",
+          "description": "nextcloud-adapter: prompts gemmes kun til fejlfinding og slettes efter den formålsbestemte frist.",
+          "dataCategories": [
+            "personal"
+          ]
+        },
+        {
+          "kind": "embeddings",
+          "description": "nextcloud-adapter: embeddings pseudonymiseres og kan ikke føres tilbage til den registrerede uden nøgle.",
+          "dataCategories": [
+            "pseudonymised"
+          ]
+        },
+        {
+          "kind": "support-access",
+          "description": "nextcloud-adapter: supportadgang er logget og kræver en ejer-godkendt procedure.",
+          "dataCategories": [
+            "personal"
+          ]
+        },
+        {
+          "kind": "logs",
+          "description": "nextcloud-adapter: driftslogs bærer tenant-id, principal og trace-id men ikke promptindhold.",
+          "dataCategories": [
+            "operational"
+          ]
+        },
+        {
+          "kind": "backups",
+          "description": "nextcloud-adapter: krypterede backups omfattes af samme slettefrist og crypto-shredding.",
+          "dataCategories": [
+            "personal"
+          ]
+        },
+        {
+          "kind": "model-provider-usage",
+          "description": "nextcloud-adapter: databehandleraftalen forbyder træning på kundedata; brug logges pr. kald.",
+          "dataCategories": [
+            "personal"
+          ]
+        }
+      ],
+      "retention": {
+        "policyId": "nextcloud-adapter-retention",
+        "version": "1.0.0",
+        "purposeRef": "workspace-collaboration",
+        "maxDays": 730,
+        "trigger": "account-deletion",
+        "basis": "Filer og delinger slettes ved konto- eller aftaleafslutning, medmindre et aktivt hold består.",
+        "legalHold": {
+          "supported": true,
+          "mechanism": "hold-flag",
+          "note": "Aktivt hold blokerer sletning."
+        },
+        "approvedBy": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "approvedAt": "2025-09-01",
+        "deleteMechanism": "Fan-out subject.erase til moduler og crypto-shredding af backups."
+      },
+      "contractRefs": [
+        "contracts/dpa/platform-processor.md",
+        "contracts/dpa/anthropic-eu.md"
+      ],
+      "evidence": [
+        "docs/compliance/data-register.md"
+      ]
+    },
+    {
+      "id": "itsm-adapter",
+      "title": "ITSM-modulet (GLPI)",
+      "status": "approved",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      },
+      "moduleRef": "itsm-adapter",
+      "dataCategories": [
+        "operational",
+        "pseudonymised",
+        "personal"
+      ],
+      "sources": [
+        {
+          "name": "Sagsrecords i GLPI",
+          "description": "Incidents, requests, problemer, kendte fejl, changes, CI-relationer og vidensartikler fra GLPI.",
+          "dataCategories": [
+            "personal"
+          ]
+        }
+      ],
+      "purposes": [
+        {
+          "id": "itsm-service-process",
+          "name": "Serviceproces og hændelseshåndtering",
+          "description": "Registrere og følge sager, problemer og changes med menneskelige ejere."
+        }
+      ],
+      "legalBasis": {
+        "status": "owner-decided",
+        "ground": "legitimate-interests",
+        "decidedBy": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "decidedAt": "2025-09-01",
+        "decisionRef": "docs/compliance/owner-decisions.md#itsm-adapter",
+        "note": "Ejerbesluttet grundlag for den behandling posten dækker."
+      },
+      "roles": {
+        "controller": {
+          "organisation": "Platformens kunder (dataansvarlige)",
+          "contractRef": "contracts/dpa/controller-template.md"
+        },
+        "processor": {
+          "name": "Platformen",
+          "contractRef": "contracts/dpa/platform-processor.md"
+        }
+      },
+      "location": {
+        "hostingRegion": "eu-eea",
+        "countryCodes": [
+          "DK"
+        ],
+        "supportAccess": {
+          "remoteAccess": true,
+          "fromCountries": [
+            "DK",
+            "US"
+          ],
+          "note": "Support kan tilgå data fra DK og US efter godkendelse."
+        },
+        "thirdCountryTransfer": {
+          "assessed": true,
+          "status": "present",
+          "mechanisms": [
+            "scc"
+          ],
+          "assessedBy": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "assessedAt": "2025-09-01",
+          "note": "Eksplicit tredjelandsvurdering trods EU-hosting, fordi support- og modeladgang kan ske fra USA."
+        }
+      },
+      "recipients": [
+        {
+          "name": "Anthropic EU",
+          "role": "subprocessor",
+          "contractRef": "contracts/dpa/anthropic-eu.md"
+        }
+      ],
+      "subprocessorRefs": [
+        "anthropic-eu"
+      ],
+      "assets": [
+        {
+          "kind": "prompts",
+          "description": "itsm-adapter: AI-genererede sagsresuméer gemmes kun til fejlfinding og slettes efter den formålsbestemte frist.",
+          "dataCategories": [
+            "personal"
+          ]
+        },
+        {
+          "kind": "embeddings",
+          "description": "itsm-adapter: embeddings pseudonymiseres og kan ikke føres tilbage til den registrerede uden nøgle.",
+          "dataCategories": [
+            "pseudonymised"
+          ]
+        },
+        {
+          "kind": "support-access",
+          "description": "itsm-adapter: supportadgang er logget og kræver en ejer-godkendt procedure.",
+          "dataCategories": [
+            "personal"
+          ]
+        },
+        {
+          "kind": "logs",
+          "description": "itsm-adapter: driftslogs bærer tenant-id, principal og trace-id men ikke sagsindhold.",
+          "dataCategories": [
+            "operational"
+          ]
+        },
+        {
+          "kind": "backups",
+          "description": "itsm-adapter: krypterede backups omfattes af samme slettefrist og crypto-shredding.",
+          "dataCategories": [
+            "personal"
+          ]
+        },
+        {
+          "kind": "model-provider-usage",
+          "description": "itsm-adapter: databehandleraftalen forbyder træning på kundedata; brug logges pr. kald.",
+          "dataCategories": [
+            "personal"
+          ]
+        }
+      ],
+      "retention": {
+        "policyId": "itsm-adapter-retention",
+        "version": "1.0.0",
+        "purposeRef": "itsm-service-process",
+        "maxDays": 1095,
+        "trigger": "contract-end",
+        "basis": "Sager bevares til revisions- og dokumentationsformål og slettes ved aftaleafslutning, medmindre et aktivt hold består.",
+        "legalHold": {
+          "supported": true,
+          "mechanism": "hold-flag",
+          "note": "Aktivt hold blokerer sletning."
+        },
+        "approvedBy": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "approvedAt": "2025-09-01",
+        "deleteMechanism": "Godkendt GLPI-sletteproces og crypto-shredding af backups."
+      },
+      "contractRefs": [
+        "contracts/dpa/platform-processor.md",
+        "contracts/dpa/anthropic-eu.md"
+      ],
+      "evidence": [
+        "docs/compliance/data-register.md",
+        "docs/dpia/itsm-adapter.md"
+      ]
+    },
+    {
+      "id": "openproject-adapter",
+      "title": "Projektstyringsmodulet (OpenProject)",
+      "status": "approved",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      },
+      "moduleRef": "openproject-adapter",
+      "dataCategories": [
+        "operational",
+        "pseudonymised",
+        "personal"
+      ],
+      "sources": [
+        {
+          "name": "Projekter, arbejdspakker og medlemskaber",
+          "description": "Projekter, arbejdspakker, ansvarlige, afhængigheder og projektmedlemskaber fra OpenProject.",
+          "dataCategories": [
+            "personal"
+          ]
+        }
+      ],
+      "purposes": [
+        {
+          "id": "project-management",
+          "name": "Projektstyring",
+          "description": "Planlægge og følge projekter, opgaver og ansvarlige med rettighedsbevidst adgang."
+        }
+      ],
+      "legalBasis": {
+        "status": "owner-decided",
+        "ground": "legitimate-interests",
+        "decidedBy": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "decidedAt": "2025-09-01",
+        "decisionRef": "docs/compliance/owner-decisions.md#openproject-adapter",
+        "note": "Ejerbesluttet grundlag for den behandling posten dækker."
+      },
+      "roles": {
+        "controller": {
+          "organisation": "Platformens kunder (dataansvarlige)",
+          "contractRef": "contracts/dpa/controller-template.md"
+        },
+        "processor": {
+          "name": "Platformen",
+          "contractRef": "contracts/dpa/platform-processor.md"
+        }
+      },
+      "location": {
+        "hostingRegion": "eu-eea",
+        "countryCodes": [
+          "DK"
+        ],
+        "supportAccess": {
+          "remoteAccess": true,
+          "fromCountries": [
+            "DK",
+            "US"
+          ],
+          "note": "Support kan tilgå data fra DK og US efter godkendelse."
+        },
+        "thirdCountryTransfer": {
+          "assessed": true,
+          "status": "present",
+          "mechanisms": [
+            "scc"
+          ],
+          "assessedBy": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "assessedAt": "2025-09-01",
+          "note": "Eksplicit tredjelandsvurdering trods EU-hosting, fordi support- og modeladgang kan ske fra USA."
+        }
+      },
+      "recipients": [
+        {
+          "name": "Anthropic EU",
+          "role": "subprocessor",
+          "contractRef": "contracts/dpa/anthropic-eu.md"
+        }
+      ],
+      "subprocessorRefs": [
+        "anthropic-eu"
+      ],
+      "assets": [
+        {
+          "kind": "prompts",
+          "description": "openproject-adapter: prompts gemmes kun til fejlfinding og slettes efter den formålsbestemte frist.",
+          "dataCategories": [
+            "personal"
+          ]
+        },
+        {
+          "kind": "embeddings",
+          "description": "openproject-adapter: embeddings pseudonymiseres og kan ikke føres tilbage til den registrerede uden nøgle.",
+          "dataCategories": [
+            "pseudonymised"
+          ]
+        },
+        {
+          "kind": "support-access",
+          "description": "openproject-adapter: supportadgang er logget og kræver en ejer-godkendt procedure.",
+          "dataCategories": [
+            "personal"
+          ]
+        },
+        {
+          "kind": "logs",
+          "description": "openproject-adapter: driftslogs bærer tenant-id, principal og trace-id men ikke projektindhold.",
+          "dataCategories": [
+            "operational"
+          ]
+        },
+        {
+          "kind": "backups",
+          "description": "openproject-adapter: krypterede backups omfattes af samme slettefrist og crypto-shredding.",
+          "dataCategories": [
+            "personal"
+          ]
+        },
+        {
+          "kind": "model-provider-usage",
+          "description": "openproject-adapter: databehandleraftalen forbyder træning på kundedata; brug logges pr. kald.",
+          "dataCategories": [
+            "personal"
+          ]
+        }
+      ],
+      "retention": {
+        "policyId": "openproject-adapter-retention",
+        "version": "1.0.0",
+        "purposeRef": "project-management",
+        "maxDays": 730,
+        "trigger": "contract-end",
+        "basis": "Projekter og arbejdspakker bevares til dokumentationsformål og slettes ved aftaleafslutning, medmindre et aktivt hold består.",
+        "legalHold": {
+          "supported": true,
+          "mechanism": "hold-flag",
+          "note": "Aktivt hold blokerer sletning."
+        },
+        "approvedBy": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "approvedAt": "2025-09-01",
+        "deleteMechanism": "Fan-out subject.erase til moduler og crypto-shredding af backups."
+      },
+      "contractRefs": [
+        "contracts/dpa/platform-processor.md",
+        "contracts/dpa/anthropic-eu.md"
+      ],
+      "evidence": [
+        "docs/compliance/data-register.md",
+        "docs/dpia/openproject-adapter.md"
+      ]
+    }
+  ]
+}

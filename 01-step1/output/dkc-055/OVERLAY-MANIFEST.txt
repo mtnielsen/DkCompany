@@ -1,0 +1,67 @@
+# SHA256-manifest for DKC-055-leverancen
+# Genereret: 2026-09-23T10:52:42Z
+# Forudsætning: DKC-001 + DKC-002 + DKC-003 + DKC-004 + DKC-005 + DKC-006 + DKC-007 + DKC-008
+# Reviewets base: 5f9fa73, undersøgt checkout: 83ad91a
+# Node v22.22.1. DKC-055 lukker rolle-separationsblokeringen fra DKC-005.
+
+# --- deliverable/ (overlay, relative til 00-core/) ---
+bf3141a021bb81bfc1c112b4ff7b4b96e82cb421ef60185eb5a2faf2032cd180  ./Makefile
+6fff388720426ac33220f0690f05cc763d59dc50739aa06ec4f94a5ff91f94d2  ./agent-registry/fixtures/manifests.mjs
+6b53f6b42c33c801f48f4744ef854fe15160ffc4a76a61800a0e107ee06b03bb  ./agent-registry/package.json
+342a159c905abdef0703d26023e64d1154e8d8d21267f7ae2bd30a4e61668563  ./agent-registry/src/check.mjs
+931036cd71e0b485649a6780e0dce3b0571a4ce83030aea9ecf329210b7d6eaf  ./agent-registry/src/handoff.mjs
+b3ac2305c145db9ee780d9c890c33a977b40bfc90039ba6cf7ae5275e79c7c44  ./agent-registry/src/index.mjs
+48e6c3e9c6f649e46a8d133c2ac4efc749ae42c1e5e926973ebeee5cb07e7e52  ./agent-registry/src/registry.mjs
+42fc886f41cf5811abdaf3b0ffc2c339c21d6f1ba37ba6a6d483530a0b7f12e7  ./agent-registry/src/roles.mjs
+777fd3be536565e0b1348053e94340492f52d9ce31e2ad2b89cc053f004141cc  ./agent-registry/src/runtime-role-guard.mjs
+76a307587c8cd70d998c8f1cd1223969f383d44e8cfc19f9b57fb052293e2566  ./agent-registry/src/scheduler.mjs
+3819c5eeedfade0421fcd4f9df84ca32b1ee6fb899151b44d4f9bbc2d12f94a7  ./agent-registry/test/approval-plan-binding.test.mjs
+c157a4effdec9d32cef306f3551e381aebae4d5255cb16eead7cc8e4aefc4ecc  ./agent-registry/test/handoff.test.mjs
+0ca709a3efea908d663541f9c2b7a197d2d4cd0bbc0ea21e30fa3cb269b1735c  ./agent-registry/test/registry.test.mjs
+55c0801d885c0c1149e209f667943958bf803c352a069853d7e3b40266fd0f93  ./agent-registry/test/roles.test.mjs
+51666c97c7c3df52a9717af89130805c78dbc518cdfb7fd59af646b4538b09bd  ./agent-registry/test/runtime-role-guard.test.mjs
+9355fc6920738fd87d85f3a86a8b257a32427f1cf480b5bade6cd5dcd44af3c7  ./agent-registry/test/scheduler.test.mjs
+c7161d9bc0214f42ff5b89a64ac1aa733d6491675c68cfc5e4ea43b65639f39a  ./approvals/src/approval-service.mjs
+b052cacdf7d1dc5d796de017c511d41f9f01f8c5d52286b4f2676d06a4b69886  ./approvals/src/binding.mjs
+30602dd838afb54871ac84408e4e9fb9389e5a73ef35a9ad2171f3dd35390270  ./conformance/src/validate-schemas.mjs
+189cc62c34bb962cedf5199aecb4b2b86575e6f091c6f150807d68a81fc0c4ca  ./conformance/test/role-conformance.test.mjs
+71756036c159ff6fa5dc8b24bbe38387d300f85d13603f3f326d5d2bc7b9c1a5  ./contracts/agent-handoff.schema.json
+392921298e855fe1c19bc8963d38100b9fb0e0f327ad5a47cffaa7dddb13b370  ./contracts/agent-manifest.schema.json
+4699e14424256a6e7aa0d926f8ed827b3aa5e567e99f6bfaec6a9229041ea0f6  ./contracts/agent-registration.schema.json
+587dc08d430c1146c8e394e57d55a9cc12f3444565b8925dee725cb77f93c500  ./contracts/approval-request.schema.json
+5157803020781c8be131af0e90e7e2bbb31d6e866160a3e0ee36658918d6d9a1  ./contracts/examples/agent-handoff.example.json
+df1ad728ca6c415fd2dd8a4103b1da7ee3caf8454cd7c53b7d6d408de17d57f7  ./contracts/examples/agent-manifest.example.json
+8e3c9f6ff8a2ecc399d9e8f76036c41316da78c006714686e2c440299d1430ed  ./contracts/examples/agent-registration.example.json
+053995c92da25dc76e12c8a2c9e4bb00d3b3e5f0a029d896a683e4f4ccc62961  ./contracts/examples/approval-request.example.json
+6e15d5911d380c281c431fcb53348cb0e47537159bec13e67162bd5983ed9f2d  ./docs/adr/0020-en-rolle-pr-agent.md
+7634ee0d7a8f12c257326d1d740f774bde4421deefe9f221627bad941f51ae77  ./docs/adr/README.md
+9102e29238a0299e942bfcbd3d4963475dfefedb09c2b616b79c03135e3d9e6c  ./docs/spec/README.md
+af017d9d425175cf1ed2c7b4d63089f2fed9d74b9f4bd77ab2b807363006f92a  ./docs/spec/agent-registry.md
+2e2813b059d2aacb59aa210f86cf22857eb85034b6c6caba99ee348b46bb165a  ./docs/status/implementation-matrix.md
+df1ad728ca6c415fd2dd8a4103b1da7ee3caf8454cd7c53b7d6d408de17d57f7  ./modules/dummy-ok/agents/backup-agent.json
+dcbf4fa6334d68b16098845ba823755f3030b24306831cc7bd0ebd22a8c633d0  ./reviewer/src/reviewer.mjs
+2b52934fcd32ad0572787ab858ff3e7e0079e515b31d80558aff3702edce46b1  ./runtime/src/boundary.mjs
+4f596d178fc94f8d446a6223f35b0d67faa444aaf4363c07d28f8643ea32d7c4  ./runtime/src/runtime.mjs
+f677447966360419828db5e249c821aa1ef2be79a7ce6decbb701293a77fae98  ./tools/baseline/registry.mjs
+
+# --- evidence/ ---
+e591584c3178a762bc1abc01987bd6df8d73cebfa9a191a884a91b28d607bf98  evidence/baseline/baseline-83ad91a.json
+e4f9d4cc762fff182918c1134c96b4d028b206b99068ec9683eaba309d14dbe9  evidence/logs/agent-conformance-test.log
+c209b8d8d85e1657648fe12e846b3f4166209d1d87111d791f6b9e4cee1c1569  evidence/logs/agent-registry-check.log
+74b7a0471b043a6e19a2b2d6a9cd205b4473224914ec31ec4a3e85eff4b0477c  evidence/logs/agent-registry-test.log
+2cafb36e3a60582b0be88f8f4e792fcb2c34bad258d9f2e3051e6831ce569ea0  evidence/logs/approval-test.log
+bd73b2ed880d41164bdde9c4871e9e3362c3e63dc06208e5772559ba320f41dc  evidence/logs/architecture-test.log
+3e045506107dbdc8b4d4df3e39a1a74708fbc4bcd83dae79415550ff6398d609  evidence/logs/baseline-test.log
+d5bdaae0e6d4e921f4b995f3ee49d1cbe46b80c47fa60ea13013dbad19092290  evidence/logs/baseline.log
+a0cea0613f6bffaa6194a8ca5b3534832297087ce62647cea0c4f592e48ce42f  evidence/logs/boundary-test.log
+28c7a05e47fc2edc84ad902e3710e3ea011b9b6090a94243fab115cc8a7a4864  evidence/logs/lint.log
+ecf260f9f4211eecf8c452a4331d6ebbe47bb9d3485d0821f468288156881515  evidence/logs/policy-test.log
+49732502f2633aa7169e63f88babffed4b63abf47e6f414d7683142c5788634e  evidence/logs/reviewer-test.log
+01920875473f5e39761216772bf0a0a8bf80b8ad60da7e31261dc682c6f91bcf  evidence/logs/runtime-test.log
+12890a1a7352e5d21779311c53c013edd17fde0f3266299253303201a04e4b36  evidence/logs/tenant-test.log
+c09157d42236183ccd0bde6b3e85ec617668cce428e03619d37c4ce0384315e1  evidence/logs/test.log
+992363892d091bedbabe9d796d68c7cb6fc15e0bf85d6f7afc46544d43ceed9e  evidence/logs/validate.log
+
+# --- README.md, apply.sh ---
+e575111f3e411b62fb4e7fc4e3f33465dbb44cbbb55291d5d5af3fb84aad38c4  ./README.md
+d0d9c31a11b6c964f10cb5891ac5ef70a70a2e34c1e6b60b9a11700f6d39248d  ./apply.sh

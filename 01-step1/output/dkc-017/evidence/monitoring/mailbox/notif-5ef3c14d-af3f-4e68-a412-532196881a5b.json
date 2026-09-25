@@ -1,0 +1,48 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "AlertNotification",
+  "id": "notif-5ef3c14d-af3f-4e68-a412-532196881a5b",
+  "alertId": "alert-561ce539-e909-4c36-abe5-2eccc657acbb",
+  "ruleId": "backup-failed",
+  "severity": "critical",
+  "signal": "backup.status",
+  "tenantId": null,
+  "summary": "Backup eller gennemført gendannelsesøvelse fejlede",
+  "owner": {
+    "subject": "oidc|anna.andersen",
+    "name": "Anna Andersen",
+    "role": "Platform Owner"
+  },
+  "escalation": [
+    {
+      "afterMinutes": 15,
+      "to": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner (substitute)"
+      }
+    }
+  ],
+  "runbook": "docs/runbooks/backup-restore.md",
+  "emittedAt": "2026-09-23T22:46:50.269Z",
+  "minimized": true,
+  "personalData": {
+    "removed": [],
+    "redactions": [],
+    "digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+  },
+  "observed": {
+    "value": null,
+    "status": "fail",
+    "freshness": "fresh",
+    "capturedAt": "2026-09-23T22:46:50.269Z",
+    "ageSeconds": 0
+  },
+  "delivery": {
+    "recipientId": null,
+    "transport": null,
+    "status": "not-run",
+    "receipt": null,
+    "deliveredAt": "2026-09-23T22:46:50.269Z"
+  }
+}

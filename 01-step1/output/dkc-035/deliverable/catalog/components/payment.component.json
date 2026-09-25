@@ -1,0 +1,86 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ComponentManifest",
+  "requires": [
+    {
+      "ref": "platform-core",
+      "range": "^1.0.0",
+      "reason": "Betaling bruger kontrolplanens policy og audit; en betaling er en godkendt ændring."
+    },
+    {
+      "ref": "identity-broker",
+      "range": "^1.0.0",
+      "reason": "Betalingstjenestens callback og operatøradgang skal have en verificeret identitet."
+    }
+  ],
+  "optionalRequires": [],
+  "conflicts": [],
+  "dataServices": [],
+  "migrations": [],
+  "download": [
+    {
+      "artifact": "payment-connector-1.0.0.tar.zst",
+      "sizeMiB": 40,
+      "source": "registry.example.org/integrations/payment:1.0.0",
+      "verified": true,
+      "checksum": "sha256:5e6f7081"
+    }
+  ],
+  "operations": ["health", "slo"],
+  "implementation": {
+    "status": "catalog-only",
+    "notes": "Katalogpost for den godkendte eksterne betalingstjeneste. Selve connector-adapteren er en særskilt afgrænset opgave og må ikke bygges uden en menneskelig godkendelse af tjenesten og dens scopes."
+  },
+  "metadata": {
+    "name": "payment",
+    "version": "1.0.0",
+    "description": "Betaling og bankadgang gennem en godkendt ekstern tjeneste med begrænsede scopes. Fuld bankadgang og kortdatahåndtering er forbudt.",
+    "accountableHuman": {
+      "subject": "oidc|cecilia.christensen",
+      "name": "Cecilia Christensen",
+      "role": "Service Owner",
+      "substitute": {
+        "subject": "oidc|david.dahl",
+        "name": "David Dahl"
+      }
+    },
+    "labels": {
+      "tier": "integration",
+      "category": "integration",
+      "wave": "6"
+    }
+  },
+  "componentType": "integration",
+  "category": "integration",
+  "securityCore": false,
+  "provides": {
+    "capabilities": ["payment"],
+    "dataServices": []
+  },
+  "supportProfile": {
+    "tier": "best-effort",
+    "supportWindow": "12 måneder fra GA",
+    "escalation": "Service Owner",
+    "notes": "Supportprofilen er foreløbig indtil en godkendt tjeneste og aftale foreligger."
+  },
+  "platforms": {
+    "os": ["linux"],
+    "arch": ["x64", "arm64"],
+    "runtime": ["node>=22 <23", "node>=24 <25"]
+  },
+  "resources": {
+    "cpuMillicores": 150,
+    "memoryMiB": 384,
+    "storageGiB": 5,
+    "nodes": 0
+  },
+  "localization": {
+    "family": "finance",
+    "status": "pending-legal-review",
+    "dataClasses": ["financial"],
+    "localeRequirements": ["payment", "agreements"],
+    "adapterInterface": "payment-bank",
+    "candidateRef": "integration-candidate.stripe.example.json",
+    "reason": "Betaling kræver en godkendt ekstern tjeneste med begrænsede scopes og en aftale; kandidaten er teknisk rangeret men ikke menneskeligt godkendt."
+  }
+}

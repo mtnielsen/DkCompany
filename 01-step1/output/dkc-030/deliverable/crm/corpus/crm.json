@@ -1,0 +1,148 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "CrmCorpus",
+  "metadata": {
+    "name": "platform-crm-corpus",
+    "version": "1.0.0",
+    "description": "Deterministisk testkorpus for CRM. Indeholder virksomheder, kontakter, salgsforløb, aktiviteter og importposter (inkl. en dublet og en gentaget idempotency-nøgle) til mock-upstreamen.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner"
+    },
+    "labels": {
+      "kind": "test-corpus"
+    }
+  },
+  "tenants": {
+    "acme": {
+      "token": "test-key-acme",
+      "owner": {
+        "subject": "oidc|ada.acme",
+        "name": "Ada Acme",
+        "role": "sales"
+      },
+      "records": {
+        "Account": [
+          {
+            "id": "1001",
+            "name": "Acme Nord A/S",
+            "vatId": "DK10010001",
+            "assignedUser": "oidc|ada.acme",
+            "classification": "internal"
+          },
+          {
+            "id": "1002",
+            "name": "Acme Syd ApS",
+            "vatId": "DK10020002",
+            "assignedUser": "oidc|ben.acme",
+            "classification": "internal"
+          }
+        ],
+        "Contact": [
+          {
+            "id": "2001",
+            "name": "Carla Contact",
+            "emailAddress": "carla@acme-nord.example",
+            "accountId": "1001",
+            "assignedUser": "oidc|ada.acme",
+            "classification": "personal"
+          },
+          {
+            "id": "2002",
+            "name": "Ben Kunde",
+            "emailAddress": "ben@acme-syd.example",
+            "accountId": "1002",
+            "assignedUser": "oidc|ben.acme",
+            "classification": "personal"
+          }
+        ],
+        "Opportunity": [
+          {
+            "id": "3001",
+            "name": "Acme Nord - udvidelse",
+            "accountId": "1001",
+            "amount": 250000,
+            "stage": "qualification",
+            "assignedUser": "oidc|ada.acme",
+            "classification": "confidential"
+          }
+        ],
+        "Activity": [
+          {
+            "id": "4001",
+            "type": "Call",
+            "subject": "Opkald om udvidelse",
+            "contactId": "2001",
+            "accountId": "1001",
+            "assignedUser": "oidc|ada.acme",
+            "classification": "personal"
+          }
+        ]
+      },
+      "imports": [
+        {
+          "entityType": "Contact",
+          "idempotencyKey": "acme-import-contact-1",
+          "record": {
+            "name": "Dora Dublet",
+            "emailAddress": "dora@acme-nord.example",
+            "accountId": "1001",
+            "classification": "personal"
+          }
+        },
+        {
+          "entityType": "Contact",
+          "idempotencyKey": "acme-import-contact-1",
+          "record": {
+            "name": "Dora Dublet",
+            "emailAddress": "dora@acme-nord.example",
+            "accountId": "1001",
+            "classification": "personal"
+          }
+        },
+        {
+          "entityType": "Account",
+          "idempotencyKey": "acme-import-account-1",
+          "record": {
+            "name": "Acme Øst A/S",
+            "vatId": "DK10030003",
+            "classification": "internal"
+          }
+        }
+      ]
+    },
+    "globex": {
+      "token": "test-key-globex",
+      "owner": {
+        "subject": "oidc|gus.globex",
+        "name": "Gus Globex",
+        "role": "sales"
+      },
+      "records": {
+        "Account": [
+          {
+            "id": "5001",
+            "name": "Globex International",
+            "vatId": "US50010001",
+            "assignedUser": "oidc|gus.globex",
+            "classification": "internal"
+          }
+        ],
+        "Contact": [
+          {
+            "id": "6001",
+            "name": "Gina Globex",
+            "emailAddress": "gina@globex.example",
+            "accountId": "5001",
+            "assignedUser": "oidc|gus.globex",
+            "classification": "personal"
+          }
+        ],
+        "Opportunity": [],
+        "Activity": []
+      },
+      "imports": []
+    }
+  }
+}

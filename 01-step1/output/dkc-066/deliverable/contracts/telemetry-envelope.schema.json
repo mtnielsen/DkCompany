@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/telemetry-envelope.schema.json",
+  "title": "Telemetry Envelope",
+  "description": "Versioneret indgave-envelope for alt telemetri: OpenTelemetry metrics/logs/traces, sikkerhedsfund, testkørsler, recovery-status og agenthandlinger. Envelopen bærer stabile ressource-ID'er og relationer, så en hændelse kan korreleres på tværs af tjeneste, miljø, tenant, version, deployment, ændring, incident, alarm og trace. Tenantscope er en påstand i envelopen; den autoritative scope udledes server-side af den verificerede principal.",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "id", "occurredAt", "signal", "source", "scope", "resource", "dataClassification"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+$" },
+    "kind": { "const": "TelemetryEnvelope" },
+    "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "occurredAt": { "type": "string", "format": "date-time" },
+    "signal": { "enum": ["metric", "log", "trace", "finding", "test-run", "recovery", "agent-action"] },
+    "source": {
+      "type": "object",
+      "required": ["id", "kind"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["otel", "scanner", "runtime", "ci", "backup", "agent", "api"] },
+        "version": { "type": "string" }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "required": ["tenantId", "environment"],
+      "additionalProperties": false,
+      "properties": {
+        "tenantId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+        "environment": { "enum": ["dev", "staging", "prod"] },
+        "service": { "type": "string" }
+      }
+    },
+    "resource": { "type": "string", "pattern": "^res:\\/\\/[a-z0-9][a-z0-9-]{1,62}\\/[a-z][a-z0-9._-]{1,63}\\/.+$" },
+    "relations": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "environment": { "type": "string", "pattern": "^res:\\/\\/" },
+        "service": { "type": "string", "pattern": "^res:\\/\\/" },
+        "version": { "type": "string", "pattern": "^res:\\/\\/" },
+        "deployment": { "type": "string", "pattern": "^res:\\/\\/" },
+        "change": { "type": "string", "pattern": "^res:\\/\\/" },
+        "incident": { "type": "string", "pattern": "^res:\\/\\/" },
+        "alert": { "type": "string", "pattern": "^res:\\/\\/" },
+        "trace": { "type": "string", "pattern": "^res:\\/\\/" }
+      }
+    },
+    "dataClassification": { "enum": ["none", "operational", "pseudonymised", "personal", "special-category"] },
+    "otel": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "traceId": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
+        "spanId": { "type": "string", "pattern": "^[0-9a-f]{16}$" },
+        "metric": {
+          "type": "object",
+          "required": ["name", "value"],
+          "additionalProperties": false,
+          "properties": {
+            "name": { "type": "string", "minLength": 1 },
+            "value": { "type": "number" },
+            "unit": { "type": "string" }
+          }
+        },
+        "attributes": { "type": "object" }
+      }
+    },
+    "ref": {
+      "type": "object",
+      "required": ["contract", "id"],
+      "additionalProperties": false,
+      "properties": {
+        "contract": { "enum": ["security-findings", "test-run", "recovery-status", "cloud-event", "release-gate-result", "restore-drill"] },
+        "id": { "type": "string", "minLength": 1 },
+        "digest": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "labels": { "type": "object" },
+    "payload": { "type": "object" }
+  }
+}

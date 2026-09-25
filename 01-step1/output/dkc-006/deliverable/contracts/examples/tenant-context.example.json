@@ -1,0 +1,19 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "TenantContext",
+  "tenantId": "acme",
+  "subject": {
+    "kind": "human",
+    "id": "oidc|dpo@example.org",
+    "transport": "oidc"
+  },
+  "source": "oidc",
+  "crossTenant": false,
+  "scope": ["acme"],
+  "resources": [
+    "res://acme/invoice/42",
+    "res://acme/audit-event/7"
+  ],
+  "resourceIdFormat": "res://<tenant>/<type>/<local-id>",
+  "claims": ["acme"]
+}

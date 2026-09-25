@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/release-catalog.schema.json",
+  "title": "Release Catalog",
+  "description": "DKC-061: et signeret, versionsstyret releasekatalog. Hver release har en udgivelseskanal (stable/security/eol/revoked), supportvindue, EOL-status, en kompatibilitetslås pr. komponent og signerede artefakter. En tilbagekaldt release må ikke kunne køre, en EOL-release skal have en vedtaget håndtering, og en sikkerhedsopdatering skal pege på en advisory og en procedure. Kataloget er grundlaget for opdateringsplanen; usignerede eller ulåste releases afvises.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "policy", "trustAnchorRef", "releases", "signature"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "ReleaseCatalog" },
+    "metadata": { "$ref": "#/$defs/metadata" },
+    "policy": {
+      "type": "object",
+      "required": [
+        "requireSignature",
+        "requireCompatibilityLock",
+        "requireProvenance",
+        "requireSbom",
+        "revokedNeverRunnable",
+        "eolRequiresHandling",
+        "securityUpdateRequiresAdvisory",
+        "promotionPath"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "requireSignature": { "type": "boolean" },
+        "requireCompatibilityLock": { "type": "boolean" },
+        "requireProvenance": { "type": "boolean" },
+        "requireSbom": { "type": "boolean" },
+        "revokedNeverRunnable": { "type": "boolean" },
+        "eolRequiresHandling": { "type": "boolean" },
+        "securityUpdateRequiresAdvisory": { "type": "boolean" },
+        "promotionPath": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["stable", "security", "eol", "revoked"] }
+        }
+      }
+    },
+    "trustAnchorRef": { "type": "string", "minLength": 3, "description": "Sti til den offentlige trust anchor (fx release/trust/release-keys.json)." },
+    "signature": { "$ref": "#/$defs/signature" },
+    "releases": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/release" }
+    }
+  },
+  "$defs": {
+    "human": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\|[a-z0-9][a-z0-9._-]{2,}$" },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": { "$ref": "#/$defs/human" }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman", "labels"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/human" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "signature": {
+      "type": "object",
+      "required": ["algorithm", "keyId", "value"],
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": { "enum": ["ed25519", "hmac-sha256"] },
+        "keyId": { "type": "string", "minLength": 2 },
+        "value": { "type": "string", "minLength": 16 }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "required": ["name", "digest", "signature"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 3 },
+        "digest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "signature": { "$ref": "#/$defs/signature" }
+      }
+    },
+    "securityUpdate": {
+      "type": "object",
+      "required": ["advisoryId", "severity", "fixedIn", "procedure"],
+      "additionalProperties": false,
+      "properties": {
+        "advisoryId": { "type": "string", "minLength": 3 },
+        "severity": { "enum": ["low", "moderate", "high", "critical"] },
+        "fixedIn": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "procedure": { "type": "string", "minLength": 10 },
+        "requiresRestart": { "type": "boolean" }
+      }
+    },
+    "supportWindow": {
+      "type": "object",
+      "required": ["from", "until", "tier"],
+      "additionalProperties": false,
+      "properties": {
+        "from": { "type": "string", "format": "date-time" },
+        "until": { "type": "string", "format": "date-time" },
+        "tier": { "enum": ["supported", "best-effort", "community", "none"] }
+      }
+    },
+    "release": {
+      "type": "object",
+      "required": ["id", "channel", "releasedAt", "eolAt", "supportWindow", "compatibilityLock", "artifacts", "securityUpdates", "digest"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "digest": { "type": "string", "pattern": "^[a-f0-9]{64}$", "description": "SHA-256 over den kanoniske release (uden digest)." },
+        "channel": { "enum": ["stable", "security", "eol", "revoked"] },
+        "releasedAt": { "type": "string", "format": "date-time" },
+        "eolAt": { "type": ["string", "null"], "format": "date-time" },
+        "handling": {
+          "type": ["string", "null"],
+          "minLength": 3,
+          "description": "Vedtaget håndtering for en EOL- eller tilbagekaldt release. Påkrævet af semantikken for de kanaler, ikke af skemaet."
+        },
+        "supportWindow": { "$ref": "#/$defs/supportWindow" },
+        "compatibilityLock": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+          "description": "Komponent-id → låst version. Hele den testede closure pinnes."
+        },
+        "artifacts": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/artifact" }
+        },
+        "securityUpdates": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/securityUpdate" }
+        }
+      }
+    }
+  }
+}

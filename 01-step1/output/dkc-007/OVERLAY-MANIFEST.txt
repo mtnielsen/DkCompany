@@ -1,0 +1,119 @@
+# SHA256-manifest for DKC-007-leverancen
+# Genereret: 2026-09-23T10:04:02Z
+# Forudsætning: DKC-001 + DKC-002 + DKC-003 + DKC-004 + DKC-005 + DKC-006
+# Reviewets base: 5f9fa73, undersøgt checkout: 83ad91a
+# Bemærk: DKC-055 er ikke implementeret; se README'ens blokeringsafsnit.
+
+# --- deliverable/ (overlay, relative til 00-core/) ---
+4d30d7e0e99fb50f6d7373cf730a9bcc5f6c4fbd02b301d633a87aae36ef4edc  ./Makefile
+217a50bd1807df0a1777dd202800b59789be1c29d0fd43aae884d691f0fe741b  ./conformance/src/checks/agents.mjs
+b1afc669ad59c8d9895315d727ef47df019ae279d15225543e69dd62a551a210  ./conformance/src/checks/policy.mjs
+00fd8d63d205e1afc0b5064ae1f21f89815cf411b5377307d4321a73ac4b310c  ./conformance/test/agent-conformance.test.mjs
+5563f070929ab18c8e6c74a38c556b89d2aee70a6b175ec2ba73e2a68da5e5f0  ./contracts/agent-task.schema.json
+2f23a18dabb07cc8e0a0e145e24469f57ad5e92b199037ab11714ebc7f3cde3a  ./contracts/examples/agent-task.example.json
+68be88bdd80002a8ff7031896155d5a24723a99e04b869b63fcfc18b64a42045  ./contracts/policy-input.schema.json
+8e92a05fea1c1f91ed24e370fbe6f1237cea6ddb85ed4f5ca06d5c863730f7f0  ./docs/adr/0018-stram-policy-scope-og-evidenkontrol.md
+b6f6ae63269a9fa2233eedd820c690b307e0a43e10550c90203311e124994c8f  ./docs/adr/README.md
+2759e20e208bd6c0e479e6c9637837185a3fad74d489b2d3bcd362255f881def  ./docs/spec/README.md
+9f50f93186369d983b8168d902c647efecfd0fe1c0d7af939e86a8525e3fedc3  ./docs/spec/policy-boundary.md
+0df234bd57453007263c4c45f0eeed893ea78ffb1b6643cd9a2a3fcb4a3ddf91  ./docs/status/implementation-matrix.md
+1d819c305cebf2dc7ed7252d5b0f3a056076e0533a5c74a455093976fc483415  ./runtime/src/boundary.mjs
+db8868af7b0232f767d944a2b6143988b1569b7e001c377bbe0c7d8dccdab82b  ./runtime/src/classification.mjs
+5f282c8a0801a19d03b7251e80de2eb212d69e17e8a16d234a353f71666f36a8  ./runtime/src/cli.mjs
+c45a75c7ba7c027a8f15051d1baf5a4af5e79ce4667a432632c2640ffca05f90  ./runtime/src/digest.mjs
+e08802b801048915c7ba80a421b420154cd3092e3082b5268e9ffdd632c01f20  ./runtime/src/evidence.mjs
+53dba47040d98453db4fa2a7df052023d2e31d9592543535fd5d8f00d9edcfa7  ./runtime/src/runtime.mjs
+6004510c8f2f71d0bb0f49204fa33e3f5f100fd08b9c4d3ef8aea9bcf0c6a177  ./runtime/test/approval-runtime.test.mjs
+9b83851cce77bff39fe7d7494e076e1e006a308d30afbe505c51a129590f981b  ./runtime/test/classification.test.mjs
+ee8416b2b35a67c20bdb7c5d8410222e39986f271139c7d4d01e95a2c9d8aade  ./runtime/test/evidence-fixtures.mjs
+ee44377bd6425b5f8e3778239d4351790e25d61a37b1905fe9afc14d70edba9a  ./runtime/test/pdp-fixtures.mjs
+dc5f32d33aff2de89e9676bb59b1d6aa25bb71ad7479bedc1864e145dd0ba1b0  ./runtime/test/policy-boundary.test.mjs
+95d2b21c0e74f0a1785a7bbb374139d8e99a1d63bd5aa12d0c5dd55a4cf8d824  ./runtime/test/runtime.test.mjs
+7305da64bef1062cb2cfbfa40afd52e33c1595b0c2c9a83ab577e7e40566a9f8  ./runtime/test/tenant-runtime.test.mjs
+0130aa379d172b5b1fe04522d01a09d2c632e37e6680930cb38a7544243f33ba  ./tools/baseline/registry.mjs
+
+# --- evidence/ ---
+7825edf96b5a82fd18a7b2216c29eab659ec3d63d8b848cf5e55f05c6722c3c7  ./baseline/artifacts/CHANGELOG.jsonl
+3d71594a1b3f891b9184f3062a9dea930d5790869bf2c46b5b1531259cc56eb0  ./baseline/artifacts/badge.json
+862b6b78550d6e1ba4d847af6c1de6a6d028cb42030f12956b26cf091cf9c4a3  ./baseline/artifacts/oscal-assessment-results.json
+59ed84178ef0d29daae75b95da2c4b1945c180ed5d9e065ec5daa4dd4a4afc2f  ./baseline/artifacts/report.json
+4659cd528eabba83d87487d7c0d26fcedaed5d4866380f38aea3fd3914a38070  ./baseline/latest.json
+77fcd4775453c767eb2789138a6af10209df15b26c737905c9960b367c57a058  ./baseline/logs/adapter-evidence.log
+0f88dd84b792bfef332f4bc3bed1261c4b7b3e354c52eaf5bbec46842fa2ecfc  ./baseline/logs/adapter-test.log
+a3267d3443bef6e55c865a500263b1f820e83ff3955c61a3dae81437ade7851e  ./baseline/logs/agent-conformance-test.log
+fede4bf3aea8ba86c60685aea1946a71db9bbf811bfed0ce5d2d9f026541af44  ./baseline/logs/approval-check.log
+8a04946300cdc93bbb2338d202ebc0dff905400313497fb3add1e9ffc29d08bf  ./baseline/logs/approval-test.log
+c3589110ba295200ad3c31c554007fbf86b3db25369c2c8d9c93813274b61aff  ./baseline/logs/architecture-test.log
+3e2340fc1de6c31d6eaeb2e70ee78a04ed16ae9d8f2cc5bec51e98e32320b7cd  ./baseline/logs/audit-service-evidence.log
+da1371458fe9254d7182ad9738fda2ee9cd69d1db0ab9639eb7de9c92fec69ac  ./baseline/logs/audit-service-test.log
+ad95c1f1108ce05c4a91fa9902cd3864ffdadb51d12a852a98ecd198b15bf8ba  ./baseline/logs/boundary-test.log
+71b1cfb13c16014e1213d384544f22d7e4f9fb18822774611d01d167a6bfc8fa  ./baseline/logs/changelog-check.log
+01639d88c5568c5c9f3ebc76dfe4f17c2d67ae6cefc6955977e448809d27663d  ./baseline/logs/changelog.log
+6ef9732a9f6439deb81a5b105720214a38c23cfdb5e251d7fd601c760fc31f70  ./baseline/logs/compliance-check.log
+f9dc0c53adcd8fea9879c192832dc5ac914b0dc2c309202b0a4184ad056182d0  ./baseline/logs/compliance-test.log
+cb49bac3297ff52d0e52049fbaeddec93421bcbca3fabafe89360f24996cf23d  ./baseline/logs/conform-all.log
+d3c5b00edd76a4050c1d4e7e63436a74a131bb5b74be0e10117cbc022fb0ed84  ./baseline/logs/conform-negative.log
+355f6e9cf7b406e1b35c166b1e5c51cff798c70ecce0d0946d8f2b51d5d9706a  ./baseline/logs/curriculum-check.log
+d24ada08fd5f72a2e445659e16e32f7204fa0acc305bd34776d4806e484715c1  ./baseline/logs/curriculum-test.log
+06a186f8ac94a32959ec3ea33ab8e96826c9162256e70b34391e1f34abb594bd  ./baseline/logs/dsar-demo.log
+d7d3c0f1ceefc7552a468c4aca591fcfcd9a83d3c78153130bcf4cb6b6c1d355  ./baseline/logs/evidence-test.log
+7a89886975c08e5621a273c05e4b6dddfa6cf919f8ba77e00c7987ae5d9707d4  ./baseline/logs/gateway-test.log
+7c8c387c137de6fa5f9be0160db793f4ee224628a1fb7880514517021f9b3858  ./baseline/logs/gitops-drift.log
+28c852c3bf592c29970daf782b1cb7f4d452bb121869c13d12c02c1e602aae2d  ./baseline/logs/gitops-reconcile.log
+f37658afdb17e19500f33a72d982e87ec6cfe54cd826e651ec5a2439374ced62  ./baseline/logs/gitops-test.log
+82894fea5b55a415341c0c0574becacf4e4bfcd6fd0982da4e17ba6f367a6bab  ./baseline/logs/gitops-verify.log
+eb022507bea8ae44c360b40aeaefdfb1f0dd56f8c71866a00122fa108824f324  ./baseline/logs/iam-adapter-evidence.log
+3dad063ae6e23a2bcc43137f14f40d3a92b407577c91148d6f9b49ae9e6ad6ea  ./baseline/logs/iam-adapter-test.log
+3e7b53d5ba1ff9388567dbd9b4b772f2bb1eac9de9980d37529e6703bb7bf10c  ./baseline/logs/identity-test.log
+a664536a815eb3630b1f0efbb432fb4a8c7419451a2cd9a76bedcf574a5f9105  ./baseline/logs/integration-falco.log
+da78e8e2050df112722f11c64a3c03c8dc7b08d15cce4c1f1d85411d25dbca13  ./baseline/logs/integration-github-actions.log
+b453f1a895c563adc5e7097711ba3aa1662751d02c9f582c048194a52557fb3f  ./baseline/logs/integration-keycloak.log
+6f51bc357a1df1ffb377dd66b3b0a9fc218308749bdb79c934ab456e1ee65980  ./baseline/logs/integration-llm.log
+73d3a2014ef2cd2a2a663401b6d1c97d9cea1f7f088c442fa211929a356de7e3  ./baseline/logs/integration-mattermost.log
+9b671d588d07ea9aaca0f08a3d6036e797b287d0b14b17355c04e53ef89dfd65  ./baseline/logs/integration-oidc.log
+237ef3ff190822099c0f3ddffa4059ad36ed8728d92d3f0214b427e6fa4eaa0c  ./baseline/logs/integration-trivy.log
+1d943c78e023c2cc4f23099db68e437f0c56baba1cc0f595c01721a264a37cb3  ./baseline/logs/integration-wazuh.log
+031d2874b4fa9e2736e9b638cc63b6edd242590519a5de7d7d15cacb2b75a20b  ./baseline/logs/lint.log
+4974e50d69e1d7227e1b14de971b38bfdf4e982fd40344ed7aacc53607019a33  ./baseline/logs/observability-check.log
+30cec7f93dcdd0dd6eddd21d0c871db3b207037e0d8e75e63e33ce7049e35ad5  ./baseline/logs/observability-test.log
+574d3e60d018cbbd93016d4c9330108f57375e408d53ac971771d7ec5650e4e7  ./baseline/logs/oscal-evidence.log
+6d7f0b91b5424e2757ec07abdc0aed4175a2ea3d0b94fde539d250979e566a92  ./baseline/logs/pitch-check.log
+4f2c6685a42338ba5d57b2af7d0292bdc7684e639262c01af5a6c51ad0609107  ./baseline/logs/pitch-test.log
+8a60521b76186bb87cc7a6bb0f5d25baf70898f467180c7835d1816385ac89d2  ./baseline/logs/policy-decide.log
+65afdee7c558a5cc91374949d7721f3e41202eaa964d625f2cce8e435fe9cd4e  ./baseline/logs/policy-test.log
+0b909ca38c422863a035bfd3210549acf4a4e1c41258d85cc937f09a51f4cd20  ./baseline/logs/policy-verify.log
+d989059bb3a6f89c630e1349474ee9fe7ba4acbe7e3b40635b411973a2245454  ./baseline/logs/reviewer-metrics.log
+dfc43f84d1f04d38cb21aa8d88333308a8a54e31b6d078936c112251953f7fe2  ./baseline/logs/reviewer-test.log
+65d38fb9ac1e1aabaeb50ea8ae9341dd8162ec5f6aabf7622f4b50b8a5922b73  ./baseline/logs/runtime-test.log
+dd875c7777147c2225c94c8d2b17d8ca6815f7511f93f52855dd720a22ba54a5  ./baseline/logs/security-check.log
+f580b0ed74dadabefa2d97b1fc12d0c34a55b414e622e93e0461d675b241655d  ./baseline/logs/security-test.log
+533952898f2e68fc825638a3ee3171fde1ddfe8c72f1e2efb28071a2d08e2791  ./baseline/logs/telemetry-test.log
+f9c2b23f42ed3c1ec405546a5c5214e61e49842b6dd63e357bdcf70c8c91865f  ./baseline/logs/tenant-check.log
+a2feeb9576f1312b219a3e653812a5a4549253271e91cfb082f9404b6d7dceeb  ./baseline/logs/tenant-test.log
+e527dfae1f2594f3efc1343be08aa1d5f65606204b5a330dcc80c844b8011b20  ./baseline/logs/test.log
+9a0239f63fd3c43bc2b1d1292bafedf5ae585b45b809236a8f41c4f1aaab7f59  ./baseline/logs/validate.log
+4659cd528eabba83d87487d7c0d26fcedaed5d4866380f38aea3fd3914a38070  ./baseline/runs/2026-09-23T10-02-25-047Z-83ad91a.json
+001ce576014c4d5a03371ce964fd23f0d873f0b97a194d2b242aba235d8403e5  ./logs/baseline-full.log
+b622b16c15ec438aa8175cee1e5d4235eb5c1be51936fc8e0c69b6e4267a2b31  ./logs/make-adapter-test.log
+350365037b0c994e12dd43483f14f73517f54106fc5d52ba421e8f574a8edb4c  ./logs/make-agent-conformance-test.log
+7f70f67b11588e92dfc472ec58f42712de2e633ba54393641fffb1e8cf4a6011  ./logs/make-approval-test.log
+7d7132950c79302eebb4e6224271c115626b331e4b9391c1c910600f7d7ddb3f  ./logs/make-architecture-test.log
+841baed1c1da478610ac8a4421be8c5676a7fb535a7cf3585101a18cf22815b7  ./logs/make-audit-service-test.log
+cd20b0308b030b8b3b57bfa58b0b62514a7fb7fd4d4bfd6f65f759fbcddfb718  ./logs/make-baseline-test.log
+9403855cea10611f5a29c43e51d336aa8b8b4ac5b31c82d59ca689f695394a60  ./logs/make-boundary-test.log
+647c0e1a3ede3ce22102ef65fa71dfd2bd3da8f1a32d236843448ce835950bd2  ./logs/make-curriculum-test.log
+aa2d4da1b3f8f97b7b9857ed548c09100d94ad452366388d76ae0e9c53edacf0  ./logs/make-gateway-test.log
+010caef9836af1cfdddc954515c05fe8730e43dc67832b96dad5b39ddc6a2a0e  ./logs/make-iam-adapter-test.log
+26ec1b20be43968f7db2ac5373eba5dd87ae8cc95024f66f2fe8ce51b99b2e0c  ./logs/make-identity-test.log
+7e3d39218b4b3c1e569c0ff8eb84f4927c0653a4044a427569a49ab1b2fee162  ./logs/make-policy-decide.log
+ae58d5d7b04c2eff69b71c4e6d4c57b12126923cc7dddefb80528bfa8274f445  ./logs/make-policy-test.log
+c15ba5b89e9eaadaf9f5d252beae68bea41679ac4773fb56daa0521c642ee129  ./logs/make-policy-verify.log
+5fffece7d5425cf9fbf24cd25ff4511d50c23bd896a938e9714b682feeb37410  ./logs/make-runtime-test.log
+86e8b8b5b7e16316f560faef1b90653c8b98ad1742f6f2bc1862f66968ab6cea  ./logs/make-tenant-check.log
+9b73027c5aeac9fc060ad1d53bb7da1cefd8618c7189f3012d9a599c52b1a887  ./logs/make-tenant-test.log
+62a9f277f291d4eb002a9ebb440dc4c5ac064d2ed9542d9cdc7f0e2256eedb6c  ./logs/make-test.log
+ccdc7896166ed82f0cfdb63a72f5c0c45b312b9506380a1d18302c7439858851  ./logs/make-validate.log
+
+# --- README.md, apply.sh ---
+c5572d0fc28c03708f339fc72c325be305b5e77ff4ad1b6bab36732a53872a11  ./README.md
+fb3d0f23f3bd996550bdecb4e824c430d217f9f80612f88c8c484d59600c68ea  ./apply.sh

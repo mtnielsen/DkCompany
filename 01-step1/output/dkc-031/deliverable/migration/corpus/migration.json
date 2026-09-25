@@ -1,0 +1,386 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "MigrationCorpus",
+  "metadata": {
+    "name": "platform-migration-corpus",
+    "version": "1.0.0",
+    "description": "Syntetisk korpus af kildeobjekter for hver pilotapp. Hvert objekt bærer de seks dækningsfacetter (ejerskab, timestamps, kommentarer, bilag, ACL og links), så dry-run, mapping, dublethåndtering, fejlliste og resumable import kan efterprøves deterministisk uden en levende kilde.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner"
+    }
+  },
+  "objects": [
+    {
+      "appId": "files",
+      "tenantId": "acme",
+      "entityType": "File",
+      "sourceObjectId": "nc-1001",
+      "classification": "internal",
+      "data": {
+        "name": "kontrakt.pdf",
+        "path": "/Aftaler/2025/kontrakt.pdf",
+        "contentHash": "aaaa000000000000000000000000000000000000000000000000000000000001",
+        "owner": "oidc|ada.acme",
+        "createdAt": "2025-01-02T08:00:00Z",
+        "updatedAt": "2025-02-03T09:30:00Z",
+        "comments": [
+          {
+            "id": "c-1001",
+            "author": "oidc|ben.acme",
+            "text": "Klar til underskrift",
+            "createdAt": "2025-01-05T10:00:00Z"
+          }
+        ],
+        "attachments": [
+          {
+            "id": "att-1001",
+            "name": "bilag-a.pdf",
+            "contentHash": "bbbb000000000000000000000000000000000000000000000000000000000002"
+          }
+        ],
+        "acl": {
+          "readSubjects": [
+            "oidc|ada.acme"
+          ],
+          "readGroups": [
+            "group:sales"
+          ],
+          "denySubjects": [],
+          "denyGroups": []
+        },
+        "links": [
+          {
+            "rel": "folder",
+            "target": "nc-2000"
+          }
+        ]
+      }
+    },
+    {
+      "appId": "files",
+      "tenantId": "acme",
+      "entityType": "Folder",
+      "sourceObjectId": "nc-2000",
+      "classification": "internal",
+      "data": {
+        "name": "Aftaler",
+        "path": "/Aftaler",
+        "owner": "oidc|ada.acme",
+        "createdAt": "2024-12-01T08:00:00Z",
+        "updatedAt": "2025-02-03T09:30:00Z",
+        "comments": [],
+        "attachments": [],
+        "acl": {
+          "readSubjects": [
+            "oidc|ada.acme"
+          ],
+          "readGroups": [
+            "group:sales"
+          ],
+          "denySubjects": [],
+          "denyGroups": []
+        },
+        "links": []
+      }
+    },
+    {
+      "appId": "projects",
+      "tenantId": "acme",
+      "entityType": "Project",
+      "sourceObjectId": "op-3001",
+      "classification": "internal",
+      "data": {
+        "identifier": "acme-migration",
+        "name": "Indflytning 2025",
+        "responsible": "oidc|ada.acme",
+        "createdAt": "2025-01-10T08:00:00Z",
+        "updatedAt": "2025-02-10T11:00:00Z",
+        "comments": [
+          {
+            "id": "pc-1",
+            "author": "oidc|ben.acme",
+            "text": "Første milepæl nået",
+            "createdAt": "2025-02-01T12:00:00Z"
+          }
+        ],
+        "attachments": [
+          {
+            "id": "patt-1",
+            "name": "plan.xlsx",
+            "ref": "files:nc-1001"
+          }
+        ],
+        "acl": {
+          "readSubjects": [
+            "oidc|ada.acme"
+          ],
+          "readGroups": [
+            "group:project-acme"
+          ],
+          "denySubjects": [],
+          "denyGroups": []
+        },
+        "links": [
+          {
+            "rel": "knowledge",
+            "target": "knowledge:kb-4001"
+          }
+        ]
+      }
+    },
+    {
+      "appId": "projects",
+      "tenantId": "acme",
+      "entityType": "WorkPackage",
+      "sourceObjectId": "wp-3101",
+      "classification": "internal",
+      "data": {
+        "projectIdentifier": "acme-migration",
+        "subject": "Migrér filer",
+        "assignee": "oidc|ben.acme",
+        "createdAt": "2025-01-11T08:00:00Z",
+        "updatedAt": "2025-02-11T09:00:00Z",
+        "comments": [
+          {
+            "id": "wc-1",
+            "author": "oidc|ada.acme",
+            "text": "Afventer dry-run",
+            "createdAt": "2025-02-02T13:00:00Z"
+          }
+        ],
+        "attachments": [
+          {
+            "id": "watt-1",
+            "name": "tjekliste.pdf",
+            "ref": "files:nc-1001"
+          }
+        ],
+        "acl": {
+          "readSubjects": [
+            "oidc|ben.acme"
+          ],
+          "readGroups": [
+            "group:project-acme"
+          ],
+          "denySubjects": [],
+          "denyGroups": []
+        },
+        "links": [
+          {
+            "rel": "blocks",
+            "target": "wp-3102"
+          }
+        ]
+      }
+    },
+    {
+      "appId": "projects",
+      "tenantId": "acme",
+      "entityType": "WorkPackage",
+      "sourceObjectId": "wp-3102",
+      "classification": "internal",
+      "data": {
+        "projectIdentifier": "acme-migration",
+        "subject": "Migrér CRM",
+        "assignee": "oidc|ada.acme",
+        "createdAt": "2025-01-11T08:05:00Z",
+        "updatedAt": "2025-02-11T09:05:00Z",
+        "comments": [],
+        "attachments": [],
+        "acl": {
+          "readSubjects": [
+            "oidc|ada.acme"
+          ],
+          "readGroups": [
+            "group:project-acme"
+          ],
+          "denySubjects": [],
+          "denyGroups": []
+        },
+        "links": []
+      }
+    },
+    {
+      "appId": "knowledge",
+      "tenantId": "acme",
+      "entityType": "Page",
+      "sourceObjectId": "kb-4001",
+      "classification": "internal",
+      "data": {
+        "book": "drift",
+        "slug": "migration",
+        "name": "Migrering til DkCompany",
+        "ownedBy": "oidc|ada.acme",
+        "createdAt": "2025-01-15T08:00:00Z",
+        "updatedAt": "2025-02-15T08:00:00Z",
+        "comments": [
+          {
+            "id": "kc-1",
+            "author": "oidc|ben.acme",
+            "text": "Opdateret med exit-trin",
+            "createdAt": "2025-02-03T08:00:00Z"
+          }
+        ],
+        "attachments": [
+          {
+            "id": "katt-1",
+            "name": "runbook.pdf",
+            "contentHash": "cccc000000000000000000000000000000000000000000000000000000000003"
+          }
+        ],
+        "acl": {
+          "readSubjects": [
+            "oidc|ada.acme"
+          ],
+          "readGroups": [
+            "group:drift"
+          ],
+          "denySubjects": [],
+          "denyGroups": []
+        },
+        "links": [
+          {
+            "rel": "project",
+            "target": "projects:op-3001"
+          }
+        ]
+      }
+    },
+    {
+      "appId": "support",
+      "tenantId": "acme",
+      "entityType": "Ticket",
+      "sourceObjectId": "za-5001",
+      "classification": "personal",
+      "data": {
+        "number": "20250115001",
+        "title": "Kan ikke logge ind",
+        "owner": "oidc|sam.support",
+        "createdAt": "2025-01-15T08:00:00Z",
+        "updatedAt": "2025-01-16T10:00:00Z",
+        "articles": [
+          {
+            "id": "ar-1",
+            "author": "oidc|sam.support",
+            "text": "Vi kigger på det",
+            "internal": false,
+            "createdAt": "2025-01-15T08:10:00Z"
+          }
+        ],
+        "attachments": [
+          {
+            "id": "zatt-1",
+            "name": "screenshot.png",
+            "contentHash": "dddd000000000000000000000000000000000000000000000000000000000004"
+          }
+        ],
+        "groupAccess": {
+          "readGroups": [
+            "group:support"
+          ],
+          "denyGroups": []
+        },
+        "links": []
+      }
+    },
+    {
+      "appId": "crm",
+      "tenantId": "acme",
+      "entityType": "Contact",
+      "sourceObjectId": "esp-6001",
+      "classification": "personal",
+      "data": {
+        "name": "Dora Dublet",
+        "emailAddress": "dora@acme-nord.example",
+        "assignedUser": "oidc|ada.acme",
+        "createdAt": "2025-01-20T08:00:00Z",
+        "updatedAt": "2025-02-20T08:00:00Z",
+        "activities": [
+          {
+            "id": "act-1",
+            "type": "Call",
+            "subject": "Opfølgning",
+            "createdAt": "2025-01-21T08:00:00Z"
+          }
+        ],
+        "attachments": [
+          {
+            "id": "eatt-1",
+            "name": "aftale.docx",
+            "contentHash": "eeee000000000000000000000000000000000000000000000000000000000005"
+          }
+        ],
+        "teams": {
+          "readSubjects": [
+            "oidc|ada.acme"
+          ],
+          "readGroups": [
+            "group:sales"
+          ],
+          "denySubjects": [],
+          "denyGroups": []
+        },
+        "links": [
+          {
+            "rel": "account",
+            "target": "crm:acme:Account:1001"
+          }
+        ]
+      }
+    },
+    {
+      "appId": "crm",
+      "tenantId": "acme",
+      "entityType": "Contact",
+      "sourceObjectId": "esp-6002",
+      "classification": "personal",
+      "data": {
+        "name": "Dora Dublet (gammel)",
+        "emailAddress": "dora@acme-nord.example",
+        "assignedUser": "oidc|ben.acme",
+        "createdAt": "2025-01-19T08:00:00Z",
+        "updatedAt": "2025-02-19T08:00:00Z",
+        "activities": [],
+        "attachments": [],
+        "teams": {
+          "readSubjects": [
+            "oidc|ben.acme"
+          ],
+          "readGroups": [
+            "group:sales"
+          ],
+          "denySubjects": [],
+          "denyGroups": []
+        },
+        "links": []
+      }
+    },
+    {
+      "appId": "crm",
+      "tenantId": "globex",
+      "entityType": "Contact",
+      "sourceObjectId": "esp-7001",
+      "classification": "personal",
+      "data": {
+        "name": "Gina Globex",
+        "emailAddress": "gina@globex.example",
+        "assignedUser": "oidc|gus.globex",
+        "createdAt": "2025-01-22T08:00:00Z",
+        "updatedAt": "2025-02-22T08:00:00Z",
+        "activities": [],
+        "attachments": [],
+        "teams": {
+          "readSubjects": [
+            "oidc|gus.globex"
+          ],
+          "readGroups": [],
+          "denySubjects": [],
+          "denyGroups": []
+        },
+        "links": []
+      }
+    }
+  ]
+}

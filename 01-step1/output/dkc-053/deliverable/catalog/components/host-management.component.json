@@ -1,0 +1,83 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ComponentManifest",
+  "requires": [
+    {
+      "ref": "platform-core",
+      "range": "^1.0.0",
+      "reason": "Host-brokeren skal godkendes og auditeres gennem kontrolplanen."
+    }
+  ],
+  "optionalRequires": [],
+  "conflicts": [],
+  "dataServices": [],
+  "migrations": [],
+  "download": [
+    {
+      "artifact": "host-management-1.0.0.tar.zst",
+      "sizeMiB": 25,
+      "source": "registry.example.org/platform/host-management:1.0.0",
+      "verified": true,
+      "checksum": "sha256:be6a0b10"
+    }
+  ],
+  "operations": [
+    "drain",
+    "upgrade",
+    "health"
+  ],
+  "implementation": {
+    "status": "catalog-only",
+    "notes": "Katalogpost; det implementerende modul er endnu ikke bygget."
+  },
+  "metadata": {
+    "name": "host-management",
+    "version": "1.0.0",
+    "description": "Afgrænset host-/OS-broker. Separat opt-in: slås kun til når deployment-profilen tillader det og operatøren vælger den.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen"
+      }
+    },
+    "labels": {
+      "tier": "opt-in"
+    }
+  },
+  "componentType": "host-management",
+  "category": "platform",
+  "securityCore": false,
+  "provides": {
+    "capabilities": [
+      "host-management"
+    ],
+    "dataServices": []
+  },
+  "supportProfile": {
+    "tier": "best-effort",
+    "supportWindow": "12 måneder fra GA",
+    "escalation": "Platform Owner"
+  },
+  "platforms": {
+    "os": [
+      "linux"
+    ],
+    "arch": [
+      "x64",
+      "arm64"
+    ],
+    "runtime": [
+      "node>=22 <23",
+      "node>=24 <25"
+    ]
+  },
+  "resources": {
+    "cpuMillicores": 100,
+    "memoryMiB": 256,
+    "storageGiB": 5,
+    "nodes": 0
+  }
+}

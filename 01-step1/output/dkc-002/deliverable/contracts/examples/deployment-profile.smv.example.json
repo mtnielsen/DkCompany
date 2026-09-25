@@ -1,0 +1,64 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "DeploymentProfile",
+  "metadata": {
+    "name": "smv-pilot",
+    "version": "1.0.0",
+    "description": "Pilotstandard for en lille eller mellemstor virksomhed: én server, fælles kontrolplan, særskilte app-instanser og databaser pr. kunde.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+    },
+    "labels": { "segment": "smv" }
+  },
+  "profileType": "single-server",
+  "tenantModel": {
+    "mode": "shared-control-plane",
+    "applicationInstancesPerTenant": true,
+    "databasePerTenant": true,
+    "tenantBoundaryEnforcedAt": ["api", "database", "storage"],
+    "sharedComponents": ["portal", "policy-pdp", "audit-log"]
+  },
+  "highAvailability": { "enabled": false },
+  "hostManagement": { "enabled": false },
+  "dataServices": [
+    {
+      "id": "primary-db",
+      "kind": "built-in-database",
+      "provider": "PostgreSQL 16",
+      "responsibilityOwner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "credentialsRef": "secrets/primary-db",
+      "tenantBound": true
+    },
+    {
+      "id": "nightly-backup",
+      "kind": "backup-destination",
+      "provider": "S3-kompatibelt objektlager",
+      "responsibilityOwner": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Continuity Owner" },
+      "responsibilityAgreement": "docs/compliance/backup-responsibility.md",
+      "credentialsRef": "secrets/backup",
+      "tenantBound": true
+    }
+  ],
+  "serviceTargets": {
+    "availability": "99.0% målt pr. måned",
+    "rpoMinutes": 60,
+    "rtoMinutes": 240,
+    "measurementWindowDays": 30
+  },
+  "cost": {
+    "model": "mixed",
+    "currency": "DKK",
+    "recurring": true,
+    "monthlyEstimateMinor": 350000,
+    "priceBasis": "pr. tenant",
+    "notes": "VPS, backupmål og support. Ingen gratis enterprise-edition antages; drift er en tilbagevendende udgift."
+  },
+  "limitations": [
+    "Single-server: planlagt vedligeholdelse og host-nedbrud giver nedetid.",
+    "Ingen automatisk failover; gendannelse sker fra backup inden for RPO/RTO."
+  ],
+  "supportedModules": ["APP-003", "APP-021", "APP-039"]
+}

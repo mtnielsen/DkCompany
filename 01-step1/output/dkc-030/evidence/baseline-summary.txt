@@ -1,0 +1,16 @@
+Baseline: 239 checks, 186 PASS, 1 FAIL, 0 error, 52 NOT RUN
+Run: 2026-09-24T21-25-16-288Z-83ad91a.json
+Repo: /tmp/dkc-030/00-core
+
+FAIL:
+  - changelog-check: (manglende DCO sign-off, også i 83ad91a — forudgående)
+
+DKC-030-checks:
+  - crm-check … PASS
+  - crm-test … PASS
+  - crm-run … PASS
+  - crm-report … PASS
+  - integration-espocrm-live … NOT-RUN
+
+Bemaerk: den forrige stak (DKC-029) havde 234 checks (182 PASS, 1 FAIL, 51 NOT RUN).
+DKC-030 tilfoejer 5 checks: 4 passer, 1 integration er NOT RUN.

@@ -1,0 +1,21 @@
+DKC-058 — forudsætningskæde og verificerede leverancer
+Review-base: 5f9fa73
+Undersøgt checkout: 83ad91a
+Stak-kæde: dkc-054/apply.sh → dkc-046/apply.sh → dkc-045/apply.sh → … → dkc-001/apply.sh
+
+Formelle forudsætninger (tasks.json): DKC-010, DKC-014, DKC-045, DKC-048, DKC-053, DKC-055
+
+OK   DKC-010 credentials/src/broker.mjs
+OK   DKC-010 credentials/src/scope.mjs
+OK   DKC-010 credentials/src/receiver.mjs
+OK   DKC-014 supply-chain/src/cli.mjs
+OK   DKC-014 release/artifacts.json
+OK   DKC-045 approvals/src/runbook.mjs
+OK   DKC-045 approvals/src/change-service.mjs
+OK   DKC-045 runbooks/dev-keyring.json
+OK   DKC-048 data-protection/src/key-protection.mjs
+OK   DKC-048 data-protection/enforcement/immutable-policy.json
+OK   DKC-053 catalog/platforms.json
+OK   DKC-053 distribution/src/resolver.mjs
+OK   DKC-055 agent-registry/src/roles.mjs
+OK   DKC-055 agent-registry/src/runtime-role-guard.mjs

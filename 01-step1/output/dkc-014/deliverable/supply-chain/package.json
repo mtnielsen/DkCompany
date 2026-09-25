@@ -1,0 +1,12 @@
+{
+  "name": "dkcompany-supply-chain",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "DKC-014: reproducerbare artefakter, SBOM, provenance, digest- og signaturverifikation samt beskyttelse af releasevejen.",
+  "scripts": {
+    "test": "node --test",
+    "check": "node src/cli.mjs check",
+    "render": "node src/cli.mjs render"
+  }
+}

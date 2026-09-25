@@ -1,0 +1,23 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ObservationPeriod",
+  "metadata": {
+    "name": "platform-pilot-observation",
+    "version": "1.0.0",
+    "description": "Den krævede 30-dages observation af piloten mod den valgte serviceprofil. Perioden er en faktisk kalendertidsbegivenhed og kan ikke forkortes eller simuleres af en deterministisk kørsel; den står derfor som udestående indtil et navngivet menneske har gennemført den.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+    },
+    "labels": { "wave": "5", "task": "DKC-033" }
+  },
+  "requiredDays": 30,
+  "observedDays": 0,
+  "status": "outstanding",
+  "startedAt": null,
+  "endedAt": null,
+  "evidenceRef": null,
+  "note": "Der findes ingen levende serviceprofil og ingen 30-dages driftsperiode i dette miljø. Den deterministiske pilotkørsel er ikke en observation."
+}

@@ -1,0 +1,10 @@
+{
+  "name": "dkcompany-search",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "DKC-028: rettighedsbevidst videnssøgning og RAG med tenant- og kilde-ACL før retrieval, revalidering ved læsning, cache-/indeksinvalidning ved rettighedsændring og sletning, kildehenvisning, usikkerhed og ubetroet indhold.",
+  "scripts": {
+    "test": "node --test"
+  }
+}

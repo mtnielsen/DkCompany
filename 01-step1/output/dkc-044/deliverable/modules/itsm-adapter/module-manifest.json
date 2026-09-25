@@ -1,0 +1,215 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ModuleManifest",
+  "metadata": {
+    "name": "itsm-adapter",
+    "version": "1.0.0",
+    "description": "ITSM-adapter. Wrapper GLPI uændret bag den fælles adapter-SDK og oversætter platformens serviceproces (alarmer, incidents, major incidents, requests, problemer, kendte fejl, changes, CI-relationer og vidensartikler) til GLPI's API. Mennesker ejer sagerne, manglende kvittering eskalerer og stopper risikofyldt handling, og en AI kan ikke lukke en major incident.",
+    "owner": {
+      "team": "platform",
+      "contact": "platform@example.org"
+    },
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "role": "Platform Owner"
+    },
+    "labels": {
+      "tier": "adapter",
+      "wave": "4",
+      "upstream": "glpi"
+    }
+  },
+  "identity": {
+    "userStore": "none",
+    "oidc": {
+      "issuer": "https://id.example.org/realms/platform",
+      "clientId": "itsm-adapter",
+      "scopes": ["openid", "profile", "email", "groups"],
+      "claimMapping": {
+        "subject": "sub",
+        "email": "email",
+        "groups": "groups",
+        "tenant": "tenant_id"
+      },
+      "pkceRequired": true,
+      "tokenAudience": "itsm-adapter"
+    },
+    "scim": {
+      "version": "2.0",
+      "endpoint": "https://id.example.org/scim/v2",
+      "mode": "consumer",
+      "supportsPatch": true,
+      "supportsBulk": false
+    },
+    "spiffe": {
+      "spiffeId": "spiffe://platform.example.org/modules/itsm-adapter",
+      "trustDomain": "platform.example.org",
+      "credentialMode": "just-in-time",
+      "maxCredentialTtlSeconds": 900
+    },
+    "audit": {
+      "authenticationEventsTo": "dk.platform.identity.authn.",
+      "retainDays": 365
+    }
+  },
+  "telemetry": {
+    "serviceName": "itsm-adapter",
+    "otel": {
+      "exporter": "otlp-grpc",
+      "endpoint": "https://otel-collector.platform.example.org:4317",
+      "signals": ["traces", "metrics", "logs"],
+      "resourceAttributes": {
+        "service.name": "itsm-adapter",
+        "service.version": "1.0.0",
+        "deployment.environment": "dev"
+      },
+      "sampling": {
+        "strategy": "parentbased-traceidratio",
+        "ratio": 0.2
+      }
+    },
+    "cloudEvents": {
+      "source": "urn:platform:module:itsm-adapter",
+      "typePrefix": "dk.platform.itsm-adapter.",
+      "sink": "https://events.platform.example.org/events",
+      "requiredAttributes": ["tenantid", "traceid", "principal"],
+      "dataClassificationRequired": true
+    },
+    "retention": {
+      "logsDays": 90,
+      "tracesDays": 30,
+      "metricsDays": 400,
+      "eventsDays": 400
+    }
+  },
+  "policy": {
+    "pdp": {
+      "endpoint": "https://pdp.platform.example.org/v1/data/platform/ops/decision",
+      "protocol": "http-json",
+      "decisionTtlSeconds": 60
+    },
+    "bundle": {
+      "name": "platform",
+      "version": "1.0.0",
+      "sha256": "baeeeb11cb003454ccd12473856966c8769388870d74f30428dfc9bd20ba2d86"
+    },
+    "failMode": "closed",
+    "gatedVerbs": [
+      "itsm.alarm.ingest",
+      "itsm.incident.acknowledge",
+      "itsm.incident.escalate",
+      "itsm.incident.close",
+      "itsm.request.create",
+      "itsm.problem.create",
+      "itsm.change.create",
+      "itsm.case.list",
+      "itsm.process.validate",
+      "itsm.edition.assess",
+      "restore",
+      "upgrade",
+      "migrate",
+      "rollback",
+      "drain",
+      "subject.erase",
+      "subject.export",
+      "subject.legal_hold"
+    ],
+    "decisionCacheSeconds": 30,
+    "evidence": {
+      "kind": "fixture",
+      "ref": "conformance/evidence/policy-decision.json",
+      "capturedAt": "2025-09-01T07:55:00Z"
+    }
+  },
+  "verbs": {
+    "backup": {
+      "conformance": "partial",
+      "reason": "GLPI kan tage database- og filbackup, men adapteren kan ikke garantere et konsistent snapshot af alle plugins gennem API'et."
+    },
+    "restore": {
+      "conformance": "unsupported",
+      "reason": "Gendannelse sker på database-/filniveau og kan ikke udføres gennem GLPI's API."
+    },
+    "verify-restore": {
+      "conformance": "unsupported",
+      "reason": "Verifikation af en gendannelse kræver adgang til backup- og databaselaget."
+    },
+    "drain": {
+      "conformance": "partial",
+      "reason": "Adapteren kan sætte en tjeneste i vedligeholdelsestilstand i GLPI, men kan ikke dræne aktive klientforbindelser."
+    },
+    "upgrade.dry-run": {
+      "conformance": "partial",
+      "reason": "Adapteren kan rapportere nuværende og ønsket GLPI-version samt manglende migrationer, men GLPI tilbyder ikke en egentlig dry-run."
+    },
+    "upgrade": {
+      "conformance": "unsupported",
+      "reason": "GLPI opgraderes ved at udskifte containeren/appen og køre sin egen migrationsproces; det ligger uden for adapterens verbkontrakt."
+    },
+    "migrate": {
+      "conformance": "unsupported",
+      "reason": "GLPI kører sine egne database- og plugin-migrationer ved opstart; adapteren kan ikke styre dem."
+    },
+    "rollback": {
+      "conformance": "unsupported",
+      "reason": "Rollback kræver gendannelse fra backup og er derfor ikke mulig gennem adapteren."
+    },
+    "health": {
+      "conformance": "full",
+      "endpoint": "https://itsm-adapter.example.org/healthz",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/health.json"
+      }
+    },
+    "slo": {
+      "conformance": "partial",
+      "reason": "Adapteren måler sin egen svartid og incidentkorrelation, men GLPI's SLO/fejlbudget ligger hos upstream-drift."
+    }
+  },
+  "privacy": {
+    "subject.locate": {
+      "conformance": "partial",
+      "reason": "Adapteren kan lokalisere sager ud fra de subjektreferencer GLPI-ticket'en bærer, men en e-mail er ikke en verificeret subjektnøgle, og audit-/backupkopier dækkes ikke."
+    },
+    "subject.export": {
+      "conformance": "partial",
+      "reason": "Adapteren eksporterer sagsfelterne for de matchede sager, men ikke audit- og backupkopier; hele DSAR-eksporten koordineres af DKC-020."
+    },
+    "subject.erase": {
+      "conformance": "partial",
+      "reason": "Sagsrecords i GLPI-databasen, revisionssporet og backups kræver en godkendt sletteproces (DKC-021); adapteren rapporterer de kopier den ikke kan fjerne."
+    },
+    "subject.legal_hold": {
+      "conformance": "unsupported",
+      "reason": "GLPI har ingen legal hold-API; et hold håndteres af retention-modulet (DKC-021) og en manuel upstream-indgriben."
+    },
+    "retention.policy": {
+      "conformance": "partial",
+      "reason": "GLPI har globale opbevaringsindstillinger pr. itemtype, men de kan ikke sættes eller rapporteres pr. subjekt gennem adapteren."
+    },
+    "dataCategories": ["operational", "pseudonymised", "personal"],
+    "dsarEndpoint": "https://itsm-adapter.example.org/v1/privacy"
+  },
+  "slo": {
+    "availability": 99.9,
+    "latencyP95Ms": 350,
+    "errorBudgetRef": "docs/slo/itsm-adapter.md"
+  },
+  "serviceClassRef": "continuity/service-classes/itsm-adapter.service-class.json",
+  "dataProtection": {
+    "supportedClasses": ["ordinary", "ai-read-only", "append-only", "retention-locked"],
+    "noAiAccessSupported": true,
+    "reclassificationRequiresHuman": true,
+    "storageEnforcement": {
+      "status": "full",
+      "reason": "Fuld lager-/nøglehåndhævelse leveres af DKC-048 (object-lock, rollematrix, beskyttet nøglebutik og to-personers kontrol). Modulet håndhæver fortsat adgangs- og transitionsregler.",
+      "deliveredBy": "DKC-048"
+    }
+  },
+  "compliance": {
+    "controlRefs": ["ac-2", "au-2", "si-12"],
+    "dpiaRef": "docs/dpia/itsm-adapter.md",
+    "dataProcessingRole": "processor"
+  }
+}

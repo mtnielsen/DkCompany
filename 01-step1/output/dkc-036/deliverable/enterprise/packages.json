@@ -1,0 +1,449 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "EnterprisePackage",
+  "metadata": {
+    "name": "platform-enterprise-packages",
+    "version": "1.0.0",
+    "description": "Versionerede enterprise- og branchepakker for enterprise, handel, produktion, feltservice og regulerede brancher. Hver pakke er sammensat oven på en af de tre størrelsesprofiler, beskriver apps, kapabilitetskrav, dataejerskab, ekstra isolation, integrationer og faglige krav, og arver de fælles sikkerhedskontrakter uden at forke kontrolplanet. Pakkerne er katalog- og planlægningsposter: en katalogpost bliver ikke automatisk til en bestilt byggeopgave, og en ubekræftet faglig, sektor- eller højrisiko-AI-vurdering blokerer implementering.",
+    "accountableHuman": {
+      "subject": "oidc|cecilia.christensen",
+      "name": "Cecilia Christensen",
+      "role": "Service Owner",
+      "substitute": { "subject": "oidc|david.dahl", "name": "David Dahl" }
+    },
+    "labels": { "wave": "6", "task": "DKC-036" }
+  },
+  "capabilitiesRef": "enterprise/capabilities.json",
+  "securityContracts": {
+    "ref": "distribution/acceptance/gate-policy.json",
+    "sharedBy": ["small-vps", "ha-cluster", "enterprise-dedicated"],
+    "contracts": [
+      {
+        "id": "security",
+        "title": "Fælles sikkerhedsgate",
+        "kind": "common",
+        "requirementRefs": ["REQ-INSTALL-001", "REQ-CONFIGURATION-001", "REQ-LIFECYCLE-001", "REQ-IDENTITY-001", "REQ-POLICY-001", "REQ-AUDIT-001", "REQ-CREDENTIALS-001", "REQ-TOOL-001", "REQ-SECURITY-001", "REQ-VULN-001"]
+      },
+      {
+        "id": "privacy",
+        "title": "Fælles privacygate",
+        "kind": "common",
+        "requirementRefs": ["REQ-PRIVACY-001", "REQ-PRIVACY-002", "REQ-RETENTION-001", "REQ-LOGGING-001"]
+      },
+      {
+        "id": "restore",
+        "title": "Fælles restoregate",
+        "kind": "common",
+        "requirementRefs": ["REQ-BACKUP-001", "REQ-BACKUP-002", "REQ-DR-001", "REQ-CONTINUITY-001", "REQ-TAKEOVER-001"]
+      },
+      {
+        "id": "role",
+        "title": "Fælles rollegate",
+        "kind": "common",
+        "requirementRefs": ["REQ-AGENT-ROLE-001", "REQ-AGENT-HANDOFF-001", "REQ-APPROVAL-001", "REQ-CHANGE-001"]
+      }
+    ]
+  },
+  "packages": [
+    {
+      "id": "enterprise-core",
+      "title": "Enterprise-kernepakke",
+      "segment": "enterprise",
+      "order": 1,
+      "baseProfileRef": "enterprise-dedicated",
+      "selectionRationale": "Enterprise-kernen er den første pakke fordi den dedikerede enterprise-profil allerede er den eneste med kapacitet, egne app-instanser og databaser pr. kunde; den samler HR, indsigt, rapportering, økonomi, fakturering og tid uden at ændre sikkerhedskernen.",
+      "demand": {
+        "segments": ["enterprise"],
+        "pilotProfileRefs": ["enterprise"],
+        "businessProfileRefs": ["enterprise"],
+        "demandRank": 1,
+        "rationale": "Enterprise Nord A/S (900 medarbejdere) efterspørger koncernøkonomi, HR og rapportering på en dedikeret installation, og metering-profilen 'enterprise' er den dokumenterede omkostningsramme."
+      },
+      "apps": ["hr", "bi", "reporting", "finance", "invoicing", "time"],
+      "capabilityConstraints": {
+        "required": ["control-plane", "identity-oidc", "audit-log", "hr", "bi", "reporting", "finance", "accounting", "invoicing", "time-tracking"],
+        "forbidden": ["commerce", "payment"],
+        "controlPlane": ["control-plane", "policy-decision", "identity-oidc", "audit-log"]
+      },
+      "dataOwnership": [
+        {
+          "dataClass": "financial",
+          "owner": { "subject": "oidc|erik.eriksen", "name": "Erik Eriksen", "role": "Enterprise Delivery Owner" },
+          "purpose": "Koncernøkonomi, bogføring og fakturering for enterprise-kunden.",
+          "residency": "dk",
+          "retentionRef": "retention/deletion-policy.json"
+        },
+        {
+          "dataClass": "personal",
+          "owner": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Security Officer" },
+          "purpose": "Medarbejderstamdata og HR-administration med beskyttet feltadgang.",
+          "residency": "eu",
+          "retentionRef": "retention/deletion-policy.json"
+        }
+      ],
+      "isolation": {
+        "level": "dedicated",
+        "dedicatedDatabases": true,
+        "networkSegmentation": true,
+        "immutableAudit": true,
+        "notes": "Kundens egne app-instanser og databaser i et dedikeret fejldomæne; audit er holdbar og WORM-beskyttet."
+      },
+      "integrations": [
+        { "candidateRef": "integration-candidate.tryton.example.json", "kind": "erp", "purpose": "Dansk økonomi og bogføring som kandidat bag en fremtidig adapter.", "availability": "included" },
+        { "candidateRef": "integration-candidate.frappe-hr.example.json", "kind": "hr", "purpose": "Medarbejderstamdata og HR-workflows som kandidat bag en fremtidig adapter.", "availability": "included" },
+        { "candidateRef": "integration-candidate.kimai.example.json", "kind": "time", "purpose": "Tidsregistrering som kandidat bag en fremtidig adapter.", "availability": "opt-in" }
+      ],
+      "professionalRequirements": [
+        { "id": "danish-accounting", "title": "Dansk bogføring og moms", "authority": "Erhvervsstyrelsen / registreret revisor", "status": "unreviewed", "blocksImplementation": true },
+        { "id": "payroll", "title": "Løn og lønkørsel", "authority": "Navngivet lønansvarlig", "status": "unreviewed", "blocksImplementation": true },
+        { "id": "e-invoicing", "title": "E-faktura access point (OIOUBL/NemHandel)", "authority": "NemHandel / godkendt access point", "status": "pending", "blocksImplementation": true }
+      ],
+      "sectorRules": {
+        "regimes": [],
+        "status": "not-applicable",
+        "assessmentRef": null,
+        "notes": "Enterprise-kernen er ikke omfattet af en sektorspecifik regel ud over de generelle regnskabs- og momskrav, som håndteres som faglige krav."
+      },
+      "highRiskAi": {
+        "applicable": false,
+        "assessmentRef": null,
+        "status": "not-applicable",
+        "reason": "Enterprise-kernen aktiverer ingen AI-funktion; AI-komponenter er særskilte og kræver deres egen risikovurdering."
+      },
+      "productOwner": { "subject": "oidc|erik.eriksen", "name": "Erik Eriksen", "role": "Enterprise Delivery Owner", "substitute": { "subject": "oidc|freja.fischer", "name": "Freja Fischer" } },
+      "testCustomer": {
+        "name": "Enterprise Nord A/S",
+        "contact": { "subject": "oidc|erik.eriksen", "name": "Erik Eriksen", "role": "CTO" },
+        "status": "identified",
+        "contractRef": null,
+        "synthetic": true
+      },
+      "implementation": {
+        "status": "blocked",
+        "reason": "Blokeret indtil dansk bogføring, moms, e-faktura og løn er afklaret af navngivne fagpersoner, og testkundens aftale er underskrevet."
+      },
+      "tcoRef": { "profileId": "enterprise", "tcoComparisonRef": "metering/report/tco-comparison.json" },
+      "exclusions": [
+        { "candidate": "Egen bogføringsmotor", "reason": "Egen bogføringsmotor ville være et parallelt ERP-produkt med dansk bogføringslov som vedvarende ansvar." },
+        { "candidate": "Fuld ERP på small-vps", "reason": "En lille VPS har ikke kapaciteten; enterprise-kernen kræver den dedikerede enterprise-profil." }
+      ]
+    },
+    {
+      "id": "retail-commerce",
+      "title": "Handels- og webshoppakke",
+      "segment": "commerce",
+      "order": 2,
+      "baseProfileRef": "ha-cluster",
+      "selectionRationale": "Handelspakken bygger på HA-profilen fordi en webshop med betaling kræver HA, og fordi den kan genbruge den allerede valgte Medusa- og betalingskandidat uden at ændre kontrolplanet.",
+      "demand": {
+        "segments": ["smv", "service"],
+        "pilotProfileRefs": ["smv", "it-service"],
+        "businessProfileRefs": ["solo", "team"],
+        "demandRank": 2,
+        "rationale": "SMV- og servicepilotvirksomhederne efterspørger webshop og fakturering; metering-profilerne 'solo' og 'team' er de dokumenterede omkostningsrammer."
+      },
+      "apps": ["webshop", "payment", "invoicing", "finance", "time"],
+      "capabilityConstraints": {
+        "required": ["control-plane", "identity-oidc", "audit-log", "commerce", "webshop", "payment", "invoicing", "finance", "time-tracking"],
+        "forbidden": ["host-management"],
+        "controlPlane": ["control-plane", "policy-decision", "identity-oidc", "audit-log"]
+      },
+      "dataOwnership": [
+        {
+          "dataClass": "financial",
+          "owner": { "subject": "oidc|maja.marked", "name": "Maja Marked", "role": "Commerce Product Owner" },
+          "purpose": "Ordrer, fakturaer og betalingsreferencer for webshoppen.",
+          "residency": "eu",
+          "retentionRef": "retention/deletion-policy.json"
+        },
+        {
+          "dataClass": "personal",
+          "owner": { "subject": "oidc|ditte.dpo", "name": "Ditte DPO", "role": "Data Protection Officer" },
+          "purpose": "Kundekontaktoplysninger og leveringsadresser til ordrebehandling.",
+          "residency": "eu",
+          "retentionRef": "retention/deletion-policy.json"
+        }
+      ],
+      "isolation": {
+        "level": "enhanced",
+        "dedicatedDatabases": true,
+        "networkSegmentation": true,
+        "immutableAudit": false,
+        "notes": "Betalingsscopet holdes adskilt fra applikationsdata, og al betaling går gennem en godkendt ekstern tjeneste med begrænsede scopes."
+      },
+      "integrations": [
+        { "candidateRef": "integration-candidate.medusa.example.json", "kind": "commerce", "purpose": "Webshop og ordrehåndtering som kandidat bag en fremtidig adapter.", "availability": "included" },
+        { "candidateRef": "integration-candidate.stripe.example.json", "kind": "payment", "purpose": "Betaling gennem en godkendt ekstern tjeneste med begrænsede scopes.", "availability": "unavailable", "reason": "Ingen betalingstjeneste er godkendt i dette miljø; aktivering kræver en menneskelig godkendelse." },
+        { "candidateRef": "integration-candidate.invoiceninja.example.json", "kind": "invoicing", "purpose": "Fakturering som kandidat bag en fremtidig adapter.", "availability": "included" }
+      ],
+      "professionalRequirements": [
+        { "id": "consumer-law", "title": "Forbrugeraftaler og handelsbetingelser", "authority": "Forbrugerombudsmanden", "status": "unreviewed", "blocksImplementation": true },
+        { "id": "vat", "title": "Moms og grænseoverskridende handel", "authority": "Skattestyrelsen", "status": "pending", "blocksImplementation": true },
+        { "id": "payment-approved-service", "title": "Godkendt betalingstjeneste", "authority": "Indsamlingsgodkendelse / PCI-scope", "status": "unreviewed", "blocksImplementation": true }
+      ],
+      "sectorRules": {
+        "regimes": ["forbrugeraftaler"],
+        "status": "required",
+        "assessmentRef": "docs/compliance/danish-localization-gates.md",
+        "notes": "Handelspakken er omfattet af forbrugeraftaler og kræver en separat juridisk vurdering før implementering."
+      },
+      "highRiskAi": {
+        "applicable": false,
+        "assessmentRef": null,
+        "status": "not-applicable",
+        "reason": "Handelspakken aktiverer ingen AI-funktion; eventuel produktanbefaling kræver sin egen vurdering og er ikke en del af pakken."
+      },
+      "productOwner": { "subject": "oidc|maja.marked", "name": "Maja Marked", "role": "Commerce Product Owner", "substitute": { "subject": "oidc|sofia.sorensen", "name": "Sofia Sørensen" } },
+      "testCustomer": {
+        "name": "Butik Nord ApS",
+        "contact": { "subject": "oidc|bente.butik", "name": "Bente Butik", "role": "Retail Director" },
+        "status": "identified",
+        "contractRef": null,
+        "synthetic": true
+      },
+      "implementation": {
+        "status": "blocked",
+        "reason": "Blokeret indtil forbrugerjura, moms og en godkendt betalingstjeneste er afklaret af navngivne mennesker, og testkundens aftale er underskrevet."
+      },
+      "tcoRef": { "profileId": "team", "tcoComparisonRef": "metering/report/tco-comparison.json" },
+      "exclusions": [
+        { "candidate": "Egen betalingsformidling", "reason": "Egen betalingsformidling er PCI-DSS-tungt og udskydes eksplicit til en godkendt ekstern tjeneste." },
+        { "candidate": "Lager- og ERP-styring i webshoppen", "reason": "Lagerstyring hører til økonomi/ERP-familien og bygges ikke som en del af handelspakken." }
+      ]
+    },
+    {
+      "id": "field-service",
+      "title": "Feltservicepakke",
+      "segment": "field-service",
+      "order": 3,
+      "baseProfileRef": "ha-cluster",
+      "selectionRationale": "Feltservicepakken bygger på HA-profilen fordi teknikere arbejder uden for kontoret og kræver HA, HR og kommunikation; den kræver desuden to kapabiliteter, som kataloget endnu ikke udstiller, og er derfor ærligt blokeret.",
+      "demand": {
+        "segments": ["service"],
+        "pilotProfileRefs": ["it-service"],
+        "businessProfileRefs": ["team"],
+        "demandRank": 3,
+        "rationale": "Servicepilotvirksomheden Team Viden A/S har teknikere i marken og efterspørger dispatch og offline-synkronisering; metering-profilen 'team' er den dokumenterede omkostningsramme."
+      },
+      "apps": ["time", "hr", "communications"],
+      "capabilityConstraints": {
+        "required": ["control-plane", "identity-oidc", "audit-log", "time-tracking", "hr", "messaging", "field-dispatch", "offline-sync"],
+        "forbidden": ["commerce", "payment"],
+        "controlPlane": ["control-plane", "policy-decision", "identity-oidc", "audit-log"]
+      },
+      "dataOwnership": [
+        {
+          "dataClass": "personal",
+          "owner": { "subject": "oidc|frida.feltservice", "name": "Frida Feltservice", "role": "Field Service Product Owner" },
+          "purpose": "Teknikeres tidsregistrering, opgaver og kundekontakt i marken.",
+          "residency": "dk",
+          "retentionRef": "retention/deletion-policy.json"
+        }
+      ],
+      "isolation": {
+        "level": "standard",
+        "dedicatedDatabases": false,
+        "networkSegmentation": false,
+        "immutableAudit": false,
+        "notes": "Feltservice bruger HA-profilens delte, tenantadskilte instanser; offline-synkronisering kræver en særskilt vurdering af datakopier på enheder."
+      },
+      "integrations": [
+        { "candidateRef": "integration-candidate.kimai.example.json", "kind": "time", "purpose": "Tidsregistrering for teknikere som kandidat bag en fremtidig adapter.", "availability": "included" },
+        { "candidateRef": "integration-candidate.frappe-hr.example.json", "kind": "hr", "purpose": "Medarbejderstamdata for teknikere som kandidat bag en fremtidig adapter.", "availability": "opt-in" }
+      ],
+      "professionalRequirements": [
+        { "id": "worker-safety", "title": "Arbejdsmiljø og sikkerhed i marken", "authority": "Arbejdstilsynet", "status": "unreviewed", "blocksImplementation": true },
+        { "id": "gdpr-field", "title": "Persondata på medarbejderenheder", "authority": "Data Protection Officer", "status": "unreviewed", "blocksImplementation": true }
+      ],
+      "sectorRules": {
+        "regimes": ["arbejdsmiljø"],
+        "status": "required",
+        "assessmentRef": "docs/compliance/data-services.md",
+        "notes": "Feltservice er omfattet af arbejdsmiljøregler og kræver en separat sikkerhedsvurdering før implementering."
+      },
+      "highRiskAi": {
+        "applicable": false,
+        "assessmentRef": null,
+        "status": "not-applicable",
+        "reason": "Feltservicepakken aktiverer ingen AI-funktion; ruteoptimering ville kræve sin egen vurdering og er ikke en del af pakken."
+      },
+      "productOwner": { "subject": "oidc|frida.feltservice", "name": "Frida Feltservice", "role": "Field Service Product Owner", "substitute": { "subject": "oidc|sofia.sorensen", "name": "Sofia Sørensen" } },
+      "testCustomer": {
+        "name": "Service Teknik A/S",
+        "contact": { "subject": "oidc|soeren.service", "name": "Søren Service", "role": "Service Director" },
+        "status": "identified",
+        "contractRef": null,
+        "synthetic": true
+      },
+      "implementation": {
+        "status": "blocked",
+        "reason": "Blokeret af to forhold: kataloget udstiller endnu ikke kapabiliteterne field-dispatch og offline-sync, og arbejdsmiljø- og persondatavurderingerne mangler et navngivet menneske."
+      },
+      "tcoRef": { "profileId": "team", "tcoComparisonRef": "metering/report/tco-comparison.json" },
+      "exclusions": [
+        { "candidate": "Egen offline-synkroniseringsmotor", "reason": "Offline-synkronisering med datakopier på enheder kræver en særskilt sikkerheds- og privacyvurdering og bygges ikke uden den." }
+      ]
+    },
+    {
+      "id": "manufacturing",
+      "title": "Produktionspakke",
+      "segment": "manufacturing",
+      "order": 4,
+      "baseProfileRef": "enterprise-dedicated",
+      "selectionRationale": "Produktionspakken bygger på enterprise-profilen fordi produktion kræver egne databaser og dedikerede instanser; den kræver MES- og PLM-kapabiliteter, som kataloget endnu ikke udstiller, og er derfor ærligt blokeret.",
+      "demand": {
+        "segments": ["enterprise"],
+        "pilotProfileRefs": ["enterprise"],
+        "businessProfileRefs": ["enterprise"],
+        "demandRank": 4,
+        "rationale": "Enterprise-pilotvirksomheden efterspørger produktionsstyring og produktdata; metering-profilen 'enterprise' er den dokumenterede omkostningsramme."
+      },
+      "apps": ["finance", "invoicing", "time", "bi", "reporting"],
+      "capabilityConstraints": {
+        "required": ["control-plane", "identity-oidc", "audit-log", "finance", "accounting", "invoicing", "time-tracking", "bi", "reporting", "mes", "plm"],
+        "forbidden": ["commerce", "payment"],
+        "controlPlane": ["control-plane", "policy-decision", "identity-oidc", "audit-log"]
+      },
+      "dataOwnership": [
+        {
+          "dataClass": "operational",
+          "owner": { "subject": "oidc|morten.produktion", "name": "Morten Produktion", "role": "Manufacturing Product Owner" },
+          "purpose": "Produktionsordrer, produktdata og ressourceforbrug.",
+          "residency": "eu",
+          "retentionRef": "retention/deletion-policy.json"
+        },
+        {
+          "dataClass": "financial",
+          "owner": { "subject": "oidc|erik.eriksen", "name": "Erik Eriksen", "role": "Enterprise Delivery Owner" },
+          "purpose": "Produktionsomkostninger og fakturering.",
+          "residency": "dk",
+          "retentionRef": "retention/deletion-policy.json"
+        }
+      ],
+      "isolation": {
+        "level": "dedicated",
+        "dedicatedDatabases": true,
+        "networkSegmentation": true,
+        "immutableAudit": true,
+        "notes": "Produktionsdata holdes i kundens dedikerede databaser og netværkssegment; audit er holdbar og WORM-beskyttet."
+      },
+      "integrations": [
+        { "candidateRef": "integration-candidate.tryton.example.json", "kind": "erp", "purpose": "Økonomi og produktionsomkostninger som kandidat bag en fremtidig adapter.", "availability": "included" },
+        { "candidateRef": "integration-candidate.kimai.example.json", "kind": "time", "purpose": "Tidsregistrering på produktionslinjer som kandidat bag en fremtidig adapter.", "availability": "opt-in" }
+      ],
+      "professionalRequirements": [
+        { "id": "product-safety", "title": "Produktsikkerhed og sporbarhed", "authority": "Sikkerhedsstyrelsen", "status": "unreviewed", "blocksImplementation": true },
+        { "id": "machine-safety-ce", "title": "Maskinsikkerhed og CE", "authority": "CE-myndighed", "status": "unreviewed", "blocksImplementation": true }
+      ],
+      "sectorRules": {
+        "regimes": ["maskinsikkerhed", "produktsikkerhed"],
+        "status": "required",
+        "assessmentRef": "docs/compliance/assurance.md",
+        "notes": "Produktion er omfattet af maskin- og produktsikkerhedsregler og kræver en separat sikkerhedsvurdering før implementering."
+      },
+      "highRiskAi": {
+        "applicable": false,
+        "assessmentRef": null,
+        "status": "not-applicable",
+        "reason": "Produktionspakken aktiverer ingen AI-funktion; prediktivt vedligehold ville kræve sin egen vurdering og er ikke en del af pakken."
+      },
+      "productOwner": { "subject": "oidc|morten.produktion", "name": "Morten Produktion", "role": "Manufacturing Product Owner", "substitute": { "subject": "oidc|erik.eriksen", "name": "Erik Eriksen" } },
+      "testCustomer": {
+        "name": "Fabrik Syd A/S",
+        "contact": { "subject": "oidc|flemming.fabrik", "name": "Flemming Fabrik", "role": "COO" },
+        "status": "identified",
+        "contractRef": null,
+        "synthetic": true
+      },
+      "implementation": {
+        "status": "blocked",
+        "reason": "Blokeret af to forhold: kataloget udstiller endnu ikke kapabiliteterne mes og plm, og produkt- og maskinsikkerhedsvurderingerne mangler et navngivet menneske."
+      },
+      "tcoRef": { "profileId": "enterprise", "tcoComparisonRef": "metering/report/tco-comparison.json" },
+      "exclusions": [
+        { "candidate": "Egen MES-motor", "reason": "En egen MES-motor ville være et parallelt produktionsstyringssystem med vedvarende ansvar for produktionsdata." }
+      ]
+    },
+    {
+      "id": "regulated-care",
+      "title": "Reguleret omsorgspakke",
+      "segment": "regulated",
+      "order": 5,
+      "baseProfileRef": "enterprise-dedicated",
+      "selectionRationale": "Den regulerede pakke bygger på enterprise-profilen fordi den kræver dedikeret isolation, holdbar audit og særskilt behandling af særlige kategorier af persondata; den er eksplicit blokeret af højrisiko-AI- og sektorvurderinger.",
+      "demand": {
+        "segments": ["enterprise"],
+        "pilotProfileRefs": ["enterprise"],
+        "businessProfileRefs": ["enterprise"],
+        "demandRank": 5,
+        "rationale": "Enterprise-segmentet efterspørger en reguleret omsorgspakke med særlige databeskyttelseskrav; metering-profilen 'enterprise' er den dokumenterede omkostningsramme."
+      },
+      "apps": ["hr", "time", "finance", "invoicing", "reporting"],
+      "capabilityConstraints": {
+        "required": ["control-plane", "identity-oidc", "audit-log", "hr", "time-tracking", "finance", "invoicing", "reporting"],
+        "forbidden": ["commerce", "payment"],
+        "controlPlane": ["control-plane", "policy-decision", "identity-oidc", "audit-log"]
+      },
+      "dataOwnership": [
+        {
+          "dataClass": "special-category",
+          "owner": { "subject": "oidc|rikke.reguleret", "name": "Rikke Reguleret", "role": "Regulated Industries Product Owner" },
+          "purpose": "Omsorgs- og sundhedsoplysninger om borgere under særlig beskyttelse.",
+          "residency": "dk",
+          "retentionRef": "retention/deletion-policy.json"
+        },
+        {
+          "dataClass": "personal",
+          "owner": { "subject": "oidc|ditte.dpo", "name": "Ditte DPO", "role": "Data Protection Officer" },
+          "purpose": "Medarbejder- og borgerkontaktoplysninger i omsorgsprocessen.",
+          "residency": "dk",
+          "retentionRef": "retention/deletion-policy.json"
+        }
+      ],
+      "isolation": {
+        "level": "dedicated",
+        "dedicatedDatabases": true,
+        "networkSegmentation": true,
+        "immutableAudit": true,
+        "notes": "Særlige kategorier af persondata holdes i kundens dedikerede databaser med ekstra adgangskontrol, og audit er holdbar og WORM-beskyttet."
+      },
+      "integrations": [
+        { "candidateRef": "integration-candidate.frappe-hr.example.json", "kind": "hr", "purpose": "Medarbejderstamdata i omsorgsorganisationen som kandidat bag en fremtidig adapter.", "availability": "included" },
+        { "candidateRef": "integration-candidate.kimai.example.json", "kind": "time", "purpose": "Tidsregistrering for omsorgspersonale som kandidat bag en fremtidig adapter.", "availability": "included" }
+      ],
+      "professionalRequirements": [
+        { "id": "sector-health", "title": "Sektorregler for sundhed og omsorg", "authority": "Styrelsen for Patientsikkerhed", "status": "unreviewed", "blocksImplementation": true },
+        { "id": "special-category", "title": "Behandling af særlige kategorier af persondata", "authority": "Data Protection Officer", "status": "pending", "blocksImplementation": true },
+        { "id": "ai-act-high-risk", "title": "Højrisiko-AI-vurdering", "authority": "AI-tilsyn / AI-Act", "status": "unreviewed", "blocksImplementation": true }
+      ],
+      "sectorRules": {
+        "regimes": ["sundhedsret", "databeskyttelse"],
+        "status": "required",
+        "assessmentRef": "docs/compliance/assurance.md",
+        "notes": "Omsorgs- og sundhedsdata er omfattet af sektorregler og kræver en separat juridisk vurdering før implementering."
+      },
+      "highRiskAi": {
+        "applicable": true,
+        "assessmentRef": "compliance/assurance-register.json#REQ-AIACT-001",
+        "status": "required",
+        "reason": "En omsorgspakke med AI-beslutningsstøtte er en højrisiko-anvendelse efter AI-Act og kræver en særskilt vurdering med et navngivet menneske før implementering."
+      },
+      "productOwner": { "subject": "oidc|rikke.reguleret", "name": "Rikke Reguleret", "role": "Regulated Industries Product Owner", "substitute": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen" } },
+      "testCustomer": {
+        "name": "Omsorg Pleje A/S",
+        "contact": { "subject": "oidc|oda.omsorg", "name": "Oda Omsorg", "role": "Direktør" },
+        "status": "identified",
+        "contractRef": null,
+        "synthetic": true
+      },
+      "implementation": {
+        "status": "blocked",
+        "reason": "Blokeret indtil den særskilte højrisiko-AI-vurdering, sektorreglerne og behandlingen af særlige kategorier er afklaret af navngivne mennesker, og testkundens aftale er underskrevet."
+      },
+      "tcoRef": { "profileId": "enterprise", "tcoComparisonRef": "metering/report/tco-comparison.json" },
+      "exclusions": [
+        { "candidate": "Automatisk AI-beslutning om omsorg", "reason": "Automatiske afgørelser om omsorg er et højrisikoområde; pakken leverer kun beslutningsstøtte under menneskeligt tilsyn." }
+      ]
+    }
+  ]
+}

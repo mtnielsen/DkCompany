@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/alert-rule-set.schema.json",
+  "title": "Alert Rule Set",
+  "description": "Alarmregler med ejer, eskalationsstige, runbook og modtager. En regel peger på en sensor og en betingelse. Reglerne er versionsstyrede i git; en ændring af hvem der alarmeres kræver en commit.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "rules"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "AlertRuleSet" },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/rule" }
+    }
+  },
+  "$defs": {
+    "human": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\|[a-z0-9][a-z0-9._-]{2,}$" },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 }
+      }
+    },
+    "recipient": {
+      "type": "object",
+      "required": ["id", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "type": { "enum": ["local-mailbox", "webhook"] },
+        "urlEnv": { "type": "string" }
+      }
+    },
+    "escalation": {
+      "type": "object",
+      "required": ["afterMinutes", "to"],
+      "additionalProperties": false,
+      "properties": {
+        "afterMinutes": { "type": "integer", "minimum": 0 },
+        "to": { "$ref": "#/$defs/human" }
+      }
+    },
+    "condition": {
+      "type": "object",
+      "required": ["operator"],
+      "additionalProperties": false,
+      "properties": {
+        "operator": { "enum": ["gt", "gte", "lt", "lte", "eq", "ne", "absent", "stale", "not-pass"] },
+        "threshold": { "type": "number" },
+        "status": { "type": "string" }
+      }
+    },
+    "rule": {
+      "type": "object",
+      "required": ["id", "signal", "sensor", "severity", "condition", "owner", "escalation", "runbook", "recipients", "tenantScoped", "summary"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+        "signal": { "type": "string", "minLength": 1 },
+        "sensor": { "type": "string", "minLength": 1 },
+        "severity": { "enum": ["info", "warning", "critical"] },
+        "condition": { "$ref": "#/$defs/condition" },
+        "owner": { "$ref": "#/$defs/human" },
+        "escalation": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/escalation" } },
+        "runbook": { "type": "string", "minLength": 1 },
+        "recipients": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/recipient" } },
+        "tenantScoped": { "type": "boolean" },
+        "summary": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

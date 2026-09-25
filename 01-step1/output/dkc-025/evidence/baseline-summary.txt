@@ -1,0 +1,13 @@
+DKC-025 baseline — 2026-09-24 (checkout 83ad91a + DKC-001..DKC-024/stack tip DKC-022)
+
+→ changelog-check … FAIL
+→ portal-check … PASS
+→ portal-test … PASS
+→ portal-preview … PASS
+→ portal-demo … PASS
+  133 pass, 1 fail, 0 error, 39 not run af 173
+
+RESULTAT: FAIL
+
+Kendt forudgående FAIL: changelog-check (manglende DCO sign-off, også 83ad91a).
+Portalens 4 real-/contract-checks er PASS; integration-portal-sso og integration-portal-browser er NOT RUN med begrundelse.

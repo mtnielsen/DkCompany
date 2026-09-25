@@ -1,0 +1,81 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "HostEnrollment",
+  "metadata": {
+    "name": "acme-prod-node1-enrollment",
+    "version": "1.0.0",
+    "description": "Eksplicit enrollment af acme-prod-node1 med menneskelig out-of-band bootstrap og verificeret trust.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner"
+    }
+  },
+  "installationId": "acme-prod",
+  "host": {
+    "id": "acme-prod-node1",
+    "hostname": "node1.acme-prod.example.org",
+    "spiffeId": "spiffe://platform.example.org/hosts/acme-prod-node1",
+    "platformRef": "linux-amd64-node22",
+    "arch": "x64",
+    "os": {
+      "family": "linux",
+      "distro": "ubuntu",
+      "version": "24.04",
+      "kernel": "6.8"
+    }
+  },
+  "ownership": {
+    "ownerSubject": "oidc|anna.andersen",
+    "ownerName": "Anna Andersen",
+    "role": "Platform Owner",
+    "substitute": {
+      "subject": "oidc|bo.bertelsen",
+      "name": "Bo Bertelsen",
+      "role": "Platform Owner (substitute)"
+    }
+  },
+  "bootstrap": {
+    "method": "human-out-of-band",
+    "performedBy": "oidc|anna.andersen",
+    "performedAt": "2026-09-24T08:00:00Z",
+    "ticketRef": "CHG-HOST-ENROLL-001",
+    "interactive": true
+  },
+  "trust": {
+    "caFingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "sshHostKeyFingerprint": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "verified": true,
+    "verifiedBy": "oidc|anna.andersen",
+    "verifiedAt": "2026-09-24T08:05:00Z",
+    "trustDomain": "platform.example.org"
+  },
+  "inventory": {
+    "cpuCores": 8,
+    "memoryMiB": 16384,
+    "diskGiB": 200,
+    "roles": [
+      "single-server",
+      "vps"
+    ]
+  },
+  "management": {
+    "enabled": false,
+    "profileRef": "linux-lts-host",
+    "enabledBy": null,
+    "enabledAt": null,
+    "justification": "Host-styring er slået fra som standard og aktiveres først efter en konkret, menneskelig beslutning."
+  },
+  "recovery": {
+    "outOfBandConsoleRef": "console://provider/out-of-band/acme-prod-node1",
+    "consoleSecurityDomainRef": "sd://provider/out-of-band",
+    "tested": true,
+    "testedAt": "2026-09-20T00:00:00Z"
+  },
+  "securityDomain": {
+    "ref": "sd://platform/security-domain",
+    "immutableKeyDomainRef": "policy-signing-key",
+    "authoritativeCopyRef": "backup-target://acme-prod/offsite",
+    "separateFromPlatform": true
+  }
+}

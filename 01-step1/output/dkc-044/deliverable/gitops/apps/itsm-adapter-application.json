@@ -1,0 +1,37 @@
+{
+  "apiVersion": "argoproj.io/v1alpha1",
+  "kind": "Application",
+  "metadata": {
+    "name": "itsm-adapter",
+    "namespace": "argocd",
+    "labels": {
+      "app.kubernetes.io/name": "itsm-adapter",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "itsm-adapter",
+      "platform.example.org/environment": "dev"
+    }
+  },
+  "spec": {
+    "project": "platform",
+    "source": {
+      "repoURL": "https://git.example.org/platform/contracts.git",
+      "targetRevision": "main",
+      "path": "gitops/manifests/dev"
+    },
+    "destination": {
+      "server": "https://kubernetes.default.svc",
+      "namespace": "platform"
+    },
+    "syncPolicy": {
+      "automated": {
+        "prune": true,
+        "selfHeal": true,
+        "allowEmpty": false
+      },
+      "syncOptions": [
+        "CreateNamespace=true",
+        "PrunePropagationPolicy=foreground"
+      ]
+    }
+  }
+}

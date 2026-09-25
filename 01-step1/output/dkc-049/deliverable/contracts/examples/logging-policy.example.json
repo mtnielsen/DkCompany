@@ -1,0 +1,42 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "LoggingPolicy",
+  "metadata": {
+    "name": "platform-logging",
+    "version": "1.0.0",
+    "description": "Eksempel på den kanoniske loggepolitik: fælles korrelation, adskilt provenance, retention pr. dataklasse, uafhængige WORM-arkiver og default-deny læseadgang."
+  },
+  "correlationFields": ["correlationId", "executionId", "tenantId", "resource", "incidentId", "changeId", "traceId"],
+  "provenance": {
+    "classes": ["sensor", "model", "verified", "human", "system"],
+    "separated": true
+  },
+  "retention": {
+    "operational": 365,
+    "personal": 90,
+    "security": 730
+  },
+  "archive": {
+    "minFailureDomains": 3,
+    "requireImmutableFor": ["personal", "security"],
+    "targets": [
+      { "id": "primary", "kind": "primary", "failureDomain": "fsn1", "immutable": false, "dataClasses": ["operational", "personal", "security"], "classification": "object-store" },
+      { "id": "worm-external", "kind": "external", "failureDomain": "hel1", "immutable": true, "dataClasses": ["operational", "personal", "security"], "classification": "object-store" },
+      { "id": "worm-offline", "kind": "offline", "failureDomain": "ash1", "immutable": true, "dataClasses": ["personal", "security"], "classification": "object-store" }
+    ]
+  },
+  "access": {
+    "defaultDeny": true,
+    "readerRoles": ["auditor", "security-owner", "platform-admin"],
+    "auditAccess": true,
+    "retentionBypassRoles": ["platform-owner"]
+  },
+  "timeSync": {
+    "maxSkewSeconds": 300,
+    "monotonicSequences": true
+  },
+  "redaction": {
+    "forbiddenReasoningKeys": ["chainOfThought", "reasoning", "internalThoughts", "scratchpad"],
+    "personalDataPolicy": "minimize-and-digest"
+  }
+}

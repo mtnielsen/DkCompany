@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "1.0",
+  "kind": "TestRun",
+  "id": "run-0001",
+  "generatedAt": "2025-09-01T10:05:00Z",
+  "occurredAt": "2025-09-01T10:04:00Z",
+  "environment": "staging",
+  "profile": "small-vps",
+  "targetCommit": "83ad91a963d8055f77c29fb4361455689df95acb",
+  "artifactDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "producer": {
+    "type": "ci",
+    "name": "release-gate",
+    "subject": "ci|release-gate"
+  },
+  "result": "passed",
+  "checks": [
+    {
+      "id": "monitoring-check",
+      "status": "pass",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner"
+      },
+      "evidence": [
+        {
+          "uri": "evidence/logs/monitoring-check.log",
+          "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      ]
+    },
+    {
+      "id": "monitoring-test",
+      "status": "pass",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      },
+      "evidence": [
+        {
+          "uri": "evidence/logs/monitoring-test.log",
+          "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "uri": "evidence/baseline/latest.json",
+      "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+    }
+  ]
+}

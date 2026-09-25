@@ -1,0 +1,61 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ContainerCatalog",
+  "description": "DKC-014: hvilke kontroltjenester der bygges som containere, hvilket repository billedet publiceres i, og hvilken Dockerfile der er kilden. Kataloget binder GitOps-manifesterne til et byggeri.",
+  "images": [
+    {
+      "component": "pdp",
+      "repository": "ghcr.io/example/platform-pdp",
+      "dockerfile": "containers/pdp/Dockerfile",
+      "context": "policy/pdp"
+    },
+    {
+      "component": "ai-gateway",
+      "repository": "ghcr.io/example/platform-ai-gateway",
+      "dockerfile": "containers/ai-gateway/Dockerfile",
+      "context": "gateway"
+    },
+    {
+      "component": "audit-service",
+      "repository": "ghcr.io/example/audit-service",
+      "dockerfile": "containers/audit-service/Dockerfile",
+      "context": "modules/audit-service/service"
+    },
+    {
+      "component": "mattermost-adapter",
+      "repository": "ghcr.io/example/mattermost-adapter",
+      "dockerfile": "containers/mattermost-adapter/Dockerfile",
+      "context": "modules/mattermost-adapter/service"
+    },
+    {
+      "component": "keycloak-adapter",
+      "repository": "ghcr.io/example/keycloak-adapter",
+      "dockerfile": "containers/keycloak-adapter/Dockerfile",
+      "context": "modules/keycloak-adapter/service"
+    },
+    {
+      "component": "nextcloud-adapter",
+      "repository": "ghcr.io/example/nextcloud-adapter",
+      "dockerfile": "containers/nextcloud-adapter/Dockerfile",
+      "context": "modules/nextcloud-adapter/service"
+    },
+    {
+      "component": "itsm-adapter",
+      "repository": "ghcr.io/example/itsm-adapter",
+      "dockerfile": "containers/itsm-adapter/Dockerfile",
+      "context": "modules/itsm-adapter/service"
+    },
+    {
+      "component": "approvals",
+      "repository": "ghcr.io/example/platform-approvals",
+      "dockerfile": "containers/approvals/Dockerfile",
+      "context": "."
+    },
+    {
+      "component": "runtime",
+      "repository": "ghcr.io/example/platform-runtime",
+      "dockerfile": "containers/runtime/Dockerfile",
+      "context": "."
+    }
+  ]
+}

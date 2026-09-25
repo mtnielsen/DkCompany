@@ -1,0 +1,86 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "OfflinePackage",
+  "metadata": {
+    "name": "example-offline-package",
+    "version": "1.0.0",
+    "description": "Eksempel på en offlinepakke med lokale kerneflows og eksplicit markerede eksterne afhængigheder.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner"
+      }
+    },
+    "labels": {
+      "tier": "distribution",
+      "wave": "5"
+    }
+  },
+  "policy": {
+    "coreFlowsRemainLocal": true,
+    "externalOutageVisible": true,
+    "noSilentFallback": true,
+    "packageSelfContained": true,
+    "externalDependencyRegistryComplete": true
+  },
+  "components": [
+    {
+      "id": "platform-core",
+      "version": "1.4.0",
+      "artifact": "platform-core-1.4.0.tar.zst",
+      "digest": "1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    {
+      "id": "identity-broker",
+      "version": "1.2.0",
+      "artifact": "identity-broker-1.2.0.tar.zst",
+      "digest": "2222222222222222222222222222222222222222222222222222222222222222"
+    },
+    {
+      "id": "audit-service",
+      "version": "1.5.0",
+      "artifact": "audit-service-1.5.0.tar.zst",
+      "digest": "3333333333333333333333333333333333333333333333333333333333333333"
+    }
+  ],
+  "coreFlows": [
+    {
+      "id": "local-authz",
+      "title": "Lokal autorisation og default-deny policy-beslutning",
+      "local": true,
+      "externalDependencies": []
+    },
+    {
+      "id": "local-data",
+      "title": "Læsning og skrivning i lokal database og objektlager",
+      "local": true,
+      "externalDependencies": []
+    },
+    {
+      "id": "local-audit",
+      "title": "Beskyttet revisionsspor og logføring",
+      "local": true,
+      "externalDependencies": []
+    }
+  ],
+  "externalDependencies": [
+    {
+      "id": "model-anthropic",
+      "kind": "model-api",
+      "endpointRef": "gateway/routes.json#anthropic",
+      "offlineBehavior": "unavailable-visible",
+      "affectedFeatures": [
+        "agent-reasoning"
+      ],
+      "routeRefs": [
+        "dummy-ok-upgrader-sonnet"
+      ],
+      "localFallbackRef": null,
+      "explicitStatus": "Modelassisterede svar er midlertidigt utilgængelige; lokal policy og audit virker uændret."
+    }
+  ]
+}

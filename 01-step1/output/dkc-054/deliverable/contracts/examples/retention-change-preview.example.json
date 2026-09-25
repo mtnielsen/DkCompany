@@ -1,0 +1,76 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "RetentionChangePreview",
+  "metadata": {
+    "name": "retention-change-change-2026-092",
+    "version": "1.0.0",
+    "description": "Preview af retentionændring med berørte data, holds, WORM og menneskelig ramme."
+  },
+  "installationId": "acme-prod",
+  "changeId": "change-2026-092",
+  "requested": [
+    {
+      "dataClass": "personal",
+      "fromDays": 90,
+      "toDays": 120
+    },
+    {
+      "dataClass": "security",
+      "fromDays": 730,
+      "toDays": 365
+    }
+  ],
+  "affectedDataClasses": [
+    {
+      "dataClass": "personal",
+      "records": 1,
+      "personalData": true,
+      "artifacts": [
+        "retention/personal"
+      ]
+    },
+    {
+      "dataClass": "security",
+      "records": 1,
+      "personalData": true,
+      "artifacts": [
+        "retention/security"
+      ]
+    }
+  ],
+  "holds": [
+    {
+      "dataClass": "personal",
+      "legalHoldRef": "hold://acme/2026-01",
+      "worm": true,
+      "until": "2026-12-31T00:00:00Z"
+    }
+  ],
+  "frames": {
+    "frameRef": "frame://platform/retention-2026",
+    "approvedBy": "oidc|anna.andersen",
+    "approvedAt": "2026-09-24T08:00:00Z",
+    "maxRetentionDays": 400,
+    "minRetentionDays": 30
+  },
+  "decisions": [
+    {
+      "dataClass": "personal",
+      "allowed": true,
+      "reason": "inden for rammen 'frame://platform/retention-2026'"
+    },
+    {
+      "dataClass": "security",
+      "allowed": false,
+      "reason": "WORM-beskyttet retention må ikke forkortes"
+    }
+  ],
+  "requiresHumanApproval": true,
+  "authorization": {
+    "humanSubject": "oidc|anna.andersen",
+    "role": "Platform Owner",
+    "grantedAt": "2026-09-24T08:00:00Z",
+    "expiresAt": "2026-09-25T08:00:00Z",
+    "decisionDigest": "2222222222222222222222222222222222222222222222222222222222222222"
+  }
+}

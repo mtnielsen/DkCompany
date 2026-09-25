@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/data-service-binding.schema.json",
+  "title": "Data Service Binding",
+  "description": "DKC-056: binder en applikation til én databaseprofil og et sæt datakilder med et eksplicit scope. Bindingen er det sted, hvor tenant-isolation, read-only adgang og ansvarsmatrix mødes for den enkelte app.",
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "application",
+    "tenantScope",
+    "databaseProfileRef",
+    "dataSourceRefs",
+    "externalDataHandling",
+    "responsibilities"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "DataServiceBinding" },
+
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{3,63}$" },
+        "version": { "type": "string" },
+        "description": { "type": "string", "minLength": 10 }
+      }
+    },
+
+    "application": {
+      "type": "object",
+      "required": ["ref", "accountableHuman"],
+      "additionalProperties": false,
+      "properties": {
+        "ref": { "type": "string", "pattern": "^[a-z0-9-]{3,63}$" },
+        "accountableHuman": { "$ref": "#/$defs/namedHuman" }
+      }
+    },
+
+    "tenantScope": {
+      "type": "object",
+      "required": ["mode", "separateIdentityPerTenant"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": { "enum": ["per-tenant", "shared-with-rls"] },
+        "separateIdentityPerTenant": { "type": "boolean" },
+        "evidence": { "type": "string" }
+      }
+    },
+
+    "databaseProfileRef": { "type": "string", "minLength": 3 },
+
+    "dataSourceRefs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ref", "scope"],
+        "additionalProperties": false,
+        "properties": {
+          "ref": { "type": "string", "minLength": 3 },
+          "scope": {
+            "type": "object",
+            "required": ["allowedSchemas", "allowedTables", "readOnly"],
+            "additionalProperties": false,
+            "properties": {
+              "allowedSchemas": { "type": "array", "items": { "type": "string" } },
+              "allowedTables": { "type": "array", "items": { "type": "string" } },
+              "readOnly": { "const": true }
+            }
+          }
+        }
+      }
+    },
+
+    "externalDataHandling": {
+      "type": "object",
+      "required": ["treatAsOwnDatabase", "migrationsAllowed", "backupsAllowed"],
+      "additionalProperties": false,
+      "properties": {
+        "treatAsOwnDatabase": { "const": false },
+        "migrationsAllowed": { "const": false },
+        "backupsAllowed": { "const": false }
+      }
+    },
+
+    "responsibilities": {
+      "type": "object",
+      "required": ["applicationData", "secrets", "migration", "backup", "restore"],
+      "additionalProperties": false,
+      "properties": {
+        "applicationData": { "$ref": "#/$defs/accountable" },
+        "secrets": { "$ref": "#/$defs/accountable" },
+        "migration": { "$ref": "#/$defs/accountable" },
+        "backup": { "$ref": "#/$defs/accountable" },
+        "restore": { "$ref": "#/$defs/accountable" }
+      }
+    }
+  },
+
+  "$defs": {
+    "namedHuman": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 }
+      }
+    },
+    "accountable": {
+      "type": "object",
+      "required": ["owner", "accountableHuman"],
+      "additionalProperties": false,
+      "properties": {
+        "owner": { "enum": ["platform", "customer", "shared", "external"] },
+        "accountableHuman": { "$ref": "#/$defs/namedHuman" }
+      }
+    }
+  }
+}

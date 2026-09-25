@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/protected-data.schema.json",
+  "title": "Protected Data Register",
+  "description": "Dataklasser for AI-immutable: almindelig, ai-read-only, append-only og retention-locked, med no-AI-access som et separat adgangsflag. Registeret beskriver beskyttelsesmetadata (ejer, versions-ID, retention/hold, nøgledomæne, hvem der må omklassificere), de forbud der gælder, og den menneskelige proces for ny version, lovlig sletning og retentionvurdering. Registeret er en påstand om adgangs-/transitionskontrol, ikke om fysisk WORM — fuld lager-/nøglehåndhævelse leveres af DKC-048 og skal erklæres ærligt.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "records"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "ProtectedDataRegister" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "lastReviewed"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{3,63}$" },
+        "version": { "type": "string" },
+        "description": { "type": "string", "minLength": 10 },
+        "lastReviewed": { "type": "string", "format": "date" }
+      }
+    },
+    "records": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id", "name", "owner", "versionId", "dataClass", "noAiAccess", "dataCategories",
+          "authoritativePointer", "keyDomain", "reclassifiers", "prohibitions", "humanProcess",
+          "storageEnforcement", "consumerModules"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$" },
+          "name": { "type": "string", "minLength": 3 },
+          "owner": { "$ref": "#/$defs/human" },
+          "versionId": { "type": "string", "minLength": 3, "description": "Den beskyttede versions-ID. En ny version kræver en menneskelig proces." },
+          "dataClass": {
+            "enum": ["ordinary", "ai-read-only", "append-only", "retention-locked"],
+            "description": "almindelig=ordinary; ai-read-only=AI må læse, ikke ændre; append-only=AI må tilføje, ikke ændre/slette; retention-locked=WORM, AI må kun læse."
+          },
+          "noAiAccess": {
+            "type": "boolean",
+            "description": "Separat adgangsflag. true betyder at ingen AI-principal må læse, hente, bruge i prompts, logs eller trænings-/analyseflows — uafhængigt af dataClass."
+          },
+          "dataCategories": {
+            "type": "array",
+            "items": { "enum": ["none", "operational", "pseudonymised", "personal", "special-category"] }
+          },
+          "authoritativePointer": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Den autoritative pointer (fx navn/sti til den aktuelle version). AI må ikke omskrive den."
+          },
+          "keyDomain": { "type": "string", "minLength": 1, "description": "Det nøgledomæne der beskytter dataene." },
+          "reclassifiers": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "$ref": "#/$defs/human" },
+            "description": "De navngivne mennesker der må omklassificere posten. AI kan aldrig omklassificere."
+          },
+          "prohibitions": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "enum": ["direct-change", "indirect-change", "alias-pointer", "authoritative-pointer", "policy", "lifecycle", "keys", "deletion"] },
+            "description": "De forbud posten er omfattet af. For enhver ikke-almindelig klasse skal alle otte være dækket."
+          },
+          "retention": {
+            "type": "object",
+            "description": "Krævet for retention-locked (WORM). En WORM-lås på persondata kræver et vurderet formål og en endelig frist.",
+            "required": ["purpose", "maxDays", "trigger", "hold", "assessedBy", "assessedAt"],
+            "additionalProperties": false,
+            "properties": {
+              "purpose": { "type": "string", "minLength": 3 },
+              "maxDays": { "type": "integer", "minimum": 1, "description": "Endelig frist. Uendelig WORM på persondata er forbudt." },
+              "trigger": { "enum": ["event-age", "legal-deadline", "purpose-fulfilled", "contract-end", "manual-review"] },
+              "hold": {
+                "type": "object",
+                "required": ["status"],
+                "additionalProperties": false,
+                "properties": {
+                  "status": { "enum": ["none", "active"] },
+                  "ref": { "type": "string" }
+                }
+              },
+              "assessedBy": { "$ref": "#/$defs/human" },
+              "assessedAt": { "type": "string", "format": "date" }
+            }
+          },
+          "humanProcess": {
+            "type": "object",
+            "required": ["newVersion", "legalDeletion", "retentionAssessment"],
+            "additionalProperties": false,
+            "properties": {
+              "newVersion": { "$ref": "#/$defs/humanStep" },
+              "legalDeletion": { "$ref": "#/$defs/humanStep" },
+              "retentionAssessment": { "$ref": "#/$defs/humanStep" }
+            }
+          },
+          "storageEnforcement": {
+            "type": "object",
+            "required": ["status", "reason"],
+            "additionalProperties": false,
+            "properties": {
+              "status": {
+                "enum": ["unsupported", "partial", "full"],
+                "description": "unsupported/partial betyder at fysisk lager-/nøglehåndhævelse ikke er leveret (DKC-048). Beskyttelsen er da adgangs-/transitionskontrol, ikke en WORM-lås."
+              },
+              "reason": { "type": "string", "minLength": 10 },
+              "deliveredBy": { "type": "string" }
+            }
+          },
+          "consumerModules": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$" },
+            "description": "De moduler/routes der behandler denne beskyttede data. Dækning kræves."
+          },
+          "evidence": { "type": "array", "items": { "type": "string" } },
+          "notes": { "type": "string" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "human": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string" },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 }
+      }
+    },
+    "humanStep": {
+      "type": "object",
+      "required": ["ref", "responsible"],
+      "additionalProperties": false,
+      "properties": {
+        "ref": { "type": "string", "minLength": 3, "description": "Reference til den dokumenterede menneskelige proces." },
+        "responsible": { "$ref": "#/$defs/human" }
+      }
+    }
+  }
+}

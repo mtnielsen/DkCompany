@@ -1,0 +1,153 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "LifecycleReport",
+  "metadata": {
+    "name": "platform-lifecycle-report",
+    "version": "1.0.0",
+    "description": "Deterministisk rapport for produktlivscyklussen: signeret releasekatalog med supportvindue, EOL-status og kompatibilitetslås, modulopdatering med påvirkning/migrationskontrol/rollback/godkendelse, fjernelse adskilt fra datasletning med reverse-dependency-kontrol, redigerede supportbundles uden skjult fjernadgang og offlinepakke med lokale kerneflows.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner"
+      }
+    },
+    "labels": {
+      "tier": "release",
+      "wave": "5"
+    }
+  },
+  "generatedAt": "2026-03-01T00:00:00Z",
+  "measured": false,
+  "policyRef": "support/policy.json",
+  "totals": {
+    "releases": 4,
+    "stableReleases": 1,
+    "lockedComponents": 11,
+    "supportAllowlist": 6,
+    "externalDependencies": 3,
+    "coreFlows": 5
+  },
+  "scenarios": [
+    {
+      "id": "release-catalog-signed-and-lifecycle-visible",
+      "problems": [],
+      "principal": "platform:release",
+      "visible": [
+        "1.4.0:stable",
+        "1.3.0:security",
+        "1.2.0:eol",
+        "1.1.0:revoked"
+      ],
+      "hidden": [],
+      "signed": true,
+      "eolHandling": 2
+    },
+    {
+      "id": "compatibility-lock-support-window-security-update",
+      "problems": [],
+      "principal": "platform:release",
+      "visible": [
+        "stable=1.4.0",
+        "security=1.3.0",
+        "lock=11"
+      ],
+      "hidden": []
+    },
+    {
+      "id": "update-impact-migration-approval-resume-rollback",
+      "problems": [],
+      "principal": "oidc|ada.acme",
+      "tenant": "acme",
+      "visible": [
+        "impact+7",
+        "steps=13",
+        "rolled-back"
+      ],
+      "hidden": [],
+      "planDigest": "7109f479b010a4f76e01fb971efa78c646780e1031213d2907e2b77bcb27e363",
+      "evidenceLevel": "fixture"
+    },
+    {
+      "id": "shared-database-and-iam-removal-rejected",
+      "problems": [],
+      "principal": "oidc|ada.acme",
+      "tenant": "acme",
+      "visible": [
+        "dbBlocking=true",
+        "iamBlocking=true"
+      ],
+      "hidden": []
+    },
+    {
+      "id": "uninstall-preserves-data-and-recovery-metadata",
+      "problems": [],
+      "principal": "oidc|ada.acme",
+      "tenant": "acme",
+      "visible": [
+        "preserve=true",
+        "lifecycle://recovery/acme-prod/communications"
+      ],
+      "hidden": []
+    },
+    {
+      "id": "destructive-delete-requires-evidence-and-two-person",
+      "problems": [],
+      "principal": "oidc|ada.acme",
+      "tenant": "acme",
+      "visible": [
+        "export+backup",
+        "oidc|ben.acme"
+      ],
+      "hidden": []
+    },
+    {
+      "id": "support-bundle-redacted-no-secrets-no-hr-no-hidden-access",
+      "problems": [],
+      "principal": "platform:support",
+      "visible": [
+        "installer-status",
+        "release-version",
+        "component-versions",
+        "preflight-checks"
+      ],
+      "hidden": [
+        "secret",
+        "hr-personal"
+      ]
+    },
+    {
+      "id": "offline-local-core-flows-preserved-external-visible",
+      "problems": [],
+      "principal": "platform:operations",
+      "visible": [
+        "local-audit",
+        "local-authz",
+        "local-backup",
+        "local-data",
+        "local-search"
+      ],
+      "hidden": [],
+      "externalUnavailable": [
+        "model-anthropic",
+        "model-openai",
+        "update-source"
+      ]
+    },
+    {
+      "id": "default-deny-and-tenant-isolation",
+      "problems": [],
+      "principal": "oidc|gus.globex",
+      "tenant": "globex",
+      "visible": [
+        "globex"
+      ],
+      "hidden": [
+        "acme"
+      ]
+    }
+  ]
+}

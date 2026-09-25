@@ -1,0 +1,99 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ServiceClass",
+  "metadata": {
+    "name": "audit-service",
+    "version": "1.0.0",
+    "description": "Serviceklasse for audit-service i HA-profilen: tre failure domains, N+1, ekstern offsite backup og særskilt recovery-lokation.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+    },
+    "labels": { "tier": "reference" }
+  },
+  "moduleRef": "audit-service",
+  "criticality": "critical",
+  "biaRef": "docs/continuity/bia.md#audit-service",
+  "failureModel": {
+    "networkPartition": {
+      "behavior": "fail-closed",
+      "splitBrain": "forbidden",
+      "quorumRequired": true,
+      "description": "Mister audit-servicen forbindelsen til databasen, afvises nye skrivninger frem for at fortsætte på en forældet kopi."
+    },
+    "corruptionDetection": {
+      "method": "hash-kæde-verifikation og checksum ved restore",
+      "detectionWindowMinutes": 60
+    }
+  },
+  "availability": {
+    "targetPercent": 99.95,
+    "measurementWindowDays": 30,
+    "acceptedDowntime": false
+  },
+  "durability": {
+    "confirmedWrites": {
+      "rpoMinutes": 0,
+      "strategy": "synchron committed write til quorum",
+      "basis": "Et bekræftet audit-intent må ikke kunne forsvinde efter svar til kalderen."
+    },
+    "regionFailure": {
+      "rpoMinutes": 15,
+      "strategy": "kontinuerlig cross-region replikering",
+      "basis": "BIA: et regionsnedbrud kan tabe op til 15 minutters audit-hændelser."
+    },
+    "corruption": {
+      "rpoMinutes": 1440,
+      "strategy": "uforanderlige snapshots og hash-kæde",
+      "basis": "Korruption opdages inden for detektionsvinduet og gendannes fra seneste verificerede snapshot."
+    }
+  },
+  "recovery": {
+    "rtoMinutes": 60,
+    "restoreOrder": ["database", "storage", "audit-service", "queue"],
+    "healing": {
+      "automated": true,
+      "allowedActions": ["restart", "reschedule", "failover", "rebuild-replica"],
+      "forbiddenActions": ["disable-audit", "manual-data-edit", "force-promote-without-quorum"],
+      "requiresHumanApproval": ["restore-from-backup"]
+    }
+  },
+  "replication": {
+    "replicas": 3,
+    "statefulMode": "stateful",
+    "storageClass": "encrypted-ssd-rwo",
+    "consistency": "strong",
+    "writeMode": "leader-elected",
+    "activeWriters": 1,
+    "upstreamSupportsMultiWriter": false
+  },
+  "backup": {
+    "required": true,
+    "mode": "external",
+    "offsite": true,
+    "encrypted": true,
+    "restoreTested": true,
+    "verifyRestoreRef": "docs/evidence/restore-tests/2026-09-audit-service.md",
+    "retentionDays": 365
+  },
+  "deploymentProfileCompatibility": {
+    "profiles": ["multiple-servers", "dedicated-customer"],
+    "haEligible": true,
+    "failureDomains": 3,
+    "nPlusOne": true,
+    "recoveryLocation": "eu-central-2"
+  },
+  "serviceCommitment": {
+    "state": "accepted",
+    "acceptedBy": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+    "acceptedAt": "2026-09-23T08:00:00Z",
+    "measured": {
+      "availabilityPercent": 99.97,
+      "capturedAt": "2026-09-01T00:00:00Z",
+      "evidenceRef": "docs/evidence/slo/2026-08-audit-service.json",
+      "source": "probe"
+    }
+  }
+}

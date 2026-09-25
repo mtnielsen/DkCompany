@@ -1,0 +1,53 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "SearchIndexPolicy",
+  "metadata": {
+    "name": "platform-search-index-policy",
+    "version": "1.0.0",
+    "description": "Politik for tenant- og ACL-bevidst videnssøgning: filtrering før scoring, revalidering ved læsning, cache-invalidering ved rettighedsændring/sletning og en målt slettefrist.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner"
+      }
+    },
+    "labels": {
+      "wave": "3",
+      "task": "DKC-028"
+    }
+  },
+  "acl": {
+    "defaultDeny": true,
+    "tenantBeforeScoring": true,
+    "aclBeforeScoring": true,
+    "revalidateAtRead": true
+  },
+  "retrieval": {
+    "maxResults": 5,
+    "minScore": 0.05,
+    "embeddingDimensions": 256,
+    "combine": "lexical-and-embedding"
+  },
+  "cache": {
+    "ttlSeconds": 60,
+    "invalidateOnPermissionChange": true,
+    "invalidateOnDelete": true
+  },
+  "deletion": {
+    "deadlineSeconds": 300,
+    "measured": false,
+    "requiresLiveSource": true,
+    "reason": "Fristen måles deterministisk i indekset, cachen og den afledte AI-visning. Den endelige, målte frist på en levende BookStack-installation kræver en ekstern kilde og er NOT RUN."
+  },
+  "answer": {
+    "treatContentAsUntrusted": true,
+    "toolActivationFromContent": "denied",
+    "requireCitation": true,
+    "uncertaintyRequired": true,
+    "onInjection": "flag-and-neutralize"
+  }
+}

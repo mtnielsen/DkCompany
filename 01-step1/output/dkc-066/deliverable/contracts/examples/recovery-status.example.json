@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "1.0",
+  "kind": "RecoveryStatus",
+  "id": "recovery-0001",
+  "generatedAt": "2025-09-01T10:10:00Z",
+  "occurredAt": "2025-09-01T10:09:00Z",
+  "scope": {
+    "tenantId": "acme",
+    "environment": "staging"
+  },
+  "serviceClass": "tier-1",
+  "gate": "pass",
+  "targets": {
+    "rpoMinutes": 5,
+    "rtoMinutes": 30
+  },
+  "measured": {
+    "dataLossMinutes": 1,
+    "restoreMinutes": 12
+  },
+  "lastBackupAt": "2025-09-01T09:00:00Z",
+  "lastRestoreDrillAt": "2025-09-01T10:09:00Z",
+  "owner": {
+    "subject": "oidc|anna.andersen",
+    "name": "Anna Andersen",
+    "role": "Platform Owner"
+  },
+  "evidence": [
+    {
+      "uri": "evidence/monitoring/drill-summary.json",
+      "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    }
+  ]
+}

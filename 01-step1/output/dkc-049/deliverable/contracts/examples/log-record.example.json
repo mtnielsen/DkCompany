@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "1.0",
+  "kind": "LogRecord",
+  "id": "4f1d2c3a-1111-4a2b-9c3d-000000000001",
+  "occurredAt": "2026-09-16T21:11:53.835Z",
+  "recordedAt": "2026-09-16T21:11:53.842Z",
+  "correlation": {
+    "correlationId": "corr-2026-09-16-0001",
+    "executionId": "exec-2026-09-16-0001",
+    "incidentId": null,
+    "changeId": "res://acme/change/CHG-4711",
+    "traceId": "c4fa324a9f793f3ff42b7aaca7813da6",
+    "parentId": null
+  },
+  "scope": {
+    "tenantId": "acme",
+    "environment": "dev",
+    "service": "observability",
+    "resource": "res://acme/service/observability"
+  },
+  "provenance": "sensor",
+  "observation": {
+    "source": "otel-collector",
+    "freshness": "fresh",
+    "value": { "http_requests_total": 42, "status": "500" },
+    "unit": "requests"
+  },
+  "action": { "mutating": false },
+  "dataClassification": "operational",
+  "retentionClass": "operational",
+  "minimized": true,
+  "redactions": []
+}

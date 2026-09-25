@@ -1,0 +1,1437 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "CapacityReport",
+  "generatedFrom": "performance/capacity-plan.json",
+  "measurement": {
+    "mode": "deterministic-simulation",
+    "measured": false,
+    "reason": "Der findes ingen levende klynge, lastgenerator eller rigtige hosts i dette miljø. Modellen er deterministisk og bærer measured=false; en faktisk lasttest på mindst tre hosts kræver ekstern infrastruktur og en navngivet ejers godkendelse.",
+    "requiresLiveLoadTest": true
+  },
+  "scalingFactors": [
+    1,
+    2,
+    5
+  ],
+  "profiles": [
+    {
+      "profileId": "small",
+      "name": "Lille kunde",
+      "runs": [
+        {
+          "profileId": "small",
+          "scaleFactor": 1,
+          "downHosts": 0,
+          "measured": false,
+          "throughputPerSecond": 47.27,
+          "throughputUtilizationPercent": 100,
+          "errorRatePercent": 0,
+          "queueAgeSeconds": 0,
+          "replicationLagMs": 25,
+          "p95Ms": 900.29,
+          "p99Ms": 2200.71,
+          "bottleneck": {
+            "id": "api",
+            "utilizationPercent": 5.2
+          },
+          "price": {
+            "currency": "DKK",
+            "vcpuMonthly": 4535.13,
+            "storageMonthly": 18,
+            "aiMonthly": 300,
+            "requestsMonthly": 97.2,
+            "jobsMonthly": 41.47,
+            "totalMonthly": 4991.8
+          },
+          "workloads": [
+            {
+              "id": "api",
+              "kind": "stateless",
+              "replicas": 4,
+              "scaled": false,
+              "capped": false,
+              "reason": "autoscale",
+              "unit": "requestsPerSecond",
+              "capacityPerSecond": 480,
+              "demandPerSecond": 25,
+              "sustainedPerSecond": 25,
+              "utilizationPercent": 5.2,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 47.47,
+                "p99Ms": 100.22
+              },
+              "multiActive": true
+            },
+            {
+              "id": "queue-worker",
+              "kind": "stateless",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "autoscale",
+              "unit": "jobsPerSecond",
+              "capacityPerSecond": 75,
+              "demandPerSecond": 2,
+              "sustainedPerSecond": 2,
+              "utilizationPercent": 2.7,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 123.29,
+                "p99Ms": 267.12
+              },
+              "multiActive": true
+            },
+            {
+              "id": "ai-gateway",
+              "kind": "stateless",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "autoscale",
+              "unit": "aiCallsPerSecond",
+              "capacityPerSecond": 18,
+              "demandPerSecond": 0.01,
+              "sustainedPerSecond": 0.01,
+              "utilizationPercent": 0,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 900.29,
+                "p99Ms": 2200.71
+              },
+              "multiActive": true
+            },
+            {
+              "id": "database",
+              "kind": "stateful",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "runbook-only",
+              "unit": "writesPerSecond",
+              "capacityPerSecond": 900,
+              "demandPerSecond": 17,
+              "sustainedPerSecond": 17,
+              "utilizationPercent": 1.9,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 12.23,
+                "p99Ms": 32.62
+              },
+              "multiActive": false
+            },
+            {
+              "id": "broker",
+              "kind": "stateful",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "runbook-only",
+              "unit": "messagesPerSecond",
+              "capacityPerSecond": 12000,
+              "demandPerSecond": 3.25,
+              "sustainedPerSecond": 3.25,
+              "utilizationPercent": 0,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 20.01,
+                "p99Ms": 60.02
+              },
+              "multiActive": true
+            },
+            {
+              "id": "object-store",
+              "kind": "stateful",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "runbook-only",
+              "unit": "writesPerSecond",
+              "capacityPerSecond": 1800,
+              "demandPerSecond": 0.01,
+              "sustainedPerSecond": 0.01,
+              "utilizationPercent": 0,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 35,
+                "p99Ms": 120
+              },
+              "multiActive": true
+            }
+          ]
+        },
+        {
+          "profileId": "small",
+          "scaleFactor": 2,
+          "downHosts": 0,
+          "measured": false,
+          "throughputPerSecond": 94.52,
+          "throughputUtilizationPercent": 100,
+          "errorRatePercent": 0,
+          "queueAgeSeconds": 0,
+          "replicationLagMs": 25,
+          "p95Ms": 900.58,
+          "p99Ms": 2201.42,
+          "bottleneck": {
+            "id": "api",
+            "utilizationPercent": 10.4
+          },
+          "price": {
+            "currency": "DKK",
+            "vcpuMonthly": 4535.13,
+            "storageMonthly": 18,
+            "aiMonthly": 300,
+            "requestsMonthly": 97.2,
+            "jobsMonthly": 41.47,
+            "totalMonthly": 4991.8
+          },
+          "workloads": [
+            {
+              "id": "api",
+              "kind": "stateless",
+              "replicas": 4,
+              "scaled": false,
+              "capped": false,
+              "reason": "autoscale",
+              "unit": "requestsPerSecond",
+              "capacityPerSecond": 480,
+              "demandPerSecond": 50,
+              "sustainedPerSecond": 50,
+              "utilizationPercent": 10.4,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 50.23,
+                "p99Ms": 106.05
+              },
+              "multiActive": true
+            },
+            {
+              "id": "queue-worker",
+              "kind": "stateless",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "autoscale",
+              "unit": "jobsPerSecond",
+              "capacityPerSecond": 75,
+              "demandPerSecond": 4,
+              "sustainedPerSecond": 4,
+              "utilizationPercent": 5.3,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 126.76,
+                "p99Ms": 274.65
+              },
+              "multiActive": true
+            },
+            {
+              "id": "ai-gateway",
+              "kind": "stateless",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "autoscale",
+              "unit": "aiCallsPerSecond",
+              "capacityPerSecond": 18,
+              "demandPerSecond": 0.01,
+              "sustainedPerSecond": 0.01,
+              "utilizationPercent": 0.1,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 900.58,
+                "p99Ms": 2201.42
+              },
+              "multiActive": true
+            },
+            {
+              "id": "database",
+              "kind": "stateful",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "runbook-only",
+              "unit": "writesPerSecond",
+              "capacityPerSecond": 900,
+              "demandPerSecond": 34,
+              "sustainedPerSecond": 34,
+              "utilizationPercent": 3.8,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 12.47,
+                "p99Ms": 33.26
+              },
+              "multiActive": false
+            },
+            {
+              "id": "broker",
+              "kind": "stateful",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "runbook-only",
+              "unit": "messagesPerSecond",
+              "capacityPerSecond": 12000,
+              "demandPerSecond": 6.5,
+              "sustainedPerSecond": 6.5,
+              "utilizationPercent": 0.1,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 20.01,
+                "p99Ms": 60.03
+              },
+              "multiActive": true
+            },
+            {
+              "id": "object-store",
+              "kind": "stateful",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "runbook-only",
+              "unit": "writesPerSecond",
+              "capacityPerSecond": 1800,
+              "demandPerSecond": 0.01,
+              "sustainedPerSecond": 0.01,
+              "utilizationPercent": 0,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 35,
+                "p99Ms": 120
+              },
+              "multiActive": true
+            }
+          ]
+        },
+        {
+          "profileId": "small",
+          "scaleFactor": 5,
+          "downHosts": 0,
+          "measured": false,
+          "throughputPerSecond": 236.31,
+          "throughputUtilizationPercent": 100,
+          "errorRatePercent": 0,
+          "queueAgeSeconds": 0,
+          "replicationLagMs": 25,
+          "p95Ms": 901.45,
+          "p99Ms": 2203.54,
+          "bottleneck": {
+            "id": "api",
+            "utilizationPercent": 26
+          },
+          "price": {
+            "currency": "DKK",
+            "vcpuMonthly": 4535.13,
+            "storageMonthly": 18,
+            "aiMonthly": 300,
+            "requestsMonthly": 97.2,
+            "jobsMonthly": 41.47,
+            "totalMonthly": 4991.8
+          },
+          "workloads": [
+            {
+              "id": "api",
+              "kind": "stateless",
+              "replicas": 4,
+              "scaled": false,
+              "capped": false,
+              "reason": "autoscale",
+              "unit": "requestsPerSecond",
+              "capacityPerSecond": 480,
+              "demandPerSecond": 125,
+              "sustainedPerSecond": 125,
+              "utilizationPercent": 26,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 60.85,
+                "p99Ms": 128.45
+              },
+              "multiActive": true
+            },
+            {
+              "id": "queue-worker",
+              "kind": "stateless",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "autoscale",
+              "unit": "jobsPerSecond",
+              "capacityPerSecond": 75,
+              "demandPerSecond": 10,
+              "sustainedPerSecond": 10,
+              "utilizationPercent": 13.3,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 138.46,
+                "p99Ms": 300
+              },
+              "multiActive": true
+            },
+            {
+              "id": "ai-gateway",
+              "kind": "stateless",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "autoscale",
+              "unit": "aiCallsPerSecond",
+              "capacityPerSecond": 18,
+              "demandPerSecond": 0.03,
+              "sustainedPerSecond": 0.03,
+              "utilizationPercent": 0.2,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 901.45,
+                "p99Ms": 2203.54
+              },
+              "multiActive": true
+            },
+            {
+              "id": "database",
+              "kind": "stateful",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "runbook-only",
+              "unit": "writesPerSecond",
+              "capacityPerSecond": 900,
+              "demandPerSecond": 85,
+              "sustainedPerSecond": 85,
+              "utilizationPercent": 9.4,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 13.25,
+                "p99Ms": 35.34
+              },
+              "multiActive": false
+            },
+            {
+              "id": "broker",
+              "kind": "stateful",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "runbook-only",
+              "unit": "messagesPerSecond",
+              "capacityPerSecond": 12000,
+              "demandPerSecond": 16.25,
+              "sustainedPerSecond": 16.25,
+              "utilizationPercent": 0.1,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 20.03,
+                "p99Ms": 60.08
+              },
+              "multiActive": true
+            },
+            {
+              "id": "object-store",
+              "kind": "stateful",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "runbook-only",
+              "unit": "writesPerSecond",
+              "capacityPerSecond": 1800,
+              "demandPerSecond": 0.03,
+              "sustainedPerSecond": 0.03,
+              "utilizationPercent": 0,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 35,
+                "p99Ms": 120
+              },
+              "multiActive": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profileId": "medium",
+      "name": "Mellemstor kunde",
+      "runs": [
+        {
+          "profileId": "medium",
+          "scaleFactor": 1,
+          "downHosts": 0,
+          "measured": false,
+          "throughputPerSecond": 472.85,
+          "throughputUtilizationPercent": 100,
+          "errorRatePercent": 0,
+          "queueAgeSeconds": 0,
+          "replicationLagMs": 25,
+          "p95Ms": 914.7,
+          "p99Ms": 2235.94,
+          "bottleneck": {
+            "id": "api",
+            "utilizationPercent": 52.1
+          },
+          "price": {
+            "currency": "DKK",
+            "vcpuMonthly": 4535.13,
+            "storageMonthly": 450,
+            "aiMonthly": 15000,
+            "requestsMonthly": 972,
+            "jobsMonthly": 414.72,
+            "totalMonthly": 21371.85
+          },
+          "workloads": [
+            {
+              "id": "api",
+              "kind": "stateless",
+              "replicas": 4,
+              "scaled": false,
+              "capped": false,
+              "reason": "autoscale",
+              "unit": "requestsPerSecond",
+              "capacityPerSecond": 480,
+              "demandPerSecond": 250,
+              "sustainedPerSecond": 250,
+              "utilizationPercent": 52.1,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 93.91,
+                "p99Ms": 198.26
+              },
+              "multiActive": true
+            },
+            {
+              "id": "queue-worker",
+              "kind": "stateless",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "autoscale",
+              "unit": "jobsPerSecond",
+              "capacityPerSecond": 75,
+              "demandPerSecond": 20,
+              "sustainedPerSecond": 20,
+              "utilizationPercent": 26.7,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 163.64,
+                "p99Ms": 354.55
+              },
+              "multiActive": true
+            },
+            {
+              "id": "ai-gateway",
+              "kind": "stateless",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "autoscale",
+              "unit": "aiCallsPerSecond",
+              "capacityPerSecond": 18,
+              "demandPerSecond": 0.29,
+              "sustainedPerSecond": 0.29,
+              "utilizationPercent": 1.6,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 914.7,
+                "p99Ms": 2235.94
+              },
+              "multiActive": true
+            },
+            {
+              "id": "database",
+              "kind": "stateful",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "runbook-only",
+              "unit": "writesPerSecond",
+              "capacityPerSecond": 900,
+              "demandPerSecond": 170,
+              "sustainedPerSecond": 170,
+              "utilizationPercent": 18.9,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 14.79,
+                "p99Ms": 39.45
+              },
+              "multiActive": false
+            },
+            {
+              "id": "broker",
+              "kind": "stateful",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "runbook-only",
+              "unit": "messagesPerSecond",
+              "capacityPerSecond": 12000,
+              "demandPerSecond": 32.5,
+              "sustainedPerSecond": 32.5,
+              "utilizationPercent": 0.3,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 20.05,
+                "p99Ms": 60.16
+              },
+              "multiActive": true
+            },
+            {
+              "id": "object-store",
+              "kind": "stateful",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "runbook-only",
+              "unit": "writesPerSecond",
+              "capacityPerSecond": 1800,
+              "demandPerSecond": 0.06,
+              "sustainedPerSecond": 0.06,
+              "utilizationPercent": 0,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 35,
+                "p99Ms": 120
+              },
+              "multiActive": true
+            }
+          ]
+        },
+        {
+          "profileId": "medium",
+          "scaleFactor": 2,
+          "downHosts": 0,
+          "measured": false,
+          "throughputPerSecond": 945.7,
+          "throughputUtilizationPercent": 100,
+          "errorRatePercent": 0,
+          "queueAgeSeconds": 0,
+          "replicationLagMs": 25,
+          "p95Ms": 929.9,
+          "p99Ms": 2273.08,
+          "bottleneck": {
+            "id": "api",
+            "utilizationPercent": 59.5
+          },
+          "price": {
+            "currency": "DKK",
+            "vcpuMonthly": 4535.13,
+            "storageMonthly": 450,
+            "aiMonthly": 15000,
+            "requestsMonthly": 972,
+            "jobsMonthly": 414.72,
+            "totalMonthly": 21371.85
+          },
+          "workloads": [
+            {
+              "id": "api",
+              "kind": "stateless",
+              "replicas": 7,
+              "scaled": true,
+              "capped": false,
+              "reason": "autoscale",
+              "unit": "requestsPerSecond",
+              "capacityPerSecond": 840,
+              "demandPerSecond": 500,
+              "sustainedPerSecond": 500,
+              "utilizationPercent": 59.5,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 111.18,
+                "p99Ms": 234.71
+              },
+              "multiActive": true
+            },
+            {
+              "id": "queue-worker",
+              "kind": "stateless",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "autoscale",
+              "unit": "jobsPerSecond",
+              "capacityPerSecond": 75,
+              "demandPerSecond": 40,
+              "sustainedPerSecond": 40,
+              "utilizationPercent": 53.3,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 257.14,
+                "p99Ms": 557.14
+              },
+              "multiActive": true
+            },
+            {
+              "id": "ai-gateway",
+              "kind": "stateless",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "autoscale",
+              "unit": "aiCallsPerSecond",
+              "capacityPerSecond": 18,
+              "demandPerSecond": 0.58,
+              "sustainedPerSecond": 0.58,
+              "utilizationPercent": 3.2,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 929.9,
+                "p99Ms": 2273.08
+              },
+              "multiActive": true
+            },
+            {
+              "id": "database",
+              "kind": "stateful",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "runbook-only",
+              "unit": "writesPerSecond",
+              "capacityPerSecond": 900,
+              "demandPerSecond": 340,
+              "sustainedPerSecond": 340,
+              "utilizationPercent": 37.8,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 19.29,
+                "p99Ms": 51.43
+              },
+              "multiActive": false
+            },
+            {
+              "id": "broker",
+              "kind": "stateful",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "runbook-only",
+              "unit": "messagesPerSecond",
+              "capacityPerSecond": 12000,
+              "demandPerSecond": 65,
+              "sustainedPerSecond": 65,
+              "utilizationPercent": 0.5,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 20.11,
+                "p99Ms": 60.33
+              },
+              "multiActive": true
+            },
+            {
+              "id": "object-store",
+              "kind": "stateful",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "runbook-only",
+              "unit": "writesPerSecond",
+              "capacityPerSecond": 1800,
+              "demandPerSecond": 0.12,
+              "sustainedPerSecond": 0.12,
+              "utilizationPercent": 0,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 35,
+                "p99Ms": 120.01
+              },
+              "multiActive": true
+            }
+          ]
+        },
+        {
+          "profileId": "medium",
+          "scaleFactor": 5,
+          "downHosts": 0,
+          "measured": false,
+          "throughputPerSecond": 2364.24,
+          "throughputUtilizationPercent": 100,
+          "errorRatePercent": 0,
+          "queueAgeSeconds": 0,
+          "replicationLagMs": 142.86,
+          "p95Ms": 6000,
+          "p99Ms": 13000,
+          "bottleneck": {
+            "id": "queue-worker",
+            "utilizationPercent": 100
+          },
+          "price": {
+            "currency": "DKK",
+            "vcpuMonthly": 4535.13,
+            "storageMonthly": 450,
+            "aiMonthly": 15000,
+            "requestsMonthly": 972,
+            "jobsMonthly": 414.72,
+            "totalMonthly": 21371.85
+          },
+          "workloads": [
+            {
+              "id": "api",
+              "kind": "stateless",
+              "replicas": 16,
+              "scaled": true,
+              "capped": true,
+              "reason": "autoscale",
+              "unit": "requestsPerSecond",
+              "capacityPerSecond": 1920,
+              "demandPerSecond": 1250,
+              "sustainedPerSecond": 1250,
+              "utilizationPercent": 65.1,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 128.96,
+                "p99Ms": 272.24
+              },
+              "multiActive": true
+            },
+            {
+              "id": "queue-worker",
+              "kind": "stateless",
+              "replicas": 4,
+              "scaled": true,
+              "capped": false,
+              "reason": "autoscale",
+              "unit": "jobsPerSecond",
+              "capacityPerSecond": 100,
+              "demandPerSecond": 100,
+              "sustainedPerSecond": 100,
+              "utilizationPercent": 100,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 6000,
+                "p99Ms": 13000
+              },
+              "multiActive": true
+            },
+            {
+              "id": "ai-gateway",
+              "kind": "stateless",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "autoscale",
+              "unit": "aiCallsPerSecond",
+              "capacityPerSecond": 18,
+              "demandPerSecond": 1.45,
+              "sustainedPerSecond": 1.45,
+              "utilizationPercent": 8,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 978.66,
+                "p99Ms": 2392.28
+              },
+              "multiActive": true
+            },
+            {
+              "id": "database",
+              "kind": "stateful",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "runbook-only",
+              "unit": "writesPerSecond",
+              "capacityPerSecond": 900,
+              "demandPerSecond": 850,
+              "sustainedPerSecond": 850,
+              "utilizationPercent": 94.4,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 216,
+                "p99Ms": 576
+              },
+              "multiActive": false
+            },
+            {
+              "id": "broker",
+              "kind": "stateful",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "runbook-only",
+              "unit": "messagesPerSecond",
+              "capacityPerSecond": 12000,
+              "demandPerSecond": 162.5,
+              "sustainedPerSecond": 162.5,
+              "utilizationPercent": 1.4,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 20.27,
+                "p99Ms": 60.82
+              },
+              "multiActive": true
+            },
+            {
+              "id": "object-store",
+              "kind": "stateful",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "runbook-only",
+              "unit": "writesPerSecond",
+              "capacityPerSecond": 1800,
+              "demandPerSecond": 0.29,
+              "sustainedPerSecond": 0.29,
+              "utilizationPercent": 0,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 35.01,
+                "p99Ms": 120.02
+              },
+              "multiActive": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profileId": "large",
+      "name": "Stor kunde",
+      "runs": [
+        {
+          "profileId": "large",
+          "scaleFactor": 1,
+          "downHosts": 0,
+          "measured": false,
+          "throughputPerSecond": 3348.47,
+          "throughputUtilizationPercent": 70.8,
+          "errorRatePercent": 29.185,
+          "queueAgeSeconds": 0,
+          "replicationLagMs": 400,
+          "p95Ms": 6000,
+          "p99Ms": 13000,
+          "bottleneck": {
+            "id": "database",
+            "utilizationPercent": 188.9
+          },
+          "price": {
+            "currency": "DKK",
+            "vcpuMonthly": 4535.13,
+            "storageMonthly": 4500,
+            "aiMonthly": 150000,
+            "requestsMonthly": 9720,
+            "jobsMonthly": 4147.2,
+            "totalMonthly": 172902.33
+          },
+          "workloads": [
+            {
+              "id": "api",
+              "kind": "stateless",
+              "replicas": 16,
+              "scaled": true,
+              "capped": true,
+              "reason": "autoscale",
+              "unit": "requestsPerSecond",
+              "capacityPerSecond": 1920,
+              "demandPerSecond": 2500,
+              "sustainedPerSecond": 1920,
+              "utilizationPercent": 130.2,
+              "overloadPerSecond": 580,
+              "latency": {
+                "p95Ms": 2250,
+                "p99Ms": 4750
+              },
+              "multiActive": true
+            },
+            {
+              "id": "queue-worker",
+              "kind": "stateless",
+              "replicas": 8,
+              "scaled": true,
+              "capped": false,
+              "reason": "autoscale",
+              "unit": "jobsPerSecond",
+              "capacityPerSecond": 200,
+              "demandPerSecond": 200,
+              "sustainedPerSecond": 200,
+              "utilizationPercent": 100,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 6000,
+                "p99Ms": 13000
+              },
+              "multiActive": true
+            },
+            {
+              "id": "ai-gateway",
+              "kind": "stateless",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "autoscale",
+              "unit": "aiCallsPerSecond",
+              "capacityPerSecond": 18,
+              "demandPerSecond": 2.89,
+              "sustainedPerSecond": 2.89,
+              "utilizationPercent": 16.1,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 1072.39,
+                "p99Ms": 2621.39
+              },
+              "multiActive": true
+            },
+            {
+              "id": "database",
+              "kind": "stateful",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "runbook-only",
+              "unit": "writesPerSecond",
+              "capacityPerSecond": 900,
+              "demandPerSecond": 1700,
+              "sustainedPerSecond": 900,
+              "utilizationPercent": 188.9,
+              "overloadPerSecond": 800,
+              "latency": {
+                "p95Ms": 600,
+                "p99Ms": 1600
+              },
+              "multiActive": false
+            },
+            {
+              "id": "broker",
+              "kind": "stateful",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "runbook-only",
+              "unit": "messagesPerSecond",
+              "capacityPerSecond": 12000,
+              "demandPerSecond": 325,
+              "sustainedPerSecond": 325,
+              "utilizationPercent": 2.7,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 20.56,
+                "p99Ms": 61.67
+              },
+              "multiActive": true
+            },
+            {
+              "id": "object-store",
+              "kind": "stateful",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "runbook-only",
+              "unit": "writesPerSecond",
+              "capacityPerSecond": 1800,
+              "demandPerSecond": 0.58,
+              "sustainedPerSecond": 0.58,
+              "utilizationPercent": 0,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 35.01,
+                "p99Ms": 120.04
+              },
+              "multiActive": true
+            }
+          ]
+        },
+        {
+          "profileId": "large",
+          "scaleFactor": 2,
+          "downHosts": 0,
+          "measured": false,
+          "throughputPerSecond": 3851.95,
+          "throughputUtilizationPercent": 40.7,
+          "errorRatePercent": 59.269,
+          "queueAgeSeconds": 4,
+          "replicationLagMs": 400,
+          "p95Ms": 6000,
+          "p99Ms": 13000,
+          "bottleneck": {
+            "id": "database",
+            "utilizationPercent": 377.8
+          },
+          "price": {
+            "currency": "DKK",
+            "vcpuMonthly": 4535.13,
+            "storageMonthly": 4500,
+            "aiMonthly": 150000,
+            "requestsMonthly": 9720,
+            "jobsMonthly": 4147.2,
+            "totalMonthly": 172902.33
+          },
+          "workloads": [
+            {
+              "id": "api",
+              "kind": "stateless",
+              "replicas": 16,
+              "scaled": true,
+              "capped": true,
+              "reason": "autoscale",
+              "unit": "requestsPerSecond",
+              "capacityPerSecond": 1920,
+              "demandPerSecond": 5000,
+              "sustainedPerSecond": 1920,
+              "utilizationPercent": 260.4,
+              "overloadPerSecond": 3080,
+              "latency": {
+                "p95Ms": 2250,
+                "p99Ms": 4750
+              },
+              "multiActive": true
+            },
+            {
+              "id": "queue-worker",
+              "kind": "stateless",
+              "replicas": 15,
+              "scaled": true,
+              "capped": true,
+              "reason": "autoscale",
+              "unit": "jobsPerSecond",
+              "capacityPerSecond": 375,
+              "demandPerSecond": 400,
+              "sustainedPerSecond": 375,
+              "utilizationPercent": 106.7,
+              "overloadPerSecond": 25,
+              "latency": {
+                "p95Ms": 6000,
+                "p99Ms": 13000
+              },
+              "multiActive": true
+            },
+            {
+              "id": "ai-gateway",
+              "kind": "stateless",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "autoscale",
+              "unit": "aiCallsPerSecond",
+              "capacityPerSecond": 18,
+              "demandPerSecond": 5.79,
+              "sustainedPerSecond": 5.79,
+              "utilizationPercent": 32.2,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 1326.46,
+                "p99Ms": 3242.46
+              },
+              "multiActive": true
+            },
+            {
+              "id": "database",
+              "kind": "stateful",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "runbook-only",
+              "unit": "writesPerSecond",
+              "capacityPerSecond": 900,
+              "demandPerSecond": 3400,
+              "sustainedPerSecond": 900,
+              "utilizationPercent": 377.8,
+              "overloadPerSecond": 2500,
+              "latency": {
+                "p95Ms": 600,
+                "p99Ms": 1600
+              },
+              "multiActive": false
+            },
+            {
+              "id": "broker",
+              "kind": "stateful",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "runbook-only",
+              "unit": "messagesPerSecond",
+              "capacityPerSecond": 12000,
+              "demandPerSecond": 650,
+              "sustainedPerSecond": 650,
+              "utilizationPercent": 5.4,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 21.15,
+                "p99Ms": 63.44
+              },
+              "multiActive": true
+            },
+            {
+              "id": "object-store",
+              "kind": "stateful",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "runbook-only",
+              "unit": "writesPerSecond",
+              "capacityPerSecond": 1800,
+              "demandPerSecond": 1.16,
+              "sustainedPerSecond": 1.16,
+              "utilizationPercent": 0.1,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 35.02,
+                "p99Ms": 120.08
+              },
+              "multiActive": true
+            }
+          ]
+        },
+        {
+          "profileId": "large",
+          "scaleFactor": 5,
+          "downHosts": 0,
+          "measured": false,
+          "throughputPerSecond": 4837.36,
+          "throughputUtilizationPercent": 20.5,
+          "errorRatePercent": 79.539,
+          "queueAgeSeconds": 100,
+          "replicationLagMs": 400,
+          "p95Ms": 6000,
+          "p99Ms": 13000,
+          "bottleneck": {
+            "id": "database",
+            "utilizationPercent": 944.4
+          },
+          "price": {
+            "currency": "DKK",
+            "vcpuMonthly": 4535.13,
+            "storageMonthly": 4500,
+            "aiMonthly": 150000,
+            "requestsMonthly": 9720,
+            "jobsMonthly": 4147.2,
+            "totalMonthly": 172902.33
+          },
+          "workloads": [
+            {
+              "id": "api",
+              "kind": "stateless",
+              "replicas": 16,
+              "scaled": true,
+              "capped": true,
+              "reason": "autoscale",
+              "unit": "requestsPerSecond",
+              "capacityPerSecond": 1920,
+              "demandPerSecond": 12500,
+              "sustainedPerSecond": 1920,
+              "utilizationPercent": 651,
+              "overloadPerSecond": 10580,
+              "latency": {
+                "p95Ms": 2250,
+                "p99Ms": 4750
+              },
+              "multiActive": true
+            },
+            {
+              "id": "queue-worker",
+              "kind": "stateless",
+              "replicas": 15,
+              "scaled": true,
+              "capped": true,
+              "reason": "autoscale",
+              "unit": "jobsPerSecond",
+              "capacityPerSecond": 375,
+              "demandPerSecond": 1000,
+              "sustainedPerSecond": 375,
+              "utilizationPercent": 266.7,
+              "overloadPerSecond": 625,
+              "latency": {
+                "p95Ms": 6000,
+                "p99Ms": 13000
+              },
+              "multiActive": true
+            },
+            {
+              "id": "ai-gateway",
+              "kind": "stateless",
+              "replicas": 4,
+              "scaled": true,
+              "capped": false,
+              "reason": "autoscale",
+              "unit": "aiCallsPerSecond",
+              "capacityPerSecond": 24,
+              "demandPerSecond": 14.47,
+              "sustainedPerSecond": 14.47,
+              "utilizationPercent": 60.3,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 2265.95,
+                "p99Ms": 5539
+              },
+              "multiActive": true
+            },
+            {
+              "id": "database",
+              "kind": "stateful",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "runbook-only",
+              "unit": "writesPerSecond",
+              "capacityPerSecond": 900,
+              "demandPerSecond": 8500,
+              "sustainedPerSecond": 900,
+              "utilizationPercent": 944.4,
+              "overloadPerSecond": 7600,
+              "latency": {
+                "p95Ms": 600,
+                "p99Ms": 1600
+              },
+              "multiActive": false
+            },
+            {
+              "id": "broker",
+              "kind": "stateful",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "runbook-only",
+              "unit": "messagesPerSecond",
+              "capacityPerSecond": 12000,
+              "demandPerSecond": 1625,
+              "sustainedPerSecond": 1625,
+              "utilizationPercent": 13.5,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 23.13,
+                "p99Ms": 69.4
+              },
+              "multiActive": true
+            },
+            {
+              "id": "object-store",
+              "kind": "stateful",
+              "replicas": 3,
+              "scaled": false,
+              "capped": false,
+              "reason": "runbook-only",
+              "unit": "writesPerSecond",
+              "capacityPerSecond": 1800,
+              "demandPerSecond": 2.89,
+              "sustainedPerSecond": 2.89,
+              "utilizationPercent": 0.2,
+              "overloadPerSecond": 0,
+              "latency": {
+                "p95Ms": 35.06,
+                "p99Ms": 120.19
+              },
+              "multiActive": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "nPlusOne": {
+    "downHosts": 1,
+    "hostCount": 3,
+    "remainingHosts": 2,
+    "baselineThroughputPerSecond": 472.85,
+    "throughputAfterLossPerSecond": 472.85,
+    "errorRateAfterLossPercent": 0,
+    "sufficient": true,
+    "measured": false
+  },
+  "scalingRealized": {
+    "small": {
+      "baseThroughputPerSecond": 47.27,
+      "steps": [
+        {
+          "scaleFactor": 2,
+          "throughputRatio": 2,
+          "linear": true,
+          "throughputPerSecond": 94.52,
+          "errorRatePercent": 0,
+          "p95Ms": 900.58,
+          "p99Ms": 2201.42,
+          "queueAgeSeconds": 0,
+          "replicationLagMs": 25,
+          "totalMonthly": 4991.8,
+          "bottleneck": {
+            "id": "api",
+            "utilizationPercent": 10.4
+          }
+        },
+        {
+          "scaleFactor": 5,
+          "throughputRatio": 4.999,
+          "linear": true,
+          "throughputPerSecond": 236.31,
+          "errorRatePercent": 0,
+          "p95Ms": 901.45,
+          "p99Ms": 2203.54,
+          "queueAgeSeconds": 0,
+          "replicationLagMs": 25,
+          "totalMonthly": 4991.8,
+          "bottleneck": {
+            "id": "api",
+            "utilizationPercent": 26
+          }
+        }
+      ]
+    },
+    "medium": {
+      "baseThroughputPerSecond": 472.85,
+      "steps": [
+        {
+          "scaleFactor": 2,
+          "throughputRatio": 2,
+          "linear": true,
+          "throughputPerSecond": 945.7,
+          "errorRatePercent": 0,
+          "p95Ms": 929.9,
+          "p99Ms": 2273.08,
+          "queueAgeSeconds": 0,
+          "replicationLagMs": 25,
+          "totalMonthly": 21371.85,
+          "bottleneck": {
+            "id": "api",
+            "utilizationPercent": 59.5
+          }
+        },
+        {
+          "scaleFactor": 5,
+          "throughputRatio": 5,
+          "linear": true,
+          "throughputPerSecond": 2364.24,
+          "errorRatePercent": 0,
+          "p95Ms": 6000,
+          "p99Ms": 13000,
+          "queueAgeSeconds": 0,
+          "replicationLagMs": 142.86,
+          "totalMonthly": 21371.85,
+          "bottleneck": {
+            "id": "queue-worker",
+            "utilizationPercent": 100
+          }
+        }
+      ]
+    },
+    "large": {
+      "baseThroughputPerSecond": 3348.47,
+      "steps": [
+        {
+          "scaleFactor": 2,
+          "throughputRatio": 1.15,
+          "linear": false,
+          "throughputPerSecond": 3851.95,
+          "errorRatePercent": 59.269,
+          "p95Ms": 6000,
+          "p99Ms": 13000,
+          "queueAgeSeconds": 4,
+          "replicationLagMs": 400,
+          "totalMonthly": 172902.33,
+          "bottleneck": {
+            "id": "database",
+            "utilizationPercent": 377.8
+          }
+        },
+        {
+          "scaleFactor": 5,
+          "throughputRatio": 1.445,
+          "linear": false,
+          "throughputPerSecond": 4837.36,
+          "errorRatePercent": 79.539,
+          "p95Ms": 6000,
+          "p99Ms": 13000,
+          "queueAgeSeconds": 100,
+          "replicationLagMs": 400,
+          "totalMonthly": 172902.33,
+          "bottleneck": {
+            "id": "database",
+            "utilizationPercent": 944.4
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,18 @@
+DKC-041 baseline (make baseline) — base-komit: 83ad91a, review-base: 5f9fa73
+
+Checks i alt: 146 — PASS 114, FAIL 1, NOT RUN 31
+
+Kendt, allerede eksisterende FAIL (ikke indført af DKC-041):
+  - changelog-check: commits (incl. 83ad91a) mangler DCO sign-off — pre-eksisterende, aldrig "fixed"
+
+Nye checks for DKC-041:
+  - storage-check: PASS
+  - storage-test: PASS
+  - storage-drill: PASS
+  - integration-storage-live: NOT-RUN
+
+Reproducerbarheds-vagt: baseline muterer 30 sporede filer under modules/*/conformance.
+De er genskabt fra et snapshot taget før make baseline, og en efterfølgende
+diff -rq mod snapshot er ren (ingen stragglers under conformance).
+NOT RUN-linjer er ikke godkendelser. integration-storage-live kræver et levende
+CSI-/objektlager og er NOT RUN med begrundelse.

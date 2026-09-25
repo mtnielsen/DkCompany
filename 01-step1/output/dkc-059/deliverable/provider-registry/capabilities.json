@@ -1,0 +1,90 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ProviderCapabilityCatalog",
+  "metadata": {
+    "name": "platform-provider-capabilities",
+    "version": "1.0.0",
+    "description": "Versionsstyret capability-katalog for udskiftelige providere. Hver capability har en klasse, en minimumsversion, om den er obligatorisk for klassen, og om den er sikkerhedskritisk. Et capabilitieskifte må ikke nedgradere en sikkerhedskritisk capability til laveste fællesnævner, og en manglende obligatorisk capability stopper skiftet før nogen ændring.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner"
+      }
+    },
+    "labels": {
+      "tier": "provider-registry",
+      "wave": "5"
+    }
+  },
+  "levels": [
+    {
+      "id": "enforced",
+      "rank": 2,
+      "title": "Håndhævet",
+      "description": "Provideren håndhæver capability'en teknisk og kan bevise det."
+    },
+    {
+      "id": "advisory",
+      "rank": 1,
+      "title": "Rådgivende",
+      "description": "Provideren understøtter capability'en, men håndhæver den ikke teknisk."
+    }
+  ],
+  "classes": [
+    { "id": "iam", "title": "IAM og identitetsbroker", "description": "Menneskelig og agentbaseret identitet, føderation, audit-provenance og tenantisolation." },
+    { "id": "modelprovider", "title": "Modelprovider", "description": "Modeladgang bag en egress-vagt med tenantrouting og forbrugsmåling." },
+    { "id": "database", "title": "Database", "description": "Strukturerede data med tenantisolation, kryptering, TLS og point-in-time recovery." },
+    { "id": "storage", "title": "Lager", "description": "Objekter og filer med checksums, kryptering, ACL-bevarelse og object lock." },
+    { "id": "backup", "title": "Backup", "description": "Krypteret, uforanderlig backup med separat nøgleadgang og verificeret gendannelse." },
+    { "id": "queue", "title": "Kø og beskedudveksling", "description": "Holdbar outbox, idempotent levering, dead-letter og tenantisolation." },
+    { "id": "apps", "title": "Applikationer", "description": "Applikationsdata med ACL, stabile id'er, links og selvbeskrivende eksport." }
+  ],
+  "capabilities": [
+    { "id": "iam.oidc", "class": "iam", "title": "OIDC-føderation", "mandatory": true, "securityCritical": true, "minVersion": "1.0.0", "description": "Verificeret fødereret login via OIDC med signerede claims." },
+    { "id": "iam.mfa", "class": "iam", "title": "Multi-faktor", "mandatory": true, "securityCritical": true, "minVersion": "1.0.0", "description": "MFA kan håndhæves for menneskelige konti." },
+    { "id": "iam.agent-identity", "class": "iam", "title": "Entydig agentidentitet", "mandatory": true, "securityCritical": true, "minVersion": "1.0.0", "description": "Agenter har en entydig, uforanderlig identitet adskilt fra mennesker." },
+    { "id": "iam.tenant-isolation", "class": "iam", "title": "Tenantisolation", "mandatory": true, "securityCritical": true, "minVersion": "1.0.0", "description": "Identiteter og sessioner er bundet til præcis én tenant." },
+    { "id": "iam.audit-provenance", "class": "iam", "title": "Historisk audit-provenance", "mandatory": true, "securityCritical": true, "minVersion": "1.0.0", "description": "Historiske auditposter bevarer den oprindelige principal og provider." },
+    { "id": "iam.scim", "class": "iam", "title": "SCIM-provisionering", "mandatory": false, "securityCritical": false, "minVersion": "1.0.0", "description": "Brugere og grupper provisioneres via SCIM." },
+
+    { "id": "model.egress-control", "class": "modelprovider", "title": "Egresskontrol", "mandatory": true, "securityCritical": true, "minVersion": "1.0.0", "description": "Kun gatewayen må kalde provideren, og kun mod en allowlistet vært." },
+    { "id": "model.tenant-routing", "class": "modelprovider", "title": "Tenantrouting", "mandatory": true, "securityCritical": true, "minVersion": "1.0.0", "description": "Forespørgsler routes tenantbevidst og lækker ikke på tværs af kunder." },
+    { "id": "model.usage-metering", "class": "modelprovider", "title": "Forbrugsmåling", "mandatory": true, "securityCritical": false, "minVersion": "1.0.0", "description": "Faktisk tokenforbrug rapporteres pr. tenant." },
+    { "id": "model.streaming", "class": "modelprovider", "title": "Streaming", "mandatory": false, "securityCritical": false, "minVersion": "1.0.0", "description": "Svar kan streames med afbrydelse." },
+
+    { "id": "database.tls", "class": "database", "title": "TLS", "mandatory": true, "securityCritical": true, "minVersion": "1.0.0", "description": "Alle forbindelser kræver verificeret TLS." },
+    { "id": "database.encryption-at-rest", "class": "database", "title": "Kryptering i hvile", "mandatory": true, "securityCritical": true, "minVersion": "1.0.0", "description": "Data og backups er krypteret i hvile." },
+    { "id": "database.row-tenant-isolation", "class": "database", "title": "Rækkeniveau-tenantisolation", "mandatory": true, "securityCritical": true, "minVersion": "1.0.0", "description": "Hver række er bundet til en tenant og filtreres teknisk." },
+    { "id": "database.pitr", "class": "database", "title": "Point-in-time recovery", "mandatory": true, "securityCritical": false, "minVersion": "1.0.0", "description": "Gendannelse til et valgt tidspunkt med WAL/binlog." },
+    { "id": "database.read-only-replica", "class": "database", "title": "Read-only replika", "mandatory": false, "securityCritical": false, "minVersion": "1.0.0", "description": "Læsning kan flyttes til en read-only replika." },
+    { "id": "database.transactional-migration", "class": "database", "title": "Transaktionel migrering", "mandatory": false, "securityCritical": false, "minVersion": "1.0.0", "description": "Skemamigrering kan køres transaktionelt og rulles tilbage." },
+
+    { "id": "storage.encryption-at-rest", "class": "storage", "title": "Kryptering i hvile", "mandatory": true, "securityCritical": true, "minVersion": "1.0.0", "description": "Objekter er krypteret i hvile med en kendt nøgle." },
+    { "id": "storage.checksums", "class": "storage", "title": "Checksums", "mandatory": true, "securityCritical": true, "minVersion": "1.0.0", "description": "Hvert objekt har en verificerbar checksum." },
+    { "id": "storage.acl-preservation", "class": "storage", "title": "ACL-bevarelse", "mandatory": true, "securityCritical": true, "minVersion": "1.0.0", "description": "Adgangsrettigheder bevares 1:1 ved flytning." },
+    { "id": "storage.object-lock", "class": "storage", "title": "Object lock / WORM", "mandatory": false, "securityCritical": true, "minVersion": "1.0.0", "description": "Objekter kan låses uforanderligt for en periode." },
+    { "id": "storage.versioning", "class": "storage", "title": "Versionering", "mandatory": false, "securityCritical": false, "minVersion": "1.0.0", "description": "Tidligere versioner bevares." },
+
+    { "id": "backup.encryption", "class": "backup", "title": "Krypteret backup", "mandatory": true, "securityCritical": true, "minVersion": "1.0.0", "description": "Backups er krypteret med AES-256-GCM." },
+    { "id": "backup.immutability", "class": "backup", "title": "Uforanderlighed", "mandatory": true, "securityCritical": true, "minVersion": "1.0.0", "description": "Backups kan ikke ændres eller slettes før udløb." },
+    { "id": "backup.separate-key-access", "class": "backup", "title": "Separat nøgleadgang", "mandatory": true, "securityCritical": true, "minVersion": "1.0.0", "description": "Nøglen ligger uden for backupmediet og kræver en anden rolle." },
+    { "id": "backup.restore-verification", "class": "backup", "title": "Verificeret gendannelse", "mandatory": true, "securityCritical": false, "minVersion": "1.0.0", "description": "Gendannelse efterprøves i en isoleret øvelse." },
+
+    { "id": "queue.durable-outbox", "class": "queue", "title": "Holdbar outbox", "mandatory": true, "securityCritical": true, "minVersion": "1.0.0", "description": "Beskeder skrives holdbart før de sendes." },
+    { "id": "queue.delivery-idempotency", "class": "queue", "title": "Idempotent levering", "mandatory": true, "securityCritical": true, "minVersion": "1.0.0", "description": "En levering kan gentages uden at skabe dubletter." },
+    { "id": "queue.tenant-isolation", "class": "queue", "title": "Tenantisolation", "mandatory": true, "securityCritical": true, "minVersion": "1.0.0", "description": "Køer og emner er tenantadskilte." },
+    { "id": "queue.dead-letter", "class": "queue", "title": "Dead-letter", "mandatory": true, "securityCritical": false, "minVersion": "1.0.0", "description": "Forgiftede beskeder flyttes til en dead-letter-kø." },
+    { "id": "queue.ordering", "class": "queue", "title": "Rækkefølge", "mandatory": false, "securityCritical": false, "minVersion": "1.0.0", "description": "Beskeder leveres i en garanteret rækkefølge." },
+
+    { "id": "app.acl", "class": "apps", "title": "Applikations-ACL", "mandatory": true, "securityCritical": true, "minVersion": "1.0.0", "description": "Adgangsrettigheder pr. objekt bevares ved migration." },
+    { "id": "app.stable-ids", "class": "apps", "title": "Stabile id'er", "mandatory": true, "securityCritical": true, "minVersion": "1.0.0", "description": "Objekter har en stabil, tenantafgrænset reference gennem migrationen." },
+    { "id": "app.links", "class": "apps", "title": "Links og relationer", "mandatory": true, "securityCritical": false, "minVersion": "1.0.0", "description": "Relationer mellem objekter bevares som referencer." },
+    { "id": "app.export-self-describing", "class": "apps", "title": "Selvbeskrivende eksport", "mandatory": true, "securityCritical": false, "minVersion": "1.0.0", "description": "Eksporten kan læses uden platformen." },
+    { "id": "app.comments", "class": "apps", "title": "Kommentarer", "mandatory": false, "securityCritical": false, "minVersion": "1.0.0", "description": "Kommentarer og metadata overføres." },
+    { "id": "app.attachments", "class": "apps", "title": "Vedhæftninger", "mandatory": false, "securityCritical": false, "minVersion": "1.0.0", "description": "Vedhæftninger overføres eller refereres stabilt." }
+  ]
+}

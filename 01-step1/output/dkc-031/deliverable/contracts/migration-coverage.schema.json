@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/migration-coverage.schema.json",
+  "title": "Migration Coverage",
+  "description": "DKC-031: en dækningsmatrix pr. pilotapp/entitet/facet (ejerskab, timestamps, kommentarer, bilag, ACL og links). Enhver facet der ikke er fuldt understøttet optræder også i `lostFunctionality`, så tabt funktionalitet vises før cutover.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "generatedAt", "matrix", "lostFunctionality", "summary"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "MigrationCoverage" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "matrix": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["appId", "tenantId", "entityType", "facet", "status"],
+        "additionalProperties": false,
+        "properties": {
+          "appId": { "enum": ["files", "projects", "knowledge", "support", "crm"] },
+          "tenantId": { "type": "string" },
+          "entityType": { "type": "string" },
+          "facet": { "enum": ["ownership", "timestamps", "comments", "attachments", "acl", "links"] },
+          "status": { "enum": ["full", "partial", "unsupported"] },
+          "source": { "type": ["string", "null"] },
+          "target": { "type": ["string", "null"] },
+          "note": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "lostFunctionality": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["appId", "tenantId", "entityType", "facet", "status"],
+        "additionalProperties": false,
+        "properties": {
+          "appId": { "enum": ["files", "projects", "knowledge", "support", "crm"] },
+          "tenantId": { "type": "string" },
+          "entityType": { "type": "string" },
+          "facet": { "enum": ["ownership", "timestamps", "comments", "attachments", "acl", "links"] },
+          "status": { "enum": ["partial", "unsupported"] },
+          "note": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": ["full", "partial", "unsupported"],
+      "additionalProperties": false,
+      "properties": {
+        "full": { "type": "integer", "minimum": 0 },
+        "partial": { "type": "integer", "minimum": 0 },
+        "unsupported": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

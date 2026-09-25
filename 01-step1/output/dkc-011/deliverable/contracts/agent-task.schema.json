@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/agent-task.schema.json",
+  "title": "Agent Task",
+  "description": "En opgave til agent-runtimen: en sekvens af foreslåede handlinger. Runtimen udfører kun verber, der er deklareret i agentens manifest, og spørger PDP før hver handling. Der findes ingen fri shell.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "taskId", "tenantId", "agentRef", "objective", "actions"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "AgentTask" },
+    "taskId": { "type": "string", "format": "uuid" },
+    "tenantId": { "type": "string", "description": "Kunden opgaven kører for. Indgår i godkendelsesbindingen." },
+    "agentRef": { "type": "string" },
+    "objective": { "type": "string" },
+    "requestedBy": {
+      "type": "object",
+      "required": ["kind", "id"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "enum": ["human", "agent", "service"] },
+        "id": { "type": "string" },
+        "onBehalfOf": { "type": "string" }
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "maxTokens": { "type": "integer", "minimum": 1 },
+        "maxCostEur": { "type": "number", "minimum": 0 },
+        "maxWallClockSeconds": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "evidenceIndex": {
+      "type": "object",
+      "description": "DKC-007: opslagsværk fra bevislabel til en verificerbar reference. Runtimen læser artefaktet, genberegner SHA-256 og kræver match; en bar tekstetikette i action.evidence accepteres ikke.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["uri", "sha256"],
+        "additionalProperties": false,
+        "properties": {
+          "uri": { "type": "string", "description": "Sti eller URI til det deterministiske bevisartefakt." },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$", "description": "Git-commit beviset er produceret på." },
+          "digest": { "type": "string", "pattern": "^[a-f0-9]{64}$", "description": "Digest for den ændring beviset dækker." },
+          "status": { "enum": ["pass", "fail", "clean", "findings", "not-run", "partial"] }
+        }
+      }
+    },
+    "actions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["verb", "target", "environment"],
+        "additionalProperties": false,
+        "properties": {
+          "verb": { "type": "string", "description": "Skal være deklareret i agentens capabilities." },
+          "target": { "type": "string" },
+          "environment": { "enum": ["dev", "staging", "prod"] },
+          "evidence": {
+            "type": "array",
+            "items": { "enum": ["policy-allow", "tests-pass", "dry-run-clean", "rollback-tested", "restore-verified", "scan-clean"] }
+          },
+          "evidenceIndex": {
+            "type": "object",
+            "description": "Handlingsspecifikke bevisreferencer; overskriver taskens.",
+            "additionalProperties": {
+              "type": "object",
+              "required": ["uri", "sha256"],
+              "additionalProperties": false,
+              "properties": {
+                "uri": { "type": "string" },
+                "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+                "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+                "digest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+                "status": { "enum": ["pass", "fail", "clean", "findings", "not-run", "partial"] }
+              }
+            }
+          },
+          "dataCategories": {
+            "type": "array",
+            "description": "DKC-007: de datakategorier handlingen rører. Skal være inden for manifestets scope.dataCategories.",
+            "items": { "enum": ["none", "operational", "pseudonymised", "personal", "special-category"] }
+          },
+          "approvalId": {
+            "type": "string",
+            "description": "ID på den serververificerede godkendelse (DKC-004). Runtimen verificerer og forbruger beslutningen lige før eksekvering. `action.approvals` findes ikke — en klientpåstand tæller ikke."
+          },
+          "executionId": {
+            "type": "string",
+            "description": "Unikt eksekverings-ID. Sammen med approvalId udgør det replay-beskyttelsen: samme godkendelse kan kun forbruges én gang."
+          },
+          "changeDigest": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "SHA-256 af den diff/ændring handlingen udfører. Skal matche godkendelsens binding, ellers afvises handlingen."
+          },
+          "parameters": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "De parametre handlingen udfører. Indgår i godkendelsens binding."
+          },
+          "policyBundleVersion": {
+            "type": "string",
+            "description": "Versionen af den policy-bundle beslutningen blev truffet under. Indgår i bindingen."
+          },
+          "blastRadius": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "tenants": { "type": "integer", "minimum": 0 },
+              "services": { "type": "integer", "minimum": 0 },
+              "personalDataRecords": { "type": "integer", "minimum": 0 }
+            }
+          },
+          "untrustedInput": {
+            "type": "boolean",
+            "description": "true når handlingen bygger på data agenten ikke kontrollerer (logs, issues, changelogs)."
+          },
+          "tool": {
+            "type": "string",
+            "description": "DKC-011: navnet på det typede værktøj fra allowlisten, som dette verbum kalder. Runtimen servervaliderer verbum, parametre, størrelsesgrænse og egress før en executor. Uden feltet udledes værktøjet af verbet."
+          },
+          "untrustedContext": {
+            "type": "array",
+            "description": "DKC-011: ubetroet indhold handlingen bygger på (logs, dokumenter, mails, tool-output, model-output). Behandles som data og kan ikke blive et eksekverbart kald.",
+            "items": {
+              "type": "object",
+              "required": ["kind", "text"],
+              "additionalProperties": false,
+              "properties": {
+                "kind": { "enum": ["log", "document", "email", "issue", "changelog", "tool-output", "model-output", "web", "chat", "unknown"] },
+                "source": { "type": "string" },
+                "text": { "type": "string" },
+                "encoding": { "type": "string" }
+              }
+            }
+          },
+          "untrustedContent": {
+            "type": "string",
+            "description": "DEPRECATED (DKC-011): brug untrustedContext. Fri tekst der behandles som ubetroet data."
+          },
+          "changeUri": { "type": "string" }
+        }
+      }
+    }
+  }
+}

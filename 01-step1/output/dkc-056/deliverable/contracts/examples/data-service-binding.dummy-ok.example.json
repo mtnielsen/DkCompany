@@ -1,0 +1,41 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "DataServiceBinding",
+  "metadata": {
+    "name": "dummy-ok-binding",
+    "version": "1.0.0",
+    "description": "Binder referencedummyen til den administrerede database og HR-kilden med tenant-isolation og read-only scope."
+  },
+  "application": {
+    "ref": "dummy-ok",
+    "accountableHuman": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" }
+  },
+  "tenantScope": {
+    "mode": "per-tenant",
+    "separateIdentityPerTenant": true,
+    "evidence": "Tenant udledes af den verificerede principal; hver tenant har sin egen database og rolle."
+  },
+  "databaseProfileRef": "managed-postgres",
+  "dataSourceRefs": [
+    {
+      "ref": "hr-source",
+      "scope": {
+        "allowedSchemas": ["hr"],
+        "allowedTables": ["hr.employees", "hr.departments", "hr.employee_departments"],
+        "readOnly": true
+      }
+    }
+  ],
+  "externalDataHandling": {
+    "treatAsOwnDatabase": false,
+    "migrationsAllowed": false,
+    "backupsAllowed": false
+  },
+  "responsibilities": {
+    "applicationData": { "owner": "platform", "accountableHuman": { "subject": "oidc|david.dahl", "name": "David Dahl", "role": "Service Owner" } },
+    "secrets": { "owner": "platform", "accountableHuman": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Security Owner" } },
+    "migration": { "owner": "platform", "accountableHuman": { "subject": "oidc|david.dahl", "name": "David Dahl", "role": "Service Owner" } },
+    "backup": { "owner": "platform", "accountableHuman": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Continuity Owner" } },
+    "restore": { "owner": "platform", "accountableHuman": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Continuity Owner" } }
+  }
+}

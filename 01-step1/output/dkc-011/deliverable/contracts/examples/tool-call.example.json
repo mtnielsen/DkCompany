@@ -1,0 +1,26 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ToolCall",
+  "tool": "upgrade.dry-run",
+  "verb": "upgrade.dry-run",
+  "target": "dummy-ok",
+  "environment": "staging",
+  "tenantId": "acme",
+  "parameters": {
+    "targetVersion": "1.2.3",
+    "endpoint": "https://module.dummy-ok.svc.platform.example.org/v1/dry-run"
+  },
+  "egress": {
+    "network": true,
+    "allowedSchemes": ["https"],
+    "allowedHosts": ["module.dummy-ok.svc.platform.example.org"]
+  },
+  "untrustedContext": [
+    {
+      "kind": "log",
+      "source": "deployment-log",
+      "text": "Upgrade dry-run requested after a latency alert in staging.",
+      "encoding": "plain"
+    }
+  ]
+}

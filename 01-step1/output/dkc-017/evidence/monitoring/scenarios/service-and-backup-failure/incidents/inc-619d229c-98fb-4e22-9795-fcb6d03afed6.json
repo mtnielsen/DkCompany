@@ -1,0 +1,47 @@
+{
+  "incidentId": "inc-619d229c-98fb-4e22-9795-fcb6d03afed6",
+  "alertId": "alert-0718e2e1-d44a-4861-a77a-f0bb75d05d14",
+  "ruleId": "service-unavailable",
+  "severity": "critical",
+  "tenantId": "acme",
+  "state": "open",
+  "owner": {
+    "subject": "oidc|anna.andersen",
+    "name": "Anna Andersen",
+    "role": "Platform Owner"
+  },
+  "escalation": [
+    {
+      "afterMinutes": 10,
+      "to": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner (substitute)"
+      }
+    },
+    {
+      "afterMinutes": 30,
+      "to": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner"
+      }
+    }
+  ],
+  "runbook": "docs/runbooks/alerting.md",
+  "openedAt": "2026-09-23T22:46:50.269Z",
+  "timeline": [
+    {
+      "at": "2026-09-23T22:46:50.269Z",
+      "type": "alerted",
+      "actor": "monitoring",
+      "detail": "regel 'service-unavailable': 0 < 0.999"
+    },
+    {
+      "at": "2026-09-23T22:46:50.277Z",
+      "type": "notified",
+      "actor": "monitoring",
+      "detail": "leveret til platform-oncall-local (local:404d15b9e8b2e24d366ce870c3ce3452fd70b63721a847fc27b236d7874ff1d5)"
+    }
+  ]
+}

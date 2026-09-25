@@ -1,0 +1,30 @@
+Only in /tmp/dkc-014/00-core/.github: CODEOWNERS
+Only in /tmp/dkc-014/00-core/.github/workflows: dco.yml
+Only in /tmp/dkc-014/00-core/.github/workflows: supply-chain.yml
+Files /tmp/dkc-014-ref/00-core/Makefile and /tmp/dkc-014/00-core/Makefile differ
+Files /tmp/dkc-014-ref/00-core/conformance/src/schemas.mjs and /tmp/dkc-014/00-core/conformance/src/schemas.mjs differ
+Only in /tmp/dkc-014/00-core/conformance/src: supply-chain.mjs
+Files /tmp/dkc-014-ref/00-core/conformance/src/validate-schemas.mjs and /tmp/dkc-014/00-core/conformance/src/validate-schemas.mjs differ
+Only in /tmp/dkc-014/00-core: containers
+Only in /tmp/dkc-014/00-core/contracts: artifact-manifest.schema.json
+Only in /tmp/dkc-014/00-core/contracts: branch-protection.schema.json
+Only in /tmp/dkc-014/00-core/contracts: build-provenance.schema.json
+Only in /tmp/dkc-014/00-core/contracts/examples: artifact-manifest.example.json
+Only in /tmp/dkc-014/00-core/contracts/examples: branch-protection.example.json
+Only in /tmp/dkc-014/00-core/contracts/examples: build-provenance.example.json
+Only in /tmp/dkc-014/00-core/contracts/examples: sbom.example.json
+Only in /tmp/dkc-014/00-core/contracts: sbom.schema.json
+Only in /tmp/dkc-014/00-core/docs/adr: 0032-reproducerbare-artefakter-og-releasevej.md
+Files /tmp/dkc-014-ref/00-core/docs/adr/README.md and /tmp/dkc-014/00-core/docs/adr/README.md differ
+Files /tmp/dkc-014-ref/00-core/docs/spec/README.md and /tmp/dkc-014/00-core/docs/spec/README.md differ
+Only in /tmp/dkc-014/00-core/docs/spec: supply-chain.md
+Files /tmp/dkc-014-ref/00-core/docs/status/implementation-matrix.md and /tmp/dkc-014/00-core/docs/status/implementation-matrix.md differ
+Only in /tmp/dkc-014/00-core/docs/status: supply-chain.md
+Files /tmp/dkc-014-ref/00-core/docs/testing/test-matrix.md and /tmp/dkc-014/00-core/docs/testing/test-matrix.md differ
+Only in /tmp/dkc-014/00-core/release: artifacts.json
+Files /tmp/dkc-014-ref/00-core/release/matrix/test-matrix.json and /tmp/dkc-014/00-core/release/matrix/test-matrix.json differ
+Only in /tmp/dkc-014/00-core/release: sbom
+Only in /tmp/dkc-014/00-core/release: trust
+Only in /tmp/dkc-014/00-core/security: branch-protection.json
+Only in /tmp/dkc-014/00-core: supply-chain
+Files /tmp/dkc-014-ref/00-core/tools/baseline/registry.mjs and /tmp/dkc-014/00-core/tools/baseline/registry.mjs differ

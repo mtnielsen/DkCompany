@@ -1,0 +1,112 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "Runbook",
+  "metadata": {
+    "name": "stateless-restart",
+    "version": "1.0.0",
+    "description": "Genstarter en stateless tjeneste sikkert: healthcheck før og efter, kort observationstid og testet rollback.",
+    "owner": {
+      "team": "platform",
+      "contact": "platform@example.org"
+    },
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "role": "Platform Owner",
+      "name": "Anna Andersen"
+    }
+  },
+  "scope": {
+    "verbs": [
+      "restart"
+    ],
+    "targets": [
+      "service/*"
+    ],
+    "environments": [
+      "staging",
+      "prod"
+    ],
+    "tenants": [
+      "*"
+    ]
+  },
+  "parameters": {
+    "schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "maxDurationSeconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 120,
+          "required": true
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "limits": {
+      "maxDurationSeconds": 120,
+      "maxTargets": 1
+    }
+  },
+  "preconditions": [
+    {
+      "id": "healthy-before",
+      "check": "healthcheck",
+      "expect": "green"
+    },
+    {
+      "id": "stateless",
+      "check": "stateless",
+      "expect": true
+    }
+  ],
+  "maxImpact": {
+    "blastRadius": "single-service",
+    "maxTargets": 1,
+    "customerVisible": false,
+    "maxDurationSeconds": 120
+  },
+  "expiry": {
+    "approvedAt": "2025-09-01T00:00:00Z",
+    "expiresAt": "2025-09-03T00:00:00Z",
+    "maxAgeSeconds": 604800
+  },
+  "attempts": {
+    "maxAttempts": 2,
+    "windowSeconds": 1800
+  },
+  "rollback": {
+    "required": true,
+    "method": "restart",
+    "runbookRef": "stateless-restart@1.0.0",
+    "tested": true
+  },
+  "postchecks": [
+    {
+      "id": "healthy-after",
+      "check": "healthcheck",
+      "expect": "green",
+      "timeoutSeconds": 60,
+      "onFailure": "rollback"
+    }
+  ],
+  "approval": {
+    "flow": "standard",
+    "preApproved": true,
+    "preApprovalRef": "APR-REMEDIATION-RESTART",
+    "requiredApprovals": 2,
+    "eligibleGroups": [
+      "platform-approvers"
+    ]
+  },
+  "signature": {
+    "algorithm": "hmac-sha256",
+    "keyId": "runbook-example-key",
+    "value": "97cda9025f80e37722581b05cd3143002b91798cd912e7be888de91c4205472c",
+    "signedAt": "2025-09-01T00:00:00Z"
+  }
+}

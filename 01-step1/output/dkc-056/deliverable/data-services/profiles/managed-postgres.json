@@ -1,0 +1,73 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "DatabaseProfile",
+  "metadata": {
+    "name": "managed-postgres",
+    "version": "1.0.0",
+    "description": "Platformens administrerede PostgreSQL-profil med HA, kryptering, verificeret restore og navngivet ejerskab. Platformen driver ikke sin egen engine.",
+    "accountableHuman": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+    "labels": { "tier": "data", "profile": "managed" }
+  },
+  "profileType": "managed",
+  "engine": {
+    "family": "postgresql",
+    "supportedVersions": [
+      { "range": ">=15.0.0 <16.0.0", "tested": true, "notes": "Pilotversion." },
+      { "range": ">=16.0.0 <17.0.0", "tested": true, "notes": "Anbefalet version." }
+    ],
+    "engineOwner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+    "noOwnEngine": true
+  },
+  "managed": {
+    "provider": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+    "serviceTier": "high-availability",
+    "slaRef": "sla://platform/data-services/managed-postgres",
+    "hostingRegion": "eu-west-1"
+  },
+  "secureDefaults": {
+    "encryptionAtRest": {
+      "required": true,
+      "method": "provider-managed AES-256",
+      "keyOwner": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Security Owner" }
+    },
+    "encryptionInTransit": { "required": true, "minTlsVersion": "1.3", "certificateRotationDays": 90 },
+    "leastPrivilegeRoles": true,
+    "auditLogging": true,
+    "publicNetwork": false
+  },
+  "migrations": {
+    "strategy": "versioned-sql",
+    "ownedSchemas": ["app_dummy_ok", "platform"],
+    "foreignSchemaPolicy": "never",
+    "backupBeforeMigrate": true,
+    "destructiveChangesRequireApproval": true
+  },
+  "backup": {
+    "enabled": true,
+    "destinationRef": "backup-destination",
+    "schedule": "0 */6 * * *",
+    "retentionDays": 35,
+    "verifiedRestore": true,
+    "owner": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Continuity Owner" }
+  },
+  "monitoring": {
+    "metrics": true,
+    "alerting": true,
+    "owner": { "subject": "oidc|carl.iversen", "name": "Carl Iversen", "role": "Operations Owner" },
+    "notes": "Forbindelsesfejl, certifikatudløb og versionsafvigelse alarmerer."
+  },
+  "responsibilityMatrix": {
+    "patching": { "owner": "platform", "accountableHuman": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" } },
+    "backup": { "owner": "platform", "accountableHuman": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Continuity Owner" } },
+    "restore": { "owner": "platform", "accountableHuman": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Continuity Owner" } },
+    "keys": { "owner": "platform", "accountableHuman": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Security Owner" } },
+    "costs": { "owner": "platform", "accountableHuman": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" } },
+    "monitoring": { "owner": "platform", "accountableHuman": { "subject": "oidc|carl.iversen", "name": "Carl Iversen", "role": "Operations Owner" } },
+    "migration": { "owner": "platform", "accountableHuman": { "subject": "oidc|david.dahl", "name": "David Dahl", "role": "Service Owner" } }
+  },
+  "tenantIsolation": {
+    "strategy": "database-per-tenant",
+    "separateIdentity": true,
+    "evidence": "Hver tenant får sin egen database og sin egen database rolle; ingen fælles rolle kan læse på tværs."
+  }
+}

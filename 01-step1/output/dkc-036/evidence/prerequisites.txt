@@ -1,0 +1,36 @@
+Forudsætningskæde for DKC-036 (verificeret i den anvendte stak, ikke i et statusfelt)
+Stak-tip før dette overlay: dkc-035/apply.sh (dkc-033/apply.sh -> dkc-065/apply.sh -> ... -> dkc-001/apply.sh)
+
+DKC-023 (adapter-SDK og kandidatgate):
+  OK  adapter-sdk/src/candidates.mjs
+  OK  adapter-sdk/src/sdk.mjs
+  OK  contracts/integration-candidate.schema.json
+  OK  assessCandidateGate eksporteret
+
+DKC-033 (pilotvirksomhedsprofiler og readiness):
+  OK  pilot/business-profiles.json
+  OK  pilot/pilot-scenarios.json
+  OK  pilot/src/readiness.mjs
+  OK  pilot/report/pilot-readiness-report.json
+
+DKC-034 (forbrug, omkostning og TCO):
+  OK  metering/price-book.json
+  OK  metering/usage-ledger.json
+  OK  metering/company-profiles.json
+  OK  metering/report/tco-comparison.json
+  OK  metering/src/tco.mjs
+
+DKC-035 (modulregistrering og dansk lokalisering):
+  OK  localization/families.json
+  OK  localization/locale-requirements.json
+  OK  localization/adapter-interfaces.json
+  OK  localization/src/model.mjs
+  OK  localization/report/localization-report.json
+  OK  contracts/module-family.schema.json
+  OK  conformance/src/localization.mjs
+
+Genbrugte API'er:
+  OK  distribution/src/resolver.mjs#resolveDependencies
+  OK  distribution/src/catalog.mjs#loadComponents/loadProfiles/loadDeploymentProfiles
+  OK  conformance/src/architecture.mjs#isNamedHuman
+  OK  distribution/acceptance/gate-policy.json#gates

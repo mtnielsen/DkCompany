@@ -1,0 +1,145 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "AdapterLiveTargets",
+  "metadata": {
+    "name": "adapter-live-targets",
+    "version": "1.0.0",
+    "description": "DKC-024: pinning af den eksakte upstream-version/edition hver adapter er godkendt på, de miljøbindinger en live-integration kræver, de scope-/rate-limit-/restdata-forhold der skal beskrives, og de dokumenterede privacy-verber der skal prøves mod upstream. Uden bindinger skrives hver prøve som not-run — aldrig som pass.",
+    "accountableHuman": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" }
+  },
+  "ttlDays": 7,
+  "targets": [
+    {
+      "id": "mattermost-adapter",
+      "module": "mattermost-adapter",
+      "releaseProfile": "contracts/examples/upstream-release-profile.mattermost-adapter.example.json",
+      "candidate": "contracts/examples/integration-candidate.mattermost-adapter.example.json",
+      "pinned": { "version": "10.0.0", "edition": "Enterprise" },
+      "upgrade": { "to": { "version": "10.1.0", "edition": "Enterprise" }, "maxDowntimeMinutes": 30 },
+      "identity": { "requiredCentralIdentity": true, "sso": "oidc", "claimSource": "module-manifest" },
+      "bindings": {
+        "adapterUrl": "DKC_LIVE_MATTERMOST_ADAPTER_URL",
+        "upstreamUrl": "DKC_LIVE_MATTERMOST_URL",
+        "assertion": "DKC_LIVE_MATTERMOST_ASSERTION"
+      },
+      "scopes": {
+        "required": ["openid", "profile", "email", "groups"],
+        "adminScopes": ["manage_system", "manage_team"],
+        "leastPrivilege": true,
+        "note": "Adapteren bruger en dedikeret tjenestekonto med mindst mulig admin-scope. Native admin-endpoints er ikke eksponeret (se releaseprofilen)."
+      },
+      "rateLimits": {
+        "documented": true,
+        "source": "https://developers.mattermost.com/integrate/reference/rate-limiting/",
+        "handling": "upstream 429 bevares som 429 + Retry-After; SDK'en klassificerer svaret",
+        "adapterBackoff": true
+      },
+      "residualData": {
+        "erase": "partial",
+        "holds": "unsupported",
+        "note": "Sletning fjerner opslag gennem API'et, men ikke kopier i backups, søgeindeks og revisionsspor. Legal hold kræver manuel indgriben i upstream og rapporteres derfor som unsupported."
+      },
+      "upstreamVersionProbe": { "base": "upstream", "method": "GET", "path": "/api/v4/system/ping", "versionField": "version" },
+      "checks": [
+        { "id": "health", "kind": "health", "base": "adapter", "method": "GET", "path": "/healthz", "expectStatus": 200 },
+        {
+          "id": "subject.locate",
+          "kind": "privacy",
+          "verb": "subject.locate",
+          "base": "adapter",
+          "method": "POST",
+          "path": "/v1/privacy/locate",
+          "body": { "identifiers": [{ "type": "email", "value": "syntetisk@example.org" }], "evidence": ["policy-allow"] },
+          "expectStatus": 200
+        },
+        {
+          "id": "subject.export",
+          "kind": "privacy",
+          "verb": "subject.export",
+          "base": "adapter",
+          "method": "POST",
+          "path": "/v1/privacy/export",
+          "body": { "identifiers": [{ "type": "email", "value": "syntetisk@example.org" }], "evidence": ["policy-allow"] },
+          "expectStatus": 200
+        },
+        {
+          "id": "subject.erase",
+          "kind": "privacy",
+          "verb": "subject.erase",
+          "base": "adapter",
+          "method": "POST",
+          "path": "/v1/privacy/erase",
+          "body": { "identifiers": [{ "type": "email", "value": "syntetisk@example.org" }], "evidence": ["policy-allow"] },
+          "expectStatus": 200,
+          "expectPartial": true
+        }
+      ]
+    },
+    {
+      "id": "keycloak-adapter",
+      "module": "keycloak-adapter",
+      "releaseProfile": "contracts/examples/upstream-release-profile.keycloak-adapter.example.json",
+      "candidate": "contracts/examples/integration-candidate.keycloak-adapter.example.json",
+      "pinned": { "version": "26.0.0", "edition": "upstream" },
+      "upgrade": { "to": { "version": "26.1.0", "edition": "upstream" }, "maxDowntimeMinutes": 30 },
+      "identity": { "requiredCentralIdentity": true, "sso": "oidc", "claimSource": "module-manifest" },
+      "bindings": {
+        "adapterUrl": "DKC_LIVE_KEYCLOAK_ADAPTER_URL",
+        "upstreamUrl": "DKC_LIVE_KEYCLOAK_URL",
+        "assertion": "DKC_LIVE_KEYCLOAK_ASSERTION"
+      },
+      "scopes": {
+        "required": ["openid", "profile", "email", "groups"],
+        "adminScopes": ["view-users", "manage-users", "view-events"],
+        "leastPrivilege": true,
+        "note": "Adapteren bruger en realm-scoped servicekonto. Native admin-endpoints er ikke eksponeret (se releaseprofilen)."
+      },
+      "rateLimits": {
+        "documented": true,
+        "source": "https://www.keycloak.org/docs/latest/server_admin/",
+        "handling": "upstream 429 bevares som 429 + Retry-After; SDK'en klassificerer svaret",
+        "adapterBackoff": true
+      },
+      "residualData": {
+        "erase": "partial",
+        "holds": "partial",
+        "note": "Brugeren slettes gennem Admin API'et, men event-store, backups og cachede tokens er ikke fjernet. Legal hold kan deaktivere kontoen, men kan ikke garantere at en administrator ikke sletter den."
+      },
+      "upstreamVersionProbe": { "base": "adapter", "method": "GET", "path": "/healthz", "versionField": "upstreamVersion" },
+      "checks": [
+        { "id": "health", "kind": "health", "base": "adapter", "method": "GET", "path": "/healthz", "expectStatus": 200 },
+        {
+          "id": "subject.locate",
+          "kind": "privacy",
+          "verb": "subject.locate",
+          "base": "adapter",
+          "method": "POST",
+          "path": "/v1/privacy/locate",
+          "body": { "identifiers": [{ "type": "email", "value": "syntetisk@example.org" }], "evidence": ["policy-allow"] },
+          "expectStatus": 200
+        },
+        {
+          "id": "subject.export",
+          "kind": "privacy",
+          "verb": "subject.export",
+          "base": "adapter",
+          "method": "POST",
+          "path": "/v1/privacy/export",
+          "body": { "identifiers": [{ "type": "email", "value": "syntetisk@example.org" }], "evidence": ["policy-allow"] },
+          "expectStatus": 200
+        },
+        {
+          "id": "subject.erase",
+          "kind": "privacy",
+          "verb": "subject.erase",
+          "base": "adapter",
+          "method": "POST",
+          "path": "/v1/privacy/erase",
+          "body": { "identifiers": [{ "type": "email", "value": "syntetisk@example.org" }], "evidence": ["policy-allow"] },
+          "expectStatus": 200,
+          "expectPartial": true
+        }
+      ]
+    }
+  ]
+}

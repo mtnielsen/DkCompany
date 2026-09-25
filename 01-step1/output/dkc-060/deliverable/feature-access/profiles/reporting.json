@@ -1,0 +1,53 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "FeatureAccessProfile",
+  "metadata": {
+    "name": "reporting",
+    "version": "1.0.0",
+    "description": "Reportings funktionsprofil. Formålet er regelbundet udtræk og afsendelse; kilden kan være et eksternt HR-system uden at hele HR-applikationen installeres.",
+    "accountableHuman": {
+      "subject": "oidc|cecilia.christensen",
+      "name": "Cecilia Christensen",
+      "role": "Service Owner",
+      "substitute": { "subject": "oidc|david.dahl", "name": "David Dahl" }
+    },
+    "labels": { "category": "reporting" }
+  },
+  "id": "reporting",
+  "purpose": "regulated-reporting",
+  "purposeDescription": "Planlagte, versionsstyrede rapporter til navngivne modtagere med revalideret adgang ved kørsel og afsendelse.",
+  "modules": ["platform-core", "object-store", "bi", "reporting"],
+  "capabilities": ["reporting"],
+  "allowedDataClasses": ["internal", "personal"],
+  "fieldRules": {
+    "defaultDecision": "deny",
+    "fields": [
+      { "field": "report_template", "dataClass": "internal", "decision": "allow" },
+      { "field": "report_parameter", "dataClass": "internal", "decision": "allow" },
+      { "field": "report_output", "dataClass": "personal", "decision": "allow", "requiresGrant": "reporting.output.read", "note": "Selve rapportindholdet kræver en eksplicit rapportbevilling." }
+    ]
+  },
+  "rowPolicy": {
+    "tenantStrict": true,
+    "selfAttribute": "subject"
+  },
+  "externalSources": [
+    {
+      "id": "external-hr-source",
+      "systemOfRecord": "HR-systemet",
+      "access": "read-only",
+      "connectorRequired": true,
+      "trustRef": "docs/compliance/data-services.md#external-hr",
+      "note": "Rapportering mod en ekstern HR-kilde bruger kildens connector og autorisation — ikke en ekstra HR-applikation."
+    }
+  ],
+  "recipientTrust": [
+    {
+      "id": "external-auditor",
+      "kind": "external",
+      "dataSharingRef": "docs/compliance/data-sharing.md#external-auditor",
+      "revalidateAt": ["run", "delivery"]
+    }
+  ],
+  "surfaces": ["ui", "api", "connector", "search", "export", "cache", "ai-tool"]
+}

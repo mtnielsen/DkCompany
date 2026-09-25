@@ -1,0 +1,60 @@
+# SHA256-manifest for DKC-013-leverancen
+# Genereret: 2026-09-23T11:48:42Z
+# Forudsætning: DKC-001 + DKC-002 + DKC-003 + DKC-004 + DKC-005 + DKC-006 + DKC-007 + DKC-008 + DKC-009 + DKC-010 + DKC-011 + DKC-055
+# Reviewets base: 5f9fa73, undersøgt checkout: 83ad91a
+# Node v22.22.1. DKC-013: holdbar job-state machine, leases, idempotency-keys, retries, dead-letter og handlingklassifikation.
+
+# --- deliverable/ (overlay, relative til 00-core/) ---
+3eecce656caee781afe5fc195ab7cbd7ac54b8a50ee3783de903381af3615500  ./Makefile
+fd1170118096143028b7186235ec166dd6d6f86e98546191c12ef0f6d6af8cd0  ./conformance/src/validate-schemas.mjs
+61a8b8679ef0af03caf47a718859947681559fc9a19b96d2aa8a9db6e29386c2  ./conformance/test/jobs-conformance.test.mjs
+895b3afb7cee5896536a2a995ef0958a19e14a93f6d54aa58fa5bd68771f51cf  ./contracts/examples/job-reconciliation.example.json
+e04837516b787c3a767e0947c38edaacbb32d44ea570568472b6d3ebe5302d0d  ./contracts/examples/job.example.json
+baabef8dd00713c2fcb715906606f4f9c62cbf25db78ac55f8c2fbdc41dce24e  ./contracts/job-reconciliation.schema.json
+d7540df09bcd26caff80f69581dca544cf9d42f5f6b06b6bec9461d82e47a2ae  ./contracts/job.schema.json
+a4f57b2e3aa3bc661f0bc2b21d1dd401bf9f21463c09d161b8d416ce2ca2c61e  ./docs/adr/0024-genoptagelige-og-idempotente-jobs.md
+40676f77fd578d1db5863c2ca83cd139b43db1bbb278b256d3623c4b1e9cafde  ./docs/adr/README.md
+a0181787d9db56e594b91d9e2f550f166e39657232410573bdf220e8596974f8  ./docs/spec/README.md
+cbedfc6d89d8c5d5f2c7a60cfbbbc17528f576ec773ddc73070ea78dfe1319a4  ./docs/spec/jobs.md
+630076f32d182e1670bcc9b5e77c6bfa795664879efe34c229cd6204a3f6361f  ./docs/spec/persistence.md
+0ff226bf906dfce8d0c29df87eae42e77399890907e274af0db0ac53c045177b  ./docs/status/implementation-matrix.md
+320b7f95895ac940eef031a0eb46931986f88b0ed7ede43d2cea6fab1f74baeb  ./jobs/package.json
+3d0ae72dd4d961df774a0b87d1e5dc14788cf38cd8f4ca5d87f189e50a9faa60  ./jobs/src/check.mjs
+5ea2535f4402ffcdbaca88058973c7ca6a9a52538354d2807623a7344afadb6e  ./jobs/src/classification.mjs
+3ab2da058f3e4eed970efe597dac2af8864f492fa55631698647ba94678ac31d  ./jobs/src/index.mjs
+45886cce083eb419259dbb34fab70fe963a08e25bdd15ccbc86d29a036ea54b4  ./jobs/src/queue.mjs
+56c5d0ad7deb5fb535bbf14ef4ccc2e860c61129449baf9bb8e74f83297f2a9e  ./jobs/src/reconciler.mjs
+809b160a3250fccf73ede28bfe1d6c94940ca7d08a7ef46244d44aa9dd4e3d77  ./jobs/src/retry.mjs
+d7eabbfd5cb1f91ddd29eb8a3c0d64b7819c8c330343e961875c56e7b8c8532e  ./jobs/src/runner.mjs
+09c9d193bb76b52ac85ca742db3ed1b7c86052156c76edbeeced7008638b0052  ./jobs/src/state.mjs
+9a396f49b2a79d300bd6043e36a9adc43467f77b0e34b103b17e7b102828a00c  ./jobs/test/reconciler.test.mjs
+d17391c6c0dd9823a23f9a9fbbff6f61e071e2b1b033ec460e007d1bf4f930ed  ./jobs/test/runner.test.mjs
+494357e66b3e5625d216905765eced6e4e1c5207257fe10c3fe27cb6bd94766b  ./jobs/test/state-retry.test.mjs
+f0804b9c9ab007fb425514aafc095bec6474c7e0b9185c479a9381b2e430152c  ./persistence/migrations/0005_resumable_jobs.sql
+8eb35287880b3efbc27b1cada30cf04377d7ea7362e70d10f6247ec1b62ba952  ./persistence/src/adapters/job-queue.mjs
+0fbf4ab3d14405560adf4ba9130dd777a2f4314774e6b39b32e7b6e41fc53781  ./persistence/src/db.mjs
+451788ec21546c0d4771b08efdaf87dfdbd9baf694c07d9ee91d2d9459136e1b  ./persistence/src/index.mjs
+1ee364088d3a1c49a5d770175cb354243438030a182edcb0b8a7736171959486  ./persistence/test/migrations.test.mjs
+f4403ea15ab2077fe9415794cf2eb7480f25ee9aced16313020f0c4b6230149b  ./runtime/src/classification.mjs
+4a5d6e9b60a28e72c1f313cdd12462c27de9132e86a76e1bb51fd3d12e780416  ./runtime/src/runtime.mjs
+6c6878e7072c0820e9e30d3662b49052409ae6794a8724f08937e603f33914d5  ./tools/baseline/registry.mjs
+
+# --- evidence/ ---
+5d871270f893c84c875a4cc9b1d687ec4703df3dcef04b76053c2e8cc577a215  evidence/baseline/baseline-run.json
+8ba153ccecab9d7e1f197f9d54b61aa172f9e2a26438c1f33b8b509ca3e3522f  evidence/baseline/baseline.log
+395fd62f432e9921dd354657326cb0dc27d16f80a1e6acf232ba268cd94169b2  evidence/logs/agent-registry-test.log
+c1bd87e9bbc01ae4c3433e4110ec6f963f102692c07d2d3300b2982279be0f52  evidence/logs/boundary-test.log
+20c026d4f93b99046a85e2517f6ff762259f7f61f625779bd669cae8751a8834  evidence/logs/credentials-test.log
+e2a48a5163d20fead9155c3929ee3453ab5f4160d0a307477e0e6765ed0a6392  evidence/logs/jobs-check.log
+0cc3c916da78ac2823c31eb849eba3b446cac45bdca52429bce8e0a7749aa0e0  evidence/logs/jobs-test.log
+4c0abb6bf057f2a27e5cb6af0f11a1aa63322989362641ba7cf4b7a21fa51e9e  evidence/logs/lint.log
+ee33aac376420f0b49eddb504cf451f7426c98a10ee14e58942324b30d863699  evidence/logs/persistence-check.log
+d25cf0aa05b739678092c41460a5a8a914197c8174497efda17e578b7b463f3f  evidence/logs/persistence-test.log
+f47b314da97dd16a0c73596c6221df14b4f91aab7bb149c34cd14ee376dc1929  evidence/logs/runtime-test.log
+b02c50e76e3c522075df94741f226ecd0eeead71e660254639591cb5f96a2fac  evidence/logs/test.log
+9ad6b8f30926bff3a36ace8a69ff2f3cbabcb7a81290184c362bdb5e07cc8b29  evidence/logs/tool-boundary-test.log
+59c01f20611703447ffa7ae8eadec374e3ac761f72c27d98d10290d6224c1d35  evidence/logs/validate.log
+
+# --- README.md, apply.sh ---
+2b03b8defec3e20082f30ea1e148a46d34d4bcc5c292381abfe505fb43fd812c  ./README.md
+fe81ca6e5e2043491e964294b645111205e7f7da94eb23750a09c785b217bad7  ./apply.sh

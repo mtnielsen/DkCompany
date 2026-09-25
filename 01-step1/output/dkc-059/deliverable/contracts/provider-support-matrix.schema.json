@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/provider-support-matrix.schema.json",
+  "title": "Provider Support Matrix",
+  "description": "DKC-059: en supportmatrix der klassificerer hvert providerskift som drop-in, planlagt datamigration eller ikke-understøttet. Et planlagt skift kræver et migrationsbevis, id-/ACL-mapping og en menneskelig godkendelse; et ikke-understøttet skift afvises. Der findes ingen generel påstand om frit skift mellem SQL-motorer eller apps.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "modes", "rows"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "ProviderSupportMatrix" },
+    "metadata": { "$ref": "#/$defs/metadata" },
+    "modes": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "description"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "enum": ["drop-in", "planned-migration", "unsupported"] },
+          "title": { "type": "string", "minLength": 3 },
+          "description": { "type": "string", "minLength": 10 }
+        }
+      }
+    },
+    "rows": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "class", "from", "to", "mode", "reason", "requiresDataMigration", "requiresMigrationProof", "requiresIdMapping", "requiresAclMapping", "requiresHumanApproval", "requiresRollback", "oldProviderReadOnly", "revokeCredentials", "evidenceRef"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{2,62}$" },
+          "class": { "enum": ["iam", "modelprovider", "database", "storage", "backup", "queue", "apps"] },
+          "from": { "type": "string", "minLength": 2 },
+          "to": { "type": "string", "minLength": 2 },
+          "mode": { "enum": ["drop-in", "planned-migration", "unsupported"] },
+          "reason": { "type": "string", "minLength": 10 },
+          "requiresDataMigration": { "type": "boolean" },
+          "requiresMigrationProof": { "type": "boolean" },
+          "requiresIdMapping": { "type": "boolean" },
+          "requiresAclMapping": { "type": "boolean" },
+          "requiresHumanApproval": { "type": "boolean" },
+          "requiresRollback": { "type": "boolean" },
+          "oldProviderReadOnly": { "type": "boolean" },
+          "revokeCredentials": { "type": "boolean" },
+          "evidenceRef": { "type": "string", "minLength": 3 }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "human": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\|[a-z0-9][a-z0-9._-]{2,}$" },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": { "$ref": "#/$defs/human" }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman", "labels"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/human" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    }
+  }
+}

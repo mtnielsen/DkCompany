@@ -1,0 +1,186 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/module-manifest.schema.json",
+  "title": "Module Manifest",
+  "description": "Ops-kontrakten: hvert modul deklarerer understøttelse pr. verbum med et conformance-niveau (full/partial/unsupported). Partial og unsupported kræver en begrundelse, så et manifest kan være ærligt i stedet for at lyve. Identitet og telemetri er indlejrede planer.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "identity", "telemetry", "policy", "verbs", "privacy"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "ModuleManifest" },
+
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "owner"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{3,63}$" },
+        "version": { "type": "string", "description": "SemVer for modulet." },
+        "description": { "type": "string" },
+        "owner": { "type": "object", "required": ["team"], "additionalProperties": false, "properties": { "team": { "type": "string" }, "contact": { "type": "string" } } },
+        "accountableHuman": {
+          "type": "object",
+          "description": "Navngivet menneske der bærer ansvaret for modulet. Ikke et team-alias.",
+          "required": ["subject", "role"],
+          "additionalProperties": false,
+          "properties": { "subject": { "type": "string" }, "role": { "type": "string" } }
+        },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+
+    "identity": { "$ref": "https://example.org/contracts/identity.schema.json" },
+    "telemetry": { "$ref": "https://example.org/contracts/telemetry.schema.json" },
+    "policy": { "$ref": "https://example.org/contracts/policy.schema.json" },
+
+    "verbs": {
+      "type": "object",
+      "description": "Ops-verbsættet. Alle verber skal deklareres — også dem modulet ikke understøtter. Manglende deklaration er en fejl, ikke en hemmelighed.",
+      "required": ["backup", "restore", "verify-restore", "drain", "upgrade.dry-run", "upgrade", "migrate", "rollback", "health", "slo"],
+      "additionalProperties": false,
+      "properties": {
+        "backup": { "$ref": "#/$defs/verbSupport" },
+        "restore": { "$ref": "#/$defs/verbSupport" },
+        "verify-restore": { "$ref": "#/$defs/verbSupport" },
+        "drain": { "$ref": "#/$defs/verbSupport" },
+        "upgrade.dry-run": { "$ref": "#/$defs/verbSupport" },
+        "upgrade": { "$ref": "#/$defs/verbSupport" },
+        "migrate": { "$ref": "#/$defs/verbSupport" },
+        "rollback": { "$ref": "#/$defs/verbSupport" },
+        "health": { "$ref": "#/$defs/verbSupport" },
+        "slo": { "$ref": "#/$defs/verbSupport" }
+      }
+    },
+
+    "privacy": {
+      "type": "object",
+      "description": "Privacy-verberne (den egentlige IP). Ét fan-out-kald på tværs af moduler i stedet for manuelle processer. Verberne skal deklareres ærligt, også når de ikke kan opfyldes fuldt.",
+      "required": ["subject.locate", "subject.export", "subject.erase", "subject.legal_hold", "retention.policy"],
+      "additionalProperties": false,
+      "properties": {
+        "subject.locate": { "$ref": "#/$defs/verbSupport" },
+        "subject.export": { "$ref": "#/$defs/verbSupport" },
+        "subject.erase": { "$ref": "#/$defs/verbSupport" },
+        "subject.legal_hold": { "$ref": "#/$defs/verbSupport" },
+        "retention.policy": { "$ref": "#/$defs/verbSupport" },
+        "dataCategories": {
+          "type": "array",
+          "items": { "enum": ["none", "operational", "pseudonymised", "personal", "special-category"] }
+        },
+        "dsarEndpoint": { "type": "string", "format": "uri" }
+      }
+    },
+
+    "slo": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "availability": { "type": "number", "minimum": 0, "maximum": 100 },
+        "latencyP95Ms": { "type": "integer", "minimum": 1 },
+        "errorBudgetRef": { "type": "string" }
+      }
+    },
+
+    "serviceClassRef": {
+      "type": "string",
+      "description": "DKC-037: sti (relativ til repo-roden) til modulets serviceklasse. Serviceklassen bærer holdbarheds-/fejlmodellen, RPO/RTO, backup og HA-egnethed."
+    },
+
+    "dataProtection": {
+      "type": "object",
+      "description": "DKC-047: hvilke beskyttede dataklasser modulet kan håndtere, og hvor ærligt lagerhåndhævelsen står. Fuld lager-/nøglehåndhævelse leveres af DKC-048.",
+      "additionalProperties": false,
+      "properties": {
+        "supportedClasses": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["ordinary", "ai-read-only", "append-only", "retention-locked"] }
+        },
+        "noAiAccessSupported": { "type": "boolean" },
+        "reclassificationRequiresHuman": { "const": true },
+        "storageEnforcement": {
+          "type": "object",
+          "required": ["status", "reason"],
+          "additionalProperties": false,
+          "properties": {
+            "status": { "enum": ["unsupported", "partial", "full"] },
+            "reason": { "type": "string", "minLength": 10 },
+            "deliveredBy": { "type": "string" }
+          }
+        }
+      }
+    },
+
+    "compliance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "controlRefs": { "type": "array", "items": { "type": "string" } },
+        "dpiaRef": { "type": "string" },
+        "dataProcessingRole": { "enum": ["controller", "processor", "joint-controller"] }
+      }
+    }
+  },
+
+  "$defs": {
+    "verbSupport": {
+      "type": "object",
+      "required": ["conformance"],
+      "additionalProperties": false,
+      "properties": {
+        "conformance": {
+          "enum": ["full", "partial", "unsupported"],
+          "description": "full = verbet virker end-to-end og er bevist. partial = virker delvist; begrundelse kræves. unsupported = kan ikke lade sig gøre; begrundelse kræves."
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 10,
+          "description": "Påkrævet for partial/unsupported. Uden denne lyver manifestet."
+        },
+        "endpoint": { "type": "string", "description": "Hvor verbet kaldes. Påkrævet for full." },
+        "evidence": { "$ref": "#/$defs/evidenceRef" },
+        "maxBlastRadius": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "tenants": { "type": "integer", "minimum": 0 },
+            "services": { "type": "integer", "minimum": 0 },
+            "personalDataRecords": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "notes": { "type": "string" }
+      },
+      "allOf": [
+        {
+          "if": { "required": ["conformance"], "properties": { "conformance": { "enum": ["partial", "unsupported"] } } },
+          "then": { "required": ["reason"], "properties": { "reason": { "type": "string", "minLength": 10 } } }
+        },
+        {
+          "if": { "required": ["conformance"], "properties": { "conformance": { "const": "full" } } },
+          "then": {
+            "required": ["endpoint", "evidence"],
+            "properties": {
+              "endpoint": { "type": "string" },
+              "evidence": { "type": "object", "properties": { "kind": { "enum": ["fixture", "probe"] } } }
+            }
+          }
+        }
+      ]
+    },
+    "evidenceRef": {
+      "type": "object",
+      "description": "Henvisning til deterministisk bevis for verbet. 'declared' er kun tilladt for partial/unsupported.",
+      "required": ["kind", "ref"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "enum": ["fixture", "probe", "declared"] },
+        "ref": { "type": "string", "description": "Sti til fixture (relativ til modulet) eller URL for probe." },
+        "capturedAt": { "type": "string", "format": "date-time" },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

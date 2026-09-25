@@ -1,0 +1,27 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "LocaleRequirementCatalog",
+  "metadata": {
+    "name": "example-danish-locale-requirements",
+    "version": "1.0.0",
+    "description": "Eksempel på et enkelt dansk lokaliseringskrav (bogføring) med en eksplicit review-status og en blokerende gate.",
+    "accountableHuman": {
+      "subject": "oidc|cecilia.christensen",
+      "name": "Cecilia Christensen",
+      "role": "Service Owner"
+    }
+  },
+  "requirements": [
+    {
+      "id": "accounting",
+      "title": "Dansk bogføring",
+      "description": "Kontoplan, bilagsførsel, momsafregning og årsafslutning skal følge dansk bogføringslov og bekræftes af en registreret revisor eller bogholder.",
+      "appliesToFamilies": ["finance", "invoicing"],
+      "status": "unreviewed",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "evidence": [],
+      "gate": { "required": true, "blocksDanishReady": true }
+    }
+  ]
+}

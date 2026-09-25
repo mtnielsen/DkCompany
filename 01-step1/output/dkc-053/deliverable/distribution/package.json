@@ -1,0 +1,12 @@
+{
+  "name": "@platform/distribution",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Installationsprofiler og dependency-resolver (DKC-053): versionerede komponentmanifester, deterministisk installationspreview og fail-closed planlægning før mutation.",
+  "scripts": {
+    "test": "node --test",
+    "check": "node src/check.mjs",
+    "preview": "node src/preview.mjs"
+  }
+}

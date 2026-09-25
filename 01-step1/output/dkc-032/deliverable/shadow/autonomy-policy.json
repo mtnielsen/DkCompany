@@ -1,0 +1,125 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "AutonomyGrant",
+  "metadata": {
+    "name": "ai-shadow-autonomy",
+    "version": "1.1.0",
+    "description": "Autonomibevilling for AI-drift: skyggetilstand først, derefter begrænset autonomi i staging for forhåndsgodkendte, reversible runbooks.",
+    "labels": {
+      "capability": "ai-operations",
+      "wave": "5"
+    }
+  },
+  "owner": {
+    "subject": "oidc|anna.andersen",
+    "name": "Anna Andersen",
+    "role": "Platform Owner",
+    "substitute": {
+      "subject": "oidc|bo.bertelsen",
+      "name": "Bo Bertelsen",
+      "role": "Platform Owner"
+    }
+  },
+  "level": "limited-autonomy",
+  "scope": {
+    "environment": "staging",
+    "tenants": [
+      "*"
+    ],
+    "runbooks": [
+      "stateless-restart@1.0.0",
+      "bounded-scale@1.0.0"
+    ],
+    "verbs": [
+      "restart",
+      "scale"
+    ],
+    "reversibilityRequired": true,
+    "humanApprovalForMutations": true,
+    "maxBlastRadius": "single-service"
+  },
+  "evaluation": {
+    "fingerprint": "726ebcded8f46ab046beed3d22115d27bf541553533aa3fe682a580b76e12491",
+    "modelRef": "gateway.model/shadow-sim-2025-09",
+    "promptDigest": "a1066ca0496a58982e1c36147d9d2f4e0df21e093531774368a757daa9570df3",
+    "gatewayRef": "gateway/routes.json",
+    "datasetRef": "shadow/replay-dataset.json",
+    "minReplayEvents": 40,
+    "minEvaluationRuns": 3,
+    "thresholds": {
+      "maxFalseAlarmRate": 0.1,
+      "maxErrorRate": 0.1,
+      "maxEscalationRate": 0.6,
+      "maxCostEur": 1,
+      "maxReviewerFindings": 10
+    },
+    "runs": [
+      {
+        "runId": "eval-2025-09-01",
+        "fingerprint": "726ebcded8f46ab046beed3d22115d27bf541553533aa3fe682a580b76e12491",
+        "at": "2025-09-01T08:00:00Z",
+        "events": 48,
+        "falseAlarmRate": 0.041666666666666664,
+        "errorRate": 0.041666666666666664,
+        "escalationRate": 0.4166666666666667,
+        "costEur": 0.1221,
+        "reviewerFindings": 2,
+        "passed": true,
+        "reasons": []
+      },
+      {
+        "runId": "eval-2025-09-08",
+        "fingerprint": "726ebcded8f46ab046beed3d22115d27bf541553533aa3fe682a580b76e12491",
+        "at": "2025-09-08T08:00:00Z",
+        "events": 48,
+        "falseAlarmRate": 0.041666666666666664,
+        "errorRate": 0.041666666666666664,
+        "escalationRate": 0.4166666666666667,
+        "costEur": 0.1221,
+        "reviewerFindings": 2,
+        "passed": true,
+        "reasons": []
+      },
+      {
+        "runId": "eval-2025-09-15",
+        "fingerprint": "726ebcded8f46ab046beed3d22115d27bf541553533aa3fe682a580b76e12491",
+        "at": "2025-09-15T08:00:00Z",
+        "events": 48,
+        "falseAlarmRate": 0.041666666666666664,
+        "errorRate": 0.041666666666666664,
+        "escalationRate": 0.4166666666666667,
+        "costEur": 0.1221,
+        "reviewerFindings": 2,
+        "passed": true,
+        "reasons": []
+      }
+    ],
+    "passed": true
+  },
+  "governance": {
+    "requiresKillSwitch": true,
+    "requiresGovernance": true,
+    "killSwitchRef": "contracts/examples/kill-switch.example.json",
+    "auditRef": "docs/spec/shadow-autonomy.md"
+  },
+  "approvedAt": "2025-09-15T08:00:00Z",
+  "expiresAt": "2027-09-01T08:00:00Z",
+  "changeRef": "docs/adr/0064-ai-i-skyggetilstand-og-begraenset-autonomi.md",
+  "supersedes": "1.0.0",
+  "history": [
+    {
+      "version": "1.0.0",
+      "level": "shadow",
+      "at": "2025-09-01T08:00:00Z",
+      "by": "oidc|anna.andersen",
+      "changeRef": "docs/adr/0064-ai-i-skyggetilstand-og-begraenset-autonomi.md"
+    },
+    {
+      "version": "1.1.0",
+      "level": "limited-autonomy",
+      "at": "2025-09-15T08:00:00Z",
+      "by": "oidc|anna.andersen",
+      "changeRef": "docs/adr/0064-ai-i-skyggetilstand-og-begraenset-autonomi.md"
+    }
+  ]
+}

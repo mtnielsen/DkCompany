@@ -1,0 +1,158 @@
+{
+  "generatedAt": "2026-09-23T13:12:52.396Z",
+  "freshnessDays": 90,
+  "entries": [
+    {
+      "name": "audit-service",
+      "moduleRef": "audit-service",
+      "classFile": "audit-service.service-class.json",
+      "criticality": "critical",
+      "commitment": "accepted",
+      "acceptedBy": "Anna Andersen",
+      "networkPartition": "fail-closed",
+      "targets": {
+        "availabilityPercent": 99.95,
+        "rpoConfirmedWritesMinutes": 0,
+        "rpoRegionFailureMinutes": 15,
+        "rpoCorruptionMinutes": 1440,
+        "rtoMinutes": 60
+      },
+      "acceptedTargets": true,
+      "measured": {
+        "status": "declared-only",
+        "source": "probe",
+        "availabilityPercent": 99.97,
+        "capturedAt": "2026-09-01T00:00:00Z",
+        "evidenceRef": "docs/continuity/measurements/2026-08-audit-service.json",
+        "fresh": false
+      },
+      "failoverMeasured": false,
+      "restoreMeasured": true,
+      "haEligible": true,
+      "haBadge": false,
+      "productionReady": false,
+      "gaps": [
+        "kun en erklæret måling; ingen frisk probe",
+        "HA-egnet, men der findes ingen frisk failover-måling"
+      ],
+      "digest": "bbae5f3efad1acc4a5dd7b9d49336ddc748dc690e02fb2fbb0ce371969c0ed6b"
+    },
+    {
+      "name": "dummy-ok",
+      "moduleRef": "dummy-ok",
+      "classFile": "dummy-ok.service-class.json",
+      "criticality": "medium",
+      "commitment": "accepted",
+      "acceptedBy": "Anna Andersen",
+      "networkPartition": "fail-closed",
+      "targets": {
+        "availabilityPercent": 99,
+        "rpoConfirmedWritesMinutes": 0,
+        "rpoRegionFailureMinutes": 240,
+        "rpoCorruptionMinutes": 1440,
+        "rtoMinutes": 240
+      },
+      "acceptedTargets": true,
+      "measured": {
+        "status": "declared-only",
+        "source": "probe",
+        "availabilityPercent": 99.42,
+        "capturedAt": "2026-09-01T00:00:00Z",
+        "evidenceRef": "docs/continuity/measurements/2026-08-dummy-ok.json",
+        "fresh": false
+      },
+      "failoverMeasured": false,
+      "restoreMeasured": true,
+      "haEligible": false,
+      "haBadge": false,
+      "productionReady": true,
+      "gaps": [
+        "kun en erklæret måling; ingen frisk probe"
+      ],
+      "digest": "5da3b2984bb7c693b77e1ac07ebd9c901612d83c34ad4cbd25b33bbbd1af0171"
+    },
+    {
+      "name": "keycloak-adapter",
+      "moduleRef": "keycloak-adapter",
+      "classFile": "keycloak-adapter.service-class.json",
+      "criticality": "critical",
+      "commitment": "proposed",
+      "acceptedBy": null,
+      "networkPartition": "fail-closed",
+      "targets": {
+        "availabilityPercent": 99,
+        "rpoConfirmedWritesMinutes": 0,
+        "rpoRegionFailureMinutes": 240,
+        "rpoCorruptionMinutes": 1440,
+        "rtoMinutes": 240
+      },
+      "acceptedTargets": false,
+      "measured": {
+        "status": "not-measured",
+        "source": null,
+        "availabilityPercent": null,
+        "capturedAt": null,
+        "evidenceRef": null,
+        "fresh": false
+      },
+      "failoverMeasured": false,
+      "restoreMeasured": false,
+      "haEligible": false,
+      "haBadge": false,
+      "productionReady": false,
+      "gaps": [
+        "målene er foreslåede og ikke vedtaget af et menneske",
+        "ingen måling af tilgængelighed",
+        "gendannelse er ikke testet"
+      ],
+      "digest": "67fc74f71b53db8a6cfb8e6c84a5704393fbf8d816600d00dfdfc8b1bd58300d"
+    },
+    {
+      "name": "mattermost-adapter",
+      "moduleRef": "mattermost-adapter",
+      "classFile": "mattermost-adapter.service-class.json",
+      "criticality": "medium",
+      "commitment": "proposed",
+      "acceptedBy": null,
+      "networkPartition": "read-only",
+      "targets": {
+        "availabilityPercent": 99,
+        "rpoConfirmedWritesMinutes": 0,
+        "rpoRegionFailureMinutes": 240,
+        "rpoCorruptionMinutes": 1440,
+        "rtoMinutes": 240
+      },
+      "acceptedTargets": false,
+      "measured": {
+        "status": "not-measured",
+        "source": null,
+        "availabilityPercent": null,
+        "capturedAt": null,
+        "evidenceRef": null,
+        "fresh": false
+      },
+      "failoverMeasured": false,
+      "restoreMeasured": false,
+      "haEligible": false,
+      "haBadge": false,
+      "productionReady": false,
+      "gaps": [
+        "målene er foreslåede og ikke vedtaget af et menneske",
+        "ingen måling af tilgængelighed",
+        "gendannelse er ikke testet"
+      ],
+      "digest": "a343e1fe94096536bcb2c26110cebc5788da0bf528b4eec05dddc43e2d9097fd"
+    }
+  ],
+  "summary": {
+    "total": 4,
+    "accepted": 2,
+    "proposed": 2,
+    "measured": 0,
+    "declaredOnly": 2,
+    "notMeasured": 2,
+    "haBadge": 0,
+    "productionReady": 1,
+    "withGaps": 4
+  }
+}

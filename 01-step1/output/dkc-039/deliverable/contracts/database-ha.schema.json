@@ -1,0 +1,170 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/database-ha.schema.json",
+  "title": "Database HA",
+  "description": "DKC-039: den konkrete database-HA-plan. Planen erklærer en vedligeholdt databaseoperator/failover-controller, tre quorum-instanser i adskilte fejldomæner, sync-replikering for kritiske writes med en eksplicit quorum-/durability-politik uden tavs async-overgang, fencing af den tidligere primary før promotion, read-consistency pr. flow, WAL-arkivering med PITR samt failback-/rejoin-procedurer. Skemaet håndhæver formen; persistence/src/ha.mjs håndhæver beslutningerne og kan ikke erstatte en målt failover på en rigtig motor.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "databaseProfileRef", "engine", "failureDomains", "topology", "durability", "fencing", "readConsistency", "wal", "failback", "rejoin"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "DatabaseHA" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$" },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "description": { "type": "string", "minLength": 20 },
+        "accountableHuman": { "$ref": "#/$defs/human" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "databaseProfileRef": { "type": "string", "pattern": "^contracts/examples/[a-z0-9.-]+\\.json$" },
+    "engine": {
+      "type": "object",
+      "required": ["family", "versionRange", "operator", "operatorVersion", "operatorMaintained", "failoverController", "noOwnEngine"],
+      "additionalProperties": false,
+      "properties": {
+        "family": { "enum": ["postgresql", "mysql", "mariadb"] },
+        "versionRange": { "type": "string", "minLength": 3 },
+        "operator": { "type": "string", "minLength": 2 },
+        "operatorVersion": { "type": "string", "minLength": 1 },
+        "operatorMaintained": { "const": true },
+        "failoverController": { "type": "string", "minLength": 3 },
+        "noOwnEngine": { "const": true }
+      }
+    },
+    "failureDomains": {
+      "type": "array",
+      "minItems": 3,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 3 }
+    },
+    "topology": {
+      "type": "object",
+      "required": ["primary", "instances", "syncReplicas", "asyncReplicas", "quorum", "minSyncReplicasForWrites", "durabilityPolicy", "noSilentAsyncFallback"],
+      "additionalProperties": false,
+      "properties": {
+        "primary": { "type": "string", "minLength": 2 },
+        "instances": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "required": ["id", "failureDomain", "role"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,63}$" },
+              "failureDomain": { "type": "string", "minLength": 3 },
+              "role": { "enum": ["primary", "sync-replica", "async-replica"] }
+            }
+          }
+        },
+        "syncReplicas": { "type": "integer", "minimum": 2 },
+        "asyncReplicas": { "type": "integer", "minimum": 0 },
+        "quorum": { "type": "integer", "minimum": 1 },
+        "minSyncReplicasForWrites": { "type": "integer", "minimum": 1 },
+        "durabilityPolicy": { "enum": ["sync-remote-apply", "sync-quorum-commit", "sync-on"] },
+        "noSilentAsyncFallback": { "const": true }
+      }
+    },
+    "durability": {
+      "type": "object",
+      "required": ["criticalWriteMode", "confirmBeforeAck", "stopWritesOnSyncReplicaLoss", "onSyncReplicaLoss", "asyncReplicasAreNotAck"],
+      "additionalProperties": false,
+      "properties": {
+        "criticalWriteMode": { "type": "string", "pattern": "synchronous_commit=(remote_apply|on|remote_write)" },
+        "confirmBeforeAck": { "const": true },
+        "stopWritesOnSyncReplicaLoss": { "const": true },
+        "onSyncReplicaLoss": { "const": "reject-writes" },
+        "asyncReplicasAreNotAck": { "const": true }
+      }
+    },
+    "fencing": {
+      "type": "object",
+      "required": ["method", "requireFenceBeforePromotion", "token", "fenceOldPrimaryOnPartition", "isolation", "allowUnsafePromotion"],
+      "additionalProperties": false,
+      "properties": {
+        "method": { "type": "string", "minLength": 3 },
+        "requireFenceBeforePromotion": { "const": true },
+        "token": { "const": "monotonic-epoch" },
+        "fenceOldPrimaryOnPartition": { "const": true },
+        "isolation": { "type": "string", "minLength": 3 },
+        "allowUnsafePromotion": { "const": false }
+      }
+    },
+    "readConsistency": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["flow", "require", "maxStalenessMs", "rationale"],
+        "additionalProperties": false,
+        "properties": {
+          "flow": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,63}$" },
+          "require": { "enum": ["primary-only", "primary-or-sync-committed", "bounded-staleness"] },
+          "maxStalenessMs": { "type": "integer", "minimum": 0 },
+          "rationale": { "type": "string", "minLength": 10 }
+        }
+      }
+    },
+    "wal": {
+      "type": "object",
+      "required": ["archiveEnabled", "archiveTarget", "pitrEnabled", "retentionHours", "baseBackupSchedule", "archiveEncrypted"],
+      "additionalProperties": false,
+      "properties": {
+        "archiveEnabled": { "const": true },
+        "archiveTarget": { "type": "string", "minLength": 3 },
+        "pitrEnabled": { "const": true },
+        "retentionHours": { "type": "integer", "minimum": 1 },
+        "baseBackupSchedule": { "type": "string", "minLength": 3 },
+        "archiveEncrypted": { "const": true }
+      }
+    },
+    "failback": {
+      "type": "object",
+      "required": ["procedure", "requiresFence", "requiresRejoinBeforePromote", "switchoverWindow"],
+      "additionalProperties": false,
+      "properties": {
+        "procedure": { "type": "array", "minItems": 3, "uniqueItems": true, "items": { "type": "string", "minLength": 3 } },
+        "requiresFence": { "const": true },
+        "requiresRejoinBeforePromote": { "const": true },
+        "switchoverWindow": { "enum": ["maintenance", "immediate"] }
+      }
+    },
+    "rejoin": {
+      "type": "object",
+      "required": ["method", "requiresFence", "catchUpBeforePromote", "verifyChecksums"],
+      "additionalProperties": false,
+      "properties": {
+        "method": { "enum": ["pg-rewind", "pg-basebackup", "mysqldump-restore", "clone-plugin"] },
+        "requiresFence": { "const": true },
+        "catchUpBeforePromote": { "const": true },
+        "verifyChecksums": { "const": true }
+      }
+    }
+  },
+  "$defs": {
+    "human": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": {
+          "type": "object",
+          "required": ["subject", "name"],
+          "additionalProperties": false,
+          "properties": {
+            "subject": { "type": "string", "minLength": 3 },
+            "name": { "type": "string", "minLength": 2 }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "AcceptanceResult",
+  "generatedAt": "2026-03-01T00:00:00Z",
+  "targetCommit": "83ad91a963d8055f77c29fb4361455689df95acb",
+  "artifactDigest": "sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+  "producer": { "type": "implementer", "name": "acceptance-suite", "subject": "process|acceptance" },
+  "profile": "small-vps",
+  "target": {
+    "id": "small-vps-local",
+    "profileRef": "small-vps",
+    "profileType": "single-server",
+    "platformRef": "linux-amd64-node22",
+    "hostManagement": false,
+    "immutable": false,
+    "selfHealing": false,
+    "acceptedDowntimeMinutes": 0,
+    "recoveryProfile": "non-HA-accepted"
+  },
+  "decision": "pending-owner-acceptance",
+  "statuses": { "total": 2, "passed": 0, "failed": 0, "notApplicable": 1, "missing": 0, "stale": 0, "wrongArtifact": 0, "unapproved": 1, "notRun": 0 },
+  "gates": [
+    {
+      "id": "security",
+      "title": "Fælles sikkerhedsgate",
+      "kind": "common",
+      "applicable": true,
+      "mandatory": true,
+      "status": "unapproved",
+      "evidenceStatus": "passed",
+      "ownerAcceptanceStatus": "pending",
+      "checks": ["installer-plan"],
+      "requirementRefs": ["REQ-INSTALL-001"],
+      "owner": { "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer" },
+      "reasons": ["afventer registreret menneskelig ejeraccept"]
+    },
+    {
+      "id": "ha",
+      "title": "HA-gate",
+      "kind": "profile",
+      "applicable": false,
+      "mandatory": true,
+      "status": "not-applicable",
+      "evidenceStatus": "passed",
+      "ownerAcceptanceStatus": "not-applicable",
+      "checks": ["ha-check"],
+      "requirementRefs": ["REQ-HA-001"],
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "reasons": ["ikke aktiv for single-server-profilen"]
+    }
+  ],
+  "roles": { "separated": true, "violations": [] },
+  "ownerAcceptance": {
+    "required": true,
+    "registryRef": "distribution/acceptance/owner-acceptance.json",
+    "acceptedGates": [],
+    "pendingGates": ["security"]
+  },
+  "environment": { "node": "v22.22.1", "platform": "linux" },
+  "reasons": ["Den menneskelige ejeraccept er en særskilt begivenhed og er endnu ikke registreret."]
+}

@@ -1,0 +1,139 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "CrmSource",
+  "metadata": {
+    "name": "platform-crm-sources",
+    "version": "1.0.0",
+    "description": "CRM-kilder. EspoCRM er den første kandidat efter kandidatcheck og forbliver system-of-record for kontakter, virksomheder og salgsforløb; platformen spejler posterne med en tenantafgrænset stabil reference og et entydigt ejerskab.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner"
+      }
+    },
+    "labels": {
+      "tier": "adapter",
+      "upstream": "espocrm",
+      "wave": "4"
+    }
+  },
+  "sources": [
+    {
+      "id": "espocrm-acme",
+      "type": "espocrm",
+      "tenantId": "acme",
+      "baseUrl": "https://crm.acme.example.org",
+      "secretRef": "vault:secret/platform/crm/espocrm-acme#api-key",
+      "systemOfRecord": "upstream",
+      "writeMode": "adapter-mediated",
+      "ownerField": "assignedUser",
+      "entityTypes": [
+        "Account",
+        "Contact",
+        "Opportunity",
+        "Activity"
+      ],
+      "roles": {
+        "sales": {
+          "read": true,
+          "write": true,
+          "entityTypes": [
+            "Account",
+            "Contact",
+            "Opportunity",
+            "Activity"
+          ]
+        },
+        "support": {
+          "read": true,
+          "write": false,
+          "entityTypes": [
+            "Account",
+            "Contact",
+            "Activity"
+          ]
+        }
+      },
+      "dedupKeys": {
+        "Account": [
+          "name",
+          "vatId"
+        ],
+        "Contact": [
+          "emailAddress"
+        ],
+        "Opportunity": [
+          "name",
+          "accountId"
+        ],
+        "Activity": [
+          "type",
+          "subject",
+          "contactId"
+        ]
+      },
+      "retention": {
+        "contactDays": 1095,
+        "activityDays": 730,
+        "copyDays": 90
+      },
+      "defaultOwner": "oidc|ada.acme"
+    },
+    {
+      "id": "espocrm-globex",
+      "type": "espocrm",
+      "tenantId": "globex",
+      "baseUrl": "https://crm.globex.example.org",
+      "secretRef": "vault:secret/platform/crm/espocrm-globex#api-key",
+      "systemOfRecord": "upstream",
+      "writeMode": "adapter-mediated",
+      "ownerField": "assignedUser",
+      "entityTypes": [
+        "Account",
+        "Contact",
+        "Opportunity",
+        "Activity"
+      ],
+      "roles": {
+        "sales": {
+          "read": true,
+          "write": true,
+          "entityTypes": [
+            "Account",
+            "Contact",
+            "Opportunity",
+            "Activity"
+          ]
+        }
+      },
+      "dedupKeys": {
+        "Account": [
+          "name",
+          "vatId"
+        ],
+        "Contact": [
+          "emailAddress"
+        ],
+        "Opportunity": [
+          "name",
+          "accountId"
+        ],
+        "Activity": [
+          "type",
+          "subject",
+          "contactId"
+        ]
+      },
+      "retention": {
+        "contactDays": 1095,
+        "activityDays": 730,
+        "copyDays": 90
+      },
+      "defaultOwner": "oidc|gus.globex"
+    }
+  ]
+}

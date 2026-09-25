@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/release-gate-result.schema.json",
+  "title": "Release Gate Result",
+  "description": "Resultatet af release-gaten (DKC-063). Failed, skipped, not-run, unsupported og stale er distinkte statusser, og kun 'passed' tæller som bestået. Resultatet binder commit, artefakt-digest, konfiguration/profil, miljø, producent, kommando og tidsstempler. En implementør kan ikke udgive sig for en uafhængig verifikator.",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "generatedAt", "matrixVersion", "targetCommit", "artifactDigest", "producer", "profile", "environment", "thresholds", "decision", "statuses", "requirements"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "type": "integer", "minimum": 1 },
+    "kind": { "const": "ReleaseGateResult" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "matrixVersion": { "type": "string" },
+    "targetCommit": { "type": "string", "minLength": 7 },
+    "artifactDigest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "artifactKind": { "type": "string" },
+    "producer": {
+      "type": "object",
+      "required": ["type", "name", "subject"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "enum": ["implementer", "independent-verifier"] },
+        "name": { "type": "string", "minLength": 2 },
+        "subject": { "type": "string", "minLength": 3 },
+        "notes": { "type": "string" }
+      }
+    },
+    "profile": { "type": "string", "minLength": 2 },
+    "environment": { "type": "object" },
+    "thresholds": { "type": "object" },
+    "decision": { "enum": ["eligible", "eligible-with-exceptions", "blocked"] },
+    "statuses": {
+      "type": "object",
+      "required": ["total", "passed", "failed", "skipped", "notRun", "unsupported", "stale", "wrongArtifact", "missing", "pendingIndependentAssessment", "excepted", "blocking"],
+      "additionalProperties": false,
+      "properties": {
+        "total": { "type": "integer", "minimum": 0 },
+        "passed": { "type": "integer", "minimum": 0 },
+        "failed": { "type": "integer", "minimum": 0 },
+        "skipped": { "type": "integer", "minimum": 0 },
+        "notRun": { "type": "integer", "minimum": 0 },
+        "unsupported": { "type": "integer", "minimum": 0 },
+        "stale": { "type": "integer", "minimum": 0 },
+        "wrongArtifact": { "type": "integer", "minimum": 0 },
+        "missing": { "type": "integer", "minimum": 0 },
+        "pendingIndependentAssessment": { "type": "integer", "minimum": 0 },
+        "excepted": { "type": "integer", "minimum": 0 },
+        "blocking": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "requirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["requirementId", "title", "mandatory", "releaseBlocking", "nonExcepted", "status", "blocking", "testTypes", "coveredTestTypes", "missingTestTypes", "checks", "independentAssessment", "reasons"],
+        "additionalProperties": false,
+        "properties": {
+          "requirementId": { "type": "string" },
+          "title": { "type": "string" },
+          "mandatory": { "type": "boolean" },
+          "releaseBlocking": { "type": "boolean" },
+          "nonExcepted": { "type": "boolean" },
+          "status": {
+            "enum": ["passed", "failed", "skipped", "not-run", "unsupported", "stale", "wrong-artifact", "missing", "pending-independent-assessment", "excepted"]
+          },
+          "blocking": { "type": "boolean" },
+          "testTypes": { "type": "array", "items": { "type": "string" } },
+          "coveredTestTypes": { "type": "array", "items": { "type": "string" } },
+          "missingTestTypes": { "type": "array", "items": { "type": "string" } },
+          "checks": { "type": "array", "items": { "type": "object" } },
+          "independentAssessment": { "type": ["object", "null"] },
+          "exception": { "type": ["object", "null"] },
+          "reasons": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "threats": { "type": "array", "items": { "type": "object" } },
+    "openExceptions": { "type": "array", "items": { "type": "object" } },
+    "reasons": { "type": "array", "items": { "type": "string" } }
+  }
+}

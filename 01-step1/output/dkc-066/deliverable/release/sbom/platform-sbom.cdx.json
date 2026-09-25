@@ -1,0 +1,541 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "Sbom",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:2c90af43-2930-5c2e-ab81-d74488067912",
+  "metadata": {
+    "timestamp": "1970-01-01T00:00:00.000Z",
+    "component": {
+      "type": "application",
+      "name": "dkcompany-platform",
+      "version": "1.0.0",
+      "bom-ref": "pkg:platform/dkcompany-platform@1.0.0"
+    },
+    "tools": [
+      {
+        "name": "dkcompany-supply-chain",
+        "version": "1.0.0"
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "ajv-formats",
+      "group": "npm",
+      "version": "3.0.1",
+      "bom-ref": "pkg:npm/ajv-formats@3.0.1",
+      "purl": "pkg:npm/ajv-formats@3.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "f2252a979d04511fae51c7514371c3a9ae84572a3776870bf20e5627714d7169aeeb621b90652e7bfa44c8b056f1518a2ae7133e0a9e92ce1f214d43038ca8c1"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "ajv",
+      "group": "npm",
+      "version": "8.20.0",
+      "bom-ref": "pkg:npm/ajv@8.20.0",
+      "purl": "pkg:npm/ajv@8.20.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "4e16e58be3a53a3fa230f60505505f2773a60809da4b2367e0cd6fcfd4fa1a46b926df5b6bf1c8479ea3a32eb9b58ea4c7f142179557341f35f58eff194ac118"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "fast-deep-equal",
+      "group": "npm",
+      "version": "3.1.3",
+      "bom-ref": "pkg:npm/fast-deep-equal@3.1.3",
+      "purl": "pkg:npm/fast-deep-equal@3.1.3",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "7f7a90f68432f63d808417bf1fd542f75c0b98a042094fe00ce9ca340606e61b303bb04b2a3d3d1dce4760dcfd70623efb19690c22200da8ad56cd3701347ce1"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "fast-uri",
+      "group": "npm",
+      "version": "3.1.8",
+      "bom-ref": "pkg:npm/fast-uri@3.1.8",
+      "purl": "pkg:npm/fast-uri@3.1.8",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "19932d6544cd4693952040a85f02cd652e7150613e99535b4c1f21ffb4708764c559c05088fcd3832662d39045f543192a42c9bfc5c14494e553bce0f3e65f32"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "json-schema-traverse",
+      "group": "npm",
+      "version": "1.0.0",
+      "bom-ref": "pkg:npm/json-schema-traverse@1.0.0",
+      "purl": "pkg:npm/json-schema-traverse@1.0.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "34cf3f3fd9f75e35e12199f594b86415a0024ce5114178d6855e0103f4673aff31be0aadaa9017f483b89914314b1d51968e2dab37aa6f4b0e96bb9a3b2dddba"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "require-from-string",
+      "group": "npm",
+      "version": "2.0.2",
+      "bom-ref": "pkg:npm/require-from-string@2.0.2",
+      "purl": "pkg:npm/require-from-string@2.0.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "5dfd2759ee91b1ece214cbbe029f5b8a251b9a996ae92f7fa7eef0ed85cffc904786b5030d48706bebc0372b9bbaa7d9593bde53ffc36151ac0c6ed128bfef13"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "@platform/adapter-sdk",
+      "group": "platform",
+      "version": "0.1.0",
+      "bom-ref": "pkg:platform/@platform/adapter-sdk@0.1.0",
+      "purl": "pkg:platform/@platform/adapter-sdk@0.1.0"
+    },
+    {
+      "type": "application",
+      "name": "@platform/agent-runtime",
+      "group": "platform",
+      "version": "1.0.0",
+      "bom-ref": "pkg:platform/@platform/agent-runtime@1.0.0",
+      "purl": "pkg:platform/@platform/agent-runtime@1.0.0"
+    },
+    {
+      "type": "application",
+      "name": "@platform/ai-gateway",
+      "group": "platform",
+      "version": "1.0.0",
+      "bom-ref": "pkg:platform/@platform/ai-gateway@1.0.0",
+      "purl": "pkg:platform/@platform/ai-gateway@1.0.0"
+    },
+    {
+      "type": "application",
+      "name": "@platform/approvals",
+      "group": "platform",
+      "version": "1.0.0",
+      "bom-ref": "pkg:platform/@platform/approvals@1.0.0",
+      "purl": "pkg:platform/@platform/approvals@1.0.0"
+    },
+    {
+      "type": "application",
+      "name": "@platform/audit-service",
+      "group": "platform",
+      "version": "1.0.0",
+      "bom-ref": "pkg:platform/@platform/audit-service@1.0.0",
+      "purl": "pkg:platform/@platform/audit-service@1.0.0"
+    },
+    {
+      "type": "application",
+      "name": "@platform/backup",
+      "group": "platform",
+      "version": "1.0.0",
+      "bom-ref": "pkg:platform/@platform/backup@1.0.0",
+      "purl": "pkg:platform/@platform/backup@1.0.0"
+    },
+    {
+      "type": "application",
+      "name": "@platform/baseline",
+      "group": "platform",
+      "version": "1.0.0",
+      "bom-ref": "pkg:platform/@platform/baseline@1.0.0",
+      "purl": "pkg:platform/@platform/baseline@1.0.0"
+    },
+    {
+      "type": "application",
+      "name": "@platform/compliance",
+      "group": "platform",
+      "version": "1.0.0",
+      "bom-ref": "pkg:platform/@platform/compliance@1.0.0",
+      "purl": "pkg:platform/@platform/compliance@1.0.0"
+    },
+    {
+      "type": "application",
+      "name": "@platform/conformance",
+      "group": "platform",
+      "version": "0.1.0",
+      "bom-ref": "pkg:platform/@platform/conformance@0.1.0",
+      "purl": "pkg:platform/@platform/conformance@0.1.0"
+    },
+    {
+      "type": "application",
+      "name": "@platform/continuity",
+      "group": "platform",
+      "version": "1.0.0",
+      "bom-ref": "pkg:platform/@platform/continuity@1.0.0",
+      "purl": "pkg:platform/@platform/continuity@1.0.0"
+    },
+    {
+      "type": "application",
+      "name": "@platform/curriculum",
+      "group": "platform",
+      "version": "1.0.0",
+      "bom-ref": "pkg:platform/@platform/curriculum@1.0.0",
+      "purl": "pkg:platform/@platform/curriculum@1.0.0"
+    },
+    {
+      "type": "application",
+      "name": "@platform/data-protection",
+      "group": "platform",
+      "version": "1.0.0",
+      "bom-ref": "pkg:platform/@platform/data-protection@1.0.0",
+      "purl": "pkg:platform/@platform/data-protection@1.0.0"
+    },
+    {
+      "type": "application",
+      "name": "@platform/distribution",
+      "group": "platform",
+      "version": "1.0.0",
+      "bom-ref": "pkg:platform/@platform/distribution@1.0.0",
+      "purl": "pkg:platform/@platform/distribution@1.0.0"
+    },
+    {
+      "type": "application",
+      "name": "@platform/evidence",
+      "group": "platform",
+      "version": "0.1.0",
+      "bom-ref": "pkg:platform/@platform/evidence@0.1.0",
+      "purl": "pkg:platform/@platform/evidence@0.1.0"
+    },
+    {
+      "type": "application",
+      "name": "@platform/gitops",
+      "group": "platform",
+      "version": "0.1.0",
+      "bom-ref": "pkg:platform/@platform/gitops@0.1.0",
+      "purl": "pkg:platform/@platform/gitops@0.1.0"
+    },
+    {
+      "type": "application",
+      "name": "@platform/identity",
+      "group": "platform",
+      "version": "1.0.0",
+      "bom-ref": "pkg:platform/@platform/identity@1.0.0",
+      "purl": "pkg:platform/@platform/identity@1.0.0"
+    },
+    {
+      "type": "application",
+      "name": "@platform/jobs",
+      "group": "platform",
+      "version": "0.1.0",
+      "bom-ref": "pkg:platform/@platform/jobs@0.1.0",
+      "purl": "pkg:platform/@platform/jobs@0.1.0"
+    },
+    {
+      "type": "application",
+      "name": "@platform/keycloak-adapter",
+      "group": "platform",
+      "version": "1.0.0",
+      "bom-ref": "pkg:platform/@platform/keycloak-adapter@1.0.0",
+      "purl": "pkg:platform/@platform/keycloak-adapter@1.0.0"
+    },
+    {
+      "type": "application",
+      "name": "@platform/mattermost-adapter",
+      "group": "platform",
+      "version": "1.0.0",
+      "bom-ref": "pkg:platform/@platform/mattermost-adapter@1.0.0",
+      "purl": "pkg:platform/@platform/mattermost-adapter@1.0.0"
+    },
+    {
+      "type": "application",
+      "name": "@platform/observability",
+      "group": "platform",
+      "version": "1.0.0",
+      "bom-ref": "pkg:platform/@platform/observability@1.0.0",
+      "purl": "pkg:platform/@platform/observability@1.0.0"
+    },
+    {
+      "type": "application",
+      "name": "@platform/pdp",
+      "group": "platform",
+      "version": "0.1.0",
+      "bom-ref": "pkg:platform/@platform/pdp@0.1.0",
+      "purl": "pkg:platform/@platform/pdp@0.1.0"
+    },
+    {
+      "type": "application",
+      "name": "@platform/pitch",
+      "group": "platform",
+      "version": "1.0.0",
+      "bom-ref": "pkg:platform/@platform/pitch@1.0.0",
+      "purl": "pkg:platform/@platform/pitch@1.0.0"
+    },
+    {
+      "type": "application",
+      "name": "@platform/privacy",
+      "group": "platform",
+      "version": "1.0.0",
+      "bom-ref": "pkg:platform/@platform/privacy@1.0.0",
+      "purl": "pkg:platform/@platform/privacy@1.0.0"
+    },
+    {
+      "type": "application",
+      "name": "@platform/release",
+      "group": "platform",
+      "version": "1.0.0",
+      "bom-ref": "pkg:platform/@platform/release@1.0.0",
+      "purl": "pkg:platform/@platform/release@1.0.0"
+    },
+    {
+      "type": "application",
+      "name": "@platform/reviewer",
+      "group": "platform",
+      "version": "1.0.0",
+      "bom-ref": "pkg:platform/@platform/reviewer@1.0.0",
+      "purl": "pkg:platform/@platform/reviewer@1.0.0"
+    },
+    {
+      "type": "application",
+      "name": "@platform/security",
+      "group": "platform",
+      "version": "1.0.0",
+      "bom-ref": "pkg:platform/@platform/security@1.0.0",
+      "purl": "pkg:platform/@platform/security@1.0.0"
+    },
+    {
+      "type": "application",
+      "name": "@platform/telemetry-api",
+      "group": "platform",
+      "version": "1.0.0",
+      "bom-ref": "pkg:platform/@platform/telemetry-api@1.0.0",
+      "purl": "pkg:platform/@platform/telemetry-api@1.0.0"
+    },
+    {
+      "type": "application",
+      "name": "@platform/vulnerability-management",
+      "group": "platform",
+      "version": "0.1.0",
+      "bom-ref": "pkg:platform/@platform/vulnerability-management@0.1.0",
+      "purl": "pkg:platform/@platform/vulnerability-management@0.1.0"
+    },
+    {
+      "type": "application",
+      "name": "dkcompany-agent-registry",
+      "group": "platform",
+      "version": "1.0.0",
+      "bom-ref": "pkg:platform/dkcompany-agent-registry@1.0.0",
+      "purl": "pkg:platform/dkcompany-agent-registry@1.0.0"
+    },
+    {
+      "type": "application",
+      "name": "dkcompany-credentials",
+      "group": "platform",
+      "version": "1.0.0",
+      "bom-ref": "pkg:platform/dkcompany-credentials@1.0.0",
+      "purl": "pkg:platform/dkcompany-credentials@1.0.0"
+    },
+    {
+      "type": "application",
+      "name": "dkcompany-data-services",
+      "group": "platform",
+      "version": "1.0.0",
+      "bom-ref": "pkg:platform/dkcompany-data-services@1.0.0",
+      "purl": "pkg:platform/dkcompany-data-services@1.0.0"
+    },
+    {
+      "type": "application",
+      "name": "dkcompany-infrastructure",
+      "group": "platform",
+      "version": "1.0.0",
+      "bom-ref": "pkg:platform/dkcompany-infrastructure@1.0.0",
+      "purl": "pkg:platform/dkcompany-infrastructure@1.0.0"
+    },
+    {
+      "type": "application",
+      "name": "dkcompany-persistence",
+      "group": "platform",
+      "version": "1.0.0",
+      "bom-ref": "pkg:platform/dkcompany-persistence@1.0.0",
+      "purl": "pkg:platform/dkcompany-persistence@1.0.0"
+    },
+    {
+      "type": "application",
+      "name": "dkcompany-supply-chain",
+      "group": "platform",
+      "version": "1.0.0",
+      "bom-ref": "pkg:platform/dkcompany-supply-chain@1.0.0",
+      "purl": "pkg:platform/dkcompany-supply-chain@1.0.0"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "pkg:npm/ajv-formats@3.0.1",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:npm/ajv@8.20.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:npm/fast-deep-equal@3.1.3",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:npm/fast-uri@3.1.8",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:npm/json-schema-traverse@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:npm/require-from-string@2.0.2",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/@platform/adapter-sdk@0.1.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/@platform/agent-runtime@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/@platform/ai-gateway@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/@platform/approvals@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/@platform/audit-service@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/@platform/backup@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/@platform/baseline@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/@platform/compliance@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/@platform/conformance@0.1.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/@platform/continuity@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/@platform/curriculum@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/@platform/data-protection@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/@platform/distribution@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/@platform/evidence@0.1.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/@platform/gitops@0.1.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/@platform/identity@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/@platform/jobs@0.1.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/@platform/keycloak-adapter@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/@platform/mattermost-adapter@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/@platform/observability@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/@platform/pdp@0.1.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/@platform/pitch@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/@platform/privacy@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/@platform/release@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/@platform/reviewer@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/@platform/security@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/@platform/telemetry-api@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/@platform/vulnerability-management@0.1.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/dkcompany-agent-registry@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/dkcompany-credentials@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/dkcompany-data-services@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/dkcompany-infrastructure@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/dkcompany-persistence@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:platform/dkcompany-supply-chain@1.0.0",
+      "dependsOn": []
+    }
+  ]
+}

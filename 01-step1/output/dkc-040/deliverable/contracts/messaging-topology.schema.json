@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/messaging-topology.schema.json",
+  "title": "Messaging Topology",
+  "description": "DKC-040: den konkrete beskedtopologi for holdbar udveksling mellem tjenester. Topologien erklærer en holdbar broker med quorum og publisher confirms, en transaktionel outbox, en deduplikerende inbox med logisk rækkefølge pr. ressource, singletonjobs med monotont fencing-token, synlig backpressure og tenantafgrænset poison-isolation. Skemaet håndhæver formen; jobs/src/topology.mjs håndhæver beslutningerne og kan ikke erstatte en rigtig broker.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "deliveryGuarantee", "broker", "outbox", "inbox", "ordering", "singletons", "backpressure", "poison", "tenantIsolation"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "MessagingTopology" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$" },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "description": { "type": "string", "minLength": 20 },
+        "accountableHuman": { "$ref": "#/$defs/human" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "deliveryGuarantee": { "const": "at-least-once" },
+    "broker": {
+      "type": "object",
+      "required": ["technology", "version", "protocol", "persistence", "replicas", "failureDomains", "quorum", "publisherConfirms", "consumerAcks", "durable", "unsafeWritesOnQuorumLoss", "retention", "deadLetterSubject", "tenantIsolation"],
+      "additionalProperties": false,
+      "properties": {
+        "technology": { "type": "string", "minLength": 2 },
+        "version": { "type": "string", "minLength": 1 },
+        "protocol": { "enum": ["nats", "amqp", "kafka", "redis-streams"] },
+        "persistence": { "enum": ["file-based-raft", "managed", "replicated-log"] },
+        "replicas": { "type": "integer", "minimum": 3 },
+        "failureDomains": { "type": "integer", "minimum": 3 },
+        "quorum": { "type": "integer", "minimum": 1 },
+        "publisherConfirms": { "const": true },
+        "consumerAcks": { "const": true },
+        "durable": { "const": true },
+        "unsafeWritesOnQuorumLoss": { "const": false },
+        "retention": {
+          "type": "object",
+          "required": ["mode", "maxAgeHours", "maxBytes"],
+          "additionalProperties": false,
+          "properties": {
+            "mode": { "enum": ["limits", "interest", "workqueue"] },
+            "maxAgeHours": { "type": "integer", "minimum": 1 },
+            "maxBytes": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "deadLetterSubject": { "type": "string", "minLength": 3 },
+        "tenantIsolation": { "type": "string", "minLength": 3 }
+      }
+    },
+    "outbox": {
+      "type": "object",
+      "required": ["table", "transactionalWith", "confirmMode", "maxAttempts", "baseDelayMs", "maxDelayMs", "batchSize", "leaseMs"],
+      "additionalProperties": false,
+      "properties": {
+        "table": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$" },
+        "transactionalWith": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 2 } },
+        "confirmMode": { "const": "broker-ack" },
+        "maxAttempts": { "type": "integer", "minimum": 1, "maximum": 50 },
+        "baseDelayMs": { "type": "integer", "minimum": 1 },
+        "maxDelayMs": { "type": "integer", "minimum": 1 },
+        "batchSize": { "type": "integer", "minimum": 1 },
+        "leaseMs": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "inbox": {
+      "type": "object",
+      "required": ["table", "dedup", "ordering", "gapPolicy", "stalePolicy", "maxAttempts", "windowDays"],
+      "additionalProperties": false,
+      "properties": {
+        "table": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$" },
+        "dedup": { "const": "unique-tenant-event" },
+        "ordering": { "const": "per-resource" },
+        "gapPolicy": { "const": "defer" },
+        "stalePolicy": { "const": "skip" },
+        "maxAttempts": { "type": "integer", "minimum": 1, "maximum": 50 },
+        "windowDays": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "ordering": {
+      "type": "object",
+      "required": ["mode", "resourceTypes"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": { "const": "per-resource" },
+        "resourceTypes": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 2 } }
+      }
+    },
+    "singletons": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "leaseMs", "fencing", "maxClockSkewMs"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,63}$" },
+          "leaseMs": { "type": "integer", "minimum": 1 },
+          "fencing": { "const": "monotonic-token" },
+          "maxClockSkewMs": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "backpressure": {
+      "type": "object",
+      "required": ["maxBacklog", "maxOldestAgeSeconds", "strategy", "visible"],
+      "additionalProperties": false,
+      "properties": {
+        "maxBacklog": { "type": "integer", "minimum": 1 },
+        "maxOldestAgeSeconds": { "type": "integer", "minimum": 1 },
+        "strategy": { "const": "pause-publishers" },
+        "visible": { "const": true }
+      }
+    },
+    "poison": {
+      "type": "object",
+      "required": ["isolation", "maxAttempts", "deadLetterTable", "quarantine"],
+      "additionalProperties": false,
+      "properties": {
+        "isolation": { "const": "per-tenant" },
+        "maxAttempts": { "type": "integer", "minimum": 1, "maximum": 50 },
+        "deadLetterTable": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$" },
+        "quarantine": { "const": true }
+      }
+    },
+    "tenantIsolation": {
+      "type": "object",
+      "required": ["eventIdBoundToTenant", "crossTenantConsume", "streamPerTenant"],
+      "additionalProperties": false,
+      "properties": {
+        "eventIdBoundToTenant": { "const": true },
+        "crossTenantConsume": { "const": false },
+        "streamPerTenant": { "const": true }
+      }
+    }
+  },
+  "$defs": {
+    "human": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": {
+          "type": "object",
+          "required": ["subject", "name"],
+          "additionalProperties": false,
+          "properties": {
+            "subject": { "type": "string", "minLength": 3 },
+            "name": { "type": "string", "minLength": 2 }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "apiVersion": "cilium.io/v2",
+  "kind": "CiliumNetworkPolicy",
+  "metadata": {
+    "name": "cross-tenant-deny",
+    "namespace": "platform-ha",
+    "labels": {
+      "app.kubernetes.io/name": "platform",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "platform",
+      "platform.example.org/environment": "ha"
+    }
+  },
+  "spec": {
+    "endpointSelector": {},
+    "ingressDeny": [
+      {
+        "fromEntities": [
+          "all"
+        ]
+      }
+    ],
+    "ingress": [
+      {
+        "fromEndpoints": [
+          {
+            "matchLabels": {
+              "k8s:io.kubernetes.pod.namespace": "platform-ha"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

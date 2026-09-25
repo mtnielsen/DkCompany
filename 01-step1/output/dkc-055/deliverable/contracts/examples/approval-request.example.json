@@ -1,0 +1,181 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ApprovalRequest",
+  "id": "018f3c2a-1b2c-7def-8a01-333333333333",
+  "tenantId": "acme",
+  "createdAt": "2025-09-01T08:40:00Z",
+  "correlationId": "5cf93f3577b34da6a3ce929d0e0e9999",
+  "agent": {
+    "ref": "dummy-ok-upgrader",
+    "spiffeId": "spiffe://platform.example.org/agents/dummy-ok-upgrader",
+    "manifestVersion": "1.0.0",
+    "model": {
+      "provider": "anthropic",
+      "model": "claude-sonnet",
+      "modelVersion": "2025-01",
+      "promptSha256": "1111111111111111111111111111111111111111111111111111111111111111"
+    }
+  },
+  "trigger": {
+    "sourceEventId": "018f3c2a-1b2c-7def-8a01-bbbbbbbbbbbb",
+    "sourceType": "dependency-update",
+    "sourceUri": "https://ci.example.org/builds/12345",
+    "observedAt": "2025-09-01T08:35:00Z",
+    "untrustedInput": false
+  },
+  "change": {
+    "verb": "upgrade.patch",
+    "autonomyClass": "A3",
+    "environment": "staging",
+    "targets": [
+      "dummy-ok"
+    ],
+    "diff": {
+      "uri": "https://git.example.org/platform/dummy-ok/-/merge_requests/42.diff",
+      "sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+      "summaryStats": {
+        "filesChanged": 3,
+        "linesAdded": 21,
+        "linesRemoved": 4
+      }
+    },
+    "parameters": {
+      "library": "libfoo",
+      "from": "1.1.0",
+      "to": "1.2.0"
+    },
+    "proposalRef": "https://git.example.org/platform/dummy-ok/-/merge_requests/42"
+  },
+  "evidence": {
+    "policyEvaluation": {
+      "pdp": "opa.platform.example.org",
+      "bundleVersion": "2025.09.01.1",
+      "decision": "allow-with-approval",
+      "matchedRules": [
+        "ops/upgrade_patch",
+        "scope/staging_only"
+      ]
+    },
+    "tests": {
+      "status": "pass",
+      "suiteRef": "dummy-ok-ci",
+      "passed": 128,
+      "failed": 0,
+      "reportUri": "https://ci.example.org/builds/12345/tests"
+    },
+    "dryRun": {
+      "status": "clean",
+      "outputUri": "s3://evidence/dummy-ok/dryrun/12345.txt",
+      "exitCode": 0
+    },
+    "scans": [
+      {
+        "tool": "trivy",
+        "status": "clean",
+        "critical": 0,
+        "high": 0,
+        "reportUri": "s3://evidence/dummy-ok/trivy/12345.json"
+      }
+    ],
+    "sbomDelta": {
+      "added": [
+        "libfoo@1.2.0"
+      ],
+      "removed": [
+        "libfoo@1.1.0"
+      ],
+      "uri": "s3://evidence/dummy-ok/sbom/12345.json"
+    }
+  },
+  "blastRadius": {
+    "tenants": 1,
+    "users": 0,
+    "services": [
+      "dummy-ok"
+    ],
+    "estimatedDowntimeSeconds": 0,
+    "reversible": true,
+    "personalDataAffected": false,
+    "dataCategories": [
+      "operational"
+    ]
+  },
+  "rollback": {
+    "method": "git-revert",
+    "tested": true,
+    "testedAt": "2025-09-01T07:00:00Z",
+    "estimatedRecoverySeconds": 120
+  },
+  "agentAssessment": {
+    "rationale": "Patchopdatering af libfoo lukker CVE-2025-0001. Ændringen er begrænset til staging og kræver menneskelig godkendelse.",
+    "doNothingConsequence": "Kendt sårbarhed forbliver åben i staging; ingen produktionseffekt endnu.",
+    "confidence": 0.82,
+    "uncertainties": [
+      "transitiv afhængighed kan ændre adfærd",
+      "rollerback er testet mod forrige patch, ikke denne"
+    ],
+    "notChecked": [
+      "belastningstest under peak",
+      "compatibility med tredjeparts-integration"
+    ],
+    "claims": [
+      {
+        "statement": "Ændringen rører 3 filer",
+        "evidenceRef": "change.diff.summaryStats.filesChanged",
+        "operator": "eq",
+        "value": 3
+      },
+      {
+        "statement": "Der tilføjes 21 linjer",
+        "evidenceRef": "change.diff.summaryStats.linesAdded",
+        "operator": "eq",
+        "value": 21
+      },
+      {
+        "statement": "Ingen personoplysninger berøres",
+        "evidenceRef": "blastRadius.personalDataAffected",
+        "operator": "eq",
+        "value": false
+      }
+    ],
+    "explanations": {
+      "owner": "Vi opdaterer et bibliotek for at lukke et sikkerhedshul. Kræver din godkendelse.",
+      "operator": "Bump libfoo 1.1.0 -> 1.2.0, dry-run ren, trivy ren, git-revert som rollback."
+    }
+  },
+  "reviewerFindings": [
+    {
+      "reviewerRef": "dummy-ok-reviewer",
+      "provider": "openai",
+      "verdict": "flag",
+      "findings": [
+        "rollback testet mod anden version end den foreslåede"
+      ],
+      "sawAuthorRationale": false
+    }
+  ],
+  "decision": {
+    "state": "pending",
+    "requiredApprovals": 2,
+    "eligibleGroups": [
+      "platform-approvers"
+    ],
+    "requiredTrainingModules": [
+      "evidence-over-prose",
+      "when-to-reject"
+    ],
+    "expiresAt": "2025-09-03T08:40:00Z",
+    "requestedBy": "oidc|owner.example",
+    "binding": {
+      "algorithm": "sha256",
+      "digest": "64bc408a223fb853d4ac0a0c17c6466f0a689bdd9b4d74f1a015d9278419d0f1",
+      "computedAt": "2025-09-01T08:40:00Z"
+    },
+    "approvals": []
+  },
+  "signature": {
+    "algorithm": "ES256",
+    "value": "base64url-signature",
+    "signedFieldsSha256": "4444444444444444444444444444444444444444444444444444444444444444"
+  }
+}

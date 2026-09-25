@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/installation-profile.schema.json",
+  "title": "Installation Profile",
+  "description": "Versioneret produktprofil for en installation (single-server non-HA, multi-server HA eller dedikeret enterprise). Profilen binder en DKC-002 deployment-profil til kataloget: hvilke platformskombinationer der understøttes, hvilke komponenter der er standard (default) og valgfrie, og hvordan et skift til HA foregår. Host-styring er altid separat opt-in og arves fra deployment-profilens tilladelse.",
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "profileType",
+    "deploymentProfileRef",
+    "hostManagement",
+    "securityCore",
+    "defaultApplications",
+    "optionalApplications",
+    "supportedPlatforms",
+    "capacity",
+    "supportProfile",
+    "migration"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "InstallationProfile" },
+
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$" },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/accountableHuman" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+
+    "profileType": {
+      "enum": ["single-server", "multiple-servers", "dedicated-customer", "external-data-services"],
+      "description": "Skal matche deployment-profilens profileType. single-server er non-HA; multiple-servers og dedicated-customer er HA-kapable."
+    },
+    "deploymentProfileRef": {
+      "type": "string",
+      "minLength": 3,
+      "description": "Sti (relativ til repo-roden) til den DKC-002 deployment-profil profilen bygger på."
+    },
+
+    "highAvailability": {
+      "type": "object",
+      "required": ["enabled"],
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "acceptedNonHaServiceClass": { "type": "boolean", "description": "Påkrævet eksplicit accept for single-server: et navngivet menneske har accepteret en non-HA-serviceklasse." },
+        "externalBackupRequired": { "type": "boolean", "description": "Påkrævet for single-server: backup skal være ekstern og offsite." }
+      }
+    },
+
+    "hostManagement": {
+      "type": "object",
+      "required": ["optIn", "component"],
+      "additionalProperties": false,
+      "properties": {
+        "optIn": { "const": true, "description": "Host-styring er altid separat opt-in, uanset profil." },
+        "component": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+        "justification": { "type": "string", "description": "Hvorfor host-styring er slået til/fra i denne profil." }
+      }
+    },
+
+    "securityCore": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+      "description": "Komponent-id'er i den obligatoriske sikkerhedskerne. Skal være et supersæt af katalogets securityCore-komponenter."
+    },
+    "defaultApplications": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+      "description": "Valgfrie applikationer der installeres som standard for profilen."
+    },
+    "optionalApplications": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+      "description": "Valgfrie applikationer operatøren kan tilvælge (fx Communications, HR, BI, Reporting)."
+    },
+
+    "supportedPlatforms": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9.-]{1,63}$" },
+      "description": "Navngivne platformskombinationer fra platform-matricen. Hver skal være navngivet og have en testkommando."
+    },
+
+    "capacity": {
+      "type": "object",
+      "required": ["cpuMillicores", "memoryMiB", "storageGiB", "nodes"],
+      "additionalProperties": false,
+      "properties": {
+        "cpuMillicores": { "type": "integer", "minimum": 1 },
+        "memoryMiB": { "type": "integer", "minimum": 1 },
+        "storageGiB": { "type": "integer", "minimum": 1 },
+        "nodes": { "type": "integer", "minimum": 1 }
+      },
+      "description": "Ressourcebudget for profilen. Resolveren fejler før mutation hvis den valgte closure overskrider det."
+    },
+
+    "supportProfile": {
+      "type": "object",
+      "required": ["tier", "supportWindow"],
+      "additionalProperties": false,
+      "properties": {
+        "tier": { "enum": ["supported", "best-effort", "community"] },
+        "supportWindow": { "type": "string", "minLength": 3 },
+        "escalation": { "type": "string" }
+      }
+    },
+
+    "migration": {
+      "type": "object",
+      "description": "Dokumenteret migrationsvej. Påkrævet for alle profiler; for HA-profilen peger den på vejen fra single-server med forventet nedetid.",
+      "required": ["from", "to", "pathRef", "expectedDowntimeMinutes", "steps"],
+      "additionalProperties": false,
+      "properties": {
+        "from": { "type": "string", "minLength": 3 },
+        "to": { "type": "string", "minLength": 3 },
+        "pathRef": { "type": "string", "minLength": 3, "description": "Sti til den dokumenterede migrationsvej." },
+        "expectedDowntimeMinutes": { "type": "integer", "minimum": 0 },
+        "steps": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 10 } }
+      }
+    }
+  },
+
+  "$defs": {
+    "accountableHuman": {
+      "type": "object",
+      "required": ["subject", "role", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": {
+          "type": "object",
+          "required": ["subject", "name"],
+          "additionalProperties": false,
+          "properties": {
+            "subject": { "type": "string", "minLength": 3 },
+            "name": { "type": "string", "minLength": 2 }
+          }
+        }
+      }
+    }
+  }
+}

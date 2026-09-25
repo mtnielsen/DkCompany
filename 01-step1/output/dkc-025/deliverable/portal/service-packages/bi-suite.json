@@ -1,0 +1,64 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ServicePackage",
+  "metadata": {
+    "name": "bi-suite",
+    "version": "1.0.0",
+    "description": "Starter plus BI og rapportering: analyser, rapportdefinitioner og styret levering med revalideret adgang.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+    },
+    "labels": { "segment": "enterprise" }
+  },
+  "category": "bi",
+  "modules": [
+    { "id": "platform-core", "versionRange": ">=1.0.0 <2.0.0", "required": true, "reason": "Kontrolplan, policy og job-runner er obligatorisk." },
+    { "id": "identity-broker", "versionRange": ">=1.0.0 <2.0.0", "required": true, "reason": "Verificeret SSO for analysebrugere." },
+    { "id": "audit-service", "versionRange": ">=1.0.0 <2.0.0", "required": true, "reason": "Revisionsspor for rapportkørsler og dataadgang." },
+    { "id": "bi", "versionRange": ">=1.0.0 <2.0.0", "required": true, "reason": "Analyser og dashboards er pakkens formål." },
+    { "id": "reporting", "versionRange": ">=1.0.0 <2.0.0", "required": false, "reason": "Rapportlevering kan tilvælges sammen med BI." }
+  ],
+  "price": {
+    "currency": "DKK",
+    "monthly": 4200,
+    "implementation": 15000,
+    "components": [
+      { "id": "platform-core", "moduleId": "platform-core", "monthly": 900, "unit": "md", "note": "Delt kontrolplan." },
+      { "id": "identity-broker", "moduleId": "identity-broker", "monthly": 300, "unit": "md", "note": "Identitetsbroker pr. kunde." },
+      { "id": "audit-service", "moduleId": "audit-service", "monthly": 300, "unit": "md", "note": "Holdbar audit." },
+      { "id": "bi", "moduleId": "bi", "monthly": 1500, "unit": "md", "note": "BI-applikation." },
+      { "id": "reporting", "moduleId": "reporting", "monthly": 1200, "unit": "md", "note": "Rapportlevering." }
+    ]
+  },
+  "consequences": [
+    {
+      "id": "analytics-personal-data",
+      "severity": "material",
+      "description": "Analyser kan aflede personhenførbare mønstre; felt- og rækkeadgang håndhæves, og eksport kræver en rapportdefinition.",
+      "requiresAcknowledgment": true
+    },
+    {
+      "id": "reporting-destination",
+      "severity": "notice",
+      "description": "Rapportlevering kræver en godkendt modtager og revalideres ved hver afsendelse."
+    },
+    {
+      "id": "shared-control-plane",
+      "severity": "notice",
+      "description": "Analyse- og rapportdata er tenantadskilt; kontrolplanen er fælles driftet."
+    }
+  ],
+  "dataProcessing": {
+    "personalData": true,
+    "subprocessorRefs": ["anthropic-eu", "openai-eu"]
+  },
+  "supportProfile": {
+    "tier": "supported",
+    "supportWindow": "12 måneder fra GA",
+    "escalation": "Platform Owner via platform@example.org"
+  },
+  "lifecycle": { "orderable": true }
+}

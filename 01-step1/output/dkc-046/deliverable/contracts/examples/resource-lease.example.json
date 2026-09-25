@@ -1,0 +1,12 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ResourceLease",
+  "resource": "service/checkout",
+  "owner": "remediation-executor",
+  "fencingToken": 1,
+  "acquiredAt": "2025-09-02T08:00:07Z",
+  "expiresAt": "2025-09-02T08:15:07Z",
+  "releasedAt": null,
+  "cooldownUntil": null,
+  "held": true
+}
