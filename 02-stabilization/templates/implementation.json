@@ -1,0 +1,16 @@
+{
+  "taskId": null,
+  "agentIdentity": null,
+  "role": "implementer",
+  "status": "not-started",
+  "sourceCommit": null,
+  "sourceTreeDigest": null,
+  "artifactDigests": [],
+  "commands": [],
+  "changes": [],
+  "limitations": [],
+  "blockedOn": [],
+  "nextAction": "independent-verification",
+  "verifierVerdict": null,
+  "humanAcceptance": null
+}

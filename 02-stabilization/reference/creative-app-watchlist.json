@@ -1,0 +1,147 @@
+{
+  "reviewDate": "2026-10-06",
+  "status": "evaluation-candidates-only",
+  "verification": "Repository metadata and documentation inspected; applications not built, tested or integrated.",
+  "candidates": [
+    {
+      "name": "photocraft",
+      "description": "An open-source, clean-room reimplementation of Adobe Photoshop in pure Rust",
+      "license": "Apache-2.0",
+      "archived": false,
+      "default_branch": "main",
+      "pushed_at": "2026-10-06T18:26:58Z",
+      "url": "https://github.com/storytold/photocraft",
+      "purpose": "Raster image editing",
+      "licenseNote": "GitHub detects Apache-2.0; consult LICENSE-MIT, LICENSE-APACHE, NOTICE and asset/brand terms before packaging.",
+      "adoptionStatus": "watchlist",
+      "requiredValidation": [
+        "Build and release reproducibility",
+        "Needed workflows and file round trips",
+        "CLI/MCP/API behaviour and sandboxing",
+        "IAM, tenant isolation and audit integration",
+        "Backup, restore, retention and protected-data handling",
+        "Dependency, asset and branding terms"
+      ]
+    },
+    {
+      "name": "vectorcraft",
+      "description": "An open-source, clean-room reimplementation of Adobe Illustrator, built in pure Rust.",
+      "license": "Apache-2.0",
+      "archived": false,
+      "default_branch": "main",
+      "pushed_at": "2026-10-06T18:41:42Z",
+      "url": "https://github.com/storytold/vectorcraft",
+      "purpose": "Vector illustration",
+      "licenseNote": "GitHub detects Apache-2.0; consult LICENSE-MIT, LICENSE-APACHE, NOTICE and asset/brand terms before packaging.",
+      "adoptionStatus": "watchlist",
+      "requiredValidation": [
+        "Build and release reproducibility",
+        "Needed workflows and file round trips",
+        "CLI/MCP/API behaviour and sandboxing",
+        "IAM, tenant isolation and audit integration",
+        "Backup, restore, retention and protected-data handling",
+        "Dependency, asset and branding terms"
+      ]
+    },
+    {
+      "name": "filmcraft",
+      "description": "An open-source, clean-room reimplementation of Adobe Premiere Pro built in pure Rust.",
+      "license": "Apache-2.0",
+      "archived": false,
+      "default_branch": "main",
+      "pushed_at": "2026-10-06T18:26:17Z",
+      "url": "https://github.com/storytold/filmcraft",
+      "purpose": "Video editing",
+      "licenseNote": "GitHub detects Apache-2.0; consult LICENSE-MIT, LICENSE-APACHE, NOTICE and asset/brand terms before packaging.",
+      "adoptionStatus": "watchlist",
+      "requiredValidation": [
+        "Build and release reproducibility",
+        "Needed workflows and file round trips",
+        "CLI/MCP/API behaviour and sandboxing",
+        "IAM, tenant isolation and audit integration",
+        "Backup, restore, retention and protected-data handling",
+        "Dependency, asset and branding terms"
+      ]
+    },
+    {
+      "name": "lightcraft",
+      "description": "An open-source, clean-room reimplementation of Adobe Lightroom in pure Rust.",
+      "license": "Apache-2.0",
+      "archived": false,
+      "default_branch": "main",
+      "pushed_at": "2026-10-06T15:35:04Z",
+      "url": "https://github.com/storytold/lightcraft",
+      "purpose": "Photo cataloguing and RAW development",
+      "licenseNote": "GitHub detects Apache-2.0; consult LICENSE-MIT, LICENSE-APACHE, NOTICE and asset/brand terms before packaging.",
+      "adoptionStatus": "watchlist",
+      "requiredValidation": [
+        "Build and release reproducibility",
+        "Needed workflows and file round trips",
+        "CLI/MCP/API behaviour and sandboxing",
+        "IAM, tenant isolation and audit integration",
+        "Backup, restore, retention and protected-data handling",
+        "Dependency, asset and branding terms"
+      ]
+    },
+    {
+      "name": "printcraft",
+      "description": "An open-source, clean-room reimplementation of Adobe Acrobat built in pure Rust",
+      "license": "Apache-2.0",
+      "archived": false,
+      "default_branch": "main",
+      "pushed_at": "2026-10-06T18:41:26Z",
+      "url": "https://github.com/storytold/printcraft",
+      "purpose": "PDF editing and document workflows",
+      "licenseNote": "GitHub detects Apache-2.0; consult LICENSE-MIT, LICENSE-APACHE, NOTICE and asset/brand terms before packaging.",
+      "adoptionStatus": "watchlist",
+      "requiredValidation": [
+        "Build and release reproducibility",
+        "Needed workflows and file round trips",
+        "CLI/MCP/API behaviour and sandboxing",
+        "IAM, tenant isolation and audit integration",
+        "Backup, restore, retention and protected-data handling",
+        "Dependency, asset and branding terms"
+      ]
+    },
+    {
+      "name": "effectcraft",
+      "description": null,
+      "license": "Apache-2.0",
+      "archived": false,
+      "default_branch": "main",
+      "pushed_at": "2026-10-06T18:42:37Z",
+      "url": "https://github.com/storytold/effectcraft",
+      "purpose": "Motion graphics and compositing",
+      "licenseNote": "GitHub detects Apache-2.0; consult LICENSE-MIT, LICENSE-APACHE, NOTICE and asset/brand terms before packaging.",
+      "adoptionStatus": "watchlist",
+      "requiredValidation": [
+        "Build and release reproducibility",
+        "Needed workflows and file round trips",
+        "CLI/MCP/API behaviour and sandboxing",
+        "IAM, tenant isolation and audit integration",
+        "Backup, restore, retention and protected-data handling",
+        "Dependency, asset and branding terms"
+      ]
+    },
+    {
+      "name": "designcraft",
+      "description": null,
+      "license": "Apache-2.0",
+      "archived": false,
+      "default_branch": "main",
+      "pushed_at": "2026-10-06T18:13:46Z",
+      "url": "https://github.com/storytold/designcraft",
+      "purpose": "Page layout and publishing",
+      "licenseNote": "GitHub detects Apache-2.0; consult LICENSE-MIT, LICENSE-APACHE, NOTICE and asset/brand terms before packaging.",
+      "adoptionStatus": "watchlist",
+      "requiredValidation": [
+        "Build and release reproducibility",
+        "Needed workflows and file round trips",
+        "CLI/MCP/API behaviour and sandboxing",
+        "IAM, tenant isolation and audit integration",
+        "Backup, restore, retention and protected-data handling",
+        "Dependency, asset and branding terms"
+      ]
+    }
+  ]
+}

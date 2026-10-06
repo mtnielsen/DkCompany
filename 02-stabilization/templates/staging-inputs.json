@@ -1,0 +1,20 @@
+{
+  "environment": "staging",
+  "profile": "single-server-non-ha",
+  "purchaseAuthorized": false,
+  "budgetCap": null,
+  "host": null,
+  "sshIdentityReference": null,
+  "domain": null,
+  "allowedAdminCidrs": [],
+  "tlsSecretReference": null,
+  "databaseSecretReference": null,
+  "backupEndpoint": null,
+  "backupFailureDomain": null,
+  "backupSecretReference": null,
+  "humanOwner": null,
+  "escalationContact": null,
+  "acceptedSourceCommit": null,
+  "acceptedArtifactDigests": [],
+  "deploymentAuthorizationReference": null
+}

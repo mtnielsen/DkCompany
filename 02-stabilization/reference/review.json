@@ -1,0 +1,185 @@
+{
+  "reviewDate": "2026-10-06",
+  "reviewedCommit": "5e3706b5e7ad569c0ec68c4b63ceeaad15c237a3",
+  "lastCommitDate": "2026-09-25",
+  "newCommitsSincePreviousReview": 3,
+  "scope": "Focused source/security/packaging review of the DKC-036 cumulative stack; all 66 overlays assembled in dependency order using LF Git archive bytes, outside the tracked checkout. Not an exhaustive audit or production assessment.",
+  "progress": [
+    "66 task output folders exist and all 66 occur in the tip chain.",
+    "Assembled tree contains 2176 files before dependency cache.",
+    "Approval identity, distinct approvers, change binding, one-use consumption, directional scope and single-role agent controls have implementations and passing selected tests.",
+    "New implementation remains in overlays; 00-core is the earlier foundation."
+  ],
+  "currentChecks": [
+    {
+      "name": "security-tests",
+      "exitCode": 0,
+      "summary": [
+        "  ...",
+        "1..216",
+        "# tests 216",
+        "# suites 0",
+        "# pass 216",
+        "# fail 0",
+        "# cancelled 0",
+        "# skipped 0",
+        "# todo 0",
+        "# duration_ms 2185.084"
+      ]
+    },
+    {
+      "name": "schemas",
+      "exitCode": 0,
+      "summary": [
+        "✔ 1 health-observation valideret (skema + observations-/forværrings-semantik)",
+        "✔ 1 platform-konfiguration valideret (skema + sikre standarder/retention/WORM/modelruter-semantik)",
+        "✔ 1 host-scope valideret (skema + supportmatrix/forbud/recovery-semantik)",
+        "✔ 1 installationsplan valideret (skema + preflight/trin/restriktioner/diagnostik-semantik)",
+        "✔ 1 retentionændrings-preview valideret (skema + holds/WORM/ramme-semantik)",
+        "✔ 1 host-enrollment valideret (skema + menneskelig bootstrap/trust/inventory/ejerskab-semantik)",
+        "✔ 1 host-profil valideret (skema + lukkede operationer/canary/backup/recovery-semantik)",
+        "✔ 1 host-operation valideret (skema + signatur/menneskeautorisation/restriktioner-semantik)",
+        "(node:49480) ExperimentalWarning: SQLite is an experimental feature and might change at any time",
+        "(Use `node --trace-warnings ...` to show where the warning was created)"
+      ]
+    },
+    {
+      "name": "conformance-tests",
+      "exitCode": 1,
+      "summary": [
+        "  ...",
+        "1..528",
+        "# tests 528",
+        "# suites 0",
+        "# pass 527",
+        "# fail 1",
+        "# cancelled 0",
+        "# skipped 0",
+        "# todo 0",
+        "# duration_ms 6071.677"
+      ]
+    }
+  ],
+  "testsSummary": {
+    "run": 744,
+    "pass": 743,
+    "fail": 1,
+    "securitySubset": 216,
+    "conformanceSubset": 528,
+    "schemas": "passed",
+    "node": "22.22.3",
+    "os": "Windows"
+  },
+  "repositoryReportedBaseline": {
+    "independentlyRerun": false,
+    "checks": 279,
+    "pass": 218,
+    "fail": 1,
+    "notRun": 60,
+    "failure": "historical DCO changelog-check"
+  },
+  "readiness": {
+    "assessment": "Substantial framework implementation progress; not ready for customer production",
+    "repositoryPilotReport": "not-ready; measured=false",
+    "liveInstaller": "Makefile installer-live currently prints NOT RUN and exits 2",
+    "gaps": [
+      "Reproducible installation from a clean clone",
+      "Effective security enforcement for confirmed bypasses",
+      "CI and independent merge review",
+      "Real supported-host installation",
+      "Live multi-server/database failover and independently stored backup/restore validation",
+      "Independent security assessment and real pilot evidence"
+    ]
+  },
+  "findings": [
+    {
+      "id": "R1",
+      "priority": "P1",
+      "title": "Task data can override server no-AI-access protection",
+      "source": {
+        "assembledFile": "runtime/src/runtime.mjs",
+        "line": 264,
+        "repositoryFile": "01-step1/output/dkc-046/deliverable/runtime/src/runtime.mjs",
+        "url": "https://github.com/mtnielsen/DkCompany/blob/5e3706b5e7ad569c0ec68c4b63ceeaad15c237a3/01-step1/output/dkc-046/deliverable/runtime/src/runtime.mjs#L264"
+      },
+      "evidence": "With the server record marked noAiAccess=true, observe.read is denied. Adding action.protectedData with ordinary/noAiAccess=false executes the same stub once.",
+      "fix": "Resolve classification from trusted server state. Derive the operation from the registered executor/tool. Reject caller classification downgrades; a caller may request stricter protection only."
+    },
+    {
+      "id": "R2",
+      "priority": "P1",
+      "title": "Revocation lacks tenant authorization",
+      "source": {
+        "assembledFile": "approvals/src/approval-service.mjs",
+        "line": 291,
+        "repositoryFile": "01-step1/output/dkc-055/deliverable/approvals/src/approval-service.mjs",
+        "url": "https://github.com/mtnielsen/DkCompany/blob/5e3706b5e7ad569c0ec68c4b63ceeaad15c237a3/01-step1/output/dkc-055/deliverable/approvals/src/approval-service.mjs#L291"
+      },
+      "evidence": "An injected authenticated human security-officer from tenant-b gets HTTP 403 reading acme approval but HTTP 200 revoking it; final state revoked.",
+      "fix": "Apply tenant/resource authorization to every approval route, including revoke and authorize, before reading or mutating state."
+    },
+    {
+      "id": "R3",
+      "priority": "P1",
+      "title": "Runtime does not enforce the PDP approval count at execution",
+      "source": {
+        "assembledFile": "runtime/src/runtime.mjs",
+        "line": 437,
+        "repositoryFile": "01-step1/output/dkc-046/deliverable/runtime/src/runtime.mjs",
+        "url": "https://github.com/mtnielsen/DkCompany/blob/5e3706b5e7ad569c0ec68c4b63ceeaad15c237a3/01-step1/output/dkc-046/deliverable/runtime/src/runtime.mjs#L437"
+      },
+      "evidence": "Actual approval service has two valid approvers; test PDP requires three; runtime completes upgrade.patch stub. requiredApprovals is not sent to authorizeExecution.",
+      "fix": "Bind execution to the trusted PDP decision and enforce the greater of its required count and the approval service policy count, with distinct eligible approvers."
+    },
+    {
+      "id": "R4",
+      "priority": "P2",
+      "title": "Approval collection leaks IDs and state without authentication",
+      "source": {
+        "assembledFile": "approvals/src/approval-service.mjs",
+        "line": 513,
+        "repositoryFile": "01-step1/output/dkc-055/deliverable/approvals/src/approval-service.mjs",
+        "url": "https://github.com/mtnielsen/DkCompany/blob/5e3706b5e7ad569c0ec68c4b63ceeaad15c237a3/01-step1/output/dkc-055/deliverable/approvals/src/approval-service.mjs#L513"
+      },
+      "evidence": "Anonymous GET /v1/approvals returns HTTP 200 with the acme approval ID and pending state.",
+      "fix": "Authenticate the collection endpoint and filter results by server-authorized tenant scope."
+    },
+    {
+      "id": "R5",
+      "priority": "P1",
+      "title": "Published overlay entry points are not executable on Linux",
+      "repositoryFile": "01-step1/output/dkc-036/apply.sh",
+      "evidence": "git ls-files -s reports mode 100644 for apply.sh; README invokes scripts directly and the chain directly executes child scripts. This prevents the documented command on an ordinary Linux checkout. No Linux execution was performed here.",
+      "fix": "Commit execute bits on shell entry points and verify the documented chain in a clean Linux CI checkout, or invoke Bash consistently at every level."
+    },
+    {
+      "id": "R6",
+      "priority": "P2",
+      "title": "Published tip manifest references missing evidence files",
+      "repositoryFile": "01-step1/output/dkc-036/OVERLAY-MANIFEST.txt",
+      "evidence": "Of 79 manifest entries, 61 match exact LF Git archive content and 18 evidence/*.log files are absent from Git. Repository .gitignore excludes *.log. Windows CRLF checkout differences were excluded from this finding.",
+      "fix": "Track intended evidence explicitly or regenerate manifests for the actual published contents; verify from a clean checkout."
+    },
+    {
+      "id": "R7",
+      "priority": "P2",
+      "title": "Windows evidence paths are rejected as outside their module",
+      "source": {
+        "assembledFile": "conformance/src/manifest.mjs",
+        "line": 38,
+        "repositoryFile": "00-core/conformance/src/manifest.mjs",
+        "url": "https://github.com/mtnielsen/DkCompany/blob/5e3706b5e7ad569c0ec68c4b63ceeaad15c237a3/00-core/conformance/src/manifest.mjs#L38"
+      },
+      "evidence": "Conformance suite: 527 passed, 1 failed. dummy-ok fails C-004 for 14 legitimate evidence paths because native resolved paths are checked against root + slash.",
+      "fix": "Use platform-aware relative-path containment and reject absolute or parent traversal results."
+    },
+    {
+      "id": "R8",
+      "priority": "P1",
+      "title": "Current main has no automated merge gate",
+      "evidence": "No root .github/workflows files. GitHub reports main protected=false, rulesets=[], open PRs=[], and only one historical failed Actions run from 2026-09-22. This is not a verification of the repository-level Actions enabled setting.",
+      "fix": "Add CI for clean assembly, integrity, regression suites and deployment checks; protect main with required checks and independent review."
+    }
+  ],
+  "changesMade": "No repository source edits, commits, pushes, settings changes, stars, forks, Discord joins or deployments. Review scripts, test logs, JSON findings and candidate watchlist only."
+}

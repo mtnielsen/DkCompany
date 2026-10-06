@@ -1,0 +1,10 @@
+{
+  "taskId": null,
+  "sourceCommit": null,
+  "verificationReference": null,
+  "decision": "pending",
+  "humanIdentity": null,
+  "decidedAt": null,
+  "scope": null,
+  "deploymentAuthorization": null
+}
