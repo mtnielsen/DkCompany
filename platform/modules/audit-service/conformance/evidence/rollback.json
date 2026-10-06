@@ -1,0 +1,21 @@
+{
+  "verb": "rollback",
+  "module": "audit-service",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-16T21:11:53.892Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 2
+  },
+  "artifact": {
+    "uri": "s3://evidence/audit-service/rollback.json",
+    "sha256": "ce3ccea8b0b522cf4a88f575f8122f629f6b07ca70b9b45de232f2c40969961c"
+  }
+}

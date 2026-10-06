@@ -1,0 +1,47 @@
+{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "allow-internal",
+    "namespace": "platform-ha",
+    "labels": {
+      "app.kubernetes.io/name": "platform",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "platform",
+      "platform.example.org/environment": "ha"
+    }
+  },
+  "spec": {
+    "podSelector": {},
+    "policyTypes": [
+      "Ingress",
+      "Egress"
+    ],
+    "ingress": [
+      {
+        "from": [
+          {
+            "namespaceSelector": {
+              "matchLabels": {
+                "kubernetes.io/metadata.name": "platform-ha"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "egress": [
+      {
+        "to": [
+          {
+            "namespaceSelector": {
+              "matchLabels": {
+                "kubernetes.io/metadata.name": "platform-ha"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "RestoreDrillReport",
+  "drillId": "9c1e4b88-7d2a-4f31-b6c5-1a2b3c4d5e6f",
+  "backupId": "0f7d2a44-2b1c-4e5d-9a3f-6c8b1d2e4f50",
+  "tenantId": "acme",
+  "isolated": true,
+  "startedAt": "2026-09-23T08:00:00Z",
+  "finishedAt": "2026-09-23T08:02:15Z",
+  "measurements": {
+    "restoreDurationMs": 135000,
+    "restoreDurationMinutes": 2.25,
+    "measuredRtoMinutes": 2.25,
+    "dataLossMinutes": 0.5,
+    "measuredRpoMinutes": 0.5,
+    "rpoTargetMinutes": 15,
+    "rtoTargetMinutes": 60
+  },
+  "integrity": {
+    "databaseOk": true,
+    "checksumsVerified": true,
+    "manifestDigest": "7a8192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f"
+  },
+  "functionalChecks": [
+    { "name": "database-integrity", "status": "pass", "detail": "databaseintegriteten er ok" },
+    { "name": "audit-chain", "status": "pass", "detail": "audit-loggens hash-kæde er intakt" },
+    { "name": "tenant-isolation", "status": "pass", "detail": "2 tenants er afgrænset gennem tenant-viewet" },
+    { "name": "audit-checkpoint", "status": "pass", "detail": "audit-loggen matcher det eksterne checkpoint" }
+  ],
+  "suppression": { "applied": true, "entries": 1, "recordsErased": 1, "ledgerHead": "9c2f3a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f607" },
+  "tenantIsolation": { "ok": true, "tenantsChecked": "all" },
+  "audit": { "chainOk": true, "checkpointOk": true, "checkpointDetail": "audit-loggen matcher det eksterne checkpoint" },
+  "gate": { "status": "pass", "reasons": [] },
+  "auditRef": "audit:backup.drill.9c1e4b88-7d2a-4f31-b6c5-1a2b3c4d5e6f"
+}

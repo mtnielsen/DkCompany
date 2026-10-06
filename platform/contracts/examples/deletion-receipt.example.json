@@ -1,0 +1,96 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "DeletionReceipt",
+  "receiptId": "del:acme:9f2c1a3b4d5e:2025-09-24T09:00:00.000Z",
+  "tenantId": "acme",
+  "subjectDigest": "9f2c1a3b4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f8",
+  "requestedBy": "oidc|pia.privat",
+  "requestedAt": "2025-09-24T09:00:00Z",
+  "completedAt": "2025-09-24T09:00:01Z",
+  "status": "partial",
+  "hold": { "blocked": false, "holdIds": [] },
+  "results": [
+    {
+      "surface": "primary-object-store",
+      "kind": "primary",
+      "status": "full",
+      "recordsAffected": 1,
+      "remainingCopies": []
+    },
+    {
+      "surface": "rebuildable-index",
+      "kind": "index",
+      "status": "full",
+      "recordsAffected": 1,
+      "remainingCopies": []
+    },
+    {
+      "surface": "ephemeral-cache",
+      "kind": "cache",
+      "status": "full",
+      "recordsAffected": 1,
+      "remainingCopies": []
+    },
+    {
+      "surface": "derived-ai-store",
+      "kind": "derived-ai",
+      "status": "partial",
+      "recordsAffected": 1,
+      "reason": "Modelleverandøren eksponerer ingen slette-API for afledte kopier; platformen kan kun slette sin egen lokale kopi og dokumentere den resterende leverandørkopi med udløb.",
+      "remainingCopies": [
+        {
+          "kind": "upstream",
+          "resource": "model-provider-derived-copy",
+          "reason": "leverandøren kan ikke slette afledte kopier",
+          "expiresAt": "2025-10-08T09:00:00Z"
+        }
+      ]
+    },
+    {
+      "surface": "protected-backup",
+      "kind": "backup",
+      "status": "partial",
+      "recordsAffected": 1,
+      "reason": "Immutable backups må ikke kunne slettes af driftscredentials; i stedet filtreres subjektet ved restore via suppressionsjournalen, og kopien udløber med backupretentionen.",
+      "remainingCopies": [
+        {
+          "kind": "backup",
+          "resource": "immutable-backup",
+          "reason": "slettebeslutningen genanvendes ved restore; kopien udløber med backupretentionen",
+          "expiresAt": "2026-09-24T09:00:00Z"
+        }
+      ]
+    },
+    {
+      "surface": "upstream-model-provider",
+      "kind": "upstream",
+      "status": "unsupported",
+      "recordsAffected": 0,
+      "reason": "Leverandøren udstiller ingen slette-API og ingen læsbar kopi; dækningen rapporteres ærligt som 'unsupported' og håndteres gennem databehandleraftalen.",
+      "remainingCopies": [
+        {
+          "kind": "upstream",
+          "resource": "model-provider-copy",
+          "reason": "leverandørkopi uden slette-API",
+          "expiresAt": "2025-10-24T09:00:00Z"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "surfaces": 6,
+    "full": 3,
+    "partial": 2,
+    "unsupported": 1,
+    "blocked": 0,
+    "recordsAffected": 4,
+    "remainingCopies": 3
+  },
+  "audit": {
+    "intentId": "intent-42",
+    "outcomeId": "outcome-42",
+    "subjectDigest": "9f2c1a3b4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f8",
+    "journalRef": "suppression:acme:17",
+    "containsRawPersonalData": false
+  }
+}

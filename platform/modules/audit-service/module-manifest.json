@@ -1,0 +1,288 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ModuleManifest",
+  "metadata": {
+    "name": "audit-service",
+    "version": "1.0.0",
+    "description": "Referencemodul A. Evidens- og audit-service: hash-kædet append-only log, DSAR-håndtering og ops-verber. Implementerer alle fire planer 100 % og spørger central PDP før enhver privilegeret handling.",
+    "owner": {
+      "team": "platform",
+      "contact": "platform@example.org"
+    },
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "role": "Platform Owner"
+    },
+    "labels": {
+      "tier": "reference",
+      "wave": "1"
+    }
+  },
+  "identity": {
+    "userStore": "none",
+    "oidc": {
+      "issuer": "https://id.example.org/realms/platform",
+      "clientId": "audit-service",
+      "scopes": [
+        "openid",
+        "profile",
+        "email",
+        "groups"
+      ],
+      "claimMapping": {
+        "subject": "sub",
+        "email": "email",
+        "groups": "groups",
+        "tenant": "tenant_id"
+      },
+      "pkceRequired": true,
+      "tokenAudience": "audit-service"
+    },
+    "scim": {
+      "version": "2.0",
+      "endpoint": "https://id.example.org/scim/v2",
+      "mode": "consumer",
+      "supportsPatch": true,
+      "supportsBulk": false
+    },
+    "spiffe": {
+      "spiffeId": "spiffe://platform.example.org/modules/audit-service",
+      "trustDomain": "platform.example.org",
+      "credentialMode": "just-in-time",
+      "maxCredentialTtlSeconds": 900
+    },
+    "audit": {
+      "authenticationEventsTo": "dk.platform.identity.authn.",
+      "retainDays": 365
+    }
+  },
+  "telemetry": {
+    "serviceName": "audit-service",
+    "otel": {
+      "exporter": "otlp-grpc",
+      "endpoint": "https://otel-collector.platform.example.org:4317",
+      "signals": [
+        "traces",
+        "metrics",
+        "logs"
+      ],
+      "resourceAttributes": {
+        "service.name": "audit-service",
+        "service.version": "1.0.0",
+        "deployment.environment": "dev"
+      },
+      "sampling": {
+        "strategy": "parentbased-traceidratio",
+        "ratio": 0.2
+      }
+    },
+    "cloudEvents": {
+      "source": "urn:platform:module:audit-service",
+      "typePrefix": "dk.platform.audit-service.",
+      "sink": "https://events.platform.example.org/events",
+      "requiredAttributes": [
+        "tenantid",
+        "traceid",
+        "principal"
+      ],
+      "dataClassificationRequired": true
+    },
+    "retention": {
+      "logsDays": 365,
+      "tracesDays": 30,
+      "metricsDays": 400,
+      "eventsDays": 1825
+    }
+  },
+  "policy": {
+    "pdp": {
+      "endpoint": "https://pdp.platform.example.org/v1/data/platform/ops/decision",
+      "protocol": "http-json",
+      "decisionTtlSeconds": 60
+    },
+    "bundle": {
+      "name": "platform",
+      "version": "1.0.0",
+      "sha256": "baeeeb11cb003454ccd12473856966c8769388870d74f30428dfc9bd20ba2d86"
+    },
+    "failMode": "closed",
+    "gatedVerbs": [
+      "restore",
+      "upgrade",
+      "migrate",
+      "rollback",
+      "drain",
+      "subject.erase",
+      "subject.export",
+      "subject.legal_hold"
+    ],
+    "decisionCacheSeconds": 30,
+    "evidence": {
+      "kind": "fixture",
+      "ref": "conformance/evidence/policy-decision.json",
+      "capturedAt": "2025-09-01T07:55:00Z"
+    }
+  },
+  "verbs": {
+    "backup": {
+      "conformance": "full",
+      "endpoint": "https://audit-service.example.org/v1/ops/backup",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/backup.json"
+      }
+    },
+    "restore": {
+      "conformance": "full",
+      "endpoint": "https://audit-service.example.org/v1/ops/restore",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/restore.json"
+      }
+    },
+    "verify-restore": {
+      "conformance": "full",
+      "endpoint": "https://audit-service.example.org/v1/ops/verify-restore",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/verify-restore.json"
+      }
+    },
+    "drain": {
+      "conformance": "full",
+      "endpoint": "https://audit-service.example.org/v1/ops/drain",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/drain.json"
+      }
+    },
+    "upgrade.dry-run": {
+      "conformance": "full",
+      "endpoint": "https://audit-service.example.org/v1/ops/upgrade/dry-run",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/upgrade.dry-run.json"
+      }
+    },
+    "upgrade": {
+      "conformance": "full",
+      "endpoint": "https://audit-service.example.org/v1/ops/upgrade",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/upgrade.json"
+      }
+    },
+    "migrate": {
+      "conformance": "full",
+      "endpoint": "https://audit-service.example.org/v1/ops/migrate",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/migrate.json"
+      }
+    },
+    "rollback": {
+      "conformance": "full",
+      "endpoint": "https://audit-service.example.org/v1/ops/rollback",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/rollback.json"
+      }
+    },
+    "health": {
+      "conformance": "full",
+      "endpoint": "https://audit-service.example.org/healthz",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/health.json"
+      }
+    },
+    "slo": {
+      "conformance": "full",
+      "endpoint": "https://audit-service.example.org/v1/ops/slo",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/slo.json"
+      }
+    }
+  },
+  "privacy": {
+    "subject.locate": {
+      "conformance": "full",
+      "endpoint": "https://audit-service.example.org/v1/privacy/locate",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/subject.locate.json"
+      }
+    },
+    "subject.export": {
+      "conformance": "full",
+      "endpoint": "https://audit-service.example.org/v1/privacy/export",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/subject.export.json"
+      }
+    },
+    "subject.erase": {
+      "conformance": "full",
+      "endpoint": "https://audit-service.example.org/v1/privacy/erase",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/subject.erase.json"
+      }
+    },
+    "subject.legal_hold": {
+      "conformance": "full",
+      "endpoint": "https://audit-service.example.org/v1/privacy/legal-hold",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/subject.legal_hold.json"
+      }
+    },
+    "retention.policy": {
+      "conformance": "full",
+      "endpoint": "https://audit-service.example.org/v1/privacy/retention",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/retention.policy.json"
+      }
+    },
+    "dataCategories": [
+      "operational",
+      "pseudonymised",
+      "personal"
+    ],
+    "dsarEndpoint": "https://audit-service.example.org/v1/privacy"
+  },
+  "slo": {
+    "availability": 99.95,
+    "latencyP95Ms": 42,
+    "errorBudgetRef": "docs/slo/audit-service.md"
+  },
+  "serviceClassRef": "continuity/service-classes/audit-service.service-class.json",
+  "dataProtection": {
+    "supportedClasses": [
+      "ordinary",
+      "ai-read-only",
+      "append-only",
+      "retention-locked"
+    ],
+    "noAiAccessSupported": true,
+    "reclassificationRequiresHuman": true,
+    "storageEnforcement": {
+      "status": "full",
+      "reason": "Fuld lager-/nøglehåndhævelse leveres nu af DKC-048 (object-lock, rollematrix, beskyttet nøglebutik og to-personers kontrol). Modulet håndhæver fortsat adgangs- og transitionsregler.",
+      "deliveredBy": "DKC-048"
+    }
+  },
+  "compliance": {
+    "controlRefs": [
+      "ac-2",
+      "au-2",
+      "au-9",
+      "cp-9",
+      "si-12"
+    ],
+    "dpiaRef": "docs/dpia/audit-service.md",
+    "dataProcessingRole": "processor"
+  }
+}

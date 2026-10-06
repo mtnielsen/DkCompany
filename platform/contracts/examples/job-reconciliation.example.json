@@ -1,0 +1,13 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "JobReconciliation",
+  "jobId": "irr-crash",
+  "tenantId": "acme",
+  "classification": "irreversible-write",
+  "attempts": 2,
+  "idempotencyId": "irr-crash:a1:0",
+  "outcome": "escalated",
+  "reason": "irreversibelt unknown outcome — afventer menneskelig reconciliation",
+  "requiresHumanReview": true,
+  "at": "2025-09-02T00:05:00Z"
+}

@@ -1,0 +1,21 @@
+{
+  "verb": "subject.locate",
+  "module": "openproject-adapter",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-24T12:51:03.364Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 43
+  },
+  "artifact": {
+    "uri": "s3://evidence/openproject-adapter/subject.locate.json",
+    "sha256": "0e43ce892fe4910a2d0570d5fc70e10089e6dbf94a210981c620028503b3b5f8"
+  }
+}

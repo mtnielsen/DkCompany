@@ -1,0 +1,233 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "AcceptanceScenarioSet",
+  "metadata": {
+    "name": "platform-acceptance-scenarios",
+    "version": "1.0.0",
+    "description": "Kørebare brugerrejser for installation, konfiguration, tilføj/fjern, opgradering, provider-skift, eskalation, recovery og exit på de understøttede profiler og platforme. Trinene udføres deterministisk mod den faktiske installer-, livscyklus-, provider- og migrationstak; en rigtig VPS/lokal/HA-installation er særskilt NOT RUN.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+    },
+    "labels": { "wave": "5" }
+  },
+  "scenarios": [
+    {
+      "id": "install-clean-small-vps-local",
+      "title": "Ren installation på lokal server (small-vps)",
+      "journey": "install",
+      "profileRef": "small-vps",
+      "platformRef": "linux-amd64-node22",
+      "target": "local-server",
+      "selection": [],
+      "steps": [
+        { "id": "preflight", "action": "preflight", "expected": "ok" },
+        { "id": "plan", "action": "plan", "expected": "ok" },
+        { "id": "install", "action": "install", "expected": "ok", "humanApproval": true },
+        { "id": "verify", "action": "verify", "expected": "ok" }
+      ],
+      "evidenceLevel": "fixture",
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner", "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" } }
+    },
+    {
+      "id": "install-clean-small-vps-vps",
+      "title": "Ren installation på VPS (small-vps, arm64)",
+      "journey": "install",
+      "profileRef": "small-vps",
+      "platformRef": "linux-arm64-node22",
+      "target": "vps",
+      "selection": [],
+      "steps": [
+        { "id": "preflight", "action": "preflight", "expected": "ok" },
+        { "id": "plan", "action": "plan", "expected": "ok" },
+        { "id": "install", "action": "install", "expected": "ok", "humanApproval": true },
+        { "id": "verify", "action": "verify", "expected": "ok" }
+      ],
+      "evidenceLevel": "fixture",
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner", "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" } }
+    },
+    {
+      "id": "install-interrupted-resumed",
+      "title": "Afbrudt installation genoptages idempotent",
+      "journey": "install",
+      "profileRef": "small-vps",
+      "platformRef": "linux-amd64-node22",
+      "target": "local-server",
+      "selection": [],
+      "steps": [
+        { "id": "plan", "action": "plan", "expected": "ok" },
+        { "id": "install", "action": "install", "expected": "resumable", "humanApproval": true },
+        { "id": "resume", "action": "resume", "expected": "ok", "humanApproval": true },
+        { "id": "verify", "action": "verify", "expected": "ok" }
+      ],
+      "evidenceLevel": "fixture",
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner", "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" } }
+    },
+    {
+      "id": "expand-add-hr",
+      "title": "Udvidelse: tilføj HR-applikationen",
+      "journey": "add-remove",
+      "profileRef": "small-vps",
+      "platformRef": "linux-amd64-node22",
+      "target": "local-server",
+      "selection": ["hr"],
+      "steps": [
+        { "id": "preflight", "action": "preflight", "expected": "ok" },
+        { "id": "plan", "action": "plan", "expected": "ok" },
+        { "id": "add", "action": "add", "expected": "ok", "humanApproval": true },
+        { "id": "verify", "action": "verify", "expected": "ok" }
+      ],
+      "evidenceLevel": "fixture",
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner", "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" } }
+    },
+    {
+      "id": "configure-safe-defaults",
+      "title": "Konfiguration anvender den ene ønskede tilstand med sikre standarder",
+      "journey": "configure",
+      "profileRef": "small-vps",
+      "platformRef": "linux-amd64-node22",
+      "target": "local-server",
+      "selection": [],
+      "steps": [
+        { "id": "plan", "action": "plan", "expected": "ok" },
+        { "id": "configure", "action": "configure", "expected": "ok", "humanApproval": true },
+        { "id": "verify", "action": "verify", "expected": "ok" }
+      ],
+      "evidenceLevel": "fixture",
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner", "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" } }
+    },
+    {
+      "id": "remove-app-preserve-data",
+      "title": "Fjern en applikation, men bevar data og recoverymetadata",
+      "journey": "add-remove",
+      "profileRef": "small-vps",
+      "platformRef": "linux-amd64-node22",
+      "target": "local-server",
+      "selection": ["hr"],
+      "steps": [
+        { "id": "remove", "action": "remove", "expected": "ok", "humanApproval": true },
+        { "id": "verify", "action": "verify", "expected": "ok" }
+      ],
+      "evidenceLevel": "fixture",
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner", "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" } }
+    },
+    {
+      "id": "upgrade-release",
+      "title": "Opgradering mellem signerede releases",
+      "journey": "upgrade",
+      "profileRef": "small-vps",
+      "platformRef": "linux-amd64-node22",
+      "target": "vps",
+      "selection": [],
+      "steps": [
+        { "id": "plan", "action": "plan", "expected": "ok" },
+        { "id": "upgrade", "action": "upgrade", "expected": "ok", "humanApproval": true },
+        { "id": "verify", "action": "verify", "expected": "ok" }
+      ],
+      "evidenceLevel": "fixture",
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner", "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" } }
+    },
+    {
+      "id": "recover-interrupted-upgrade",
+      "title": "Afbrudt opgradering rulles tilbage fra snapshot",
+      "journey": "recovery",
+      "profileRef": "small-vps",
+      "platformRef": "linux-amd64-node22",
+      "target": "vps",
+      "selection": [],
+      "steps": [
+        { "id": "upgrade", "action": "upgrade", "expected": "resumable", "humanApproval": true },
+        { "id": "recover", "action": "recover", "expected": "rolled-back", "humanApproval": true },
+        { "id": "verify", "action": "verify", "expected": "ok" }
+      ],
+      "evidenceLevel": "fixture",
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner", "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" } }
+    },
+    {
+      "id": "provider-switch-database",
+      "title": "Provider-skift af database efter capability-preflight",
+      "journey": "provider-switch",
+      "profileRef": "small-vps",
+      "platformRef": "linux-amd64-node22",
+      "target": "vps",
+      "selection": [],
+      "steps": [
+        { "id": "provider-switch", "action": "provider-switch", "expected": "ok", "humanApproval": true },
+        { "id": "verify", "action": "verify", "expected": "ok" }
+      ],
+      "evidenceLevel": "fixture",
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner", "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" } }
+    },
+    {
+      "id": "escalation-approval",
+      "title": "Eskalering: muterende trin afvises uden menneskelig godkendelse og gennemføres bagefter",
+      "journey": "escalation",
+      "profileRef": "small-vps",
+      "platformRef": "linux-amd64-node22",
+      "target": "vps",
+      "selection": [],
+      "steps": [
+        { "id": "escalate", "action": "escalate", "expected": "approval-required" },
+        { "id": "install", "action": "install", "expected": "ok", "humanApproval": true },
+        { "id": "verify", "action": "verify", "expected": "ok" }
+      ],
+      "evidenceLevel": "fixture",
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner", "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" } }
+    },
+    {
+      "id": "exit-export",
+      "title": "Exit: maskinlæsbar eksport kan læses uden platformen",
+      "journey": "exit",
+      "profileRef": "small-vps",
+      "platformRef": "linux-amd64-node22",
+      "target": "vps",
+      "selection": [],
+      "steps": [
+        { "id": "export", "action": "export", "expected": "ok", "humanApproval": true },
+        { "id": "verify", "action": "verify", "expected": "ok" }
+      ],
+      "evidenceLevel": "fixture",
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner", "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" } }
+    },
+    {
+      "id": "install-ha-cluster",
+      "title": "Installation af HA-profil (kræver HA-kapabiliteter)",
+      "journey": "install",
+      "profileRef": "ha-cluster",
+      "platformRef": "linux-amd64-node22",
+      "target": "ha-cluster",
+      "selection": [],
+      "ha": true,
+      "steps": [
+        { "id": "preflight", "action": "preflight", "expected": "ok" },
+        { "id": "plan", "action": "plan", "expected": "ok" },
+        { "id": "install", "action": "install", "expected": "ok", "humanApproval": true },
+        { "id": "verify", "action": "verify", "expected": "ok" }
+      ],
+      "evidenceLevel": "fixture",
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner", "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" } }
+    },
+    {
+      "id": "install-enterprise-immutable-host-selfhealing",
+      "title": "Enterprise med host management, immutable og self-healing aktiveret",
+      "journey": "install",
+      "profileRef": "enterprise-dedicated",
+      "platformRef": "linux-amd64-node22",
+      "target": "enterprise-dedicated",
+      "selection": [],
+      "hostManagement": true,
+      "immutable": true,
+      "selfHealing": true,
+      "steps": [
+        { "id": "preflight", "action": "preflight", "expected": "ok" },
+        { "id": "plan", "action": "plan", "expected": "ok" },
+        { "id": "install", "action": "install", "expected": "ok", "humanApproval": true },
+        { "id": "verify", "action": "verify", "expected": "ok" }
+      ],
+      "evidenceLevel": "fixture",
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner", "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" } }
+    }
+  ]
+}

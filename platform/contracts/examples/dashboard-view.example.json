@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "1.0",
+  "kind": "DashboardView",
+  "view": "operations",
+  "generatedAt": "2025-09-01T10:00:00.000Z",
+  "scope": {
+    "tenantId": "acme",
+    "environment": "staging",
+    "service": null
+  },
+  "lastObservedAt": "2025-09-01T09:59:30.000Z",
+  "windowStart": "2025-09-01T09:00:00.000Z",
+  "windowEnd": "2025-09-01T10:00:00.000Z",
+  "series": [
+    {
+      "metric": "http_requests_total",
+      "unit": "1",
+      "points": [
+        {
+          "at": "2025-09-01T09:59:00.000Z",
+          "value": 1200
+        }
+      ]
+    },
+    {
+      "metric": "http_errors_total",
+      "unit": "1",
+      "points": [
+        {
+          "at": "2025-09-01T09:59:30.000Z",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "metric": "http_request_duration_p95_seconds",
+      "unit": "s",
+      "points": [
+        {
+          "at": "2025-09-01T09:59:30.000Z",
+          "value": 0.42
+        }
+      ]
+    }
+  ],
+  "items": [],
+  "aggregates": {
+    "availability": 0.995,
+    "latencyP95Seconds": 0.42,
+    "errorRate": 0.005,
+    "capacityRatio": null,
+    "requests": 1200,
+    "errors": 6
+  },
+  "cardinality": {
+    "series": 3,
+    "dropped": 0
+  },
+  "redactions": [],
+  "partial": false,
+  "notes": [],
+  "status": "partial"
+}

@@ -1,0 +1,20 @@
+{
+  "specversion": "1.0",
+  "id": "049befd5-89b6-4f86-84af-8095592bfeb3",
+  "source": "urn:platform:module:nextcloud-adapter",
+  "type": "dk.platform.nextcloud-adapter.subject-locate.completed",
+  "time": "2026-09-24T10:59:05.758Z",
+  "datacontenttype": "application/json",
+  "tenantid": "acme",
+  "traceid": "2fc181f1c92c261ce93d27d5d61ae9bd",
+  "spanid": "46ce7692cd14fc42",
+  "principal": {
+    "kind": "agent",
+    "id": "spiffe://platform.example.org/agents/nextcloud-adapter"
+  },
+  "dataclassification": "personal",
+  "data": {
+    "verb": "subject.locate",
+    "decision": "allow"
+  }
+}

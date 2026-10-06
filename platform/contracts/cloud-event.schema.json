@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/cloud-event.schema.json",
+  "title": "Platform CloudEvent",
+  "description": "CloudEvents 1.0-envelope med platformens obligatoriske extensions. Samme envelope bærer både menneske- og agenthandlinger; forskellen ligger i principal.kind. Attributnavne følger CloudEvents-reglen om lowercase alfanumerisk, derfor 'tenantid'/'traceid' som wire-form af tenant_id/trace_id.",
+  "type": "object",
+  "required": ["specversion", "id", "source", "type", "time", "tenantid", "traceid", "principal"],
+  "properties": {
+    "specversion": { "const": "1.0" },
+    "id": { "type": "string", "minLength": 1 },
+    "source": { "type": "string", "format": "uri-reference", "minLength": 1 },
+    "type": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*(\\.[a-z0-9][a-z0-9-]*)+$",
+      "description": "Omvendt domæne, fx 'dk.platform.ops.backup.completed'."
+    },
+    "time": { "type": "string", "format": "date-time" },
+    "datacontenttype": { "const": "application/json" },
+    "dataschema": { "type": "string", "format": "uri" },
+    "subject": { "type": "string" },
+    "tenantid": { "type": "string", "minLength": 1 },
+    "traceid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$",
+      "description": "W3C trace-id (32 hex). Binder hændelsen til trace og audit-log."
+    },
+    "spanid": { "type": "string", "pattern": "^[0-9a-f]{16}$" },
+    "principal": {
+      "type": "object",
+      "description": "Hvem/hvad der udførte handlingen. Gør menneske- og agenthandlinger sammenlignelige i samme audit-log.",
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": { "enum": ["human", "agent", "service"] },
+        "id": { "type": "string", "minLength": 1 },
+        "spiffeId": { "type": "string", "pattern": "^spiffe://" },
+        "oidcSub": { "type": "string" },
+        "onBehalfOf": {
+          "type": "object",
+          "description": "Ved agenthandlinger: det menneske eller den gruppe der bærer ansvaret.",
+          "required": ["id"],
+          "properties": {
+            "kind": { "enum": ["human", "group", "tenant"] },
+            "id": { "type": "string" }
+          }
+        },
+        "agentManifestRef": { "type": "string" },
+        "autonomyClass": { "enum": ["A0", "A1", "A2", "A3"] }
+      }
+    },
+    "dataclassification": { "enum": ["none", "operational", "pseudonymised", "personal", "special-category"] },
+    "data": { "type": "object" }
+  },
+  "additionalProperties": true
+}

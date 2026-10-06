@@ -1,0 +1,126 @@
+{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "observability-grafana",
+    "namespace": "platform",
+    "labels": {
+      "app.kubernetes.io/name": "observability-grafana",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "observability",
+      "platform.example.org/environment": "dev"
+    }
+  },
+  "spec": {
+    "replicas": 1,
+    "selector": {
+      "matchLabels": {
+        "app.kubernetes.io/name": "observability-grafana"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app.kubernetes.io/name": "observability-grafana",
+          "platform.example.org/module": "observability",
+          "platform.example.org/environment": "dev"
+        }
+      },
+      "spec": {
+        "serviceAccountName": "observability-grafana",
+        "securityContext": {
+          "runAsNonRoot": true,
+          "seccompProfile": {
+            "type": "RuntimeDefault"
+          }
+        },
+        "containers": [
+          {
+            "name": "observability-grafana",
+            "image": "docker.io/grafana/grafana@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "args": [],
+            "ports": [
+              {
+                "containerPort": 3000,
+                "name": "http"
+              }
+            ],
+            "securityContext": {
+              "readOnlyRootFilesystem": true,
+              "allowPrivilegeEscalation": false,
+              "capabilities": {
+                "drop": [
+                  "ALL"
+                ]
+              }
+            },
+            "volumeMounts": [
+              {
+                "name": "provisioning",
+                "mountPath": "/etc/grafana/provisioning",
+                "readOnly": true
+              },
+              {
+                "name": "dashboards",
+                "mountPath": "/etc/grafana/dashboards",
+                "readOnly": true
+              },
+              {
+                "name": "data",
+                "mountPath": "/var/lib/grafana"
+              },
+              {
+                "name": "tmp",
+                "mountPath": "/tmp"
+              }
+            ],
+            "readinessProbe": {
+              "httpGet": {
+                "path": "/api/health",
+                "port": 3000
+              }
+            },
+            "livenessProbe": {
+              "httpGet": {
+                "path": "/api/health",
+                "port": 3000
+              }
+            },
+            "resources": {
+              "requests": {
+                "cpu": "50m",
+                "memory": "128Mi"
+              },
+              "limits": {
+                "cpu": "500m",
+                "memory": "512Mi"
+              }
+            }
+          }
+        ],
+        "volumes": [
+          {
+            "name": "provisioning",
+            "configMap": {
+              "name": "observability-grafana-provisioning"
+            }
+          },
+          {
+            "name": "dashboards",
+            "configMap": {
+              "name": "observability-grafana-dashboards"
+            }
+          },
+          {
+            "name": "data",
+            "emptyDir": {}
+          },
+          {
+            "name": "tmp",
+            "emptyDir": {}
+          }
+        ]
+      }
+    }
+  }
+}

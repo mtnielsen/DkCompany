@@ -1,0 +1,21 @@
+{
+  "verb": "retention.policy",
+  "module": "audit-service",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-16T21:11:53.925Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 1
+  },
+  "artifact": {
+    "uri": "s3://evidence/audit-service/retention.policy.json",
+    "sha256": "81cab4c30debaedfdc6c235049af016277d40801a3d7931b41deac30c52a4289"
+  }
+}

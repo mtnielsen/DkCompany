@@ -1,0 +1,234 @@
+{
+  "schema": "dkc-overlay-stack/v1",
+  "description": "Canonical materialization order for the historical DKC cumulative overlays. Each predecessor edge mirrors the single non-comment apply.sh invocation in that overlay package. The order is dependency order, never numeric order; dkc-036 is the historical tip.",
+  "tip": "dkc-036",
+  "base": {
+    "path": "00-core"
+  },
+  "overlaysRoot": "01-step1/output",
+  "deliverableName": "deliverable",
+  "verifyApplyScripts": true,
+  "git": {
+    "baseCommit": "83ad91a963d8055f77c29fb4361455689df95acb",
+    "inputsCommit": "ca90364327fae3679df9d6f8ca36640e35d4e7e6",
+    "reviewedBaseline": "5e3706b5e7ad569c0ec68c4b63ceeaad15c237a3"
+  },
+  "exclude": {
+    "names": [
+      ".git",
+      "node_modules",
+      ".conformance-out",
+      "dist",
+      "coverage",
+      ".DS_Store"
+    ],
+    "suffixes": [
+      ".log"
+    ],
+    "paths": [
+      "policy/keys/signing-key.json"
+    ]
+  },
+  "overlays": {
+    "dkc-001": {
+      "predecessor": null
+    },
+    "dkc-002": {
+      "predecessor": "dkc-001",
+      "note": "Historical special case: dkc-002/apply.sh tries $ROOT/apply.sh first and falls back to $ROOT/dkc-001/apply.sh. The canonical predecessor is dkc-001."
+    },
+    "dkc-003": {
+      "predecessor": "dkc-002"
+    },
+    "dkc-004": {
+      "predecessor": "dkc-003"
+    },
+    "dkc-005": {
+      "predecessor": "dkc-004"
+    },
+    "dkc-006": {
+      "predecessor": "dkc-005"
+    },
+    "dkc-007": {
+      "predecessor": "dkc-006"
+    },
+    "dkc-008": {
+      "predecessor": "dkc-007"
+    },
+    "dkc-009": {
+      "predecessor": "dkc-055"
+    },
+    "dkc-010": {
+      "predecessor": "dkc-009"
+    },
+    "dkc-011": {
+      "predecessor": "dkc-010"
+    },
+    "dkc-012": {
+      "predecessor": "dkc-013"
+    },
+    "dkc-013": {
+      "predecessor": "dkc-011"
+    },
+    "dkc-014": {
+      "predecessor": "dkc-056"
+    },
+    "dkc-015": {
+      "predecessor": "dkc-014"
+    },
+    "dkc-016": {
+      "predecessor": "dkc-020"
+    },
+    "dkc-017": {
+      "predecessor": "dkc-057"
+    },
+    "dkc-018": {
+      "predecessor": "dkc-015"
+    },
+    "dkc-019": {
+      "predecessor": "dkc-063"
+    },
+    "dkc-020": {
+      "predecessor": "dkc-024"
+    },
+    "dkc-021": {
+      "predecessor": "dkc-048"
+    },
+    "dkc-022": {
+      "predecessor": "dkc-043"
+    },
+    "dkc-023": {
+      "predecessor": "dkc-064"
+    },
+    "dkc-024": {
+      "predecessor": "dkc-023"
+    },
+    "dkc-025": {
+      "predecessor": "dkc-022"
+    },
+    "dkc-026": {
+      "predecessor": "dkc-025"
+    },
+    "dkc-027": {
+      "predecessor": "dkc-058"
+    },
+    "dkc-028": {
+      "predecessor": "dkc-034"
+    },
+    "dkc-029": {
+      "predecessor": "dkc-028"
+    },
+    "dkc-030": {
+      "predecessor": "dkc-029"
+    },
+    "dkc-031": {
+      "predecessor": "dkc-030"
+    },
+    "dkc-032": {
+      "predecessor": "dkc-051"
+    },
+    "dkc-033": {
+      "predecessor": "dkc-065"
+    },
+    "dkc-034": {
+      "predecessor": "dkc-052"
+    },
+    "dkc-035": {
+      "predecessor": "dkc-033"
+    },
+    "dkc-036": {
+      "predecessor": "dkc-035"
+    },
+    "dkc-037": {
+      "predecessor": "dkc-012"
+    },
+    "dkc-038": {
+      "predecessor": "dkc-060"
+    },
+    "dkc-039": {
+      "predecessor": "dkc-040"
+    },
+    "dkc-040": {
+      "predecessor": "dkc-038"
+    },
+    "dkc-041": {
+      "predecessor": "dkc-039"
+    },
+    "dkc-042": {
+      "predecessor": "dkc-049"
+    },
+    "dkc-043": {
+      "predecessor": "dkc-042"
+    },
+    "dkc-044": {
+      "predecessor": "dkc-026"
+    },
+    "dkc-045": {
+      "predecessor": "dkc-044"
+    },
+    "dkc-046": {
+      "predecessor": "dkc-045"
+    },
+    "dkc-047": {
+      "predecessor": "dkc-019"
+    },
+    "dkc-048": {
+      "predecessor": "dkc-041"
+    },
+    "dkc-049": {
+      "predecessor": "dkc-021"
+    },
+    "dkc-050": {
+      "predecessor": "dkc-027"
+    },
+    "dkc-051": {
+      "predecessor": "dkc-050"
+    },
+    "dkc-052": {
+      "predecessor": "dkc-032"
+    },
+    "dkc-053": {
+      "predecessor": "dkc-037"
+    },
+    "dkc-054": {
+      "predecessor": "dkc-046"
+    },
+    "dkc-055": {
+      "predecessor": "dkc-008"
+    },
+    "dkc-056": {
+      "predecessor": "dkc-047"
+    },
+    "dkc-057": {
+      "predecessor": "dkc-016"
+    },
+    "dkc-058": {
+      "predecessor": "dkc-054"
+    },
+    "dkc-059": {
+      "predecessor": "dkc-031"
+    },
+    "dkc-060": {
+      "predecessor": "dkc-066"
+    },
+    "dkc-061": {
+      "predecessor": "dkc-059"
+    },
+    "dkc-062": {
+      "predecessor": "dkc-061"
+    },
+    "dkc-063": {
+      "predecessor": "dkc-053"
+    },
+    "dkc-064": {
+      "predecessor": "dkc-018"
+    },
+    "dkc-065": {
+      "predecessor": "dkc-062"
+    },
+    "dkc-066": {
+      "predecessor": "dkc-017"
+    }
+  },
+  "decisionRecord": "02-stabilization/adr/0001-platform-source-tree.md"
+}

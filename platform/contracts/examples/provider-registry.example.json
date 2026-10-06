@@ -1,0 +1,31 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ProviderRegistry",
+  "metadata": {
+    "name": "example-provider-registry",
+    "version": "1.0.0",
+    "description": "Eksempel på et providerregister med version og håndhævelsesniveau pr. capability.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner"
+    },
+    "labels": { "tier": "example" }
+  },
+  "providers": [
+    {
+      "id": "example-iam",
+      "class": "iam",
+      "product": "example-idp",
+      "vendor": "Example",
+      "version": "1.0.0",
+      "edition": "standard",
+      "connection": { "scheme": "https", "endpoint": "https://id.example.org" },
+      "status": "supported",
+      "securitySemantics": { "sso": "oidc", "mfaEnforced": true },
+      "capabilities": {
+        "iam.oidc": { "version": "1.0.0", "level": "enforced" }
+      }
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/dashboard-view.schema.json",
+  "title": "Dashboard View",
+  "description": "En tenant-scopet, autoriseret samling af drifts- og assurance-data til et dashboard. En view har altid en friskhedsstatus: `pass` kræver friske data, og manglende signaler giver `unknown` med `lastObservedAt` — aldrig en stiltiende grøn. `partial` markerer, at kun en del af kilderne kunne læses eller var autoriserede.",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "view", "generatedAt", "scope", "status", "lastObservedAt", "series", "items", "aggregates", "cardinality", "redactions"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+$" },
+    "kind": { "const": "DashboardView" },
+    "view": { "enum": ["operations", "vulnerabilities", "test-release", "recovery", "ai"] },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "scope": {
+      "type": "object",
+      "required": ["tenantId"],
+      "additionalProperties": false,
+      "properties": {
+        "tenantId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+        "environment": { "type": ["string", "null"] },
+        "service": { "type": ["string", "null"] }
+      }
+    },
+    "status": { "enum": ["pass", "partial", "fail", "stale", "missing", "unknown"] },
+    "lastObservedAt": { "type": ["string", "null"] },
+    "windowStart": { "type": "string", "format": "date-time" },
+    "windowEnd": { "type": "string", "format": "date-time" },
+    "series": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["metric", "points"],
+        "additionalProperties": false,
+        "properties": {
+          "metric": { "type": "string" },
+          "unit": { "type": "string" },
+          "points": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["at", "value"],
+              "additionalProperties": false,
+              "properties": {
+                "at": { "type": "string", "format": "date-time" },
+                "value": { "type": "number" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "items": { "type": "array", "items": { "type": "object" } },
+    "aggregates": { "type": "object" },
+    "cardinality": {
+      "type": "object",
+      "required": ["series", "dropped"],
+      "additionalProperties": false,
+      "properties": {
+        "series": { "type": "integer", "minimum": 0 },
+        "dropped": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "redactions": { "type": "array", "items": { "type": "string" } },
+    "partial": { "type": "boolean" },
+    "notes": { "type": "array", "items": { "type": "string" } }
+  }
+}

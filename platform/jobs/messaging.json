@@ -1,0 +1,77 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "MessagingTopology",
+  "metadata": {
+    "name": "messaging-topology-staging",
+    "version": "1.0.0",
+    "description": "Konkret beskedtopologi for den holdbare udveksling: en holdbar broker med quorum og publisher confirms, en transaktionel outbox, en deduplikerende inbox med logisk rækkefølge pr. ressource, singletonjobs med monotont fencing-token, synlig backpressure og tenantafgrænset poison-isolation.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+    },
+    "labels": { "segment": "service" }
+  },
+  "deliveryGuarantee": "at-least-once",
+  "broker": {
+    "technology": "nats-jetstream",
+    "version": "2.10",
+    "protocol": "nats",
+    "persistence": "file-based-raft",
+    "replicas": 3,
+    "failureDomains": 3,
+    "quorum": 2,
+    "publisherConfirms": true,
+    "consumerAcks": true,
+    "durable": true,
+    "unsafeWritesOnQuorumLoss": false,
+    "retention": { "mode": "limits", "maxAgeHours": 168, "maxBytes": 10737418240 },
+    "deadLetterSubject": "dlq.{{tenant}}",
+    "tenantIsolation": "per-tenant-stream"
+  },
+  "outbox": {
+    "table": "event_outbox",
+    "transactionalWith": ["jobs", "approval_requests", "audit_events"],
+    "confirmMode": "broker-ack",
+    "maxAttempts": 8,
+    "baseDelayMs": 500,
+    "maxDelayMs": 60000,
+    "batchSize": 50,
+    "leaseMs": 30000
+  },
+  "inbox": {
+    "table": "event_inbox",
+    "dedup": "unique-tenant-event",
+    "ordering": "per-resource",
+    "gapPolicy": "defer",
+    "stalePolicy": "skip",
+    "maxAttempts": 8,
+    "windowDays": 30
+  },
+  "ordering": {
+    "mode": "per-resource",
+    "resourceTypes": ["job", "approval-request", "credential-issuance", "backup-manifest"]
+  },
+  "singletons": [
+    { "name": "backup-scheduler", "leaseMs": 60000, "fencing": "monotonic-token", "maxClockSkewMs": 1000 },
+    { "name": "audit-checkpoint", "leaseMs": 60000, "fencing": "monotonic-token", "maxClockSkewMs": 1000 }
+  ],
+  "backpressure": {
+    "maxBacklog": 1000,
+    "maxOldestAgeSeconds": 300,
+    "strategy": "pause-publishers",
+    "visible": true
+  },
+  "poison": {
+    "isolation": "per-tenant",
+    "maxAttempts": 8,
+    "deadLetterTable": "event_dead_letters",
+    "quarantine": true
+  },
+  "tenantIsolation": {
+    "eventIdBoundToTenant": true,
+    "crossTenantConsume": false,
+    "streamPerTenant": true
+  }
+}

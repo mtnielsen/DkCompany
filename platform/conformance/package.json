@@ -1,0 +1,18 @@
+{
+  "name": "@platform/conformance",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Kørbar konformanssuite for platformens kontrakter. Skrevet samtidig med specen, ikke efter.",
+  "bin": {
+    "conform": "./src/cli.mjs"
+  },
+  "scripts": {
+    "test": "node --test",
+    "conform": "node src/cli.mjs"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1"
+  }
+}

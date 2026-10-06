@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/acceptance-result.schema.json",
+  "title": "Acceptance Result",
+  "description": "Maskinlæsbart resultat af den profilbevidste acceptgate (DKC-062). Resultatet binder commit, artefakt-digest, profil, mål og producent, og skelner skarpt mellem manglende, forældet, forkert-artefakt, ikke-godkendt og ikke-anvendelig evidens. 'accepted' kræver at hver aktiv gate har gyldigt testbevis OG en særskilt registreret menneskelig ejeraccept; en genereret PASS er aldrig en menneskelig accept.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "generatedAt", "targetCommit", "artifactDigest", "producer", "profile", "target", "decision", "gates", "roles", "ownerAcceptance", "environment", "reasons"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "AcceptanceResult" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "targetCommit": { "type": "string", "minLength": 7 },
+    "artifactDigest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "producer": {
+      "type": "object",
+      "required": ["type", "name", "subject"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "enum": ["implementer", "independent-verifier"] },
+        "name": { "type": "string", "minLength": 2 },
+        "subject": { "type": "string", "minLength": 3 }
+      }
+    },
+    "profile": { "type": "string", "minLength": 2 },
+    "target": {
+      "type": "object",
+      "required": ["id", "profileRef", "profileType", "platformRef", "hostManagement", "immutable", "selfHealing"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 2 },
+        "profileRef": { "type": "string", "minLength": 2 },
+        "profileType": { "type": "string", "minLength": 2 },
+        "platformRef": { "type": "string", "minLength": 2 },
+        "hostManagement": { "type": "boolean" },
+        "immutable": { "type": "boolean" },
+        "selfHealing": { "type": "boolean" },
+        "acceptedDowntimeMinutes": { "type": "integer", "minimum": 0 },
+        "recoveryProfile": { "type": "string" }
+      }
+    },
+    "decision": { "enum": ["accepted", "pending-owner-acceptance", "blocked"] },
+    "statuses": {
+      "type": "object",
+      "required": ["total", "passed", "failed", "notApplicable", "missing", "stale", "wrongArtifact", "unapproved", "notRun"],
+      "additionalProperties": false,
+      "properties": {
+        "total": { "type": "integer", "minimum": 0 },
+        "passed": { "type": "integer", "minimum": 0 },
+        "failed": { "type": "integer", "minimum": 0 },
+        "notApplicable": { "type": "integer", "minimum": 0 },
+        "missing": { "type": "integer", "minimum": 0 },
+        "stale": { "type": "integer", "minimum": 0 },
+        "wrongArtifact": { "type": "integer", "minimum": 0 },
+        "unapproved": { "type": "integer", "minimum": 0 },
+        "notRun": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "gates": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/gate" }
+    },
+    "roles": {
+      "type": "object",
+      "required": ["separated", "violations"],
+      "additionalProperties": false,
+      "properties": {
+        "separated": { "type": "boolean" },
+        "violations": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "ownerAcceptance": {
+      "type": "object",
+      "required": ["required", "registryRef", "acceptedGates", "pendingGates"],
+      "additionalProperties": false,
+      "properties": {
+        "required": { "const": true },
+        "registryRef": { "type": "string", "minLength": 3 },
+        "acceptedGates": { "type": "array", "items": { "type": "string" } },
+        "pendingGates": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "environment": { "type": "object" },
+    "reasons": { "type": "array", "items": { "type": "string" } }
+  },
+  "$defs": {
+    "gate": {
+      "type": "object",
+      "required": ["id", "title", "kind", "applicable", "mandatory", "status", "evidenceStatus", "ownerAcceptanceStatus", "checks", "requirementRefs", "owner", "reasons"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+        "title": { "type": "string", "minLength": 3 },
+        "kind": { "enum": ["common", "profile"] },
+        "applicable": { "type": "boolean" },
+        "mandatory": { "type": "boolean" },
+        "status": {
+          "enum": ["passed", "failed", "not-applicable", "missing", "stale", "wrong-artifact", "unapproved", "not-run"]
+        },
+        "evidenceStatus": {
+          "enum": ["passed", "failed", "missing", "stale", "wrong-artifact", "not-run"]
+        },
+        "ownerAcceptanceStatus": { "enum": ["accepted", "pending", "not-applicable"] },
+        "checks": { "type": "array", "items": { "type": "string" } },
+        "requirementRefs": { "type": "array", "items": { "type": "string" } },
+        "owner": { "type": "object" },
+        "reasons": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

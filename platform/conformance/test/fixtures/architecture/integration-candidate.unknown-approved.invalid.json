@@ -1,0 +1,125 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "IntegrationCandidate",
+  "metadata": {
+    "name": "bad-unknown-approved",
+    "version": "1.0.0",
+    "description": "Ugyldig: en nødvendig egenskab er unknown, men kandidaten er godkendt.",
+    "accountableHuman": {
+      "subject": "oidc|hans.hansen",
+      "name": "Hans Hansen",
+      "role": "Solution Architect"
+    },
+    "labels": {
+      "application": "APP-039"
+    }
+  },
+  "applicationId": "APP-039",
+  "name": "OpenProject",
+  "upstream": {
+    "vendor": "OpenProject GmbH",
+    "projectUrl": "https://www.openproject.org/",
+    "documentationUrl": "https://www.openproject.org/docs/",
+    "sourceUrl": "https://github.com/opf/openproject"
+  },
+  "exactVersion": "15.0.0",
+  "edition": {
+    "name": "Community",
+    "tier": "community",
+    "notes": "Ikke Enterprise-tilføjelser."
+  },
+  "license": {
+    "spdx": "GPL-3.0-only",
+    "type": "open-source",
+    "paidFeaturesRequired": false,
+    "redistributionAllowed": true,
+    "notes": "Community-udgaven er GPL. Visse funktioner er kun i Enterprise-abonnementet."
+  },
+  "hosting": {
+    "mode": "customer-self-hosted",
+    "commercialRedistribution": true,
+    "commercialHostingAllowed": true,
+    "notes": "Må hostes for kunder; Enterprise-tilføjelser har egne vilkår."
+  },
+  "sso": {
+    "capability": "unknown",
+    "supported": false,
+    "protocols": []
+  },
+  "scim": {
+    "capability": "none",
+    "supported": false,
+    "provisioningAlternative": "Brugere provisioneres fra centralt IAM via SCIM til platformen; OpenProject-modtagelsen bygges i adapteren."
+  },
+  "api": {
+    "capability": "full",
+    "documented": true,
+    "protocols": [
+      "rest",
+      "webhook"
+    ],
+    "authentication": [
+      "oauth2",
+      "api-key"
+    ]
+  },
+  "isolation": {
+    "capability": "partial",
+    "tenantModel": "shared-control-plane",
+    "databasePerTenant": true,
+    "notes": "Én database pr. kunde via særskilt app-instans; delte tabeller undgås."
+  },
+  "export": {
+    "capability": "full",
+    "formats": [
+      "csv",
+      "xlsx",
+      "api"
+    ],
+    "aclPreserved": false,
+    "apiAccessible": true,
+    "notes": "Rettigheder eksporteres ikke maskinelt; de genskabes fra IAM."
+  },
+  "backup": {
+    "capability": "full",
+    "supported": true,
+    "pointInTime": true,
+    "restoreTested": true
+  },
+  "price": {
+    "model": "free",
+    "currency": "EUR",
+    "recurring": false,
+    "listPriceMinor": 0,
+    "priceBasis": "Community-udgaven",
+    "notes": "Softwarepris 0; drift, backup og support er stadig en udgift."
+  },
+  "maintenance": {
+    "vendorSupport": "community",
+    "releaseCadence": "Månedlige patch- og kvartalsvise feature-udgivelser.",
+    "securityResponse": "Offentlig sikkerhedsproces og advisories.",
+    "upgradePath": "Trinvis opgradering via dokumenterede migrations."
+  },
+  "freeVsPaid": {
+    "documented": true,
+    "freeTierLimitations": [
+      "Avanceret planlægning, budget og visse integrationer kræver Enterprise-abonnement."
+    ],
+    "requiredPaidFeatures": [],
+    "sourceUrl": "https://www.openproject.org/pricing/"
+  },
+  "verification": {
+    "status": "approved",
+    "verifiedBy": {
+      "subject": "oidc|hans.hansen",
+      "name": "Hans Hansen",
+      "role": "Solution Architect"
+    },
+    "verifiedAt": "2026-09-22",
+    "evidence": [
+      "https://www.openproject.org/pricing/",
+      "https://www.openproject.org/docs/"
+    ],
+    "notes": "Kandidaten er godkendt på den eksakte Community-version. Enterprise-funktioner er ikke godkendt."
+  }
+}

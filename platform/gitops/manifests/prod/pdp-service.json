@@ -1,0 +1,26 @@
+{
+  "apiVersion": "v1",
+  "kind": "Service",
+  "metadata": {
+    "name": "pdp",
+    "namespace": "platform-prod",
+    "labels": {
+      "app.kubernetes.io/name": "pdp",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "pdp",
+      "platform.example.org/environment": "prod"
+    }
+  },
+  "spec": {
+    "selector": {
+      "app.kubernetes.io/name": "pdp"
+    },
+    "ports": [
+      {
+        "name": "http",
+        "port": 443,
+        "targetPort": 8181
+      }
+    ]
+  }
+}

@@ -1,0 +1,192 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "MigrationExport",
+  "tenantId": "acme",
+  "appId": "files",
+  "format": "migration-export-bundle",
+  "version": "1",
+  "generatedAt": "2026-03-01T00:00:00Z",
+  "recordCount": 2,
+  "checksum": "46b068d8c791b9220630f63672300d02283d4048218fc850c694a9eb8ea92010",
+  "readableWithoutPlatform": true,
+  "includes": {
+    "ownership": true,
+    "timestamps": true,
+    "comments": true,
+    "attachments": true,
+    "acl": true,
+    "links": true
+  },
+  "files": [
+    {
+      "path": "records.jsonl",
+      "mediaType": "application/x-ndjson",
+      "records": 2,
+      "sha256": "dc40f114e99a667ee8c699f739c57628b451dbb8afd18b59cb8e7349474aca3a"
+    },
+    {
+      "path": "records.csv",
+      "mediaType": "text/csv",
+      "records": 2,
+      "sha256": "e0e6c047dfe1a5e2970f2eba588df294ac7954fd81869c8ec154687caa6ec37e"
+    },
+    {
+      "path": "read-export.mjs",
+      "mediaType": "text/javascript",
+      "records": 0,
+      "sha256": "26f365181f4a57afdfa0c5db1dd23bd100a12fc2b8b3e152fde2071a38e7464a"
+    },
+    {
+      "path": "README.md",
+      "mediaType": "text/markdown",
+      "records": 0,
+      "sha256": "a4e493c89799ec46d41d1ffd4a322828a10e26ebf3bcbd93969d473715411107"
+    }
+  ],
+  "coverage": {
+    "matrix": [
+      {
+        "appId": "files",
+        "tenantId": "acme",
+        "entityType": "File",
+        "facet": "acl",
+        "status": "full",
+        "source": "acl",
+        "target": "acl.readSubjects/readGroups",
+        "note": null
+      },
+      {
+        "appId": "files",
+        "tenantId": "acme",
+        "entityType": "File",
+        "facet": "attachments",
+        "status": "full",
+        "source": "attachments",
+        "target": "attachments",
+        "note": null
+      },
+      {
+        "appId": "files",
+        "tenantId": "acme",
+        "entityType": "File",
+        "facet": "comments",
+        "status": "partial",
+        "source": "comments",
+        "target": null,
+        "note": "Nextcloud-kommentarer overføres uden @-mention-metadata; selve teksten bevares."
+      },
+      {
+        "appId": "files",
+        "tenantId": "acme",
+        "entityType": "File",
+        "facet": "links",
+        "status": "full",
+        "source": "links",
+        "target": "links",
+        "note": null
+      },
+      {
+        "appId": "files",
+        "tenantId": "acme",
+        "entityType": "File",
+        "facet": "ownership",
+        "status": "full",
+        "source": "owner",
+        "target": "owner.subject",
+        "note": null
+      },
+      {
+        "appId": "files",
+        "tenantId": "acme",
+        "entityType": "File",
+        "facet": "timestamps",
+        "status": "full",
+        "source": "createdAt/updatedAt",
+        "target": "createdAt/updatedAt",
+        "note": null
+      },
+      {
+        "appId": "files",
+        "tenantId": "acme",
+        "entityType": "Folder",
+        "facet": "acl",
+        "status": "full",
+        "source": "acl",
+        "target": "acl.readSubjects/readGroups",
+        "note": null
+      },
+      {
+        "appId": "files",
+        "tenantId": "acme",
+        "entityType": "Folder",
+        "facet": "attachments",
+        "status": "full",
+        "source": "attachments",
+        "target": "attachments",
+        "note": null
+      },
+      {
+        "appId": "files",
+        "tenantId": "acme",
+        "entityType": "Folder",
+        "facet": "comments",
+        "status": "unsupported",
+        "source": null,
+        "target": null,
+        "note": "Mapper i Nextcloud har ingen kommentarfunktion; feltet er tomt og vises som tabt funktionalitet før cutover."
+      },
+      {
+        "appId": "files",
+        "tenantId": "acme",
+        "entityType": "Folder",
+        "facet": "links",
+        "status": "full",
+        "source": "links",
+        "target": "links",
+        "note": null
+      },
+      {
+        "appId": "files",
+        "tenantId": "acme",
+        "entityType": "Folder",
+        "facet": "ownership",
+        "status": "full",
+        "source": "owner",
+        "target": "owner.subject",
+        "note": null
+      },
+      {
+        "appId": "files",
+        "tenantId": "acme",
+        "entityType": "Folder",
+        "facet": "timestamps",
+        "status": "full",
+        "source": "createdAt/updatedAt",
+        "target": "createdAt/updatedAt",
+        "note": null
+      }
+    ],
+    "lostFunctionality": [
+      {
+        "appId": "files",
+        "tenantId": "acme",
+        "entityType": "File",
+        "facet": "comments",
+        "status": "partial",
+        "note": "Nextcloud-kommentarer overføres uden @-mention-metadata; selve teksten bevares."
+      },
+      {
+        "appId": "files",
+        "tenantId": "acme",
+        "entityType": "Folder",
+        "facet": "comments",
+        "status": "unsupported",
+        "note": "Mapper i Nextcloud har ingen kommentarfunktion; feltet er tomt og vises som tabt funktionalitet før cutover."
+      }
+    ]
+  },
+  "schema": {
+    "records": "Én JSON-post pr. linje med reference, ejerskab, klassifikation, ACL, kommentarer, bilag, links og timestamps.",
+    "csv": "Flad CSV med de samme felter; lister er JSON-kodede strenge."
+  }
+}

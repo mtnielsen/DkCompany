@@ -1,0 +1,115 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ComponentManifest",
+  "requires": [
+    {
+      "ref": "platform-core",
+      "range": "^1.0.0",
+      "reason": "BI bruger kontrolplanens policy og job-runner til planlagte opdateringer."
+    },
+    {
+      "ref": "identity-broker",
+      "range": "^1.0.0",
+      "reason": "Adgang til dashboards skal gå gennem den fælles identitetsbroker."
+    },
+    {
+      "ref": "analytics-store",
+      "range": "^1.0.0",
+      "reason": "BI regner på det kolonnebaserede analyticslager."
+    }
+  ],
+  "optionalRequires": [],
+  "conflicts": [
+    {
+      "ref": "bi-legacy",
+      "reason": "BI og det forældede BI Classic må ikke installeres samtidigt; de deler modelnavne og datakilder."
+    }
+  ],
+  "dataServices": [
+    {
+      "id": "analytics",
+      "kind": "columnar",
+      "required": true,
+      "reason": "BI-dashboards kræver et analyticslager med hurtige aggregeringer."
+    }
+  ],
+  "migrations": [
+    {
+      "id": "bi-init",
+      "phase": "schema",
+      "description": "Opretter model-, datasæt- og dashboard-tabeller.",
+      "reversible": true
+    }
+  ],
+  "download": [
+    {
+      "artifact": "bi-3.0.0.tar.zst",
+      "sizeMiB": 340,
+      "source": "registry.example.org/apps/bi:3.0.0",
+      "verified": true,
+      "checksum": "sha256:9c4e8f08"
+    }
+  ],
+  "operations": [
+    "backup",
+    "restore",
+    "upgrade",
+    "health",
+    "slo"
+  ],
+  "implementation": {
+    "status": "catalog-only",
+    "notes": "Katalogpost; det implementerende modul er endnu ikke bygget."
+  },
+  "metadata": {
+    "name": "bi",
+    "version": "3.0.0",
+    "description": "Business intelligence med modeller, dashboards og selvbetjening. Valgfri applikation i BI-kategorien.",
+    "accountableHuman": {
+      "subject": "oidc|cecilia.christensen",
+      "name": "Cecilia Christensen",
+      "role": "Service Owner",
+      "substitute": {
+        "subject": "oidc|david.dahl",
+        "name": "David Dahl"
+      }
+    },
+    "labels": {
+      "tier": "app",
+      "category": "bi"
+    }
+  },
+  "componentType": "application",
+  "category": "bi",
+  "securityCore": false,
+  "provides": {
+    "capabilities": [
+      "bi"
+    ],
+    "dataServices": []
+  },
+  "supportProfile": {
+    "tier": "supported",
+    "supportWindow": "18 måneder fra GA",
+    "escalation": "Service Owner"
+  },
+  "platforms": {
+    "os": [
+      "linux"
+    ],
+    "arch": [
+      "x64",
+      "arm64"
+    ],
+    "runtime": [
+      "node>=22 <23",
+      "node>=24 <25"
+    ]
+  },
+  "resources": {
+    "cpuMillicores": 800,
+    "memoryMiB": 2048,
+    "storageGiB": 40,
+    "nodes": 0
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "LifecycleRemovalPlan",
+  "metadata": {
+    "name": "removal-plan-acme-prod-communications",
+    "version": "1.0.0",
+    "createdAt": "2026-03-01T00:00:00Z",
+    "description": "Almindelig afinstallering af 'communications' med reverse-dependency-kontrol og eksplicit datadisposition.",
+    "installationId": "acme-prod"
+  },
+  "component": {
+    "id": "communications",
+    "version": "2.1.0",
+    "componentType": "application"
+  },
+  "mode": "remove-only",
+  "reverseDependencies": [],
+  "blocking": false,
+  "dataDisposition": {
+    "preserve": true,
+    "exportRef": null,
+    "backupRef": null,
+    "recoveryMetadataRef": "lifecycle://recovery/acme-prod/communications",
+    "destructiveApproved": false
+  },
+  "preflight": {
+    "ok": true,
+    "checks": [
+      {
+        "id": "component-known",
+        "title": "Komponenten findes i kataloget",
+        "status": "pass",
+        "detail": "application 2.1.0"
+      },
+      {
+        "id": "reverse-dependency",
+        "title": "Ingen aktive moduler kræver komponenten",
+        "status": "pass",
+        "detail": "0 afhængige, ingen obligatoriske"
+      },
+      {
+        "id": "security-core",
+        "title": "Sikkerhedskernen fjernes ikke i en almindelig afinstallering",
+        "status": "pass",
+        "detail": "ikke sikkerhedskerne"
+      },
+      {
+        "id": "preserve-data",
+        "title": "Almindelig afinstallering bevarer data og recoverymetadata",
+        "status": "pass",
+        "detail": "lifecycle://recovery/acme-prod/communications"
+      }
+    ],
+    "blockingProblems": []
+  },
+  "authorization": {
+    "required": false,
+    "humanSubject": null,
+    "secondHumanSubject": null,
+    "approvalRef": null
+  },
+  "steps": [
+    {
+      "id": "preflight",
+      "order": 1,
+      "kind": "preflight",
+      "description": "Kør read-only reverse-dependency- og sikkerhedskerne-kontrol",
+      "mutating": false,
+      "requiresApproval": false,
+      "dependsOn": [],
+      "state": "pending"
+    },
+    {
+      "id": "reverse-dependency-check",
+      "order": 2,
+      "kind": "reverse-dependency-check",
+      "description": "Bekræft at ingen aktive moduler kræver komponenten",
+      "mutating": false,
+      "requiresApproval": false,
+      "dependsOn": [
+        "preflight"
+      ],
+      "state": "pending"
+    },
+    {
+      "id": "remove",
+      "order": 3,
+      "kind": "remove",
+      "description": "Afinstallér modulet og bevar data og recoverymetadata",
+      "mutating": true,
+      "requiresApproval": true,
+      "dependsOn": [
+        "reverse-dependency-check"
+      ],
+      "state": "pending"
+    },
+    {
+      "id": "verify",
+      "order": 4,
+      "kind": "verify",
+      "description": "Verificér at data og recoverymetadata er bevaret (eller slettet som godkendt)",
+      "mutating": false,
+      "requiresApproval": false,
+      "dependsOn": [
+        "remove"
+      ],
+      "state": "pending"
+    }
+  ],
+  "restrictions": {
+    "separateFromDataDeletion": true,
+    "requiresReverseDependencyCheck": true,
+    "requiresExportOrBackup": true,
+    "explicitDestructiveAction": true
+  }
+}

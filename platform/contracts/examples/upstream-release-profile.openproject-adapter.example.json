@@ -1,0 +1,132 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "UpstreamReleaseProfile",
+  "metadata": {
+    "name": "openproject-14-6-0",
+    "version": "1.0.0",
+    "description": "Releaseprofil for OpenProject 14.6.0 (Enterprise).",
+    "accountableHuman": {
+      "subject": "oidc|hans.hansen",
+      "name": "Hans Hansen",
+      "role": "Solution Architect"
+    }
+  },
+  "upstream": {
+    "vendor": "OpenProject GmbH",
+    "product": "OpenProject",
+    "exactVersion": "14.6.0",
+    "edition": "Enterprise",
+    "tier": "enterprise"
+  },
+  "candidateRef": "openproject-adapter-14-6-0.json",
+  "negotiation": {
+    "supportedRanges": [
+      "^14.0.0"
+    ],
+    "supportedEditions": [
+      "Enterprise"
+    ],
+    "onUnsupported": "refuse"
+  },
+  "verbMatrix": {
+    "backup": {
+      "conformance": "partial",
+      "reason": "OpenProject kan tage database- og vedhæftningsbackup, men adapteren kan ikke garantere et konsistent snapshot af alle plugins gennem API'et."
+    },
+    "restore": {
+      "conformance": "unsupported",
+      "reason": "Gendannelse sker på database-/volumeniveau og kan ikke udføres gennem OpenProject API v3."
+    },
+    "verify-restore": {
+      "conformance": "unsupported",
+      "reason": "Verifikation af en gendannelse kræver adgang til backup- og databaselaget."
+    },
+    "drain": {
+      "conformance": "partial",
+      "reason": "Adapteren kan sætte OpenProject i vedligeholdelsestilstand, men kan ikke dræne aktive klient-/webhook-forbindelser."
+    },
+    "upgrade.dry-run": {
+      "conformance": "partial",
+      "reason": "Adapteren kan rapportere nuværende og ønsket version samt manglende migrationer, men OpenProject tilbyder ikke en egentlig dry-run."
+    },
+    "upgrade": {
+      "conformance": "unsupported",
+      "reason": "OpenProject opgraderes ved at udskifte containeren/appen og køre sin egen migrationsproces; det ligger uden for adapterens verbkontrakt."
+    },
+    "migrate": {
+      "conformance": "unsupported",
+      "reason": "OpenProject kører sine egne database- og plugin-migrationer ved opstart; adapteren kan ikke styre dem."
+    },
+    "rollback": {
+      "conformance": "unsupported",
+      "reason": "Rollback kræver gendannelse fra backup og er derfor ikke mulig gennem adapteren."
+    },
+    "health": {
+      "conformance": "full",
+      "endpoint": "https://openproject-adapter.example.org/healthz",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/health.json"
+      }
+    },
+    "slo": {
+      "conformance": "partial",
+      "reason": "Adapteren måler sin egen svartid og projektionens friskhed, men OpenProjects SLO og fejlbudget ligger hos upstream-drift."
+    }
+  },
+  "privacyMatrix": {
+    "subject.locate": {
+      "conformance": "partial",
+      "reason": "Adapteren kan lokalisere projektmedlemskaber og tildelte arbejdspakker ud fra principal/e-mail, men e-mail er ikke en verificeret subjektnøgle, og audit-/backupkopier dækkes ikke."
+    },
+    "subject.export": {
+      "conformance": "partial",
+      "reason": "Adapteren eksporterer medlemskaber og arbejdspakker, men ikke vedhæftningsindhold, audit- og backupkopier; hele DSAR-eksporten koordineres af DKC-020."
+    },
+    "subject.erase": {
+      "conformance": "partial",
+      "reason": "Adapteren fjerner medlemskaber og afknytter arbejdspakker gennem API'et, men backups, søgeindeks og revisionsspor kræver en godkendt upstream-oprydning (DKC-021)."
+    },
+    "subject.legal_hold": {
+      "conformance": "unsupported",
+      "reason": "OpenProject har ingen legal hold-API; et hold håndteres af retention-modulet (DKC-021) og en manuel upstream-indgriben."
+    },
+    "retention.policy": {
+      "conformance": "partial",
+      "reason": "OpenProject har globale opbevaringsindstillinger pr. projekt, men de kan ikke sættes eller rapporteres pr. subjekt gennem adapteren."
+    }
+  },
+  "nativeAdmin": {
+    "exposed": false,
+    "protectedBy": [
+      "adapter",
+      "pdp",
+      "network-policy"
+    ],
+    "evidence": [
+      "gitops/manifests/dev/model-egress-default-deny.json",
+      "infrastructure/src/netpol.mjs"
+    ]
+  },
+  "approvalGate": {
+    "requiredSso": true,
+    "licenseType": "mixed",
+    "status": "blocked",
+    "blockers": [
+      "kandidaten er ikke godkendt af et navngivet menneske"
+    ]
+  },
+  "verification": {
+    "status": "candidate_not_approved",
+    "verifiedBy": {
+      "subject": "oidc|hans.hansen",
+      "name": "Hans Hansen",
+      "role": "Solution Architect"
+    },
+    "verifiedAt": "2025-01-12",
+    "evidence": [
+      "https://www.openproject.org/pricing/",
+      "https://www.openproject.org/docs/api/"
+    ]
+  }
+}

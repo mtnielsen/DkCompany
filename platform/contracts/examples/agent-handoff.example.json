@@ -1,0 +1,18 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "AgentHandoff",
+  "changeId": "chg-2025-09-01-42",
+  "artifactKind": "plan",
+  "artifactDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "inputDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "producer": "spiffe://platform.example.org/agents/dummy-ok-planner",
+  "producerRole": "planner",
+  "producerModel": "anthropic/claude-sonnet@2025-01",
+  "receiver": "spiffe://platform.example.org/agents/dummy-ok-implementer",
+  "receiverRole": "implementer",
+  "planDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "runbookDigest": null,
+  "diffDigest": null,
+  "at": "2025-09-01T08:05:00Z",
+  "digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+}

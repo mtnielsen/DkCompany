@@ -1,0 +1,60 @@
+{
+  "apiVersion": "postgresql.cnpg.io/v1",
+  "kind": "Cluster",
+  "metadata": {
+    "name": "database-ha-staging",
+    "namespace": "platform-data",
+    "labels": {
+      "app.kubernetes.io/name": "database-ha-staging",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/environment": "staging"
+    },
+    "annotations": {
+      "platform.example.org/engine": "postgresql",
+      "platform.example.org/operator": "CloudNativePG@1.24",
+      "platform.example.org/failover-controller": "cnpg-instance-manager"
+    }
+  },
+  "spec": {
+    "instances": 4,
+    "primaryUpdateStrategy": "supervised",
+    "storage": {
+      "size": "50Gi",
+      "storageClass": "encrypted-ssd-rwo"
+    },
+    "postgresql": {
+      "parameters": {
+        "synchronous_commit": "remote_apply",
+        "synchronous_standby_names": "ANY 1 (pg-2,pg-3)",
+        "wal_level": "replica"
+      }
+    },
+    "minSyncReplicas": 1,
+    "maxSyncReplicas": 2,
+    "failoverDelay": 0,
+    "monitoring": {
+      "enablePodMonitor": true
+    },
+    "affinity": {
+      "topologyKey": "topology.kubernetes.io/zone",
+      "enablePodAntiAffinity": true,
+      "nodeSelector": {
+        "platform.example.org/data": "true"
+      }
+    },
+    "backup": {
+      "barmanObjectStore": {
+        "destinationPath": "s3://platform-wal-archive/eu-west-1",
+        "wal": {
+          "compression": "gzip",
+          "encryption": "AES256"
+        },
+        "data": {
+          "compression": "gzip",
+          "encryption": "AES256"
+        }
+      },
+      "retentionPolicy": "168h"
+    }
+  }
+}

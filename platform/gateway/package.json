@@ -1,0 +1,14 @@
+{
+  "name": "@platform/ai-gateway",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "AI-gateway: alle modelkald gennem én tjeneste med routing, budgetter, logging og modelversionering. En agent uden route kan ikke nå en model.",
+  "bin": {
+    "ai-gateway": "./src/cli.mjs"
+  },
+  "scripts": {
+    "test": "node --test",
+    "start": "node src/cli.mjs"
+  }
+}

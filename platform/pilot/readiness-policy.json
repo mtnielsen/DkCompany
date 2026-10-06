@@ -1,0 +1,169 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ReadinessPolicy",
+  "metadata": {
+    "name": "platform-pilot-readiness-policy",
+    "version": "1.0.0",
+    "description": "Readiness-politik for pilotforløbet. Krævede gates for sikkerhed, kvalitet, recovery og menneskelig vurdering læser faktisk evidens og fejler lukket; HA-gaten er kun aktiv for den deklarerede HA-profil, og 30-dages observation samt kundeaccept er særskilte registrerede begivenheder.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+    },
+    "labels": { "wave": "5", "task": "DKC-033" }
+  },
+  "freshnessDays": 30,
+  "gates": [
+    {
+      "id": "security",
+      "title": "Sikkerhed",
+      "kind": "common",
+      "description": "Ingen kendte åbne blokerende sikkerhedsfund, og sikkerhedsvurderingen må ikke være udestående. En grøn lokal harness alene er ikke en uafhængig vurdering.",
+      "appliesWhen": { "always": true },
+      "evidenceSources": [
+        { "kind": "security-assessment", "ref": "security-assessment/assessment.json", "required": true },
+        { "kind": "independent-assessment", "ref": "release/matrix/assessments.json", "required": true }
+      ],
+      "requirementRefs": ["REQ-PILOT-001", "REQ-PENTEST-001", "REQ-SECURITY-001"],
+      "checks": ["security-assessment-check", "security-assessment-test", "security-assessment-run"],
+      "independent": true,
+      "mandatory": true,
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "substitute": { "subject": "oidc|anna.andersen", "name": "Anna Andersen" }
+      }
+    },
+    {
+      "id": "quality",
+      "title": "Kvalitet",
+      "kind": "common",
+      "description": "Alle seks kritiske arbejdsgange gennemføres for hver virksomhedsprofil, og abuse-proberne må ikke finde nogen åben omgåelse af godkendelser eller kundeisolering.",
+      "appliesWhen": { "always": true },
+      "evidenceSources": [
+        { "kind": "pilot-scenarios", "ref": "pilot/pilot-scenarios.json", "required": true },
+        { "kind": "test-matrix", "ref": "release/matrix/test-matrix.json", "required": true }
+      ],
+      "requirementRefs": ["REQ-PILOT-001", "REQ-ACCEPTANCE-001", "REQ-EVIDENCE-001"],
+      "checks": ["pilot-check", "pilot-test", "pilot-run", "pilot-report"],
+      "mandatory": true,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+      }
+    },
+    {
+      "id": "recovery",
+      "title": "Recovery",
+      "kind": "common",
+      "description": "RPO og RTO er målt i en faktisk backup-/gendannelsesøvelse og ligger inden for de deklarerede mål. En manglende måling er ikke en grøn gate.",
+      "appliesWhen": { "always": true },
+      "evidenceSources": [
+        { "kind": "restore-drill", "ref": "continuity/report/recovery-drill-report.json", "required": true }
+      ],
+      "requirementRefs": ["REQ-PILOT-001", "REQ-BACKUP-001", "REQ-DR-001"],
+      "checks": ["backup-check", "backup-test", "dr-check", "dr-test", "continuity-check"],
+      "mandatory": true,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+      }
+    },
+    {
+      "id": "human-assessment",
+      "title": "Menneskelig vurdering og kundeaccept",
+      "kind": "common",
+      "description": "En uafhængig menneskelig sikkerhedsvurdering og en navngivet kundes accept er særskilt registrerede begivenheder. En implementørkørsel eller en grøn check kan aldrig erstatte dem.",
+      "appliesWhen": { "always": true },
+      "evidenceSources": [
+        { "kind": "independent-assessment", "ref": "release/matrix/assessments.json", "required": true },
+        { "kind": "customer-acceptance", "ref": "pilot/customer-acceptance.json", "required": true }
+      ],
+      "requirementRefs": ["REQ-PILOT-001", "REQ-PENTEST-001", "REQ-ASSURANCE-001"],
+      "checks": ["integration-pentest-independent", "pilot-check"],
+      "independent": true,
+      "mandatory": true,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+      }
+    },
+    {
+      "id": "ha",
+      "title": "HA-mål og HA-gates",
+      "kind": "profile",
+      "description": "HA-mål og failover-gates gælder kun den erklærede HA-profil (flere servere). Single-server-profiler markerer gaten ikke-anvendelig i stedet for at påstå HA.",
+      "appliesWhen": { "deploymentProfileRef": "ha-cluster" },
+      "evidenceSources": [
+        { "kind": "pilot-scenarios", "ref": "pilot/pilot-scenarios.json", "required": true },
+        { "kind": "test-matrix", "ref": "release/matrix/test-matrix.json", "required": true }
+      ],
+      "requirementRefs": ["REQ-PILOT-001", "REQ-HA-001", "REQ-CONTINUITY-001"],
+      "checks": ["ha-check", "ha-test", "ha-drill"],
+      "mandatory": true,
+      "owner": {
+        "subject": "oidc|sofia.sorensen",
+        "name": "Sofia Sørensen",
+        "role": "Service Delivery Owner",
+        "substitute": { "subject": "oidc|sven.svendsen", "name": "Sven Svendsen" }
+      }
+    },
+    {
+      "id": "cost",
+      "title": "Omkostning",
+      "kind": "common",
+      "description": "Den månedlige omkostning er målt eller modelleret fra den faktiske forbrugsrapport pr. virksomhedsprofil; et estimat må ikke præsenteres som en målt besparelse.",
+      "appliesWhen": { "always": true },
+      "evidenceSources": [
+        { "kind": "cost-report", "ref": "metering/report/cost-report.json", "required": true }
+      ],
+      "requirementRefs": ["REQ-PILOT-001", "REQ-METERING-001"],
+      "checks": ["metering-check", "metering-test", "metering-run"],
+      "mandatory": true,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+      }
+    },
+    {
+      "id": "observation",
+      "title": "30-dages observation",
+      "kind": "common",
+      "description": "Pilotens 30-dages observation mod den valgte serviceprofil er en faktisk kalendertidsbegivenhed. Den kan ikke forkortes eller simuleres af en deterministisk kørsel.",
+      "appliesWhen": { "always": true },
+      "evidenceSources": [
+        { "kind": "observation-period", "ref": "pilot/observation.json", "required": true }
+      ],
+      "requirementRefs": ["REQ-PILOT-001"],
+      "checks": ["pilot-check", "pilot-run"],
+      "mandatory": true,
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+      }
+    }
+  ],
+  "observation": {
+    "requiredDays": 30,
+    "appliesWhen": { "always": true },
+    "registryRef": "pilot/observation.json"
+  },
+  "customerAcceptance": {
+    "registryRef": "pilot/customer-acceptance.json",
+    "requireForEveryActiveGate": true,
+    "maxAgeDays": 30,
+    "acceptedByRoles": ["Platform Owner", "Service Delivery Owner", "Enterprise Delivery Owner"]
+  }
+}

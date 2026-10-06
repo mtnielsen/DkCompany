@@ -1,0 +1,32 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "EvidenceRecord",
+  "id": "assurance-access-review",
+  "subject": {
+    "kind": "component",
+    "name": "access-review"
+  },
+  "mode": "fixture",
+  "result": "pass",
+  "commit": "83ad91a963d8055f77c29fb4361455689df95acb",
+  "imageDigest": null,
+  "environment": "local",
+  "upstreamVersion": "platform@1.0.0",
+  "runId": "assurance-assurance-access-review",
+  "capturedAt": "2026-09-24T10:00:00Z",
+  "expiresAt": "2026-10-24T10:00:00Z",
+  "producer": {
+    "type": "human",
+    "name": "Cecilia Christensen",
+    "subject": "oidc|cecilia.christensen"
+  },
+  "command": [
+    "make",
+    "audit-service-evidence"
+  ],
+  "artifact": {
+    "uri": "docs/compliance/incident-access-exit.md",
+    "sha256": "592173d35ee2d7e30a9b6a4741ad3e3d1d04b9b68edc2ba7ed5a072c4fda988a"
+  },
+  "digest": "d3fc5372084979b4be39c614dfecb1d6a1f47ff6d340bbe16bbd5888c2c4dfb5"
+}

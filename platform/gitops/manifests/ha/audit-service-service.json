@@ -1,0 +1,30 @@
+{
+  "apiVersion": "v1",
+  "kind": "Service",
+  "metadata": {
+    "name": "audit-service",
+    "namespace": "platform-ha",
+    "labels": {
+      "app.kubernetes.io/name": "audit-service",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "audit-service",
+      "platform.example.org/environment": "ha"
+    },
+    "annotations": {
+      "platform.example.org/service-discovery": "headless"
+    }
+  },
+  "spec": {
+    "clusterIP": "None",
+    "selector": {
+      "app.kubernetes.io/name": "audit-service"
+    },
+    "ports": [
+      {
+        "name": "http",
+        "port": 8284,
+        "targetPort": 8284
+      }
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ReplyDraft",
+  "id": "draft:0123456789abcdef",
+  "tenantId": "example",
+  "ticketId": "zammad-example:1001",
+  "body": "Hej Ada,\n\nTak for din henvendelse. Vi har modtaget sagen og vender tilbage med en løsning.\n\nMed venlig hilsen\nSupport",
+  "draftDigest": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+  "model": {
+    "provider": "deterministic-helpdesk-model",
+    "version": "1.0.0"
+  },
+  "untrusted": true,
+  "executable": false,
+  "toolProposals": [],
+  "toolActivationDenied": true,
+  "injectionFindings": [],
+  "requiresApproval": true,
+  "approvalId": null,
+  "createdAt": "2026-03-01T00:05:00Z",
+  "sentAt": null
+}

@@ -1,0 +1,30 @@
+# Falco-regler for platformen (3.4).
+#
+# Kør som DaemonSet/sidecar og send hændelser til Wazuh og OTel-collectoren, så
+# de normaliseres og indgår i OSCAL-evidensplanen i stedet for at være en
+# separat silo. Reglerne er platformsspecifikke; Falcos standardregler kører
+# fortsat ved siden af.
+
+- list: platform_audit_paths
+  items: [/var/log/audit, /var/lib/audit-service]
+
+- rule: Skrivning til audit-log-mappen
+  desc: En container skriver til audit-loggen uden om audit-service.
+  condition: open_write and container and fd.directory in (platform_audit_paths) and not proc.name=audit-service
+  output: "Skrivning til audit-log (user=%user.name pod=%k8s.pod.name dir=%fd.directory)"
+  priority: WARNING
+  tags: [platform, audit]
+
+- rule: Shell i platform-container
+  desc: En interaktiv shell er startet i en platform-container.
+  condition: spawned_process and container and proc.name in (bash, sh, zsh) and k8s.ns.name=platform
+  output: "Shell i container (pod=%k8s.pod.name cmd=%proc.cmdline)"
+  priority: ERROR
+  tags: [platform, runtime]
+
+- rule: Læsning af policy-signeringsnøgle
+  desc: Nogen læser den private policy-signeringsnøgle.
+  condition: open_read and fd.name contains policy/keys/signing-key.json
+  output: "Signeringsnøgle læst (user=%user.name cmd=%proc.cmdline)"
+  priority: CRITICAL
+  tags: [platform, policy]

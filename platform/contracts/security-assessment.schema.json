@@ -1,0 +1,246 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/security-assessment.schema.json",
+  "title": "Security Assessment",
+  "description": "DKC-065: versioneret sikkerhedsvurdering med dækning, fund, retest og artefaktbinding. Registeret kan bygges fra en isoleret lokal/staging-regressionsharness og importeres fra en uafhængig assessor. En implementørkørsel er ikke en uafhængig vurdering, og en produktionsgate må kun bestå med en gyldig, artefaktbundet uafhængig vurdering og et navngivet menneskes releasebeslutning.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "assessmentVersion", "generatedAt", "measured", "rulesOfEngagementRef", "artifactBinding", "coverage", "harnessRuns", "findings", "retests", "impactReview", "independentAssessment", "releaseDecision", "status"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "SecurityAssessment" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$" },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/person" }
+      }
+    },
+    "assessmentVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$", "description": "Separat version for dækningskravene; en ændring kræver en ny version." },
+    "generatedAt": { "type": "string", "format": "date-time", "description": "Deterministisk genereringstid; aldrig vægurets tid." },
+    "measured": { "const": false, "description": "Sand kun når vurderingen er målt på et levende miljø af en uafhængig aktør." },
+    "rulesOfEngagementRef": { "type": "string", "minLength": 3 },
+    "artifactBinding": {
+      "type": "object",
+      "required": ["targetCommit", "artifactDigest", "profileInventory"],
+      "additionalProperties": false,
+      "properties": {
+        "targetCommit": { "type": "string", "pattern": "^[0-9a-f]{7,64}$" },
+        "artifactDigest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "profileInventory": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["component", "digest"],
+            "additionalProperties": false,
+            "properties": {
+              "component": { "type": "string", "minLength": 2 },
+              "digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+            }
+          }
+        }
+      }
+    },
+    "coverage": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "version", "required", "status", "evidenceRefs"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "enum": ["auth", "direct-apis", "cross-tenant-access", "injection", "agent-role-approval-bypass", "host-broker", "connectors", "telemetry-leaks", "immutable-bypass"] },
+          "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+          "required": { "type": "boolean" },
+          "status": { "enum": ["passed", "failed", "not-run", "covered-by-check"] },
+          "evidenceRefs": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 3 } },
+          "probeIds": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 2 } },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "harnessRuns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "targetId", "roeRef", "startedAt", "authorized", "probes", "summary"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^RUN-[A-Z0-9-]{2,40}$" },
+          "targetId": { "type": "string", "minLength": 2 },
+          "roeRef": { "type": "string", "minLength": 3 },
+          "startedAt": { "type": "string", "format": "date-time" },
+          "authorized": { "type": "boolean" },
+          "probes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "category", "result", "assertion", "evidenceRef"],
+              "additionalProperties": false,
+              "properties": {
+                "id": { "type": "string", "pattern": "^PROBE-[A-Z0-9-]{2,40}$" },
+                "category": { "enum": ["auth", "direct-apis", "cross-tenant-access", "injection", "agent-role-approval-bypass", "host-broker", "connectors", "telemetry-leaks", "immutable-bypass"] },
+                "result": { "enum": ["passed", "failed", "skipped"] },
+                "assertion": { "type": "string", "minLength": 5 },
+                "evidenceRef": { "type": "string", "minLength": 3 }
+              }
+            }
+          },
+          "summary": {
+            "type": "object",
+            "required": ["total", "passed", "failed"],
+            "additionalProperties": false,
+            "properties": {
+              "total": { "type": "integer", "minimum": 0 },
+              "passed": { "type": "integer", "minimum": 0 },
+              "failed": { "type": "integer", "minimum": 0 }
+            }
+          }
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "category", "source", "severity", "impact", "reproducible", "evidenceRef", "affectedArtifactDigest", "remediation", "status"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^FIND-[A-Z0-9-]{2,40}$" },
+          "category": { "enum": ["auth", "direct-apis", "cross-tenant-access", "injection", "agent-role-approval-bypass", "host-broker", "connectors", "telemetry-leaks", "immutable-bypass"] },
+          "source": { "enum": ["local-regression-harness", "independent-assessor", "scanner"] },
+          "severity": { "enum": ["critical", "high", "medium", "low", "info"] },
+          "impact": { "type": "string", "minLength": 10 },
+          "reproducible": { "type": "boolean" },
+          "evidenceRef": { "type": "string", "minLength": 3 },
+          "affectedArtifactDigest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+          "remediation": {
+            "type": "object",
+            "required": ["owner", "handoffRef", "dueAt", "status"],
+            "additionalProperties": false,
+            "properties": {
+              "owner": { "$ref": "#/$defs/person" },
+              "handoffRef": { "type": "string", "minLength": 3 },
+              "dueAt": { "type": "string", "format": "date-time" },
+              "status": { "enum": ["open", "in-progress", "resolved"] }
+            }
+          },
+          "status": { "enum": ["open", "retest-pending", "fixed", "accepted", "false-positive"] },
+          "exception": {
+            "oneOf": [
+              { "type": "null" },
+              {
+                "type": "object",
+                "required": ["reason", "acceptedBy", "expiresAt", "compensatingControls"],
+                "additionalProperties": false,
+                "properties": {
+                  "reason": { "type": "string", "minLength": 10 },
+                  "acceptedBy": { "$ref": "#/$defs/person" },
+                  "expiresAt": { "type": "string", "format": "date-time" },
+                  "compensatingControls": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 5 } }
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "retests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "findingId", "performedAt", "performedBy", "fixedArtifactDigest", "result", "evidenceRef"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^RETEST-[A-Z0-9-]{2,40}$" },
+          "findingId": { "type": "string", "pattern": "^FIND-[A-Z0-9-]{2,40}$" },
+          "performedAt": { "type": "string", "format": "date-time" },
+          "performedBy": { "$ref": "#/$defs/person" },
+          "fixedArtifactDigest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+          "result": { "enum": ["passed", "failed"] },
+          "evidenceRef": { "type": "string", "minLength": 3 }
+        }
+      }
+    },
+    "impactReview": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "required": ["reviewedBy", "reviewedAt", "reason", "fromArtifactDigest", "toArtifactDigest"],
+          "additionalProperties": false,
+          "properties": {
+            "reviewedBy": { "$ref": "#/$defs/person" },
+            "reviewedAt": { "type": "string", "format": "date-time" },
+            "reason": { "type": "string", "minLength": 10 },
+            "fromArtifactDigest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+            "toArtifactDigest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+          }
+        }
+      ]
+    },
+    "independentAssessment": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "required": ["id", "registerRef", "assessor", "method", "performedAt", "expiresAt", "targetCommit", "artifactDigest", "scope", "evidenceRef"],
+          "additionalProperties": false,
+          "properties": {
+            "id": { "type": "string", "pattern": "^ASM-[A-Z0-9-]{2,40}$" },
+            "registerRef": { "type": "string", "minLength": 3 },
+            "assessor": { "$ref": "#/$defs/person" },
+            "method": { "enum": ["penetration-test", "independent-assessment", "external-audit"] },
+            "performedAt": { "type": "string", "format": "date-time" },
+            "expiresAt": { "type": "string", "format": "date-time" },
+            "targetCommit": { "type": "string", "pattern": "^[0-9a-f]{7,64}$" },
+            "artifactDigest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+            "scope": { "type": "string", "minLength": 5 },
+            "evidenceRef": { "type": "string", "minLength": 3 }
+          }
+        }
+      ]
+    },
+    "releaseDecision": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "required": ["decidedBy", "decidedAt", "decision", "conditions"],
+          "additionalProperties": false,
+          "properties": {
+            "decidedBy": { "$ref": "#/$defs/person" },
+            "decidedAt": { "type": "string", "format": "date-time" },
+            "decision": { "enum": ["approved", "rejected", "deferred"] },
+            "conditions": { "type": "array", "items": { "type": "string", "minLength": 5 } },
+            "evidenceRef": { "type": "string", "minLength": 3 }
+          }
+        }
+      ]
+    },
+    "status": { "enum": ["outstanding", "complete", "failed"] }
+  },
+  "$defs": {
+    "person": {
+      "type": "object",
+      "required": ["subject", "role", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": {
+          "type": "object",
+          "required": ["subject", "name"],
+          "additionalProperties": false,
+          "properties": { "subject": { "type": "string", "minLength": 3 }, "name": { "type": "string", "minLength": 2 } }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ServiceClass",
+  "metadata": {
+    "name": "nextcloud-adapter",
+    "version": "1.0.0",
+    "description": "Serviceklasse for arbejdspladsadapteren (Nextcloud) i SMV-pilotprofilen. Målene er foreslået og afventer menneskelig vedtagelse før produktion.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+    },
+    "labels": { "tier": "adapter", "pilot": "true" }
+  },
+  "moduleRef": "nextcloud-adapter",
+  "criticality": "high",
+  "biaRef": "docs/continuity/bia.md#nextcloud-adapter",
+  "failureModel": {
+    "networkPartition": {
+      "behavior": "read-only",
+      "splitBrain": "forbidden",
+      "quorumRequired": true,
+      "description": "Ved netværkspartition sætter adapteren sig i read-only, så der aldrig skrives til Nextcloud fra to samtidige kontrollplaner."
+    },
+    "corruptionDetection": {
+      "method": "checksum ved backup og verify-restore",
+      "detectionWindowMinutes": 1440
+    }
+  },
+  "availability": {
+    "targetPercent": 99.5,
+    "measurementWindowDays": 30,
+    "acceptedDowntime": true
+  },
+  "durability": {
+    "confirmedWrites": {
+      "rpoMinutes": 0,
+      "strategy": "skrivning bekræftes af upstream eller af en holdbar kø",
+      "basis": "BIA: en bekræftet filændring må ikke tabes, selv om adapteren genstarter."
+    },
+    "regionFailure": {
+      "rpoMinutes": 240,
+      "strategy": "natlig offsite backup",
+      "basis": "BIA: et regionsnedbrud er accepteret med op til fire timers tab i SMV-profilen."
+    },
+    "corruption": {
+      "rpoMinutes": 1440,
+      "strategy": "daglige krypterede volume-/databasesnapshots",
+      "basis": "Korruption opdages ved verify-restore og gendannes fra seneste verificerede snapshot."
+    }
+  },
+  "recovery": {
+    "rtoMinutes": 240,
+    "restoreOrder": ["database", "object-storage", "nextcloud-adapter"],
+    "healing": {
+      "automated": false,
+      "allowedActions": ["restart", "restore-from-backup", "replay-from-log"],
+      "forbiddenActions": ["manual-data-edit", "disable-audit"],
+      "requiresHumanApproval": ["restore-from-backup"]
+    }
+  },
+  "replication": {
+    "replicas": 1,
+    "statefulMode": "stateful",
+    "storageClass": "standard-rwo",
+    "consistency": "strong",
+    "writeMode": "single-writer",
+    "activeWriters": 1,
+    "upstreamSupportsMultiWriter": false
+  },
+  "backup": {
+    "required": true,
+    "mode": "external",
+    "offsite": true,
+    "encrypted": true,
+    "restoreTested": false,
+    "retentionDays": 30
+  },
+  "deploymentProfileCompatibility": {
+    "profiles": ["single-server"],
+    "haEligible": false,
+    "failureDomains": 1,
+    "nPlusOne": false
+  },
+  "serviceCommitment": {
+    "state": "proposed"
+  }
+}

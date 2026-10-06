@@ -1,0 +1,58 @@
+name: Continuous security checks
+
+# DKC-064 — kør de vedligeholdte scannere, byg den normaliserede
+# sårbarhedsbeholdning og håndhæv livscyklusgaten.
+#
+# GitHub Actions er slået fra på repo-niveau i dette miljø. De samme trin kan
+# køres lokalt med `make vulnerability-scan`, `make vulnerability-write`,
+# `make vulnerability-check` og `make vulnerability-test`. Uden scannerne og en
+# isoleret stagingklynge er dynamisk scanning NOT RUN, og dækningen erklæres
+# ufuldstændig — ikke grøn.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  vulnerability-lifecycle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install
+        run: make install
+
+      - name: Run maintained scanners
+        # Scannerne er installeret i CI; her køres de rigtige værktøjer.
+        run: |
+          make vulnerability-scan
+
+      - name: Build and validate inventory
+        run: |
+          make vulnerability-write
+          make vulnerability-check
+          make vulnerability-test
+
+      - name: Upload vulnerability evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vulnerability-evidence
+          path: |
+            vulnerability-management/inventory.json
+            vulnerability-management/policy.json
+            docs/status/vulnerability-management.md

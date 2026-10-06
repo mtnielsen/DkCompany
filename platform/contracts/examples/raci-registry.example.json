@@ -1,0 +1,41 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "RaciRegistry",
+  "metadata": {
+    "name": "acceptance-raci-example",
+    "version": "1.0.0",
+    "description": "Eksempel på RACI-poster for en service, en dataklasse og en kontrolproces."
+  },
+  "entries": [
+    {
+      "id": "svc-platform-core",
+      "scope": "service",
+      "ref": "platform-core",
+      "responsible": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Deputy Platform Owner" },
+      "accountable": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "consulted": [{ "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer" }],
+      "informed": [{ "subject": "oidc|ditte.dpo", "name": "Ditte DPO", "role": "Data Protection Officer" }]
+    },
+    {
+      "id": "dc-personal",
+      "scope": "data-class",
+      "ref": "personal",
+      "responsible": { "subject": "oidc|ditte.dpo", "name": "Ditte DPO", "role": "Data Protection Officer" },
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Deputy Platform Owner" },
+      "accountable": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "consulted": [{ "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer" }],
+      "informed": [{ "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" }]
+    },
+    {
+      "id": "cp-restore",
+      "scope": "control-process",
+      "ref": "restore",
+      "responsible": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Deputy Platform Owner" },
+      "accountable": { "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer" },
+      "consulted": [{ "subject": "oidc|ditte.dpo", "name": "Ditte DPO", "role": "Data Protection Officer" }],
+      "informed": [{ "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" }]
+    }
+  ]
+}

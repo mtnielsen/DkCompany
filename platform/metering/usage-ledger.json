@@ -1,0 +1,307 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "UsageLedger",
+  "metadata": {
+    "name": "platform-usage-ledger",
+    "version": "1.0.0",
+    "description": "Syntetisk forbrugsjournal for tre kunder (acme, globex, initech) med faktiske og estimerede hændelser, idempotency-nøgler og kundens stopgrænse.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner"
+      }
+    },
+    "labels": {
+      "wave": "3",
+      "task": "DKC-034"
+    }
+  },
+  "tenants": [
+    {
+      "tenantId": "acme",
+      "packageId": "scale",
+      "stopLimit": {
+        "currency": "EUR",
+        "monthlyLimit": 900,
+        "warningPercent": 80,
+        "onExceed": "block",
+        "forecastMethod": "straight-line"
+      },
+      "events": [
+        {
+          "id": "acme-compute-1",
+          "eventKey": "acme|2026-02|compute|node-a",
+          "meter": "compute",
+          "quantity": 3200,
+          "unit": "vcpu-hour",
+          "currency": "EUR",
+          "occurredAt": "2026-02-15T10:00:00Z",
+          "provenance": "actual"
+        },
+        {
+          "id": "acme-compute-1-dup",
+          "eventKey": "acme|2026-02|compute|node-a",
+          "meter": "compute",
+          "quantity": 3200,
+          "unit": "vcpu-hour",
+          "currency": "EUR",
+          "occurredAt": "2026-02-15T10:05:00Z",
+          "provenance": "actual",
+          "note": "Duplikat leveret efter retry"
+        },
+        {
+          "id": "acme-storage-1",
+          "eventKey": "acme|2026-02|storage|volume-1",
+          "meter": "storage",
+          "quantity": 1800,
+          "unit": "gb-month",
+          "currency": "EUR",
+          "occurredAt": "2026-02-28T23:00:00Z",
+          "provenance": "actual"
+        },
+        {
+          "id": "acme-backup-1",
+          "eventKey": "acme|2026-02|backup|bucket-1",
+          "meter": "backup",
+          "quantity": 900,
+          "unit": "gb-month",
+          "currency": "EUR",
+          "occurredAt": "2026-02-28T23:05:00Z",
+          "provenance": "actual"
+        },
+        {
+          "id": "acme-model-1",
+          "eventKey": "acme|2026-02|model-calls|gateway",
+          "meter": "model-calls",
+          "quantity": 25000,
+          "unit": "1k-tokens",
+          "currency": "EUR",
+          "occurredAt": "2026-02-20T12:00:00Z",
+          "provenance": "actual"
+        },
+        {
+          "id": "acme-integrations-1",
+          "eventKey": "acme|2026-02|integrations|adapters",
+          "meter": "integrations",
+          "quantity": 6,
+          "unit": "instance-month",
+          "currency": "EUR",
+          "occurredAt": "2026-02-28T23:10:00Z",
+          "provenance": "actual"
+        },
+        {
+          "id": "acme-runtime-1",
+          "eventKey": "acme|2026-02|runtime|control-plane",
+          "meter": "runtime",
+          "quantity": 1200,
+          "unit": "vcpu-hour",
+          "currency": "EUR",
+          "occurredAt": "2026-02-28T23:15:00Z",
+          "provenance": "actual"
+        },
+        {
+          "id": "acme-support-1",
+          "eventKey": "acme|2026-02|support|hours",
+          "meter": "support",
+          "quantity": 4,
+          "unit": "hour",
+          "currency": "EUR",
+          "occurredAt": "2026-02-28T23:20:00Z",
+          "provenance": "actual"
+        },
+        {
+          "id": "acme-upstream-1",
+          "eventKey": "acme|2026-02|upstream-features|seats",
+          "meter": "upstream-features",
+          "quantity": 12,
+          "unit": "seat-month",
+          "currency": "EUR",
+          "occurredAt": "2026-02-28T23:25:00Z",
+          "provenance": "actual"
+        },
+        {
+          "id": "acme-support-est-1",
+          "eventKey": "acme|2026-03|support|estimate",
+          "meter": "support",
+          "quantity": 2,
+          "unit": "hour",
+          "currency": "EUR",
+          "occurredAt": "2026-02-28T23:30:00Z",
+          "provenance": "estimated",
+          "note": "Estimeret kommende supportforbrug"
+        }
+      ]
+    },
+    {
+      "tenantId": "globex",
+      "packageId": "starter",
+      "stopLimit": {
+        "currency": "EUR",
+        "monthlyLimit": 250,
+        "warningPercent": 75,
+        "onExceed": "warn",
+        "forecastMethod": "trailing-30d"
+      },
+      "events": [
+        {
+          "id": "globex-compute-1",
+          "eventKey": "globex|2026-02|compute|node-a",
+          "meter": "compute",
+          "quantity": 700,
+          "unit": "vcpu-hour",
+          "currency": "EUR",
+          "occurredAt": "2026-02-15T10:00:00Z",
+          "provenance": "actual"
+        },
+        {
+          "id": "globex-storage-1",
+          "eventKey": "globex|2026-02|storage|volume-1",
+          "meter": "storage",
+          "quantity": 300,
+          "unit": "gb-month",
+          "currency": "EUR",
+          "occurredAt": "2026-02-28T23:00:00Z",
+          "provenance": "actual"
+        },
+        {
+          "id": "globex-model-1",
+          "eventKey": "globex|2026-02|model-calls|gateway",
+          "meter": "model-calls",
+          "quantity": 4000,
+          "unit": "1k-tokens",
+          "currency": "EUR",
+          "occurredAt": "2026-02-20T12:00:00Z",
+          "provenance": "actual"
+        },
+        {
+          "id": "globex-integrations-1",
+          "eventKey": "globex|2026-02|integrations|adapters",
+          "meter": "integrations",
+          "quantity": 2,
+          "unit": "instance-month",
+          "currency": "EUR",
+          "occurredAt": "2026-02-28T23:10:00Z",
+          "provenance": "actual"
+        },
+        {
+          "id": "globex-support-1",
+          "eventKey": "globex|2026-02|support|hours",
+          "meter": "support",
+          "quantity": 1,
+          "unit": "hour",
+          "currency": "EUR",
+          "occurredAt": "2026-02-28T23:20:00Z",
+          "provenance": "actual"
+        }
+      ]
+    },
+    {
+      "tenantId": "initech",
+      "packageId": "enterprise",
+      "stopLimit": {
+        "currency": "EUR",
+        "monthlyLimit": 2500,
+        "warningPercent": 85,
+        "onExceed": "block",
+        "forecastMethod": "straight-line"
+      },
+      "events": [
+        {
+          "id": "initech-compute-1",
+          "eventKey": "initech|2026-02|compute|nodes",
+          "meter": "compute",
+          "quantity": 9800,
+          "unit": "vcpu-hour",
+          "currency": "EUR",
+          "occurredAt": "2026-02-15T10:00:00Z",
+          "provenance": "actual"
+        },
+        {
+          "id": "initech-storage-1",
+          "eventKey": "initech|2026-02|storage|volumes",
+          "meter": "storage",
+          "quantity": 6400,
+          "unit": "gb-month",
+          "currency": "DKK",
+          "occurredAt": "2026-02-28T23:00:00Z",
+          "provenance": "actual"
+        },
+        {
+          "id": "initech-backup-1",
+          "eventKey": "initech|2026-02|backup|buckets",
+          "meter": "backup",
+          "quantity": 3200,
+          "unit": "gb-month",
+          "currency": "EUR",
+          "occurredAt": "2026-02-28T23:05:00Z",
+          "provenance": "actual"
+        },
+        {
+          "id": "initech-model-1",
+          "eventKey": "initech|2026-02|model-calls|gateway",
+          "meter": "model-calls",
+          "quantity": 90000,
+          "unit": "1k-tokens",
+          "currency": "USD",
+          "occurredAt": "2026-02-20T12:00:00Z",
+          "provenance": "actual"
+        },
+        {
+          "id": "initech-integrations-1",
+          "eventKey": "initech|2026-02|integrations|adapters",
+          "meter": "integrations",
+          "quantity": 14,
+          "unit": "instance-month",
+          "currency": "EUR",
+          "occurredAt": "2026-02-28T23:10:00Z",
+          "provenance": "actual"
+        },
+        {
+          "id": "initech-runtime-1",
+          "eventKey": "initech|2026-02|runtime|control-plane",
+          "meter": "runtime",
+          "quantity": 3600,
+          "unit": "vcpu-hour",
+          "currency": "EUR",
+          "occurredAt": "2026-02-28T23:15:00Z",
+          "provenance": "actual"
+        },
+        {
+          "id": "initech-support-1",
+          "eventKey": "initech|2026-02|support|hours",
+          "meter": "support",
+          "quantity": 10,
+          "unit": "hour",
+          "currency": "EUR",
+          "occurredAt": "2026-02-28T23:20:00Z",
+          "provenance": "actual"
+        },
+        {
+          "id": "initech-upstream-1",
+          "eventKey": "initech|2026-02|upstream-features|seats",
+          "meter": "upstream-features",
+          "quantity": 40,
+          "unit": "seat-month",
+          "currency": "EUR",
+          "occurredAt": "2026-02-28T23:25:00Z",
+          "provenance": "actual"
+        },
+        {
+          "id": "initech-migration-1",
+          "eventKey": "initech|2026-02|migration|onboarding",
+          "meter": "migration",
+          "quantity": 5,
+          "unit": "hour",
+          "currency": "EUR",
+          "occurredAt": "2026-02-10T09:00:00Z",
+          "provenance": "estimated",
+          "note": "Estimeret migreringsarbejde; ikke en driftsudgift i februar"
+        }
+      ]
+    }
+  ]
+}

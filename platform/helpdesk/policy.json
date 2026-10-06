@@ -1,0 +1,68 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "HelpdeskPolicy",
+  "metadata": {
+    "name": "platform-helpdesk-policy",
+    "version": "1.0.0",
+    "description": "Adgangs-, AI-, vedhæftnings- og retentionpolitik for support og sagsbehandling. Adgang er default-deny og tenantadskilt; en ekstern kunde ser kun egne sager; AI må klassificere og udkaste svar, men en afsendelse er en separat handling der kræver en gyldig, ændringsbundet godkendelse; vedhæftninger er ubetroet indhold der aldrig må ændre rettigheder.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner"
+      }
+    },
+    "labels": {
+      "tier": "adapter",
+      "upstream": "zammad",
+      "wave": "4"
+    }
+  },
+  "authorization": {
+    "defaultDeny": true,
+    "tenantIsolation": true,
+    "externalCustomerSeesOwnOnly": true,
+    "queueAclBeforeContent": true,
+    "revalidateAtRead": true
+  },
+  "ai": {
+    "classification": true,
+    "draftReplies": true,
+    "sendingRequiresApproval": true,
+    "sendingRequiresHumanApproval": true,
+    "approvalBinding": "draft-digest",
+    "treatTicketContentAsUntrusted": true,
+    "toolActivationFromContent": "denied",
+    "maxDraftAutonomy": "draft-only"
+  },
+  "attachments": {
+    "treatAsUntrusted": true,
+    "scanForInjection": true,
+    "executable": false,
+    "mayChangePermissions": false,
+    "quarantineSuspicious": true,
+    "maxBytes": 10485760
+  },
+  "approvals": {
+    "requiredFor": ["ticket.reply.send", "ticket.close"],
+    "expiresInMinutes": 60,
+    "uniqueApprovers": 1,
+    "selfApprovalForbidden": true
+  },
+  "retention": {
+    "mailDays": 365,
+    "attachmentDays": 180,
+    "indexDays": 90,
+    "exportFormat": "json",
+    "legalHoldBlocksDeletion": true,
+    "deletionIsTombstone": true
+  },
+  "history": {
+    "appendOnly": true,
+    "immutable": true,
+    "recordsEveryTransition": true
+  }
+}

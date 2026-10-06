@@ -1,0 +1,26 @@
+{
+  "apiVersion": "v1",
+  "kind": "Service",
+  "metadata": {
+    "name": "itsm-adapter",
+    "namespace": "platform",
+    "labels": {
+      "app.kubernetes.io/name": "itsm-adapter",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "itsm-adapter",
+      "platform.example.org/environment": "dev"
+    }
+  },
+  "spec": {
+    "selector": {
+      "app.kubernetes.io/name": "itsm-adapter"
+    },
+    "ports": [
+      {
+        "name": "http",
+        "port": 443,
+        "targetPort": 8092
+      }
+    ]
+  }
+}

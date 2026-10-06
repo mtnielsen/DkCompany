@@ -1,0 +1,10 @@
+{
+  "name": "dkcompany-agent-registry",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "DKC-055: uforanderlig rolle pr. agent, rollebundne handoffs og en scheduler uden alle credentials.",
+  "scripts": {
+    "test": "node --test"
+  }
+}

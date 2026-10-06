@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/collector-status.schema.json",
+  "title": "Collector Status",
+  "description": "Selvovervågning af telemetri-collectorerne. Hver collector har et forventet interval, en maksimal alder, en heartbeat og eksplicitte tællere for afviste, droppede og backpressure-ramte hændelser. Et collectornedbrud eller overload følger dokumenterede grænser og udløser en alarm; tab af drifts-telemetri deaktiverer ikke den obligatoriske audit, som har sin egen holdbare vej.",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "generatedAt", "overall", "collectors"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+$" },
+    "kind": { "const": "CollectorStatus" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "overall": { "enum": ["pass", "partial", "fail", "stale", "missing", "unknown"] },
+    "collectors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "status", "freshness", "drops", "backpressure", "rejected"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "kind": { "enum": ["otel", "scanner", "runtime", "ci", "backup", "agent", "api"] },
+          "status": { "enum": ["pass", "partial", "fail", "stale", "missing", "unknown"] },
+          "freshness": { "enum": ["fresh", "stale", "missing"] },
+          "lastSeenAt": { "type": ["string", "null"] },
+          "ageSeconds": { "type": ["number", "null"] },
+          "expectedIntervalSeconds": { "type": "integer", "minimum": 1 },
+          "maxAgeSeconds": { "type": "integer", "minimum": 1 },
+          "drops": { "type": "integer", "minimum": 0 },
+          "backpressure": { "type": "integer", "minimum": 0 },
+          "rejected": { "type": "integer", "minimum": 0 },
+          "bound": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      }
+    }
+  }
+}

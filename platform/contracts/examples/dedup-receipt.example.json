@@ -1,0 +1,57 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "DedupReceipt",
+  "receiptId": "dedup-receipt-acme-backup-2026-09-24",
+  "backupId": "backup-acme-001",
+  "createdAt": "2026-09-24T09:00:00.000Z",
+  "domain": {
+    "tenantId": "acme",
+    "encryptionDomain": "eu-primary",
+    "retentionClass": "financial-7y",
+    "category": "backup-blocks"
+  },
+  "logicalBytes": 8388608,
+  "physicalBytes": 2621440,
+  "savedBytes": 5767168,
+  "physicalToLogicalRatio": 0.3125,
+  "uniqueChunks": 42,
+  "references": 96,
+  "snapshots": [
+    {
+      "id": "backup-acme-001:database:database",
+      "logicalBytes": 6291456,
+      "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "protected": true,
+      "retentionUntil": "2033-09-24T09:00:00.000Z"
+    },
+    {
+      "id": "backup-acme-001:objects:reports/q3.json",
+      "logicalBytes": 2097152,
+      "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "protected": false,
+      "retentionUntil": null
+    }
+  ],
+  "integrity": {
+    "checked": 42,
+    "ok": true,
+    "corruptions": []
+  },
+  "restore": {
+    "ok": true,
+    "snapshots": [
+      {
+        "snapshotId": "backup-acme-001:database:database",
+        "ok": true,
+        "bytes": 6291456
+      },
+      {
+        "snapshotId": "backup-acme-001:objects:reports/q3.json",
+        "ok": true,
+        "bytes": 2097152
+      }
+    ]
+  },
+  "savingsActive": true,
+  "notes": "Syntetisk eksempel. Besparelsen er kun aktiv fordi både integritetskontrollen og den fulde restore bestod."
+}

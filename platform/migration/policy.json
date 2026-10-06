@@ -1,0 +1,83 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "MigrationPolicy",
+  "metadata": {
+    "name": "platform-migration-policy",
+    "version": "1.0.0",
+    "description": "Politik for migration og exit. Adgang er default-deny og tenantadskilt. En import er altid forudgået af en dry-run, der afstemmer antal og checksums og viser tabt funktionalitet før cutover. Importen er resumable, idempotent på en idempotency-nøgle og dublerer ikke, og dublerede forretningsposter flettes aldrig automatisk. Eksporten er selvbeskrivende og kan læses uden en aktiv DkCompany-installation. Cutover kræver en afstemt dry-run, en dokumenteret rollback og en godkendelse fra pilotbrugerne af både indhold og adgangsrettigheder.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner"
+      }
+    },
+    "labels": {
+      "tier": "migration",
+      "wave": "4"
+    }
+  },
+  "authorization": {
+    "defaultDeny": true,
+    "tenantIsolation": true,
+    "roleProtection": true,
+    "revalidateAtRead": true,
+    "crossTenantImport": false
+  },
+  "import": {
+    "dryRunRequired": true,
+    "resumable": true,
+    "checkpointRequired": true,
+    "idempotencyKeyRequired": true,
+    "dedupKeysRequired": true,
+    "errorListRequired": true,
+    "businessRecordsNeverMerged": true,
+    "crossTenantDedup": false,
+    "conflictRequiresHuman": true,
+    "repeatedImportCreatesDuplicates": false
+  },
+  "coverage": {
+    "facets": [
+      "ownership",
+      "timestamps",
+      "comments",
+      "attachments",
+      "acl",
+      "links"
+    ],
+    "requireAllFacetsDeclared": true,
+    "unsupportedRequiresNote": true,
+    "showLostFunctionalityBeforeCutover": true
+  },
+  "reconciliation": {
+    "algorithm": "sha256",
+    "requireCountsMatch": true,
+    "requireChecksumsMatch": true
+  },
+  "export": {
+    "formats": [
+      "jsonl",
+      "csv",
+      "json"
+    ],
+    "selfDescribing": true,
+    "readableWithoutPlatform": true,
+    "includeFacets": true,
+    "includeAcl": true
+  },
+  "cutover": {
+    "requiresReconciliation": true,
+    "requiresPilotApproval": true,
+    "requiresRollback": true,
+    "approvalMustBeHuman": true,
+    "twoPerson": true,
+    "rollbackRestoresRights": true
+  },
+  "retention": {
+    "legalHoldBlocksDeletion": true,
+    "copiesMustFollowDeletion": true
+  }
+}

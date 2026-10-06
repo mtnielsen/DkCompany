@@ -1,0 +1,229 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/database-profile.schema.json",
+  "title": "Database Profile",
+  "description": "DKC-056: en databaseprofil er enten platformens administrerede profil eller en BYO-profil (bring your own). Profilen bærer sikre defaults, migrationsregler, kryptering, overvågning, backup og en ansvarsmatrix med navngivne mennesker. Platformen driver ikke sin egen databaseengine; den beskriver og håndhæver kontrakten mod en understøttet motor.",
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "profileType",
+    "engine",
+    "secureDefaults",
+    "migrations",
+    "backup",
+    "monitoring",
+    "responsibilityMatrix",
+    "tenantIsolation"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "DatabaseProfile" },
+
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{3,63}$" },
+        "version": { "type": "string", "description": "SemVer for profilen." },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/namedHuman" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+
+    "profileType": {
+      "enum": ["managed", "byo"],
+      "description": "managed = platformens administrerede profil. byo = kundens egen database på en understøttet motor."
+    },
+
+    "engine": {
+      "type": "object",
+      "required": ["family", "supportedVersions", "engineOwner", "noOwnEngine"],
+      "additionalProperties": false,
+      "properties": {
+        "family": { "enum": ["postgresql", "mysql", "mariadb", "sqlite", "other"] },
+        "supportedVersions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["range", "tested"],
+            "additionalProperties": false,
+            "properties": {
+              "range": { "type": "string", "minLength": 1, "description": "SemVer-interval for understøttede motorversioner." },
+              "tested": { "type": "boolean", "description": "Er versionen faktisk efterprøvet mod platformen?" },
+              "notes": { "type": "string" }
+            }
+          }
+        },
+        "engineOwner": { "$ref": "#/$defs/namedHuman" },
+        "noOwnEngine": {
+          "const": true,
+          "description": "Platformen implementerer ikke sin egen databaseengine; den bruger en understøttet motor."
+        }
+      }
+    },
+
+    "managed": {
+      "type": "object",
+      "description": "Påkrævet for profileType 'managed'.",
+      "required": ["provider", "serviceTier", "slaRef"],
+      "additionalProperties": false,
+      "properties": {
+        "provider": { "$ref": "#/$defs/namedHuman" },
+        "serviceTier": { "enum": ["single-node", "high-availability", "dedicated"] },
+        "slaRef": { "type": "string", "minLength": 3 },
+        "hostingRegion": { "type": "string", "minLength": 2 }
+      }
+    },
+
+    "byo": {
+      "type": "object",
+      "description": "Påkrævet for profileType 'byo'.",
+      "required": ["customer", "contractRef", "responsibilityAcceptedBy"],
+      "additionalProperties": false,
+      "properties": {
+        "customer": { "$ref": "#/$defs/namedHuman" },
+        "contractRef": { "type": "string", "minLength": 3 },
+        "responsibilityAcceptedBy": { "$ref": "#/$defs/namedHuman" },
+        "extensions": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+          "description": "Krævede databaseextensions. Skal være en del af det aftalte scope."
+        }
+      }
+    },
+
+    "secureDefaults": {
+      "type": "object",
+      "required": ["encryptionAtRest", "encryptionInTransit", "leastPrivilegeRoles", "auditLogging", "publicNetwork"],
+      "additionalProperties": false,
+      "properties": {
+        "encryptionAtRest": {
+          "type": "object",
+          "required": ["required", "method"],
+          "additionalProperties": false,
+          "properties": {
+            "required": { "type": "boolean" },
+            "method": { "type": "string", "minLength": 3 },
+            "keyOwner": { "$ref": "#/$defs/namedHuman" }
+          }
+        },
+        "encryptionInTransit": {
+          "type": "object",
+          "required": ["required", "minTlsVersion"],
+          "additionalProperties": false,
+          "properties": {
+            "required": { "type": "boolean" },
+            "minTlsVersion": { "enum": ["1.2", "1.3"] },
+            "certificateRotationDays": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "leastPrivilegeRoles": { "type": "boolean" },
+        "auditLogging": { "type": "boolean" },
+        "publicNetwork": { "type": "boolean" }
+      }
+    },
+
+    "migrations": {
+      "type": "object",
+      "required": ["strategy", "ownedSchemas", "foreignSchemaPolicy", "backupBeforeMigrate", "destructiveChangesRequireApproval"],
+      "additionalProperties": false,
+      "properties": {
+        "strategy": { "enum": ["versioned-sql", "external-tool", "none"] },
+        "ownedSchemas": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "pattern": "^[a-z_][a-z0-9_]*$" }
+        },
+        "foreignSchemaPolicy": {
+          "const": "never",
+          "description": "Migrationer må aldrig ændre et schema platformen ikke ejer."
+        },
+        "backupBeforeMigrate": { "type": "boolean" },
+        "destructiveChangesRequireApproval": { "type": "boolean" }
+      }
+    },
+
+    "backup": {
+      "type": "object",
+      "required": ["enabled", "owner", "verifiedRestore"],
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "destinationRef": { "type": "string" },
+        "schedule": { "type": "string" },
+        "retentionDays": { "type": "integer", "minimum": 1 },
+        "verifiedRestore": { "type": "boolean" },
+        "owner": { "$ref": "#/$defs/namedHuman" }
+      }
+    },
+
+    "monitoring": {
+      "type": "object",
+      "required": ["metrics", "alerting", "owner"],
+      "additionalProperties": false,
+      "properties": {
+        "metrics": { "type": "boolean" },
+        "alerting": { "type": "boolean" },
+        "owner": { "$ref": "#/$defs/namedHuman" },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "responsibilityMatrix": {
+      "type": "object",
+      "description": "Hvem ejer hvad. Hver række har et navngivet menneske, også når ejerskabet ligger hos kunden.",
+      "required": ["patching", "backup", "restore", "keys", "costs", "monitoring", "migration"],
+      "additionalProperties": false,
+      "properties": {
+        "patching": { "$ref": "#/$defs/accountable" },
+        "backup": { "$ref": "#/$defs/accountable" },
+        "restore": { "$ref": "#/$defs/accountable" },
+        "keys": { "$ref": "#/$defs/accountable" },
+        "costs": { "$ref": "#/$defs/accountable" },
+        "monitoring": { "$ref": "#/$defs/accountable" },
+        "migration": { "$ref": "#/$defs/accountable" }
+      }
+    },
+
+    "tenantIsolation": {
+      "type": "object",
+      "required": ["strategy", "separateIdentity", "evidence"],
+      "additionalProperties": false,
+      "properties": {
+        "strategy": { "enum": ["database-per-tenant", "schema-per-tenant", "role-per-tenant", "row-level-security"] },
+        "separateIdentity": { "type": "boolean" },
+        "evidence": { "type": "string", "minLength": 10 }
+      }
+    }
+  },
+
+  "$defs": {
+    "namedHuman": {
+      "type": "object",
+      "description": "Et navngivet menneske, ikke et team-alias.",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 }
+      }
+    },
+    "accountable": {
+      "type": "object",
+      "required": ["owner", "accountableHuman"],
+      "additionalProperties": false,
+      "properties": {
+        "owner": { "enum": ["platform", "customer", "shared", "external"] },
+        "accountableHuman": { "$ref": "#/$defs/namedHuman" },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

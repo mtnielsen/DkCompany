@@ -1,0 +1,89 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ServiceClass",
+  "metadata": {
+    "name": "mattermost-adapter",
+    "version": "1.0.0",
+    "description": "Serviceklasse for Mattermost-adapteren i SMV-pilotprofilen. Målene er foreslået og afventer menneskelig vedtagelse før produktion.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+    },
+    "labels": { "tier": "reference", "pilot": "true" }
+  },
+  "moduleRef": "mattermost-adapter",
+  "criticality": "medium",
+  "biaRef": "docs/continuity/bia.md#mattermost-adapter",
+  "failureModel": {
+    "networkPartition": {
+      "behavior": "read-only",
+      "splitBrain": "forbidden",
+      "quorumRequired": true,
+      "description": "Ved netværkspartition til Mattermost sætter adapteren sig i read-only og køer ændringer, så den eksterne instans aldrig får to samtidige skrivere."
+    },
+    "corruptionDetection": {
+      "method": "checksum ved backup og verify-restore",
+      "detectionWindowMinutes": 1440
+    }
+  },
+  "availability": {
+    "targetPercent": 99.0,
+    "measurementWindowDays": 30,
+    "acceptedDowntime": true
+  },
+  "durability": {
+    "confirmedWrites": {
+      "rpoMinutes": 0,
+      "strategy": "kø i adapterens database før kvittering",
+      "basis": "BIA: en bekræftet besked må ikke tabes, selv om Mattermost er nede."
+    },
+    "regionFailure": {
+      "rpoMinutes": 240,
+      "strategy": "natlig offsite backup",
+      "basis": "BIA: et regionsnedbrud er accepteret med op til fire timers tab i SMV-profilen."
+    },
+    "corruption": {
+      "rpoMinutes": 1440,
+      "strategy": "daglige krypterede snapshots",
+      "basis": "Korruption opdages ved verify-restore og gendannes fra seneste verificerede snapshot."
+    }
+  },
+  "recovery": {
+    "rtoMinutes": 240,
+    "restoreOrder": ["database", "mattermost-adapter", "queue"],
+    "healing": {
+      "automated": false,
+      "allowedActions": ["restart", "restore-from-backup", "replay-from-log"],
+      "forbiddenActions": ["manual-data-edit", "disable-audit"],
+      "requiresHumanApproval": ["restore-from-backup"]
+    }
+  },
+  "replication": {
+    "replicas": 1,
+    "statefulMode": "stateful",
+    "storageClass": "standard-rwo",
+    "consistency": "strong",
+    "writeMode": "single-writer",
+    "activeWriters": 1,
+    "upstreamSupportsMultiWriter": false
+  },
+  "backup": {
+    "required": true,
+    "mode": "external",
+    "offsite": true,
+    "encrypted": true,
+    "restoreTested": false,
+    "retentionDays": 30
+  },
+  "deploymentProfileCompatibility": {
+    "profiles": ["single-server"],
+    "haEligible": false,
+    "failureDomains": 1,
+    "nPlusOne": false
+  },
+  "serviceCommitment": {
+    "state": "proposed"
+  }
+}

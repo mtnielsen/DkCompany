@@ -1,0 +1,130 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "SecurityAssessmentReport",
+  "metadata": {
+    "name": "platform-security-assessment-report",
+    "version": "1.0.0",
+    "description": "Redigeret, adgangskontrolleret rapport for den lokale regressionsharness og assessment-gaten.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen"
+      }
+    }
+  },
+  "generatedAt": "2026-03-01T00:00:00Z",
+  "measured": false,
+  "assessmentVersion": "1.0.0",
+  "targetCommit": "83ad91a963d8055f77c29fb4361455689df95acb",
+  "artifactDigest": "sha256:360668be68ec924e95e01d3d89d27ecebccaf323187ac2cd49808cbbc3bf0459",
+  "accessControl": {
+    "classification": "confidential",
+    "allowedRoles": [
+      "Security Owner",
+      "Platform Owner",
+      "Independent Assessor"
+    ],
+    "rawEvidenceControlled": true
+  },
+  "coverage": [
+    {
+      "id": "auth",
+      "version": "1.0.0",
+      "required": true,
+      "status": "passed",
+      "probeCount": 2
+    },
+    {
+      "id": "direct-apis",
+      "version": "1.0.0",
+      "required": true,
+      "status": "passed",
+      "probeCount": 2
+    },
+    {
+      "id": "cross-tenant-access",
+      "version": "1.0.0",
+      "required": true,
+      "status": "passed",
+      "probeCount": 2
+    },
+    {
+      "id": "injection",
+      "version": "1.0.0",
+      "required": true,
+      "status": "passed",
+      "probeCount": 3
+    },
+    {
+      "id": "agent-role-approval-bypass",
+      "version": "1.0.0",
+      "required": true,
+      "status": "passed",
+      "probeCount": 2
+    },
+    {
+      "id": "host-broker",
+      "version": "1.0.0",
+      "required": true,
+      "status": "passed",
+      "probeCount": 2
+    },
+    {
+      "id": "connectors",
+      "version": "1.0.0",
+      "required": true,
+      "status": "passed",
+      "probeCount": 1
+    },
+    {
+      "id": "telemetry-leaks",
+      "version": "1.0.0",
+      "required": true,
+      "status": "passed",
+      "probeCount": 2
+    },
+    {
+      "id": "immutable-bypass",
+      "version": "1.0.0",
+      "required": true,
+      "status": "passed",
+      "probeCount": 1
+    }
+  ],
+  "harness": {
+    "runs": 1,
+    "total": 17,
+    "passed": 17,
+    "failed": 0
+  },
+  "findings": {
+    "total": 0,
+    "open": 0,
+    "blocking": 0
+  },
+  "independentAssessment": null,
+  "releaseDecision": null,
+  "status": "outstanding",
+  "gate": {
+    "decision": "blocked",
+    "outstanding": true,
+    "blockers": [
+      "no-independent-assessment",
+      "no-release-decision",
+      "assessment-outstanding"
+    ]
+  },
+  "provenance": {
+    "producer": {
+      "type": "implementer",
+      "name": "security-assessment-gate",
+      "subject": "process|security-assessment-suite"
+    },
+    "actors": [
+      "implementer:security-assessment-suite"
+    ]
+  }
+}

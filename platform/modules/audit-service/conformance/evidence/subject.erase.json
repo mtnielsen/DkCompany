@@ -1,0 +1,21 @@
+{
+  "verb": "subject.erase",
+  "module": "audit-service",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-16T21:11:53.936Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 2
+  },
+  "artifact": {
+    "uri": "s3://evidence/audit-service/subject.erase.json",
+    "sha256": "74607fe09fc4a659785fa0111f59fd51ac405e1d6faa5bdb07657c8e14d5aa8f"
+  }
+}

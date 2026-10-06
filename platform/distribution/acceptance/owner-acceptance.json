@@ -1,0 +1,11 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "OwnerAcceptanceRegistry",
+  "metadata": {
+    "name": "platform-acceptance-owner-acceptance",
+    "version": "1.0.0",
+    "description": "Særskilt registrerede menneskelige ejeraccept pr. aktiv acceptgate. En tom liste betyder, at den menneskelige accept endnu ikke er givet; den udledes aldrig af en grøn check.",
+    "labels": { "wave": "5" }
+  },
+  "accepted": []
+}

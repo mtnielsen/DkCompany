@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/tco-comparison.schema.json",
+  "title": "TCO Comparison",
+  "description": "Sammenligning af totalomkostning for tre virksomhedsprofiler (DKC-034): kundens faktiske udgangspunkt mod den modellerede platformpris, med migreringsomkostning, 12-måneders-TCO og en claim-politik der forbyder påstande om gratis drift eller fuld SaaS-erstatning uden dokumentation.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "generatedAt", "currency", "baselineSource", "measured", "profiles", "claims"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "TcoComparison" },
+    "metadata": { "$ref": "#/$defs/metadata" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "currency": { "type": "string", "minLength": 3 },
+    "baselineSource": { "type": "string", "minLength": 3 },
+    "measured": { "const": false },
+    "profiles": {
+      "type": "array",
+      "minItems": 3,
+      "items": { "$ref": "#/$defs/profile" }
+    },
+    "claims": { "$ref": "#/$defs/claims" }
+  },
+  "$defs": {
+    "human": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\|[a-z0-9][a-z0-9._-]{2,}$" },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": { "$ref": "#/$defs/human" }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman", "labels"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/human" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "costLine": {
+      "type": "object",
+      "required": ["meter", "currentCost", "platformCost", "note"],
+      "additionalProperties": false,
+      "properties": {
+        "meter": { "$ref": "#/$defs/meter" },
+        "currentCost": { "type": "number", "minimum": 0 },
+        "platformCost": { "type": "number", "minimum": 0 },
+        "note": { "type": "string", "minLength": 5 }
+      }
+    },
+    "profile": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "companySize",
+        "currentMonthlyCost",
+        "currentCostSource",
+        "platformMonthlyCost",
+        "migrationOneTimeCost",
+        "twelveMonthTco",
+        "savingsMonthly",
+        "savingsPercent",
+        "costLines",
+        "estimationNote"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,30}$" },
+        "name": { "type": "string", "minLength": 2 },
+        "companySize": { "type": "string", "minLength": 2 },
+        "currentMonthlyCost": { "type": "number", "minimum": 0 },
+        "currentCostSource": { "type": "string", "minLength": 3 },
+        "platformMonthlyCost": { "type": "number", "minimum": 0 },
+        "migrationOneTimeCost": { "type": "number", "minimum": 0 },
+        "twelveMonthTco": { "type": "number", "minimum": 0 },
+        "savingsMonthly": { "type": "number" },
+        "savingsPercent": { "type": "number" },
+        "costLines": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/costLine" }
+        },
+        "estimationNote": { "type": "string", "minLength": 20 }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "required": ["savingsClaimed", "comparableDataRef", "documentationRefs", "noFreeOperation", "notFullSaasReplacement", "rationale"],
+      "additionalProperties": false,
+      "properties": {
+        "savingsClaimed": { "type": "boolean" },
+        "comparableDataRef": { "type": ["string", "null"] },
+        "documentationRefs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 3 }
+        },
+        "noFreeOperation": { "const": true },
+        "notFullSaasReplacement": { "const": true },
+        "rationale": { "type": "string", "minLength": 30 }
+      }
+    },
+    "meter": {
+      "enum": [
+        "compute",
+        "storage",
+        "backup",
+        "model-calls",
+        "integrations",
+        "runtime",
+        "support",
+        "upstream-features",
+        "migration"
+      ]
+    }
+  }
+}

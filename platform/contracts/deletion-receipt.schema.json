@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/deletion-receipt.schema.json",
+  "title": "Deletion Receipt",
+  "description": "DKC-021: et bevis for et sletteforsøg og dets resultat. Kvitteringen bærer subjektets digest (aldrig rå identifikatorer), per-flade status og de resterende kopier med begrundelse og forventet udløb. En 'partial' kvittering skal have en præcis begrundelse og mindst én resterende kopi; en 'blocked-by-hold' kvittering må ikke have slettet noget.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "receiptId", "tenantId", "subjectDigest", "requestedBy", "requestedAt", "completedAt", "status", "hold", "results", "summary", "audit"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "DeletionReceipt" },
+    "receiptId": { "type": "string", "minLength": 3 },
+    "tenantId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+    "subjectDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "requestedBy": { "type": "string", "minLength": 2 },
+    "requestedAt": { "type": "string", "format": "date-time" },
+    "completedAt": { "type": "string", "format": "date-time" },
+    "status": { "enum": ["full", "partial", "unsupported", "blocked-by-hold"] },
+    "hold": {
+      "type": "object",
+      "required": ["blocked", "holdIds"],
+      "additionalProperties": false,
+      "properties": {
+        "blocked": { "type": "boolean" },
+        "holdIds": { "type": "array", "items": { "type": "string" } },
+        "reason": { "type": "string", "minLength": 3 }
+      }
+    },
+    "results": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["surface", "kind", "status", "recordsAffected"],
+        "additionalProperties": false,
+        "properties": {
+          "surface": { "type": "string", "minLength": 2 },
+          "kind": { "enum": ["primary", "index", "cache", "derived-ai", "backup", "upstream"] },
+          "status": { "enum": ["full", "partial", "unsupported", "blocked-by-hold", "not-found", "failed"] },
+          "recordsAffected": { "type": "integer", "minimum": 0 },
+          "reason": { "type": "string", "minLength": 3 },
+          "remainingCopies": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["kind", "resource", "reason", "expiresAt"],
+              "additionalProperties": false,
+              "properties": {
+                "kind": { "enum": ["primary", "index", "cache", "derived-ai", "backup", "upstream"] },
+                "resource": { "type": "string", "minLength": 1 },
+                "reason": { "type": "string", "minLength": 3 },
+                "expiresAt": { "type": "string", "format": "date-time" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": ["surfaces", "full", "partial", "unsupported", "blocked", "recordsAffected", "remainingCopies"],
+      "additionalProperties": false,
+      "properties": {
+        "surfaces": { "type": "integer", "minimum": 1 },
+        "full": { "type": "integer", "minimum": 0 },
+        "partial": { "type": "integer", "minimum": 0 },
+        "unsupported": { "type": "integer", "minimum": 0 },
+        "blocked": { "type": "integer", "minimum": 0 },
+        "recordsAffected": { "type": "integer", "minimum": 0 },
+        "remainingCopies": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "audit": {
+      "type": "object",
+      "description": "Revisionssporet er skrevet før mutationen og indeholder kun subjektets digest — ikke rå identifikatorer eller slettede data.",
+      "required": ["intentId", "outcomeId", "subjectDigest", "containsRawPersonalData"],
+      "additionalProperties": false,
+      "properties": {
+        "intentId": { "type": "string", "minLength": 3 },
+        "outcomeId": { "type": "string", "minLength": 3 },
+        "subjectDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "journalRef": { "type": "string", "minLength": 3 },
+        "containsRawPersonalData": { "const": false }
+      }
+    }
+  }
+}

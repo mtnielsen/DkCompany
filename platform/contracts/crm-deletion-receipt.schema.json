@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/crm-deletion-receipt.schema.json",
+  "title": "CRM Deletion Receipt",
+  "description": "DKC-030: en ærlig sletterapport for en tværgående CRM-sletning. Rapporten opgiver status pr. flade (primær, aktiviteter, indeks, kopier, backup) og hvilke kopier der eventuelt består, fx en WORM-låst backup indtil dens retention udløber.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "tenantId", "accountReference", "entityType", "reason", "status", "legalHoldId", "surfaces", "remainingCopies", "createdAt"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "CrmDeletionReceipt" },
+    "tenantId": { "type": "string" },
+    "accountReference": { "type": "string", "pattern": "^crm:" },
+    "entityType": { "enum": ["Account", "Contact", "Opportunity", "Activity"] },
+    "reason": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["full", "partial", "blocked"] },
+    "legalHoldId": { "type": ["string", "null"] },
+    "relatedRecords": { "type": "integer", "minimum": 0 },
+    "surfaces": {
+      "type": "object",
+      "required": ["primary", "activities", "index", "copies", "backup"],
+      "additionalProperties": false,
+      "properties": {
+        "primary": { "$ref": "#/$defs/surface" },
+        "activities": { "$ref": "#/$defs/surface" },
+        "index": { "$ref": "#/$defs/surface" },
+        "copies": { "$ref": "#/$defs/surface" },
+        "backup": { "$ref": "#/$defs/surface" }
+      }
+    },
+    "remainingCopies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kind", "resource", "reason", "expiresAt"],
+        "additionalProperties": false,
+        "properties": {
+          "kind": { "type": "string" },
+          "resource": { "type": "string" },
+          "reason": { "type": "string" },
+          "expiresAt": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "createdAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "surface": {
+      "type": "object",
+      "required": ["status", "recordsAffected"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "enum": ["full", "partial", "unsupported", "blocked"] },
+        "recordsAffected": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

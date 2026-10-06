@@ -1,0 +1,30 @@
+{
+  "verb": "subject.locate",
+  "module": "dummy-ok",
+  "moduleVersion": "1.2.0",
+  "capturedAt": "2025-09-01T09:40:00.000Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "preflight",
+      "status": "pass",
+      "detail": "policy allow + ingen aktive inciden"
+    },
+    {
+      "name": "subject-scope",
+      "status": "pass"
+    },
+    {
+      "name": "verify",
+      "status": "pass",
+      "detail": "post-condition bekræftet"
+    }
+  ],
+  "measurements": {
+    "durationMs": 1570
+  },
+  "artifact": {
+    "uri": "s3://evidence/dummy-ok/subject.locate/2025-09-01T09:40:00.000Z.json",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+  }
+}

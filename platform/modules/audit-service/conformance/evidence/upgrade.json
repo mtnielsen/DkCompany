@@ -1,0 +1,21 @@
+{
+  "verb": "upgrade",
+  "module": "audit-service",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-16T21:11:53.880Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 4
+  },
+  "artifact": {
+    "uri": "s3://evidence/audit-service/upgrade.json",
+    "sha256": "ade4d17c98d0711b6231f5b1bd8c4710bbbe9c5bfb4c5bcf035b02bf93aab948"
+  }
+}

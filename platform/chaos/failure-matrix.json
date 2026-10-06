@@ -1,0 +1,210 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "FailureMatrix",
+  "metadata": {
+    "name": "platform-failure-matrix",
+    "version": "1.0.0",
+    "description": "Automatiseret fejl- og katastrofematrix for platformen: hosttab, quorumtab, partition, databasefailover, diskfuld, korruption, kø-replay, tab af kontroltjenester, restore til andet site, dedup-prune, KMS-utilgængelighed, immutable-bypass og healingstorm. Hvert scenarie erklærer failure scope, forventet dataudfald, RPO/RTO og tilladt autonomi og køres deterministisk mod de rigtige moduler.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner (substitute)"
+      }
+    },
+    "lastReviewed": "2026-09-28",
+    "labels": {
+      "segment": "continuity",
+      "tier": "chaos"
+    }
+  },
+  "principle": "En fejl er kun bevist ved en isoleret, gentagelig øvelse på syntetiske data uden kundedata; en model er ikke en målt hændelse.",
+  "invariants": {
+    "noSplitBrain": true,
+    "noLostAcknowledgedWrites": true,
+    "immutableBypassDeniedAndLogged": true,
+    "healingStormBounded": true,
+    "repeatableFromCleanInstall": true
+  },
+  "scenarios": [
+    {
+      "id": "ha-host-loss",
+      "title": "Tab af én host i en tre-medlems HA-klynge",
+      "failureScope": "single-host",
+      "expectedDataOutcome": "no-acknowledged-loss",
+      "rpoMinutes": 0,
+      "rtoMinutes": 2,
+      "allowedAutonomy": "safe-fallback",
+      "probe": "ha-host-loss",
+      "humanEscalation": "on-budget-exhaustion",
+      "sharedHealingBudget": true,
+      "probesInvariants": ["noSplitBrain", "noLostAcknowledgedWrites", "healingStormBounded"]
+    },
+    {
+      "id": "ha-quorum-loss",
+      "title": "Tab af quorum i kontrolplanen",
+      "failureScope": "quorum",
+      "expectedDataOutcome": "no-acknowledged-loss",
+      "rpoMinutes": 0,
+      "rtoMinutes": 5,
+      "allowedAutonomy": "none",
+      "probe": "ha-quorum-loss",
+      "humanEscalation": "always",
+      "sharedHealingBudget": true,
+      "probesInvariants": ["noSplitBrain", "noLostAcknowledgedWrites"]
+    },
+    {
+      "id": "network-partition",
+      "title": "Netværkspartition med kun én autoritativ skriver",
+      "failureScope": "network-partition",
+      "expectedDataOutcome": "no-acknowledged-loss",
+      "rpoMinutes": 0,
+      "rtoMinutes": 2,
+      "allowedAutonomy": "none",
+      "probe": "database-partition",
+      "humanEscalation": "on-integrity-failure",
+      "sharedHealingBudget": true,
+      "probesInvariants": ["noSplitBrain", "noLostAcknowledgedWrites"]
+    },
+    {
+      "id": "database-failover",
+      "title": "Databasefailover med fencing og synkron commit",
+      "failureScope": "database",
+      "expectedDataOutcome": "no-acknowledged-loss",
+      "rpoMinutes": 0,
+      "rtoMinutes": 5,
+      "allowedAutonomy": "safe-fallback",
+      "probe": "database-failover",
+      "humanEscalation": "on-integrity-failure",
+      "sharedHealingBudget": true,
+      "probesInvariants": ["noSplitBrain", "noLostAcknowledgedWrites"]
+    },
+    {
+      "id": "storage-disk-full",
+      "title": "Diskfuld på et lagerhost",
+      "failureScope": "storage",
+      "expectedDataOutcome": "no-acknowledged-loss",
+      "rpoMinutes": 0,
+      "rtoMinutes": 30,
+      "allowedAutonomy": "none",
+      "probe": "storage-disk-full",
+      "humanEscalation": "always",
+      "sharedHealingBudget": true,
+      "probesInvariants": ["noLostAcknowledgedWrites"]
+    },
+    {
+      "id": "storage-corruption",
+      "title": "Stille korruption opdages af scrub og repareres",
+      "failureScope": "storage",
+      "expectedDataOutcome": "no-loss",
+      "rpoMinutes": 0,
+      "rtoMinutes": 30,
+      "allowedAutonomy": "safe-fallback",
+      "probe": "storage-corruption",
+      "humanEscalation": "on-integrity-failure",
+      "sharedHealingBudget": true,
+      "probesInvariants": ["noLostAcknowledgedWrites"]
+    },
+    {
+      "id": "queue-replay",
+      "title": "Kø-replay uden dobbelt sideeffekt eller tab",
+      "failureScope": "queue",
+      "expectedDataOutcome": "no-loss",
+      "rpoMinutes": 0,
+      "rtoMinutes": 15,
+      "allowedAutonomy": "safe-fallback",
+      "probe": "queue-replay",
+      "humanEscalation": "on-integrity-failure",
+      "sharedHealingBudget": true,
+      "probesInvariants": ["noLostAcknowledgedWrites"]
+    },
+    {
+      "id": "control-plane-loss",
+      "title": "Tab af kontroltjenester aktiverer sikker fallback",
+      "failureScope": "control-plane",
+      "expectedDataOutcome": "no-acknowledged-loss",
+      "rpoMinutes": 0,
+      "rtoMinutes": 30,
+      "allowedAutonomy": "safe-fallback",
+      "probe": "control-plane-loss",
+      "humanEscalation": "always",
+      "sharedHealingBudget": true,
+      "probesInvariants": ["noLostAcknowledgedWrites", "healingStormBounded"]
+    },
+    {
+      "id": "site-restore",
+      "title": "Restore til et isoleret andet site",
+      "failureScope": "site",
+      "expectedDataOutcome": "bounded-loss",
+      "rpoMinutes": 0,
+      "rtoMinutes": 60,
+      "allowedAutonomy": "runbook-with-approval",
+      "probe": "site-restore",
+      "humanEscalation": "always",
+      "sharedHealingBudget": false,
+      "probesInvariants": ["noLostAcknowledgedWrites", "repeatableFromCleanInstall"]
+    },
+    {
+      "id": "dedup-prune",
+      "title": "Dedup-prune frigiver kun udløbne, urefererede blokke",
+      "failureScope": "deduplication",
+      "expectedDataOutcome": "no-loss",
+      "rpoMinutes": 0,
+      "rtoMinutes": 30,
+      "allowedAutonomy": "safe-fallback",
+      "probe": "dedup-prune",
+      "humanEscalation": "on-integrity-failure",
+      "sharedHealingBudget": true,
+      "probesInvariants": ["noLostAcknowledgedWrites"]
+    },
+    {
+      "id": "kms-unavailability",
+      "title": "KMS-utilgængelighed stopper mutationer fail-closed",
+      "failureScope": "keys",
+      "expectedDataOutcome": "no-acknowledged-loss",
+      "rpoMinutes": 0,
+      "rtoMinutes": 30,
+      "allowedAutonomy": "safe-fallback",
+      "probe": "kms-unavailability",
+      "humanEscalation": "always",
+      "sharedHealingBudget": true,
+      "probesInvariants": ["noLostAcknowledgedWrites"]
+    },
+    {
+      "id": "immutable-bypass",
+      "title": "Immutable-bypassforsøg afvises og logges",
+      "failureScope": "immutable",
+      "expectedDataOutcome": "no-loss",
+      "rpoMinutes": 0,
+      "rtoMinutes": 5,
+      "allowedAutonomy": "none",
+      "probe": "immutable-bypass",
+      "humanEscalation": "always",
+      "sharedHealingBudget": false,
+      "probesInvariants": ["immutableBypassDeniedAndLogged", "noLostAcknowledgedWrites"]
+    },
+    {
+      "id": "healing-storm",
+      "title": "Healingstorm stoppes af fælles budget og eskalering",
+      "failureScope": "control-plane",
+      "expectedDataOutcome": "no-acknowledged-loss",
+      "rpoMinutes": 0,
+      "rtoMinutes": 30,
+      "allowedAutonomy": "safe-fallback",
+      "probe": "healing-storm",
+      "humanEscalation": "on-budget-exhaustion",
+      "sharedHealingBudget": true,
+      "probesInvariants": ["healingStormBounded", "noLostAcknowledgedWrites"]
+    }
+  ],
+  "measurement": {
+    "mode": "deterministic-simulation",
+    "measured": false,
+    "reason": "Der findes ingen isoleret stagingklynge, lastgenerator eller levende hosts i dette miljø. Matrixen kører de rigtige moduler deterministisk på syntetiske data og bærer measured=false; en faktisk fejløvelse på en levende klynge kræver ekstern infrastruktur og en navngivet ejers godkendelse.",
+    "requiresLiveStaging": true
+  },
+  "liveEvidenceRef": "docs/continuity/chaos-live.md"
+}

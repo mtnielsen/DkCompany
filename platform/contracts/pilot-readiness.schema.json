@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/pilot-readiness.schema.json",
+  "title": "Pilot Readiness Report",
+  "description": "Deterministisk readiness-rapport for pilotforløbet (DKC-033). Rapporten samler de kørebare pilotscenariers udfald pr. virksomhedsprofil, abuse- og belastningsprober samt gate-vurderinger fra faktisk evidens. 'ready' kræver at hver aktiv, obligatorisk gate består; en udestående 30-dages observation eller manglende menneskelig kundeaccept giver 'not-ready'.",
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "generatedAt",
+    "measured",
+    "targetCommit",
+    "artifactDigest",
+    "readiness",
+    "profiles",
+    "gates",
+    "abuse",
+    "load",
+    "observation",
+    "customerAcceptance",
+    "problems"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "PilotReadinessReport" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 3 },
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$" },
+        "description": { "type": "string", "minLength": 20 },
+        "accountableHuman": { "$ref": "#/$defs/human" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "measured": { "type": "boolean" },
+    "targetCommit": { "type": "string", "minLength": 7 },
+    "artifactDigest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "readiness": { "enum": ["ready", "not-ready"] },
+    "profiles": {
+      "type": "array",
+      "minItems": 3,
+      "items": { "$ref": "#/$defs/profileResult" }
+    },
+    "gates": { "type": "array", "minItems": 4, "items": { "$ref": "#/$defs/gateResult" } },
+    "abuse": {
+      "type": "object",
+      "required": ["probes", "violations"],
+      "additionalProperties": false,
+      "properties": {
+        "probes": { "type": "array", "items": { "type": "string", "minLength": 2 } },
+        "violations": { "type": "array", "items": { "type": "string", "minLength": 2 } }
+      }
+    },
+    "load": {
+      "type": "object",
+      "required": ["bounded", "iterations", "concurrency", "failures", "bypasses"],
+      "additionalProperties": false,
+      "properties": {
+        "bounded": { "const": true },
+        "iterations": { "type": "integer", "minimum": 1 },
+        "concurrency": { "type": "integer", "minimum": 1 },
+        "failures": { "type": "integer", "minimum": 0 },
+        "bypasses": { "type": "integer", "minimum": 0 },
+        "p95LatencyMs": { "type": "number", "minimum": 0 }
+      }
+    },
+    "observation": { "$ref": "#/$defs/observation" },
+    "customerAcceptance": { "$ref": "#/$defs/customerAcceptance" },
+    "problems": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+  },
+  "$defs": {
+    "human": {
+      "type": "object",
+      "required": ["subject", "role", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": {
+          "type": "object",
+          "required": ["subject", "name"],
+          "additionalProperties": false,
+          "properties": { "subject": { "type": "string", "minLength": 3 }, "name": { "type": "string", "minLength": 2 } }
+        }
+      }
+    },
+    "workflowResult": {
+      "type": "object",
+      "required": ["scenarioId", "journey", "runner", "status", "steps"],
+      "additionalProperties": false,
+      "properties": {
+        "scenarioId": { "type": "string", "minLength": 3 },
+        "journey": { "enum": ["login-offboarding", "daily-work", "restore", "privacy-case", "upgrade", "exit"] },
+        "runner": { "type": "string", "minLength": 2 },
+        "status": { "enum": ["passed", "failed"] },
+        "steps": { "type": "array", "items": { "$ref": "#/$defs/stepResult" } },
+        "problems": { "type": "array", "items": { "type": "string" } },
+        "metrics": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "stepResult": {
+      "type": "object",
+      "required": ["id", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 2 },
+        "status": { "enum": ["ok", "denied", "approval-required", "blocked", "resumable", "rolled-back"] },
+        "detail": { "type": ["string", "null"] }
+      }
+    },
+    "profileResult": {
+      "type": "object",
+      "required": ["profileRef", "segment", "deploymentProfileRef", "companySizeEmployees", "workflows", "complete"],
+      "additionalProperties": false,
+      "properties": {
+        "profileRef": { "type": "string", "minLength": 2 },
+        "segment": { "enum": ["smv", "service", "enterprise"] },
+        "deploymentProfileRef": { "type": "string", "minLength": 2 },
+        "companySizeEmployees": { "type": "integer", "minimum": 1 },
+        "workflows": { "type": "array", "minItems": 6, "items": { "$ref": "#/$defs/workflowResult" } },
+        "complete": { "type": "boolean" },
+        "rpoMinutes": { "type": ["number", "null"] },
+        "rtoMinutes": { "type": ["number", "null"] },
+        "monthlyCostEur": { "type": ["number", "null"] }
+      }
+    },
+    "gateResult": {
+      "type": "object",
+      "required": ["id", "kind", "applicable", "mandatory", "status", "reasons", "evidence"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 2 },
+        "kind": { "enum": ["common", "profile"] },
+        "applicable": { "type": "boolean" },
+        "mandatory": { "type": "boolean" },
+        "status": { "enum": ["passed", "failed", "pending", "not-run", "not-applicable"] },
+        "reasons": { "type": "array", "items": { "type": "string" } },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["kind", "ref", "status"],
+            "additionalProperties": false,
+            "properties": {
+              "kind": { "type": "string", "minLength": 2 },
+              "ref": { "type": "string", "minLength": 2 },
+              "status": { "enum": ["passed", "failed", "pending", "missing"] },
+              "detail": { "type": ["string", "null"] }
+            }
+          }
+        }
+      }
+    },
+    "observation": {
+      "type": "object",
+      "required": ["status", "requiredDays", "observedDays", "startedAt", "endedAt"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "enum": ["complete", "in-progress", "outstanding", "failed"] },
+        "requiredDays": { "type": "integer", "minimum": 1 },
+        "observedDays": { "type": "integer", "minimum": 0 },
+        "startedAt": { "type": ["string", "null"] },
+        "endedAt": { "type": ["string", "null"] },
+        "note": { "type": "string" }
+      }
+    },
+    "customerAcceptance": {
+      "type": "object",
+      "required": ["status", "accepted", "acceptedBy"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "enum": ["accepted", "pending", "outstanding"] },
+        "accepted": { "type": "boolean" },
+        "acceptedBy": { "type": ["string", "null"] },
+        "acceptedAt": { "type": ["string", "null"] },
+        "limitations": { "type": "array", "items": { "type": "string" } },
+        "note": { "type": "string" }
+      }
+    }
+  }
+}

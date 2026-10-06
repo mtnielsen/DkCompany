@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0",
+  "kind": "DashboardAdapter",
+  "id": "grafana",
+  "kindDetail": "grafana",
+  "version": "10.x",
+  "capabilities": [
+    "read"
+  ],
+  "scopes": [
+    "view:operations"
+  ],
+  "views": [
+    "operations"
+  ],
+  "enabled": true,
+  "endpoint": "https://grafana.example.org",
+  "notes": "Read-only provisioneret datasource."
+}

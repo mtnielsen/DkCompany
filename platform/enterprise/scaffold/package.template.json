@@ -1,0 +1,85 @@
+{
+  "id": "__ID__",
+  "title": "__TITLE__",
+  "segment": "__SEGMENT__",
+  "order": 99,
+  "baseProfileRef": "enterprise-dedicated",
+  "selectionRationale": "Skabelon: beskriv hvorfor pakken bygges på denne størrelsesprofil, og hvilket dokumenteret behov den dækker. Pakken arver de fælles sikkerhedskontrakter og forker ikke kontrolplanet.",
+  "demand": {
+    "segments": ["enterprise"],
+    "pilotProfileRefs": ["enterprise"],
+    "businessProfileRefs": ["enterprise"],
+    "demandRank": 99,
+    "rationale": "Skabelon: henvis til den konkrete efterspørgsel fra en pilotvirksomhedsprofil og den dokumenterede omkostningsramme."
+  },
+  "apps": ["reporting"],
+  "capabilityConstraints": {
+    "required": ["control-plane", "identity-oidc", "audit-log", "reporting"],
+    "forbidden": [],
+    "controlPlane": ["control-plane", "policy-decision", "identity-oidc", "audit-log"]
+  },
+  "dataOwnership": [
+    {
+      "dataClass": "operational",
+      "owner": { "subject": "oidc|__OWNER__", "name": "__OWNER_NAME__", "role": "Product Owner" },
+      "purpose": "Skabelon: beskriv formålet med behandlingen for den nye pakke.",
+      "residency": "eu",
+      "retentionRef": "retention/deletion-policy.json"
+    }
+  ],
+  "isolation": {
+    "level": "dedicated",
+    "dedicatedDatabases": true,
+    "networkSegmentation": true,
+    "immutableAudit": true,
+    "notes": "Skabelon: beskriv pakkens ekstra isolation. En pakke må ikke forke kontrolplanet eller fjerne de fælles sikkerhedskontrakter."
+  },
+  "integrations": [
+    {
+      "candidateRef": "integration-candidate.kimai.example.json",
+      "kind": "time",
+      "purpose": "Skabelon: beskriv integrationens formål, eller fjern den og tilføj et begrundet fravalg.",
+      "availability": "opt-in"
+    }
+  ],
+  "professionalRequirements": [
+    {
+      "id": "professional-review",
+      "title": "Faglig gennemgang",
+      "authority": "Navngivet fagperson",
+      "status": "unreviewed",
+      "blocksImplementation": true
+    }
+  ],
+  "sectorRules": {
+    "regimes": [],
+    "status": "not-applicable",
+    "assessmentRef": null,
+    "notes": "Skabelon: afklar om pakken er omfattet af sektorregler, og registrér den særskilte vurdering. En uafklaret vurdering blokerer implementering."
+  },
+  "highRiskAi": {
+    "applicable": false,
+    "assessmentRef": null,
+    "status": "not-applicable",
+    "reason": "Skabelon: sæt applicable til sand og registrér en særskilt højrisiko-AI-vurdering, hvis pakken aktiverer AI-beslutningsstøtte."
+  },
+  "productOwner": { "subject": "oidc|__OWNER__", "name": "__OWNER_NAME__", "role": "Product Owner" },
+  "testCustomer": {
+    "name": "__CUSTOMER__",
+    "contact": { "subject": "oidc|__CONTACT__", "name": "__CONTACT_NAME__", "role": "Customer Contact" },
+    "status": "identified",
+    "contractRef": null,
+    "synthetic": true
+  },
+  "implementation": {
+    "status": "blocked",
+    "reason": "Skabelon: blokeret indtil faglige krav, sektor-/AI-vurdering og en underskrevet testkundeaftale er afklaret."
+  },
+  "tcoRef": { "profileId": "enterprise", "tcoComparisonRef": "metering/report/tco-comparison.json" },
+  "exclusions": [
+    {
+      "candidate": "Skabelon-fravalg",
+      "reason": "Skabelon: beskriv mindst ét begrundet fravalg, så pakken ikke fremstår som en fuld erstatning for et specialiseret produkt."
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/privacy-request.schema.json",
+  "title": "Privacy Subject Request",
+  "description": "Én DSAR-anmodning der fan-out'es til alle moduler. Anmodningen indeholder subjekt-identifikatorer og ét privacy-verbum; orkestratoren kalder hvert moduls verbum og samler resultatet.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "requestId", "createdAt", "tenantId", "verb", "subject", "legalBasis", "requestedBy"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "PrivacySubjectRequest" },
+    "requestId": { "type": "string", "format": "uuid" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "deadline": { "type": "string", "format": "date-time", "description": "GDPR art. 12(3): typisk én måned." },
+    "tenantId": { "type": "string", "minLength": 1 },
+    "verb": {
+      "enum": ["subject.locate", "subject.export", "subject.erase", "subject.legal_hold", "retention.policy"]
+    },
+    "subject": {
+      "type": "object",
+      "required": ["identifiers"],
+      "additionalProperties": false,
+      "properties": {
+        "subjectId": { "type": "string", "description": "OIDC sub hvis kendt." },
+        "identifiers": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Pseudonyme eller direkte identifikatorer (e-mail, kundenummer, deviceId).",
+          "items": {
+            "type": "object",
+            "required": ["type", "value"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "enum": ["oidc-sub", "email", "customer-id", "employee-id", "device-id", "phone", "other"] },
+              "value": { "type": "string", "minLength": 1 },
+              "normalised": { "type": "string" }
+            }
+          }
+        },
+        "jurisdiction": { "type": "string" }
+      }
+    },
+    "legalBasis": {
+      "type": "object",
+      "required": ["type"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "enum": ["gdpr-art-15", "gdpr-art-17", "gdpr-art-18", "gdpr-art-20", "legal-obligation", "legal-hold", "retention-policy"] },
+        "reference": { "type": "string" },
+        "retentionRule": { "type": "string" }
+      }
+    },
+    "requestedBy": {
+      "type": "object",
+      "required": ["kind", "id"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "enum": ["human", "agent", "service"] },
+        "id": { "type": "string" },
+        "onBehalfOf": { "type": "string" }
+      }
+    },
+    "targets": {
+      "type": "array",
+      "description": "Valgfri begrænsning. Tom = alle moduler i tenantens scope.",
+      "items": { "type": "string" }
+    },
+    "dryRun": { "type": "boolean", "default": false }
+  }
+}

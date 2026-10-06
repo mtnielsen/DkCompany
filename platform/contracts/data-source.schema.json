@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/data-source.schema.json",
+  "title": "Data Source",
+  "description": "DKC-056: en datakildeconnector til et eksternt system (fx HR eller et analyseinput). Connectorer er read-only som standard, tenantbundne, bruger secretreferencer (aldrig rå hemmeligheder), har en navngiven dataejer og et aftalt scope. Eksterne kilder er ikke platformens egne databaser og må ikke migreres eller sikkerhedskopieres automatisk.",
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "sourceType",
+    "engine",
+    "connection",
+    "access",
+    "tenantBinding",
+    "schemaDiscovery",
+    "dataOwnership",
+    "externalPolicy",
+    "auditTrail"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "DataSource" },
+
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "dataOwner"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{3,63}$" },
+        "version": { "type": "string" },
+        "description": { "type": "string", "minLength": 10 },
+        "dataOwner": { "$ref": "#/$defs/namedHuman" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+
+    "sourceType": { "enum": ["hr", "bi", "analytics", "backup", "object-store", "external", "other"] },
+
+    "engine": {
+      "type": "object",
+      "required": ["family", "version"],
+      "additionalProperties": false,
+      "properties": {
+        "family": { "enum": ["postgresql", "mysql", "mariadb", "sqlite", "other"] },
+        "version": { "type": "string", "description": "Den faktiske motorversion hos kilden." }
+      }
+    },
+
+    "connection": {
+      "type": "object",
+      "required": ["host", "port", "database", "tls", "secretRef"],
+      "additionalProperties": false,
+      "properties": {
+        "host": { "type": "string", "minLength": 3 },
+        "port": { "type": "integer", "minimum": 1, "maximum": 65535 },
+        "database": { "type": "string", "minLength": 1 },
+        "tls": {
+          "type": "object",
+          "required": ["mode", "minVersion"],
+          "additionalProperties": false,
+          "properties": {
+            "mode": { "enum": ["disable", "require", "verify-ca", "verify-full"] },
+            "minVersion": { "enum": ["1.2", "1.3"] },
+            "certSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$", "description": "Pinned SHA-256 af serverens leaf-certifikat. Rotation opdages som en kontrolleret fejl." }
+          }
+        },
+        "secretRef": {
+          "type": "string",
+          "pattern": "^(vault|k8s|env|file|kms):[A-Za-z0-9_./#:-]{3,200}$",
+          "description": "Reference til en hemmelighed, ikke værdien. Formen er <provider>:<sti>."
+        }
+      }
+    },
+
+    "access": {
+      "type": "object",
+      "required": ["readOnly", "allowedSchemas", "allowedTables", "denyWrites"],
+      "additionalProperties": false,
+      "properties": {
+        "readOnly": { "const": true, "description": "Read-only er standard og kan ikke slås fra i kontrakten." },
+        "allowedSchemas": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[a-z_][a-z0-9_]*$" }
+        },
+        "allowedTables": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^(public|[a-z_][a-z0-9_]*)\\.([a-z_][a-z0-9_]*)$" },
+          "description": "Eksplicitte schema.tabel-par. Tom liste betyder ingen tabeller, ikke alle."
+        },
+        "denyWrites": { "const": true },
+        "denyDdl": { "const": true },
+        "maxRows": { "type": "integer", "minimum": 1 }
+      }
+    },
+
+    "tenantBinding": {
+      "type": "object",
+      "required": ["required", "source", "strategy"],
+      "additionalProperties": false,
+      "properties": {
+        "required": { "const": true },
+        "source": { "const": "principal", "description": "Tenant udledes af den verificerede principal, aldrig af et felt klienten sætter." },
+        "strategy": { "enum": ["per-tenant-credential", "per-tenant-view", "per-tenant-database"] }
+      }
+    },
+
+    "schemaDiscovery": {
+      "type": "object",
+      "required": ["enabled", "includeSchemas"],
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "includeSchemas": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[a-z_][a-z0-9_]*$" }
+        },
+        "discoveredAt": { "type": "string", "format": "date-time" },
+        "snapshotRef": { "type": "string" }
+      }
+    },
+
+    "dataOwnership": {
+      "type": "object",
+      "required": ["owner", "classification", "agreementRef", "purpose"],
+      "additionalProperties": false,
+      "properties": {
+        "owner": { "$ref": "#/$defs/namedHuman" },
+        "classification": { "enum": ["none", "operational", "pseudonymised", "personal", "special-category"] },
+        "agreementRef": { "type": "string", "minLength": 3, "description": "Aftale om behandling/adgang til kilden." },
+        "purpose": { "type": "string", "minLength": 5 }
+      }
+    },
+
+    "externalPolicy": {
+      "type": "object",
+      "description": "En ekstern kilde er ikke platformens egen database. Disse flag er kontraktuelt låst.",
+      "required": ["treatAsOwnDatabase", "autoMigrate", "autoBackup", "scopeAgreementRef"],
+      "additionalProperties": false,
+      "properties": {
+        "treatAsOwnDatabase": { "const": false },
+        "autoMigrate": { "const": false },
+        "autoBackup": { "const": false },
+        "scopeAgreementRef": { "type": "string", "minLength": 3, "description": "Scope-aftalen der tillader netop denne læseadgang." }
+      }
+    },
+
+    "auditTrail": {
+      "type": "object",
+      "required": ["enabled", "events", "sink"],
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "const": true },
+        "events": {
+          "type": "array",
+          "minItems": 3,
+          "items": { "enum": ["connect", "schema-discovery", "query", "denied", "disconnect"] }
+        },
+        "sink": { "type": "string", "minLength": 3 }
+      }
+    }
+  },
+
+  "$defs": {
+    "namedHuman": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 }
+      }
+    }
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "Runbook",
+  "metadata": {
+    "name": "host-certificate-renew",
+    "version": "1.0.0",
+    "description": "Fornyer et hostcertifikat via den scoped executor og bevarer den gamle nøgleversion, så tidligere signaturer fortsat kan verificeres.",
+    "owner": {
+      "team": "platform",
+      "contact": "platform@example.org"
+    },
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "role": "Platform Owner",
+      "name": "Anna Andersen"
+    }
+  },
+  "scope": {
+    "verbs": [
+      "certificate-renew",
+      "rotate-credential"
+    ],
+    "targets": [
+      "host/*"
+    ],
+    "environments": [
+      "staging",
+      "prod"
+    ],
+    "tenants": [
+      "*"
+    ]
+  },
+  "parameters": {
+    "schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "hostRef": {
+          "type": "string",
+          "required": true
+        },
+        "certificateRef": {
+          "type": "string",
+          "required": true
+        }
+      }
+    },
+    "limits": {
+      "maxDurationSeconds": 300,
+      "maxTargets": 1
+    }
+  },
+  "preconditions": [
+    {
+      "id": "backup-verified",
+      "check": "backup",
+      "expect": true
+    },
+    {
+      "id": "host-enrolled",
+      "check": "host-enrollment",
+      "expect": true
+    }
+  ],
+  "maxImpact": {
+    "blastRadius": "single-target",
+    "maxTargets": 1,
+    "customerVisible": false,
+    "maxDurationSeconds": 300
+  },
+  "expiry": {
+    "approvedAt": "2026-09-01T00:00:00Z",
+    "expiresAt": "2026-09-15T00:00:00Z",
+    "maxAgeSeconds": 1209600
+  },
+  "attempts": {
+    "maxAttempts": 2,
+    "windowSeconds": 3600
+  },
+  "rollback": {
+    "required": true,
+    "method": "certificate-rollback",
+    "runbookRef": "host-certificate-renew@1.0.0",
+    "tested": true
+  },
+  "postchecks": [
+    {
+      "id": "certificate-valid",
+      "check": "certificate-validity",
+      "expect": "valid",
+      "timeoutSeconds": 120,
+      "onFailure": "escalate"
+    }
+  ],
+  "approval": {
+    "flow": "normal",
+    "preApproved": false,
+    "requiredApprovals": 1,
+    "eligibleGroups": [
+      "platform-approvers"
+    ]
+  },
+  "signature": {
+    "algorithm": "hmac-sha256",
+    "keyId": "runbook-example-key",
+    "value": "da9d4da96c07b514c644289fea4df41b687a0e732350a987b0ab9e7d14d8db1f",
+    "signedAt": "2026-09-01T00:00:00Z"
+  }
+}

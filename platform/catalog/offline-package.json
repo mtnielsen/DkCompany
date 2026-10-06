@@ -1,0 +1,145 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "OfflinePackage",
+  "metadata": {
+    "name": "platform-offline-package",
+    "version": "1.0.0",
+    "description": "Valgfri offlinepakke for cloud-uafhængig drift. Lokale kerneflows virker uden internet, og hver ekstern afhængighed er markeret med en eksplicit offline-adfærd.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner"
+      }
+    },
+    "labels": {
+      "tier": "distribution",
+      "wave": "5"
+    }
+  },
+  "policy": {
+    "coreFlowsRemainLocal": true,
+    "externalOutageVisible": true,
+    "noSilentFallback": true,
+    "packageSelfContained": true,
+    "externalDependencyRegistryComplete": true
+  },
+  "components": [
+    {
+      "id": "platform-core",
+      "version": "1.4.0",
+      "artifact": "platform-core-1.4.0.tar.zst",
+      "digest": "1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    {
+      "id": "identity-broker",
+      "version": "1.2.0",
+      "artifact": "identity-broker-1.2.0.tar.zst",
+      "digest": "2222222222222222222222222222222222222222222222222222222222222222"
+    },
+    {
+      "id": "audit-service",
+      "version": "1.5.0",
+      "artifact": "audit-service-1.5.0.tar.zst",
+      "digest": "3333333333333333333333333333333333333333333333333333333333333333"
+    },
+    {
+      "id": "primary-database",
+      "version": "1.3.0",
+      "artifact": "postgresql-16.4.tar.zst",
+      "digest": "4444444444444444444444444444444444444444444444444444444444444444"
+    },
+    {
+      "id": "object-store",
+      "version": "1.1.0",
+      "artifact": "object-store-1.1.0.tar.zst",
+      "digest": "5555555555555555555555555555555555555555555555555555555555555555"
+    },
+    {
+      "id": "backup-destination",
+      "version": "1.0.0",
+      "artifact": "backup-destination-1.0.0.tar.zst",
+      "digest": "6666666666666666666666666666666666666666666666666666666666666666"
+    }
+  ],
+  "coreFlows": [
+    {
+      "id": "local-authz",
+      "title": "Lokal autorisation og default-deny policy-beslutning",
+      "local": true,
+      "externalDependencies": []
+    },
+    {
+      "id": "local-data",
+      "title": "Læsning og skrivning i lokal database og objektlager",
+      "local": true,
+      "externalDependencies": []
+    },
+    {
+      "id": "local-audit",
+      "title": "Beskyttet revisionsspor og logføring",
+      "local": true,
+      "externalDependencies": []
+    },
+    {
+      "id": "local-backup",
+      "title": "Lokal backup og verificeret gendannelse",
+      "local": true,
+      "externalDependencies": []
+    },
+    {
+      "id": "local-search",
+      "title": "Lokal videnssøgning på eksisterende indeks uden modelkald",
+      "local": true,
+      "externalDependencies": []
+    }
+  ],
+  "externalDependencies": [
+    {
+      "id": "model-anthropic",
+      "kind": "model-api",
+      "endpointRef": "gateway/routes.json#anthropic",
+      "offlineBehavior": "unavailable-visible",
+      "affectedFeatures": [
+        "agent-reasoning",
+        "privacy-triage"
+      ],
+      "routeRefs": [
+        "dummy-ok-upgrader-sonnet",
+        "audit-service-operator-sonnet",
+        "privacy-operator-sonnet"
+      ],
+      "localFallbackRef": null,
+      "explicitStatus": "Modelassisterede svar og agent-ræsonnering er midlertidigt utilgængelige; lokal policy, dataadgang og audit virker uændret."
+    },
+    {
+      "id": "model-openai",
+      "kind": "model-api",
+      "endpointRef": "gateway/routes.json#openai",
+      "offlineBehavior": "unavailable-visible",
+      "affectedFeatures": [
+        "reviewer-draft"
+      ],
+      "routeRefs": [
+        "dummy-ok-reviewer-gpt"
+      ],
+      "localFallbackRef": null,
+      "explicitStatus": "Reviewerens modeludkast er midlertidigt utilgængeligt; den menneskelige godkendelse og de lokale kontroller består."
+    },
+    {
+      "id": "update-source",
+      "kind": "update-source",
+      "endpointRef": "https://updates.example.org/catalog",
+      "offlineBehavior": "queued",
+      "affectedFeatures": [
+        "release-update"
+      ],
+      "routeRefs": [],
+      "localFallbackRef": null,
+      "explicitStatus": "Nye releases og sikkerhedsopdateringer sættes i kø; den kørende release fortsætter uændret."
+    }
+  ]
+}

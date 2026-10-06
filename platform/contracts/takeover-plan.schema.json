@@ -1,0 +1,228 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/takeover-plan.schema.json",
+  "title": "TakeoverPlan",
+  "description": "DKC-052: den menneskelige overtagelses- og beredskabsplan. Den navngiver serviceejer, on-call, stedfortræder, incidentleder, change authority og dataansvarlig funktion; en uafhængig kontaktkanal med eskalationskæde; en offline/recoverykopi af runbooks; credentials under menneskekontrol; en prioriteret restoreplan; den formelt valgte HA-/immutable-/self-healing-profil; og de gentagelige øvelsesscenarier (single-server, HA, AI-offline, IAM-tab, sitekatastrofe). Skemaet håndhæver formen; continuity/src/takeover.mjs håndhæver beslutningerne.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "roles", "contactChannel", "offlineRunbooks", "credentials", "restorePlan", "profiles", "drills"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "TakeoverPlan" },
+    "metadata": { "$ref": "#/$defs/metadata" },
+    "roles": { "$ref": "#/$defs/roles" },
+    "contactChannel": { "$ref": "#/$defs/contactChannel" },
+    "offlineRunbooks": { "$ref": "#/$defs/offlineRunbooks" },
+    "credentials": { "$ref": "#/$defs/credentials" },
+    "restorePlan": { "$ref": "#/$defs/restorePlan" },
+    "profiles": { "$ref": "#/$defs/profiles" },
+    "drills": { "$ref": "#/$defs/drills" }
+  },
+  "$defs": {
+    "human": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\|[a-z0-9][a-z0-9._-]{2,}$" },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "channel": { "type": "string", "minLength": 2 },
+        "contact": { "type": "string", "minLength": 3 },
+        "substitute": { "$ref": "#/$defs/human" }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman", "lastReviewed", "labels"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "description": { "type": "string", "minLength": 20 },
+        "accountableHuman": { "$ref": "#/$defs/human" },
+        "lastReviewed": { "type": "string", "minLength": 10 },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "roles": {
+      "type": "object",
+      "required": ["serviceOwner", "substitute", "onCall", "incidentLead", "changeAuthority", "dataProtection"],
+      "additionalProperties": false,
+      "properties": {
+        "serviceOwner": { "$ref": "#/$defs/human" },
+        "substitute": { "$ref": "#/$defs/human" },
+        "onCall": { "$ref": "#/$defs/human" },
+        "incidentLead": { "$ref": "#/$defs/human" },
+        "changeAuthority": { "$ref": "#/$defs/human" },
+        "dataProtection": { "$ref": "#/$defs/human" }
+      }
+    },
+    "contactChannel": {
+      "type": "object",
+      "required": ["independent", "channel", "instructions", "testRecipients", "escalation"],
+      "additionalProperties": false,
+      "properties": {
+        "independent": { "const": true },
+        "channel": { "type": "string", "minLength": 3 },
+        "instructions": { "type": "string", "minLength": 10 },
+        "testRecipients": { "type": "array", "minItems": 2, "items": { "$ref": "#/$defs/human" } },
+        "escalation": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["afterMinutes", "to"],
+            "additionalProperties": false,
+            "properties": {
+              "afterMinutes": { "type": "integer", "minimum": 0 },
+              "to": { "$ref": "#/$defs/human" }
+            }
+          }
+        }
+      }
+    },
+    "offlineRunbooks": {
+      "type": "object",
+      "required": ["independentMedium", "location", "lastVerified", "copies"],
+      "additionalProperties": false,
+      "properties": {
+        "independentMedium": { "type": "string", "minLength": 3 },
+        "location": { "type": "string", "minLength": 3 },
+        "lastVerified": { "type": "string", "minLength": 10 },
+        "copies": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": ["ref", "digest"],
+            "additionalProperties": false,
+            "properties": {
+              "ref": { "type": "string", "minLength": 3 },
+              "digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+            }
+          }
+        }
+      }
+    },
+    "credentials": {
+      "type": "object",
+      "required": ["underHumanControl", "custodians", "vault", "breakGlass"],
+      "additionalProperties": false,
+      "properties": {
+        "underHumanControl": { "const": true },
+        "custodians": { "type": "array", "minItems": 2, "items": { "$ref": "#/$defs/human" } },
+        "vault": { "type": "string", "minLength": 3 },
+        "breakGlass": {
+          "type": "object",
+          "required": ["ref", "requiresTwoPerson"],
+          "additionalProperties": false,
+          "properties": {
+            "ref": { "type": "string", "minLength": 3 },
+            "requiresTwoPerson": { "const": true }
+          }
+        }
+      }
+    },
+    "restorePlan": {
+      "type": "object",
+      "required": ["ref", "owner", "dataIntegrityCheck", "priority"],
+      "additionalProperties": false,
+      "properties": {
+        "ref": { "type": "string", "minLength": 3 },
+        "owner": { "$ref": "#/$defs/human" },
+        "dataIntegrityCheck": { "type": "string", "minLength": 5 },
+        "priority": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "required": ["order", "component", "ref"],
+            "additionalProperties": false,
+            "properties": {
+              "order": { "type": "integer", "minimum": 1 },
+              "component": { "type": "string", "minLength": 2 },
+              "ref": { "type": "string", "minLength": 3 }
+            }
+          }
+        }
+      }
+    },
+    "profiles": {
+      "type": "object",
+      "required": ["deploymentProfile", "haProfile", "immutableProfile", "selfHealingProfile", "formallyChosen", "chosenBy", "testedBy"],
+      "additionalProperties": false,
+      "properties": {
+        "deploymentProfile": { "type": "string", "minLength": 3 },
+        "haProfile": { "type": "string", "minLength": 3 },
+        "immutableProfile": { "type": "string", "minLength": 3 },
+        "selfHealingProfile": { "type": "string", "minLength": 3 },
+        "formallyChosen": { "const": true },
+        "chosenBy": { "$ref": "#/$defs/human" },
+        "testedBy": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 3 } }
+      }
+    },
+    "schedule": {
+      "type": "object",
+      "required": ["accessReviewDays", "backupControlDays", "capacityReviewDays", "drDrillDays", "runbookRecertificationDays"],
+      "additionalProperties": false,
+      "properties": {
+        "accessReviewDays": { "type": "integer", "minimum": 1 },
+        "backupControlDays": { "type": "integer", "minimum": 1 },
+        "capacityReviewDays": { "type": "integer", "minimum": 1 },
+        "drDrillDays": { "type": "integer", "minimum": 1 },
+        "runbookRecertificationDays": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "lastCompleted": {
+      "type": "object",
+      "required": ["accessReview", "backupControl", "capacityReview", "drDrill", "runbookRecertification"],
+      "additionalProperties": false,
+      "properties": {
+        "accessReview": { "type": "string", "minLength": 10 },
+        "backupControl": { "type": "string", "minLength": 10 },
+        "capacityReview": { "type": "string", "minLength": 10 },
+        "drDrill": { "type": "string", "minLength": 10 },
+        "runbookRecertification": { "type": "string", "minLength": 10 }
+      }
+    },
+    "step": {
+      "type": "object",
+      "required": ["id", "phase", "kind", "ownerRole", "evidenceKind", "required", "ackMinutes", "probe"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,60}$" },
+        "phase": { "enum": ["takeover", "restore", "failback", "validation"] },
+        "kind": { "enum": ["machine", "human"] },
+        "ownerRole": { "type": ["string", "null"], "enum": ["serviceOwner", "substitute", "onCall", "incidentLead", "changeAuthority", "dataProtection", null] },
+        "evidenceKind": { "type": "string", "minLength": 3 },
+        "required": { "type": "boolean" },
+        "ackMinutes": { "type": "integer", "minimum": 0 },
+        "probe": { "type": ["string", "null"] }
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "required": ["id", "kind", "title", "environment", "artifacts", "steps"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$" },
+        "kind": { "enum": ["single-server", "ha", "ai-offline", "iam-loss", "site-catastrophe"] },
+        "title": { "type": "string", "minLength": 5 },
+        "environment": { "type": "string", "minLength": 3 },
+        "artifacts": { "type": "object", "minProperties": 1, "additionalProperties": { "type": "string", "minLength": 3 } },
+        "steps": { "type": "array", "minItems": 6, "items": { "$ref": "#/$defs/step" } }
+      }
+    },
+    "drills": {
+      "type": "object",
+      "required": ["schedule", "lastCompleted", "scenarios"],
+      "additionalProperties": false,
+      "properties": {
+        "schedule": { "$ref": "#/$defs/schedule" },
+        "lastCompleted": { "$ref": "#/$defs/lastCompleted" },
+        "scenarios": { "type": "array", "minItems": 2, "items": { "$ref": "#/$defs/scenario" } }
+      }
+    }
+  }
+}

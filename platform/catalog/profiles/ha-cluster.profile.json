@@ -1,0 +1,77 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "InstallationProfile",
+  "metadata": {
+    "name": "ha-cluster",
+    "version": "1.0.0",
+    "description": "Multi-server HA-installation med mindst tre fejldomæner, N+1, særskilt recovery-lokation og valgfri afgrænset host-styring.",
+    "accountableHuman": {
+      "subject": "oidc|cecilia.christensen",
+      "name": "Cecilia Christensen",
+      "role": "Service Owner",
+      "substitute": {
+        "subject": "oidc|david.dahl",
+        "name": "David Dahl"
+      }
+    },
+    "labels": {
+      "segment": "service",
+      "ha": "true"
+    }
+  },
+  "profileType": "multiple-servers",
+  "deploymentProfileRef": "contracts/examples/deployment-profile.service.example.json",
+  "highAvailability": {
+    "enabled": true,
+    "acceptedNonHaServiceClass": false,
+    "externalBackupRequired": true
+  },
+  "hostManagement": {
+    "optIn": true,
+    "component": "host-management",
+    "justification": "Host-styring kan tilvælges i HA-profilen, men er aldrig en forudsætning for HA og fjerner ikke den out-of-band recoveryvej."
+  },
+  "securityCore": [
+    "platform-core",
+    "identity-broker",
+    "audit-service"
+  ],
+  "defaultApplications": [],
+  "optionalApplications": [
+    "hr",
+    "bi",
+    "reporting",
+    "finance",
+    "invoicing",
+    "time",
+    "webshop",
+    "payment"
+  ],
+  "supportedPlatforms": [
+    "linux-amd64-node22",
+    "linux-arm64-node22"
+  ],
+  "capacity": {
+    "cpuMillicores": 24000,
+    "memoryMiB": 49152,
+    "storageGiB": 3000,
+    "nodes": 3
+  },
+  "supportProfile": {
+    "tier": "supported",
+    "supportWindow": "24 måneder fra GA",
+    "escalation": "Service Owner via service@example.org"
+  },
+  "migration": {
+    "from": "small-vps",
+    "to": "ha-cluster",
+    "pathRef": "docs/distribution/single-server-til-ha.md",
+    "expectedDowntimeMinutes": 60,
+    "steps": [
+      "Tilføj mindst to ekstra fejldomæner og bring dem i samme kontrolplan som den eksisterende server.",
+      "Flyt primærdatabasen til en replikeret konfiguration med mindst tre replikaer og N+1-kapacitet.",
+      "Aktivér ekstern, offsite backup til en særskilt recovery-lokation.",
+      "Mål failover i et planlagt vindue og opdatér serviceklassen fra non-HA til HA med målt evidens."
+    ]
+  }
+}

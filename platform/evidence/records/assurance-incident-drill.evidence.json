@@ -1,0 +1,33 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "EvidenceRecord",
+  "id": "assurance-incident-drill",
+  "subject": {
+    "kind": "verb",
+    "name": "incident-drill",
+    "verb": "drill"
+  },
+  "mode": "fixture",
+  "result": "pass",
+  "commit": "83ad91a963d8055f77c29fb4361455689df95acb",
+  "imageDigest": null,
+  "environment": "local",
+  "upstreamVersion": "platform@1.0.0",
+  "runId": "assurance-assurance-incident-drill",
+  "capturedAt": "2026-09-24T10:00:00Z",
+  "expiresAt": "2026-10-24T10:00:00Z",
+  "producer": {
+    "type": "ci",
+    "name": "assurance-drill",
+    "subject": "ci|assurance"
+  },
+  "command": [
+    "make",
+    "monitoring-drill"
+  ],
+  "artifact": {
+    "uri": "evidence/generated/assurance-incident-drill.md",
+    "sha256": "70c332e0aeacbcedfacbaee8ddee013af8442b8ba036d2750be2374baa21d2c7"
+  },
+  "digest": "4a607b8ee62e656bf18190ba0e007fbeb9e1386c6b481eb27dfcca61e86ab0e8"
+}

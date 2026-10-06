@@ -1,0 +1,23 @@
+{
+  "apiVersion": "v1",
+  "kind": "ResourceQuota",
+  "metadata": {
+    "name": "prod-quota",
+    "namespace": "platform-prod",
+    "labels": {
+      "app.kubernetes.io/name": "platform",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "platform",
+      "platform.example.org/environment": "prod"
+    }
+  },
+  "spec": {
+    "hard": {
+      "requests.cpu": "7500m",
+      "requests.memory": "3840Mi",
+      "limits.cpu": "15000m",
+      "limits.memory": "7680Mi",
+      "persistentvolumeclaims": "4"
+    }
+  }
+}

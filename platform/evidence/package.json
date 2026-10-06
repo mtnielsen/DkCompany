@@ -1,0 +1,13 @@
+{
+  "name": "@platform/evidence",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "OSCAL-evidens-emitter: maskinlæsbar compliance-evidens fra konformanskørsler, policy, audit, git og GitOps-gates. Ingen runtime-afhængigheder.",
+  "bin": {
+    "oscal-evidence": "./src/cli.mjs"
+  },
+  "scripts": {
+    "test": "node --test"
+  }
+}

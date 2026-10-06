@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/agent-registration.schema.json",
+  "title": "Agent Registration",
+  "description": "DKC-055: den uforanderlige registrering af én agentidentitet med præcis én rolle, dens rollebundne credentials og dens lifecycle. Rollen kan ikke ændres in-place; en rolleændring kræver retire + reprovision til en ny identitet.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "spiffeId", "agentRef", "role", "status", "allowedVerbs", "allowedTools", "allowedArtifacts", "createdBy", "createdAt", "manifestDigest"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "AgentRegistration" },
+    "spiffeId": { "type": "string", "pattern": "^spiffe://" },
+    "agentRef": { "type": "string" },
+    "role": { "enum": ["observer", "planner", "implementer", "verifier", "executor", "auditor"] },
+    "status": { "enum": ["active", "retired"] },
+    "modelRef": { "type": ["string", "null"] },
+    "allowedVerbs": { "type": "array", "items": { "type": "string" } },
+    "allowedTools": { "type": "array", "items": { "type": "string" } },
+    "allowedArtifacts": { "type": "array", "items": { "type": "string" } },
+    "createdBy": { "type": "string", "description": "OIDC-sub for det verificerede menneske der oprettede agenten." },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "manifestDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "previousIdentity": { "type": ["string", "null"], "description": "Ved reprovision: den tilbagetrukne identitet denne afløser." },
+    "retiredAt": { "type": "string", "format": "date-time" },
+    "retiredBy": { "type": "string" },
+    "retireReason": { "type": ["string", "null"] }
+  }
+}

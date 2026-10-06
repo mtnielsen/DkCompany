@@ -1,0 +1,21 @@
+{
+  "verb": "subject.export",
+  "module": "nextcloud-adapter",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-24T10:59:05.771Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 12
+  },
+  "artifact": {
+    "uri": "s3://evidence/nextcloud-adapter/subject.export.json",
+    "sha256": "55fb035c3433f499e5f4a26013860c422d671c29db486ee3a19261def93f72d2"
+  }
+}

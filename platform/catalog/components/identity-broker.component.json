@@ -1,0 +1,101 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ComponentManifest",
+  "requires": [
+    {
+      "ref": "platform-core",
+      "range": "^1.0.0",
+      "reason": "Identitetsbrokeren kalder kontrolplanens policy-punkt for hver udstedelse."
+    }
+  ],
+  "optionalRequires": [],
+  "conflicts": [],
+  "dataServices": [
+    {
+      "id": "sql",
+      "kind": "relational",
+      "required": true,
+      "reason": "Identitetsbrokeren gemmer klienter, sessions og mappings i en relationel database."
+    }
+  ],
+  "migrations": [
+    {
+      "id": "identity-init",
+      "phase": "schema",
+      "description": "Opretter klienter, scopes og tenantbindinger.",
+      "reversible": true
+    }
+  ],
+  "download": [
+    {
+      "artifact": "identity-broker-1.2.0.tar.zst",
+      "sizeMiB": 90,
+      "source": "registry.example.org/security/identity-broker:1.2.0",
+      "verified": true,
+      "checksum": "sha256:3c8e2b02"
+    }
+  ],
+  "operations": [
+    "backup",
+    "restore",
+    "upgrade",
+    "health",
+    "slo"
+  ],
+  "implementation": {
+    "status": "implemented",
+    "moduleRef": "modules/keycloak-adapter/",
+    "notes": "IAM-adapteren wrapper Keycloak/Authentik og er implementeret."
+  },
+  "metadata": {
+    "name": "identity-broker",
+    "version": "1.2.0",
+    "description": "OIDC- og SPIFFE-identitetsbroker. Verificerer mennesker og workloads og udsteder tenantbundne identiteter.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen"
+      }
+    },
+    "labels": {
+      "tier": "security-core"
+    }
+  },
+  "componentType": "security-core",
+  "category": "security",
+  "securityCore": true,
+  "provides": {
+    "capabilities": [
+      "identity-oidc",
+      "identity-spiffe"
+    ],
+    "dataServices": []
+  },
+  "supportProfile": {
+    "tier": "supported",
+    "supportWindow": "24 måneder fra GA",
+    "escalation": "Platform Owner"
+  },
+  "platforms": {
+    "os": [
+      "linux"
+    ],
+    "arch": [
+      "x64",
+      "arm64"
+    ],
+    "runtime": [
+      "node>=22 <23",
+      "node>=24 <25"
+    ]
+  },
+  "resources": {
+    "cpuMillicores": 300,
+    "memoryMiB": 512,
+    "storageGiB": 5,
+    "nodes": 0
+  }
+}

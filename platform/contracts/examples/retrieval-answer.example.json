@@ -1,0 +1,34 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "RetrievalAnswer",
+  "query": "arkitektur",
+  "tenantId": "acme",
+  "subject": "oidc|bo.bertelsen",
+  "answerText": "Baseret på 1 autoriserede kilde(r):\n\n[1] Arkitektur-overblik: Platformen består af en kontrolplan, en dataplan og en række moduler. Alle ændringer går gennem git og en central PDP. Tenantadskillelse håndhæves ved identitetsgrænsen.",
+  "uncertainty": {
+    "level": "low",
+    "score": 0.9,
+    "reason": "Kilderne matcher forespørgslen direkte."
+  },
+  "citations": [
+    {
+      "documentId": "bookstack-acme:page-architecture",
+      "sourceId": "bookstack-acme",
+      "title": "Arkitektur-overblik",
+      "url": "https://knowledge.acme.example/books/Teknisk%20dokumentation/page/arkitektur-overblik",
+      "snippet": "Platformen består af en kontrolplan, en dataplan og en række moduler. Alle ændringer går gennem git og en central PDP. Tenantadskillelse håndhæves ved identitetsgrænsen.",
+      "classification": "internal"
+    }
+  ],
+  "untrusted": true,
+  "executable": false,
+  "toolProposals": [],
+  "toolActivationDenied": true,
+  "accessDecision": {
+    "readAllowed": true,
+    "filteredDocuments": 1,
+    "deniedDocuments": 0
+  },
+  "injectionFindings": [],
+  "policyRef": "search/index-policy.json"
+}

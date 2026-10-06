@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/restore-drill.schema.json",
+  "title": "Restore Drill Report",
+  "description": "DKC-016: en gennemført gendannelsesøvelse med målte RPO/RTO, isoleret miljø, checksums, suppressionsresultat og en eksplicit release-gate. Afvigelser spærrer pilotrelease.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "drillId", "backupId", "tenantId", "isolated", "startedAt", "finishedAt", "measurements", "integrity", "functionalChecks", "suppression", "tenantIsolation", "audit", "gate", "auditRef"],
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "RestoreDrillReport" },
+    "drillId": { "type": "string", "format": "uuid" },
+    "backupId": { "type": "string", "format": "uuid" },
+    "tenantId": { "type": "string", "minLength": 1 },
+    "isolated": { "const": true },
+    "startedAt": { "type": "string", "format": "date-time" },
+    "finishedAt": { "type": "string", "format": "date-time" },
+    "measurements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["restoreDurationMs", "restoreDurationMinutes", "measuredRtoMinutes", "dataLossMinutes", "measuredRpoMinutes", "rpoTargetMinutes", "rtoTargetMinutes"],
+      "properties": {
+        "restoreDurationMs": { "type": "number", "minimum": 0 },
+        "restoreDurationMinutes": { "type": "number", "minimum": 0 },
+        "measuredRtoMinutes": { "type": "number", "minimum": 0 },
+        "dataLossMinutes": { "type": "number", "minimum": 0 },
+        "measuredRpoMinutes": { "type": "number", "minimum": 0 },
+        "rpoTargetMinutes": { "type": "number", "minimum": 0 },
+        "rtoTargetMinutes": { "type": "number", "minimum": 0 }
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["databaseOk", "checksumsVerified", "manifestDigest"],
+      "properties": {
+        "databaseOk": { "type": "boolean" },
+        "checksumsVerified": { "type": "boolean" },
+        "manifestDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "functionalChecks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "status", "detail"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "status": { "enum": ["pass", "fail"] },
+          "detail": { "type": "string" }
+        }
+      }
+    },
+    "suppression": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["applied", "entries", "recordsErased"],
+      "properties": {
+        "applied": { "type": "boolean" },
+        "entries": { "type": "integer", "minimum": 0 },
+        "recordsErased": { "type": "integer", "minimum": 0 },
+        "ledgerHead": { "type": ["string", "null"] }
+      }
+    },
+    "tenantIsolation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ok", "tenantsChecked"],
+      "properties": {
+        "ok": { "type": "boolean" },
+        "tenantsChecked": { "type": ["string", "number"] }
+      }
+    },
+    "audit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["chainOk", "checkpointOk"],
+      "properties": {
+        "chainOk": { "type": "boolean" },
+        "checkpointOk": { "type": ["boolean", "null"] },
+        "checkpointDetail": { "type": "string" }
+      }
+    },
+    "gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reasons"],
+      "properties": {
+        "status": { "enum": ["pass", "blocked"] },
+        "reasons": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "auditRef": { "type": "string", "minLength": 1 }
+  }
+}

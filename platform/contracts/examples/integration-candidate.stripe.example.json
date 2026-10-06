@@ -1,0 +1,93 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "IntegrationCandidate",
+  "metadata": {
+    "name": "stripe-2024-12-18",
+    "version": "1.0.0",
+    "description": "Kandidatvurdering af Stripe (API-version 2024-12-18.acacia) som godkendt ekstern betalingstjeneste. Platformen gemmer aldrig kortdata og bruger kun begrænsede scopes.",
+    "accountableHuman": {
+      "subject": "oidc|hans.hansen",
+      "name": "Hans Hansen",
+      "role": "Solution Architect"
+    },
+    "labels": { "application": "APP-054", "adapter": "payment-adapter", "product": "stripe" }
+  },
+  "applicationId": "APP-054",
+  "name": "Stripe",
+  "upstream": {
+    "vendor": "Stripe",
+    "projectUrl": "https://stripe.com/",
+    "documentationUrl": "https://docs.stripe.com/",
+    "sourceUrl": "https://github.com/stripe"
+  },
+  "exactVersion": "2024-12-18.acacia",
+  "edition": { "name": "Standard", "tier": "cloud", "notes": "Vendor-hosted SaaS; prisen afhænger af transaktionsvolumen." },
+  "license": {
+    "spdx": "Proprietary",
+    "type": "proprietary",
+    "paidFeaturesRequired": true,
+    "redistributionAllowed": false,
+    "notes": "Lukket SaaS; platformen videredistribuerer intet og gemmer ingen kortdata."
+  },
+  "hosting": {
+    "mode": "vendor-saas",
+    "commercialRedistribution": false,
+    "commercialHostingAllowed": true,
+    "notes": "Vendor-hostet betalingstjeneste; data forlader platformen under en databehandleraftale."
+  },
+  "sso": { "capability": "partial", "supported": true, "protocols": ["saml2"], "notes": "SAML-SSO til dashboardet er planafhængigt; API-adgang bruger begrænsede nøgler." },
+  "scim": { "capability": "none", "supported": false, "provisioningAlternative": "Brugere i dashboardet administreres manuelt eller gennem en SCIM-bro på et højere plan.", "notes": "Ingen SCIM i standardplanen." },
+  "api": {
+    "capability": "full",
+    "documented": true,
+    "protocols": ["rest", "webhook"],
+    "authentication": ["api-key", "oauth2"],
+    "notes": "REST API og signerede webhooks; kun betalings- og refunderingsevner bruges, ikke kortdata."
+  },
+  "isolation": {
+    "capability": "partial",
+    "tenantModel": "single-tenant-only",
+    "databasePerTenant": false,
+    "notes": "Vendor-hostet multi-tenant; platformen adskiller kunder gennem begrænsede nøgler og tenantmetadata."
+  },
+  "export": {
+    "capability": "partial",
+    "formats": ["json"],
+    "aclPreserved": false,
+    "apiAccessible": true,
+    "notes": "Betalinger og refunderinger kan listes gennem API'et til afstemning."
+  },
+  "backup": {
+    "capability": "partial",
+    "supported": true,
+    "pointInTime": false,
+    "restoreTested": false,
+    "notes": "Tjenesten er vendor-hostet; platformens egen afstemningseksport kan gendannes, men leverandørens data er ikke under platformens backup."
+  },
+  "price": {
+    "model": "usage",
+    "currency": "DKK",
+    "recurring": false,
+    "priceBasis": "Transaktionsgebyr pr. betaling.",
+    "notes": "Prisen afhænger af betalingsmetode og volumen."
+  },
+  "maintenance": {
+    "vendorSupport": "commercial",
+    "releaseCadence": "Løbende API-versionsopdateringer.",
+    "securityResponse": "PCI-DSS-certificeret leverandør med offentlig sikkerhedsproces.",
+    "upgradePath": "API-versioner pinnes og opgraderes kontrolleret."
+  },
+  "freeVsPaid": {
+    "documented": true,
+    "freeTierLimitations": ["Ingen gratis produktionstransaktioner.", "SAML-SSO og avanceret svindelkontrol er planafhængigt."],
+    "requiredPaidFeatures": ["Betalingstransaktioner", "SAML-SSO"],
+    "sourceUrl": "https://stripe.com/pricing"
+  },
+  "verification": {
+    "status": "candidate_not_approved",
+    "verifiedBy": { "subject": "oidc|hans.hansen", "name": "Hans Hansen", "role": "Solution Architect" },
+    "verifiedAt": "2025-01-15",
+    "evidence": ["https://docs.stripe.com/api", "https://docs.stripe.com/security"],
+    "notes": "Licens, API og begrænsede scopes er vurderet. Kandidaten godkendes ikke endnu: en navngivet menneskelig godkendelse af tjenesten, dens scopes og databehandleraftalen mangler."
+  }
+}

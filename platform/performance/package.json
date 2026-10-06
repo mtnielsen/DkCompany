@@ -1,0 +1,10 @@
+{
+  "name": "dkcompany-performance",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "DKC-050: kapacitets- og skaleringsmodel med lastprofiler, autoskalering, tenantkvoter, fairness, connection pools, backpressure og enhedspris.",
+  "scripts": {
+    "test": "node --test"
+  }
+}

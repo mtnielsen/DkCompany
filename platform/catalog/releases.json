@@ -1,0 +1,231 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ReleaseCatalog",
+  "metadata": {
+    "name": "platform-release-catalog",
+    "version": "1.0.0",
+    "description": "Signeret, versionsstyret releasekatalog for platformen. Hver release har supportvindue, EOL-status, vedtaget håndtering, kompatibilitetslås og signerede artefakter. En tilbagekaldt release må ikke køre, og en sikkerhedsopdatering peger på en advisory og en procedure.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner"
+      }
+    },
+    "labels": {
+      "tier": "release",
+      "wave": "5"
+    }
+  },
+  "policy": {
+    "requireSignature": true,
+    "requireCompatibilityLock": true,
+    "requireProvenance": true,
+    "requireSbom": true,
+    "revokedNeverRunnable": true,
+    "eolRequiresHandling": true,
+    "securityUpdateRequiresAdvisory": true,
+    "promotionPath": [
+      "stable",
+      "security",
+      "eol",
+      "revoked"
+    ]
+  },
+  "trustAnchorRef": "release/trust/release-keys.json",
+  "releases": [
+    {
+      "id": "1.4.0",
+      "channel": "stable",
+      "releasedAt": "2026-01-15T00:00:00Z",
+      "eolAt": null,
+      "handling": null,
+      "supportWindow": {
+        "from": "2026-01-15T00:00:00Z",
+        "until": "2028-01-15T00:00:00Z",
+        "tier": "supported"
+      },
+      "compatibilityLock": {
+        "analytics-store": "1.2.0",
+        "audit-service": "1.5.0",
+        "backup-destination": "1.0.0",
+        "bi": "3.0.0",
+        "communications": "2.1.0",
+        "hr": "1.4.0",
+        "identity-broker": "1.2.0",
+        "object-store": "1.1.0",
+        "platform-core": "1.4.0",
+        "primary-database": "1.3.0",
+        "reporting": "1.1.0"
+      },
+      "artifacts": [
+        {
+          "name": "platform-core-1.4.0.tar.zst",
+          "digest": "f63145a682525577047849dd9c9b71a95db800829cedb60b2bc0ffc9e395a126",
+          "signature": {
+            "algorithm": "hmac-sha256",
+            "keyId": "installer-example-key",
+            "value": "d1f2001ec76db6337ced528404dc09f6c6005d38a2c9dcbd3d5138ca7918f008"
+          }
+        },
+        {
+          "name": "identity-broker-1.2.0.tar.zst",
+          "digest": "2ab37ea845fd218ac5a27c1743bcb80e90f3677d3701162e50ba3c5e96503e87",
+          "signature": {
+            "algorithm": "hmac-sha256",
+            "keyId": "installer-example-key",
+            "value": "12b57dd8eb01b08642221cb67594716a62067f5a6736229ef9f919327bd3d9c4"
+          }
+        },
+        {
+          "name": "audit-service-1.5.0.tar.zst",
+          "digest": "e1bbd14d1e001694276ff3237a6602319a457ca2fd4fa8eb47d24a62c3ccece5",
+          "signature": {
+            "algorithm": "hmac-sha256",
+            "keyId": "installer-example-key",
+            "value": "221fb006fc1914a33168c1df003c7eb06399ef45b39f7ff80a536f684ede6167"
+          }
+        }
+      ],
+      "securityUpdates": [],
+      "digest": "c9438bdc0cea26c5823973ebb0f29da40b8ab3deeb2204d41315711cb5d7311b"
+    },
+    {
+      "id": "1.3.0",
+      "channel": "security",
+      "releasedAt": "2025-10-01T00:00:00Z",
+      "eolAt": null,
+      "handling": null,
+      "supportWindow": {
+        "from": "2025-10-01T00:00:00Z",
+        "until": "2026-10-01T00:00:00Z",
+        "tier": "supported"
+      },
+      "compatibilityLock": {
+        "analytics-store": "1.2.0",
+        "audit-service": "1.4.0",
+        "backup-destination": "1.0.0",
+        "bi": "2.9.0",
+        "communications": "2.0.0",
+        "hr": "1.3.0",
+        "identity-broker": "1.1.0",
+        "object-store": "1.1.0",
+        "platform-core": "1.3.0",
+        "primary-database": "1.3.0",
+        "reporting": "1.0.0"
+      },
+      "artifacts": [
+        {
+          "name": "platform-core-1.3.0.tar.zst",
+          "digest": "b2f79b6b09f08488ee137edede6db4abe914b5c0646c99d583b935155f9d0847",
+          "signature": {
+            "algorithm": "hmac-sha256",
+            "keyId": "installer-example-key",
+            "value": "4b15c96797d5bafd3a7eb399508d4ba5fe2674074d56380f972e708476dce82a"
+          }
+        },
+        {
+          "name": "identity-broker-1.1.0.tar.zst",
+          "digest": "d242f10a794262c6381adc620afa839883b7ccb8713914aae382e2bd073291b0",
+          "signature": {
+            "algorithm": "hmac-sha256",
+            "keyId": "installer-example-key",
+            "value": "54a6cff5805e9e43d702f55dd2688f1ad5587df22a5daf4806b073e6630129b6"
+          }
+        }
+      ],
+      "securityUpdates": [
+        {
+          "advisoryId": "DKC-SA-2025-014",
+          "severity": "high",
+          "fixedIn": "1.4.0",
+          "procedure": "Opdatér til 1.4.0 via opdateringsplanen; verificér signaturen og kør migrationskontrollen før cutover.",
+          "requiresRestart": true
+        }
+      ],
+      "digest": "0aa13870d7e8bcd367cc83568fcf3a7f429d2133571668d6383a0869395efcde"
+    },
+    {
+      "id": "1.2.0",
+      "channel": "eol",
+      "releasedAt": "2025-04-01T00:00:00Z",
+      "eolAt": "2026-01-01T00:00:00Z",
+      "handling": "Udfaset: ingen nye features. Eksisterende installationer skal opdateres til 1.4.0 inden 2026-10-01; support ydes kun som fejlretning.",
+      "supportWindow": {
+        "from": "2025-04-01T00:00:00Z",
+        "until": "2026-01-01T00:00:00Z",
+        "tier": "community"
+      },
+      "compatibilityLock": {
+        "analytics-store": "1.1.0",
+        "audit-service": "1.3.0",
+        "backup-destination": "1.0.0",
+        "identity-broker": "1.1.0",
+        "object-store": "1.0.0",
+        "platform-core": "1.2.0",
+        "primary-database": "1.2.0"
+      },
+      "artifacts": [
+        {
+          "name": "platform-core-1.2.0.tar.zst",
+          "digest": "6f15261a646112c465203ccc00871beb2ef7e03519c7962c0646fb03917e3dbc",
+          "signature": {
+            "algorithm": "hmac-sha256",
+            "keyId": "installer-example-key",
+            "value": "df5294b9283e5f2e2e11ac5ec74429bc963cf536515d6584bac67fd9fa365675"
+          }
+        }
+      ],
+      "securityUpdates": [],
+      "digest": "4af148331cfc2b2ba8ec6ad03520c150f62aa0e394c600a2bc8ff68bad81f19d"
+    },
+    {
+      "id": "1.1.0",
+      "channel": "revoked",
+      "releasedAt": "2024-10-01T00:00:00Z",
+      "eolAt": "2025-06-01T00:00:00Z",
+      "handling": "Tilbagekaldt efter DKC-SA-2024-031: kendt autorisationsfejl. Må ikke køres. Eksisterende installationer skal opdateres øjeblikkeligt, og credentialer roteres.",
+      "supportWindow": {
+        "from": "2024-10-01T00:00:00Z",
+        "until": "2025-06-01T00:00:00Z",
+        "tier": "none"
+      },
+      "compatibilityLock": {
+        "audit-service": "1.2.0",
+        "identity-broker": "1.0.0",
+        "object-store": "1.0.0",
+        "platform-core": "1.1.0",
+        "primary-database": "1.1.0"
+      },
+      "artifacts": [
+        {
+          "name": "platform-core-1.1.0.tar.zst",
+          "digest": "493091b54976a0b9b95232458f1a1feb1a0e763701e106fd32c9ddb562df88c3",
+          "signature": {
+            "algorithm": "hmac-sha256",
+            "keyId": "installer-example-key",
+            "value": "8519d84f9a89920062e06b6f3efd4c36614ed2bde7e7e231722658cffb08dd48"
+          }
+        }
+      ],
+      "securityUpdates": [
+        {
+          "advisoryId": "DKC-SA-2024-031",
+          "severity": "critical",
+          "fixedIn": "1.3.0",
+          "procedure": "Opdatér til 1.4.0 eller minimum 1.3.0, rotér alle credentials og verificér autorisationen efter cutover.",
+          "requiresRestart": true
+        }
+      ],
+      "digest": "7e51f421a723bd2abff639b474922e2aa5c4a73f05339fb85f5a982993a645a2"
+    }
+  ],
+  "signature": {
+    "algorithm": "hmac-sha256",
+    "keyId": "installer-example-key",
+    "value": "1cc871d59d2c21766ec0e060f16c3feff2dbaa2dbd84dc075985eca9964c2f50"
+  }
+}

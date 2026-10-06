@@ -1,0 +1,19 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "CustomerAcceptanceRegister",
+  "metadata": {
+    "name": "platform-pilot-customer-acceptance",
+    "version": "1.0.0",
+    "description": "Særskilt register for den navngivne kundes accept af pilotens kendte begrænsninger. Registeret er tomt som standard: en grøn deterministisk kørsel udleder aldrig en kundeaccept, og en accept skal registreres af et menneske i en accepteret rolle.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+    },
+    "labels": { "wave": "5", "task": "DKC-033" }
+  },
+  "acceptedByRoles": ["Platform Owner", "Service Delivery Owner", "Enterprise Delivery Owner"],
+  "maxAgeDays": 30,
+  "acceptances": []
+}

@@ -1,0 +1,21 @@
+{
+  "verb": "backup",
+  "module": "audit-service",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-16T21:11:53.843Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 36
+  },
+  "artifact": {
+    "uri": "s3://evidence/audit-service/backup.json",
+    "sha256": "9b44c1e2348a1f3aeae408eecce63939f1a0324ea7b2c4cbba48cca85b1dae9d"
+  }
+}

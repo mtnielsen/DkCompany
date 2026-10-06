@@ -1,0 +1,39 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ProviderSwapFixture",
+  "id": "iam-keycloak-to-entra",
+  "title": "Verificeret IAM-migration: Keycloak til Entra ID",
+  "class": "iam",
+  "from": "keycloak-iam",
+  "to": "entra-iam",
+  "mode": "planned-migration",
+  "tenantId": "acme",
+  "appId": "platform",
+  "migrationProof": "docs/spec/provider-contracts.md#iam-skift",
+  "records": [
+    {
+      "sourceId": "kc-ada",
+      "entityType": "Principal",
+      "owner": { "subject": "oidc|ada.acme", "tenantId": "acme" },
+      "classification": "internal",
+      "acl": { "readSubjects": ["oidc|ada.acme"], "readGroups": [] },
+      "links": [],
+      "references": ["mig:acme:iam:Principal:kc-ada"],
+      "identity": { "kind": "human", "subject": "oidc|ada.acme" },
+      "auditProvenance": ["audit:keycloak:login:kc-ada:2026-02-01", "audit:keycloak:role-change:kc-ada:2026-02-15"],
+      "data": { "email": "ada@acme.example", "displayName": "Ada Acme" }
+    },
+    {
+      "sourceId": "kc-agent-1",
+      "entityType": "Principal",
+      "owner": { "subject": "service|platform-agent", "tenantId": "acme" },
+      "classification": "internal",
+      "acl": { "readSubjects": ["service|platform-agent"], "readGroups": [] },
+      "links": [],
+      "references": ["mig:acme:iam:Principal:kc-agent-1"],
+      "identity": { "kind": "agent", "subject": "service|platform-agent" },
+      "auditProvenance": ["audit:keycloak:token-issue:kc-agent-1:2026-02-20"],
+      "data": { "displayName": "Platform Agent", "role": "migration-runner" }
+    }
+  ]
+}

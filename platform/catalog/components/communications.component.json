@@ -1,0 +1,111 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ComponentManifest",
+  "requires": [
+    {
+      "ref": "platform-core",
+      "range": "^1.0.0",
+      "reason": "Kommunikation bruger kontrolplanens policy og job-runner til provisionering."
+    },
+    {
+      "ref": "identity-broker",
+      "range": "^1.0.0",
+      "reason": "Brugere og bots skal logge ind gennem den fælles identitetsbroker."
+    },
+    {
+      "ref": "object-store",
+      "range": "^1.0.0",
+      "reason": "Vedhæftede filer gemmes i det fælles objektlager."
+    }
+  ],
+  "optionalRequires": [],
+  "conflicts": [],
+  "dataServices": [
+    {
+      "id": "sql",
+      "kind": "relational",
+      "required": true,
+      "reason": "Kommunikation gemmer beskeder og kanaler i en relationel database."
+    }
+  ],
+  "migrations": [
+    {
+      "id": "communications-init",
+      "phase": "schema",
+      "description": "Opretter tabeller for kanaler, beskeder og vedhæftninger.",
+      "reversible": true
+    }
+  ],
+  "download": [
+    {
+      "artifact": "communications-2.1.0.tar.zst",
+      "sizeMiB": 260,
+      "source": "registry.example.org/apps/communications:2.1.0",
+      "verified": true,
+      "checksum": "sha256:7a2c6d06"
+    }
+  ],
+  "operations": [
+    "backup",
+    "restore",
+    "upgrade",
+    "health",
+    "slo"
+  ],
+  "implementation": {
+    "status": "implemented",
+    "moduleRef": "modules/mattermost-adapter/",
+    "notes": "Kommunikation leveres gennem Mattermost-adapteren, som er implementeret."
+  },
+  "metadata": {
+    "name": "communications",
+    "version": "2.1.0",
+    "description": "Kommunikation og teamchat. Valgfri applikation i Communications-kategorien.",
+    "accountableHuman": {
+      "subject": "oidc|cecilia.christensen",
+      "name": "Cecilia Christensen",
+      "role": "Service Owner",
+      "substitute": {
+        "subject": "oidc|david.dahl",
+        "name": "David Dahl"
+      }
+    },
+    "labels": {
+      "tier": "app",
+      "category": "communications"
+    }
+  },
+  "componentType": "application",
+  "category": "communications",
+  "securityCore": false,
+  "provides": {
+    "capabilities": [
+      "messaging"
+    ],
+    "dataServices": []
+  },
+  "supportProfile": {
+    "tier": "supported",
+    "supportWindow": "18 måneder fra GA",
+    "escalation": "Service Owner"
+  },
+  "platforms": {
+    "os": [
+      "linux"
+    ],
+    "arch": [
+      "x64",
+      "arm64"
+    ],
+    "runtime": [
+      "node>=22 <23",
+      "node>=24 <25"
+    ]
+  },
+  "resources": {
+    "cpuMillicores": 500,
+    "memoryMiB": 1024,
+    "storageGiB": 20,
+    "nodes": 0
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "@platform/logging",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "DKC-049: komplet, korreleret og manipuleringssikker logging på tværs af agenter og servere. Bygger på den holdbare audit-log (DKC-009), telemetri-korrelationen (DKC-066) og WORM-lageret (DKC-048).",
+  "bin": {
+    "platform-logging": "./src/cli.mjs"
+  },
+  "scripts": {
+    "test": "node --test"
+  }
+}

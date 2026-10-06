@@ -1,0 +1,340 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "SecurityAssessment",
+  "metadata": {
+    "name": "platform-security-assessment",
+    "version": "1.0.0",
+    "description": "Versioneret sikkerhedsvurdering: forberedt engagement, isoleret lokal regressionsharness med ni dækningskategorier, fund/retest-import og artefaktbinding. Den uafhængige vurdering og den menneskelige releasebeslutning er udestående.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen"
+      }
+    }
+  },
+  "assessmentVersion": "1.0.0",
+  "generatedAt": "2026-03-01T00:00:00.000Z",
+  "measured": false,
+  "rulesOfEngagementRef": "security-assessment/rules-of-engagement.json",
+  "artifactBinding": {
+    "targetCommit": "83ad91a963d8055f77c29fb4361455689df95acb",
+    "artifactDigest": "sha256:360668be68ec924e95e01d3d89d27ecebccaf323187ac2cd49808cbbc3bf0459",
+    "profileInventory": [
+      {
+        "component": "telemetry-api",
+        "digest": "sha256:71967e65a21bddf9a9cb9d7ae520360fcd5b11dfa20bc80a2d767069f5191ce3"
+      },
+      {
+        "component": "agent-registry",
+        "digest": "sha256:48b654421c9c1a1357c8ad21b5c5cf7f8f73a6f35e06d63d142f7eb98ad3df38"
+      },
+      {
+        "component": "host-management",
+        "digest": "sha256:7af22fcb4f5ef9333794a1d3dcc5383fd91d7af2f55edadd7ea933cb7a96a6ae"
+      },
+      {
+        "component": "adapter-sdk",
+        "digest": "sha256:a623e8f277962a493a3bd778064ef2f8c2fb7d4d189cf2529edca7c2c1f34da8"
+      },
+      {
+        "component": "storage",
+        "digest": "sha256:e81e7cfceae29b5aa11f49615235aa8a7dd8b151be649283fea591f18503738b"
+      },
+      {
+        "component": "runtime",
+        "digest": "sha256:1f163f8064ede4151e1712c900fa2a4e6dbfb0e049be8722e578f41c17a039b0"
+      },
+      {
+        "component": "identity",
+        "digest": "sha256:467e0b8b6de9f91982798ec3082ab01746a9b13f86111c9dbb6c88ba052d964d"
+      },
+      {
+        "component": "credentials",
+        "digest": "sha256:ed9d2dc27804b51559321ff06b270dce1fe1c138f7466c5b53c60ad4a505ad49"
+      },
+      {
+        "component": "approvals",
+        "digest": "sha256:bdf6c700e24c2599043678f8e949fe73ae63433e95bac972c69cea74529d4f18"
+      }
+    ]
+  },
+  "coverage": [
+    {
+      "id": "auth",
+      "version": "1.0.0",
+      "required": true,
+      "status": "passed",
+      "evidenceRefs": [
+        "security-assessment/report/security-assessment-report.json#PROBE-AUTH-NO-TOKEN",
+        "security-assessment/report/security-assessment-report.json#PROBE-AUTH-WRONG-AUDIENCE"
+      ],
+      "probeIds": [
+        "PROBE-AUTH-NO-TOKEN",
+        "PROBE-AUTH-WRONG-AUDIENCE"
+      ],
+      "notes": "Dækket af den isolerede lokale regressionsharness."
+    },
+    {
+      "id": "direct-apis",
+      "version": "1.0.0",
+      "required": true,
+      "status": "passed",
+      "evidenceRefs": [
+        "security-assessment/report/security-assessment-report.json#PROBE-DIRECT-NO-EXECUTE",
+        "security-assessment/report/security-assessment-report.json#PROBE-DIRECT-UNKNOWN-ROUTE"
+      ],
+      "probeIds": [
+        "PROBE-DIRECT-NO-EXECUTE",
+        "PROBE-DIRECT-UNKNOWN-ROUTE"
+      ],
+      "notes": "Dækket af den isolerede lokale regressionsharness."
+    },
+    {
+      "id": "cross-tenant-access",
+      "version": "1.0.0",
+      "required": true,
+      "status": "passed",
+      "evidenceRefs": [
+        "security-assessment/report/security-assessment-report.json#PROBE-CROSS-TENANT-VIEW",
+        "security-assessment/report/security-assessment-report.json#PROBE-CROSS-TENANT-LINK"
+      ],
+      "probeIds": [
+        "PROBE-CROSS-TENANT-VIEW",
+        "PROBE-CROSS-TENANT-LINK"
+      ],
+      "notes": "Dækket af den isolerede lokale regressionsharness."
+    },
+    {
+      "id": "injection",
+      "version": "1.0.0",
+      "required": true,
+      "status": "passed",
+      "evidenceRefs": [
+        "security-assessment/report/security-assessment-report.json#PROBE-INJECTION-MALFORMED",
+        "security-assessment/report/security-assessment-report.json#PROBE-INJECTION-OVERSIZED",
+        "security-assessment/report/security-assessment-report.json#PROBE-INJECTION-PROMPT"
+      ],
+      "probeIds": [
+        "PROBE-INJECTION-MALFORMED",
+        "PROBE-INJECTION-OVERSIZED",
+        "PROBE-INJECTION-PROMPT"
+      ],
+      "notes": "Dækket af den isolerede lokale regressionsharness."
+    },
+    {
+      "id": "agent-role-approval-bypass",
+      "version": "1.0.0",
+      "required": true,
+      "status": "passed",
+      "evidenceRefs": [
+        "security-assessment/report/security-assessment-report.json#PROBE-AGENT-SAME-IDENTITY",
+        "security-assessment/report/security-assessment-report.json#PROBE-AGENT-SAME-ROLE"
+      ],
+      "probeIds": [
+        "PROBE-AGENT-SAME-IDENTITY",
+        "PROBE-AGENT-SAME-ROLE"
+      ],
+      "notes": "Dækket af den isolerede lokale regressionsharness."
+    },
+    {
+      "id": "host-broker",
+      "version": "1.0.0",
+      "required": true,
+      "status": "passed",
+      "evidenceRefs": [
+        "security-assessment/report/security-assessment-report.json#PROBE-HOST-BROKER-UNSIGNED",
+        "security-assessment/report/security-assessment-report.json#PROBE-HOST-BROKER-TAMPERED"
+      ],
+      "probeIds": [
+        "PROBE-HOST-BROKER-UNSIGNED",
+        "PROBE-HOST-BROKER-TAMPERED"
+      ],
+      "notes": "Dækket af den isolerede lokale regressionsharness."
+    },
+    {
+      "id": "connectors",
+      "version": "1.0.0",
+      "required": true,
+      "status": "passed",
+      "evidenceRefs": [
+        "security-assessment/report/security-assessment-report.json#PROBE-CONNECTOR-DEMO-IDENTITY"
+      ],
+      "probeIds": [
+        "PROBE-CONNECTOR-DEMO-IDENTITY"
+      ],
+      "notes": "Dækket af den isolerede lokale regressionsharness."
+    },
+    {
+      "id": "telemetry-leaks",
+      "version": "1.0.0",
+      "required": true,
+      "status": "passed",
+      "evidenceRefs": [
+        "security-assessment/report/security-assessment-report.json#PROBE-TENANT-VIEW-SCOPE",
+        "security-assessment/report/security-assessment-report.json#PROBE-TELEMETRY-REDACTION"
+      ],
+      "probeIds": [
+        "PROBE-TENANT-VIEW-SCOPE",
+        "PROBE-TELEMETRY-REDACTION"
+      ],
+      "notes": "Dækket af den isolerede lokale regressionsharness."
+    },
+    {
+      "id": "immutable-bypass",
+      "version": "1.0.0",
+      "required": true,
+      "status": "passed",
+      "evidenceRefs": [
+        "security-assessment/report/security-assessment-report.json#PROBE-IMMUTABLE-COMPLIANCE-LOCK"
+      ],
+      "probeIds": [
+        "PROBE-IMMUTABLE-COMPLIANCE-LOCK"
+      ],
+      "notes": "Dækket af den isolerede lokale regressionsharness."
+    }
+  ],
+  "harnessRuns": [
+    {
+      "id": "RUN-LOCAL-REGRESSION",
+      "targetId": "local-loopback",
+      "roeRef": "security-assessment/rules-of-engagement.json",
+      "startedAt": "2026-03-01T00:00:00.000Z",
+      "authorized": true,
+      "probes": [
+        {
+          "id": "PROBE-AUTH-NO-TOKEN",
+          "category": "auth",
+          "result": "passed",
+          "assertion": "Et kald uden bearer-token afvises med 401",
+          "evidenceRef": "security-assessment/report/security-assessment-report.json#PROBE-AUTH-NO-TOKEN"
+        },
+        {
+          "id": "PROBE-AUTH-WRONG-AUDIENCE",
+          "category": "auth",
+          "result": "passed",
+          "assertion": "Et token udstedt til en anden audience afvises med 401",
+          "evidenceRef": "security-assessment/report/security-assessment-report.json#PROBE-AUTH-WRONG-AUDIENCE"
+        },
+        {
+          "id": "PROBE-DIRECT-NO-EXECUTE",
+          "category": "direct-apis",
+          "result": "passed",
+          "assertion": "API'et har ingen udførelsesrute (404)",
+          "evidenceRef": "security-assessment/report/security-assessment-report.json#PROBE-DIRECT-NO-EXECUTE"
+        },
+        {
+          "id": "PROBE-DIRECT-UNKNOWN-ROUTE",
+          "category": "direct-apis",
+          "result": "passed",
+          "assertion": "En ukendt direkte rute afvises (404)",
+          "evidenceRef": "security-assessment/report/security-assessment-report.json#PROBE-DIRECT-UNKNOWN-ROUTE"
+        },
+        {
+          "id": "PROBE-CROSS-TENANT-VIEW",
+          "category": "cross-tenant-access",
+          "result": "passed",
+          "assertion": "Læsning af en anden tenants view afvises med 403",
+          "evidenceRef": "security-assessment/report/security-assessment-report.json#PROBE-CROSS-TENANT-VIEW"
+        },
+        {
+          "id": "PROBE-CROSS-TENANT-LINK",
+          "category": "cross-tenant-access",
+          "result": "passed",
+          "assertion": "Et ressource-link til en anden tenant afvises med 403",
+          "evidenceRef": "security-assessment/report/security-assessment-report.json#PROBE-CROSS-TENANT-LINK"
+        },
+        {
+          "id": "PROBE-INJECTION-MALFORMED",
+          "category": "injection",
+          "result": "passed",
+          "assertion": "En malformet indtags-envelope afvises med 400/422",
+          "evidenceRef": "security-assessment/report/security-assessment-report.json#PROBE-INJECTION-MALFORMED"
+        },
+        {
+          "id": "PROBE-INJECTION-OVERSIZED",
+          "category": "injection",
+          "result": "passed",
+          "assertion": "Et payload over grænsen afvises, og serveren overlever",
+          "evidenceRef": "security-assessment/report/security-assessment-report.json#PROBE-INJECTION-OVERSIZED"
+        },
+        {
+          "id": "PROBE-INJECTION-PROMPT",
+          "category": "injection",
+          "result": "passed",
+          "assertion": "Prompt-injektion i ubetroet tekst flagges",
+          "evidenceRef": "security-assessment/report/security-assessment-report.json#PROBE-INJECTION-PROMPT"
+        },
+        {
+          "id": "PROBE-TENANT-VIEW-SCOPE",
+          "category": "telemetry-leaks",
+          "result": "passed",
+          "assertion": "Et view uden den nødvendige scope afvises med 403",
+          "evidenceRef": "security-assessment/report/security-assessment-report.json#PROBE-TENANT-VIEW-SCOPE"
+        },
+        {
+          "id": "PROBE-TELEMETRY-REDACTION",
+          "category": "telemetry-leaks",
+          "result": "passed",
+          "assertion": "Følsomme felter fjernes for en principal uden den nødvendige rolle",
+          "evidenceRef": "security-assessment/report/security-assessment-report.json#PROBE-TELEMETRY-REDACTION"
+        },
+        {
+          "id": "PROBE-AGENT-SAME-IDENTITY",
+          "category": "agent-role-approval-bypass",
+          "result": "passed",
+          "assertion": "En verifier der er samme identitet som producenten afvises",
+          "evidenceRef": "security-assessment/report/security-assessment-report.json#PROBE-AGENT-SAME-IDENTITY"
+        },
+        {
+          "id": "PROBE-AGENT-SAME-ROLE",
+          "category": "agent-role-approval-bypass",
+          "result": "passed",
+          "assertion": "En verifier med samme rolle som producenten afvises",
+          "evidenceRef": "security-assessment/report/security-assessment-report.json#PROBE-AGENT-SAME-ROLE"
+        },
+        {
+          "id": "PROBE-HOST-BROKER-UNSIGNED",
+          "category": "host-broker",
+          "result": "passed",
+          "assertion": "En usigneret host-operation afvises",
+          "evidenceRef": "security-assessment/report/security-assessment-report.json#PROBE-HOST-BROKER-UNSIGNED"
+        },
+        {
+          "id": "PROBE-HOST-BROKER-TAMPERED",
+          "category": "host-broker",
+          "result": "passed",
+          "assertion": "En manipuleret signeret host-operation afvises",
+          "evidenceRef": "security-assessment/report/security-assessment-report.json#PROBE-HOST-BROKER-TAMPERED"
+        },
+        {
+          "id": "PROBE-CONNECTOR-DEMO-IDENTITY",
+          "category": "connectors",
+          "result": "passed",
+          "assertion": "En demo-identitet giver ikke adgang i produktionsprofilen",
+          "evidenceRef": "security-assessment/report/security-assessment-report.json#PROBE-CONNECTOR-DEMO-IDENTITY"
+        },
+        {
+          "id": "PROBE-IMMUTABLE-COMPLIANCE-LOCK",
+          "category": "immutable-bypass",
+          "result": "passed",
+          "assertion": "En COMPLIANCE-låst version kan ikke slettes",
+          "evidenceRef": "security-assessment/report/security-assessment-report.json#PROBE-IMMUTABLE-COMPLIANCE-LOCK"
+        }
+      ],
+      "summary": {
+        "total": 17,
+        "passed": 17,
+        "failed": 0
+      }
+    }
+  ],
+  "findings": [],
+  "retests": [],
+  "impactReview": null,
+  "independentAssessment": null,
+  "releaseDecision": null,
+  "status": "outstanding"
+}

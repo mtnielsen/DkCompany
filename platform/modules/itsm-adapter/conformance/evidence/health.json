@@ -1,0 +1,21 @@
+{
+  "verb": "health",
+  "module": "itsm-adapter",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-24T11:12:35.830Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 31
+  },
+  "artifact": {
+    "uri": "s3://evidence/itsm-adapter/health.json",
+    "sha256": "2b35e99e1075ead700ba17bc04e9ebe9e4ac0cf9ca43e28300074790871e12fd"
+  }
+}

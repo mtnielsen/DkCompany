@@ -1,0 +1,24 @@
+{
+  "metadata": {
+    "accountableHuman": {
+      "subject": "oidc|dorthe.damgaard",
+      "name": "Dorthe Damgaard",
+      "role": "Independent Assessor"
+    }
+  },
+  "retests": [
+    {
+      "ref": "RT-001",
+      "findingRef": "PT-001",
+      "performedAt": "2026-03-15T00:00:00Z",
+      "performedBy": {
+        "subject": "oidc|dorthe.damgaard",
+        "name": "Dorthe Damgaard",
+        "role": "Independent Assessor"
+      },
+      "fixedArtifactDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "result": "passed",
+      "evidence": "Samme request afvises nu med 403 efter rettelsen."
+    }
+  ]
+}

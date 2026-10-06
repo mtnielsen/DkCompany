@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/usage-ledger.schema.json",
+  "title": "Usage Ledger",
+  "description": "Forbrugsjournal (DKC-034): forbrugshændelser pr. tenant og pakke, hver med en idempotency-nøgle, en måler, en mængde, en valuta, et tidspunkt og en herkomst (actual eller estimated). Journalen skelner mellem faktisk forbrug og estimation og bærer kundens stopgrænse og prognosemetode.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "tenants"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "UsageLedger" },
+    "metadata": { "$ref": "#/$defs/metadata" },
+    "tenants": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/tenantUsage" }
+    }
+  },
+  "$defs": {
+    "human": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\|[a-z0-9][a-z0-9._-]{2,}$" },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": { "$ref": "#/$defs/human" }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman", "labels"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/human" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "tenantUsage": {
+      "type": "object",
+      "required": ["tenantId", "packageId", "stopLimit", "events"],
+      "additionalProperties": false,
+      "properties": {
+        "tenantId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+        "packageId": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$" },
+        "stopLimit": { "$ref": "#/$defs/stopLimit" },
+        "events": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/usageEvent" }
+        }
+      }
+    },
+    "stopLimit": {
+      "type": "object",
+      "required": ["currency", "monthlyLimit", "warningPercent", "onExceed", "forecastMethod"],
+      "additionalProperties": false,
+      "properties": {
+        "currency": { "type": "string", "minLength": 3 },
+        "monthlyLimit": { "type": "number", "exclusiveMinimum": 0 },
+        "warningPercent": { "type": "integer", "minimum": 1, "maximum": 99 },
+        "onExceed": { "enum": ["block", "warn"] },
+        "forecastMethod": { "enum": ["straight-line", "trailing-30d"] }
+      }
+    },
+    "usageEvent": {
+      "type": "object",
+      "required": ["id", "eventKey", "meter", "quantity", "unit", "currency", "occurredAt", "provenance"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "eventKey": { "type": "string", "minLength": 3 },
+        "meter": { "$ref": "#/$defs/meter" },
+        "quantity": { "type": "number", "exclusiveMinimum": 0 },
+        "unit": { "type": "string", "minLength": 1 },
+        "currency": { "type": "string", "minLength": 3 },
+        "occurredAt": { "type": "string", "format": "date-time" },
+        "provenance": { "enum": ["actual", "estimated"] },
+        "vendorRef": { "type": "string", "minLength": 1 },
+        "note": { "type": "string", "minLength": 1 }
+      }
+    },
+    "meter": {
+      "enum": [
+        "compute",
+        "storage",
+        "backup",
+        "model-calls",
+        "integrations",
+        "runtime",
+        "support",
+        "upstream-features",
+        "migration"
+      ]
+    }
+  }
+}

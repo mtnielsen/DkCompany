@@ -1,0 +1,52 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "AgentTask",
+  "taskId": "018f3c2a-1b2c-7def-8a01-777777777777",
+  "tenantId": "acme",
+  "agentRef": "dummy-ok-upgrader",
+  "objective": "Luk CVE-2025-0001 i dummy-ok ved at foreslå en patch-opgradering.",
+  "requestedBy": { "kind": "human", "id": "oidc|anna.andersen" },
+  "budget": { "maxTokens": 200000, "maxCostEur": 25, "maxWallClockSeconds": 3600 },
+  "evidenceIndex": {
+    "tests-pass": {
+      "uri": "evidence/dummy-ok/tests-report.json",
+      "sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+      "commit": "5555555555555555555555555555555555555555",
+      "status": "pass"
+    },
+    "dry-run-clean": {
+      "uri": "evidence/dummy-ok/dry-run.json",
+      "sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+      "commit": "5555555555555555555555555555555555555555",
+      "status": "clean"
+    },
+    "rollback-tested": {
+      "uri": "evidence/dummy-ok/rollback-test.json",
+      "sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+      "commit": "5555555555555555555555555555555555555555",
+      "status": "pass"
+    }
+  },
+  "actions": [
+    {
+      "verb": "upgrade.dry-run",
+      "target": "dummy-ok",
+      "environment": "staging",
+      "evidence": ["tests-pass"],
+      "changeUri": "https://git.example.org/platform/dummy-ok/-/merge_requests/42"
+    },
+    {
+      "verb": "upgrade.patch",
+      "target": "dummy-ok",
+      "environment": "staging",
+      "evidence": ["tests-pass", "dry-run-clean", "rollback-tested"],
+      "dataCategories": ["operational"],
+      "approvalId": "018f3c2a-1b2c-7def-8a01-333333333333",
+      "executionId": "exec-018f3c2a-1b2c-7def-8a01-444444444444",
+      "changeDigest": "3333333333333333333333333333333333333333333333333333333333333333",
+      "parameters": { "library": "libfoo", "from": "1.1.0", "to": "1.2.0" },
+      "policyBundleVersion": "2025.09.01.1",
+      "blastRadius": { "tenants": 1, "services": 1, "personalDataRecords": 0 }
+    }
+  ]
+}

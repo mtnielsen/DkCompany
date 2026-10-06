@@ -1,0 +1,112 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ComponentManifest",
+  "requires": [
+    {
+      "ref": "primary-database",
+      "range": ">=1.0.0 <2.0.0",
+      "reason": "Kontrolplanet gemmer policy, konfiguration og jobtilstand i den relationelle database."
+    },
+    {
+      "ref": "backup-destination",
+      "range": ">=1.0.0 <2.0.0",
+      "reason": "En produktionsinstallation skal have en ekstern, offsite backupdestination fra dag ét."
+    }
+  ],
+  "optionalRequires": [],
+  "conflicts": [],
+  "dataServices": [
+    {
+      "id": "sql",
+      "kind": "relational",
+      "required": true,
+      "reason": "Kontrolplanet kan ikke køre uden en relationel database med transaktioner."
+    }
+  ],
+  "migrations": [
+    {
+      "id": "core-init",
+      "phase": "schema",
+      "description": "Opretter skemaet for policy, konfiguration og jobtilstand.",
+      "reversible": false
+    }
+  ],
+  "download": [
+    {
+      "artifact": "platform-core-1.4.0.tar.zst",
+      "sizeMiB": 60,
+      "source": "registry.example.org/platform/platform-core:1.4.0",
+      "verified": true,
+      "checksum": "sha256:1b0c9f00"
+    }
+  ],
+  "operations": [
+    "backup",
+    "restore",
+    "verify-restore",
+    "upgrade",
+    "migrate",
+    "rollback",
+    "health",
+    "slo"
+  ],
+  "implementation": {
+    "status": "implemented",
+    "moduleRef": "runtime/",
+    "notes": "Kontrolplan, policy-grænse og job-runner er implementeret i runtime/ og jobs/."
+  },
+  "metadata": {
+    "name": "platform-core",
+    "version": "1.4.0",
+    "description": "Kontrolplan, policy-beslutningspunkt, job-runner og telemetri. Den obligatoriske platformkerne som alle andre komponenter hviler på.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen"
+      }
+    },
+    "labels": {
+      "tier": "security-core"
+    }
+  },
+  "componentType": "security-core",
+  "category": "platform",
+  "securityCore": true,
+  "provides": {
+    "capabilities": [
+      "control-plane",
+      "policy-decision",
+      "job-runner",
+      "telemetry"
+    ],
+    "dataServices": []
+  },
+  "supportProfile": {
+    "tier": "supported",
+    "supportWindow": "24 måneder fra GA",
+    "escalation": "Platform Owner via platform@example.org",
+    "notes": "Sikkerhedskernen er obligatorisk i alle profiler."
+  },
+  "platforms": {
+    "os": [
+      "linux"
+    ],
+    "arch": [
+      "x64",
+      "arm64"
+    ],
+    "runtime": [
+      "node>=22 <23",
+      "node>=24 <25"
+    ]
+  },
+  "resources": {
+    "cpuMillicores": 500,
+    "memoryMiB": 1024,
+    "storageGiB": 10,
+    "nodes": 0
+  }
+}

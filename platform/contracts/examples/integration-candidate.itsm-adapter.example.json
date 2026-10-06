@@ -1,0 +1,96 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "IntegrationCandidate",
+  "metadata": {
+    "name": "itsm-adapter-10-0-16",
+    "version": "1.0.0",
+    "description": "Kandidatvurdering af GLPI 10.0.16 Network som ITSM-kerne (servicekatalog, incidents, requests, problemer, kendte fejl, changes, CMDB og vidensbase) bag den fælles adapter-SDK. Gratis/betalt-skellet er dokumenteret med kilde.",
+    "accountableHuman": {
+      "subject": "oidc|hans.hansen",
+      "name": "Hans Hansen",
+      "role": "Solution Architect"
+    },
+    "labels": { "application": "APP-044", "adapter": "itsm-adapter" }
+  },
+  "applicationId": "APP-044",
+  "name": "GLPI",
+  "upstream": {
+    "vendor": "Teclib'",
+    "projectUrl": "https://glpi-project.org/",
+    "documentationUrl": "https://glpi-developer-documentation.readthedocs.io/",
+    "sourceUrl": "https://github.com/glpi-project/glpi"
+  },
+  "exactVersion": "10.0.16",
+  "edition": { "name": "Network", "tier": "enterprise", "notes": "Network-abonnementet kræves for SLA/OLA-avancerede felter og support; kernen er GPL." },
+  "license": {
+    "spdx": "GPL-3.0-or-later",
+    "type": "mixed",
+    "paidFeaturesRequired": true,
+    "redistributionAllowed": true,
+    "notes": "Kernen er GPL-3.0-or-later; Network-abonnementet dækker support og avancerede SLA-felter. Platformen videredistribuerer ikke binæren."
+  },
+  "hosting": {
+    "mode": "customer-self-hosted",
+    "commercialRedistribution": false,
+    "commercialHostingAllowed": true,
+    "notes": "Hostes for kunden i kundens eget miljø; én instans pr. kunde."
+  },
+  "sso": { "capability": "partial", "supported": true, "protocols": ["saml2", "oidc"], "notes": "SSO via plugin; ikke i kernen. Adapteren håndhæver fail-closed PDP og verificerede identiteter uafhængigt." },
+  "scim": { "capability": "none", "supported": false, "version": "2.0", "provisioningAlternative": "GLPI har ingen SCIM; brugere provisioneres via LDAP/SSO.", "notes": "Ingen SCIM i kernen." },
+  "api": {
+    "capability": "full",
+    "documented": true,
+    "protocols": ["rest"],
+    "authentication": ["api-key"],
+    "notes": "REST + High-Level API (`/apirest.php`) med app-/user-token og sessions."
+  },
+  "isolation": {
+    "capability": "full",
+    "tenantModel": "dedicated-installation",
+    "databasePerTenant": true,
+    "notes": "Én installation og én database pr. kunde; platformens tenantgrænse håndhæves i adapter og netværkspolitik."
+  },
+  "export": {
+    "capability": "partial",
+    "formats": ["json", "csv"],
+    "aclPreserved": true,
+    "apiAccessible": true,
+    "notes": "Sager og metadata kan eksporteres gennem API'et; audit-/backupkopier følger platformens DSAR-proces."
+  },
+  "backup": {
+    "capability": "partial",
+    "supported": true,
+    "pointInTime": false,
+    "restoreTested": false,
+    "notes": "GLPI understøtter database-/filbackup, men adapteren kan ikke garantere et konsistent snapshot af alle plugins gennem API'et; restore er ikke testet i dette miljø."
+  },
+  "price": {
+    "model": "mixed",
+    "currency": "EUR",
+    "recurring": true,
+    "priceBasis": "Pr. instans/år for Network; kernen er gratis.",
+    "notes": "Network-abonnementet er en separat licens."
+  },
+  "maintenance": {
+    "vendorSupport": "commercial",
+    "releaseCadence": "Månedlige patch- og årlige feature-udgivelser.",
+    "securityResponse": "Offentlig sikkerhedsproces og advisories med koordineret offentliggørelse.",
+    "upgradePath": "Trinvis opgradering inden for en major-serie via dokumenterede migrations."
+  },
+  "freeVsPaid": {
+    "documented": true,
+    "freeTierLimitations": [
+      "Avancerede SLA/OLA-felter og support kræver Network-abonnementet.",
+      "Der er ingen kommerciel support på den gratis kerne."
+    ],
+    "requiredPaidFeatures": ["SLA/OLA-avanceret", "Network-support"],
+    "sourceUrl": "https://glpi-project.org/pricing/"
+  },
+  "verification": {
+    "status": "candidate_not_approved",
+    "verifiedBy": { "subject": "oidc|hans.hansen", "name": "Hans Hansen", "role": "Solution Architect" },
+    "verifiedAt": "2025-01-10",
+    "evidence": ["https://glpi-project.org/pricing/", "https://glpi-developer-documentation.readthedocs.io/"],
+    "notes": "Licens, SSO, API og isolation er vurderet, men kandidaten godkendes ikke endnu: en testet gendannelse af GLPI (DKC-016) mangler i dette miljø, og en rigtig upstream-integration er NOT RUN."
+  }
+}

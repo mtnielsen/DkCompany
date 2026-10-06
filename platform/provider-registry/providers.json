@@ -1,0 +1,358 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ProviderRegistry",
+  "metadata": {
+    "name": "platform-provider-registry",
+    "version": "1.0.0",
+    "description": "Versionsstyret providerregister. Hver provider erklærer sin klasse, produkt, version/edition, forbindelsesform og de capabilities den tilbyder med version og håndhævelsesniveau. Registret er grundlaget for versionsforhandling: en forbindelsesstreng alene, selv en identisk, kan ikke erstatte en capability-forhandling.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner"
+      }
+    },
+    "labels": {
+      "tier": "provider-registry",
+      "wave": "5"
+    }
+  },
+  "providers": [
+    {
+      "id": "keycloak-iam",
+      "class": "iam",
+      "product": "keycloak",
+      "vendor": "DkCompany",
+      "version": "26.0.0",
+      "edition": "upstream",
+      "connection": { "scheme": "https", "endpoint": "https://id.acme.example" },
+      "status": "supported",
+      "securitySemantics": { "sso": "oidc", "mfaEnforced": true, "agentIdentity": true, "auditProvenance": "native" },
+      "capabilities": {
+        "iam.oidc": { "version": "26.0.0", "level": "enforced" },
+        "iam.mfa": { "version": "26.0.0", "level": "enforced" },
+        "iam.agent-identity": { "version": "26.0.0", "level": "enforced" },
+        "iam.tenant-isolation": { "version": "26.0.0", "level": "enforced" },
+        "iam.audit-provenance": { "version": "26.0.0", "level": "enforced" },
+        "iam.scim": { "version": "26.0.0", "level": "enforced" }
+      }
+    },
+    {
+      "id": "entra-iam",
+      "class": "iam",
+      "product": "entra-id",
+      "vendor": "Microsoft",
+      "version": "2.0.0",
+      "edition": "p1",
+      "connection": { "scheme": "https", "endpoint": "https://login.microsoftonline.com" },
+      "status": "supported",
+      "securitySemantics": { "sso": "oidc", "mfaEnforced": true, "agentIdentity": true, "auditProvenance": "imported" },
+      "capabilities": {
+        "iam.oidc": { "version": "2.0.0", "level": "enforced" },
+        "iam.mfa": { "version": "2.0.0", "level": "enforced" },
+        "iam.agent-identity": { "version": "2.0.0", "level": "enforced" },
+        "iam.tenant-isolation": { "version": "2.0.0", "level": "enforced" },
+        "iam.audit-provenance": { "version": "2.0.0", "level": "enforced" },
+        "iam.scim": { "version": "2.0.0", "level": "enforced" }
+      }
+    },
+    {
+      "id": "legacy-ldap-iam",
+      "class": "iam",
+      "product": "openldap",
+      "vendor": "Community",
+      "version": "1.0.0",
+      "edition": "community",
+      "connection": { "scheme": "ldaps", "endpoint": "ldaps://ldap.acme.example" },
+      "status": "deprecated",
+      "securitySemantics": { "sso": "ldap-bind", "mfaEnforced": false, "agentIdentity": false, "auditProvenance": "none" },
+      "capabilities": {
+        "iam.oidc": { "version": "1.0.0", "level": "advisory" },
+        "iam.tenant-isolation": { "version": "1.0.0", "level": "advisory" }
+      }
+    },
+
+    {
+      "id": "local-llm",
+      "class": "modelprovider",
+      "product": "local-inference",
+      "vendor": "DkCompany",
+      "version": "1.0.0",
+      "edition": "self-hosted",
+      "connection": { "scheme": "http", "endpoint": "http://model-local.internal" },
+      "status": "supported",
+      "securitySemantics": { "egress": "deny-by-default", "tenantRouting": true },
+      "capabilities": {
+        "model.egress-control": { "version": "1.0.0", "level": "enforced" },
+        "model.tenant-routing": { "version": "1.0.0", "level": "enforced" },
+        "model.usage-metering": { "version": "1.0.0", "level": "enforced" },
+        "model.streaming": { "version": "1.0.0", "level": "enforced" }
+      }
+    },
+    {
+      "id": "external-llm",
+      "class": "modelprovider",
+      "product": "external-inference",
+      "vendor": "Vendor",
+      "version": "3.0.0",
+      "edition": "enterprise",
+      "connection": { "scheme": "https", "endpoint": "https://api.vendor.example" },
+      "status": "supported",
+      "securitySemantics": { "egress": "gateway-allowlist", "tenantRouting": true },
+      "capabilities": {
+        "model.egress-control": { "version": "3.0.0", "level": "enforced" },
+        "model.tenant-routing": { "version": "3.0.0", "level": "enforced" },
+        "model.usage-metering": { "version": "3.0.0", "level": "enforced" },
+        "model.streaming": { "version": "3.0.0", "level": "enforced" }
+      }
+    },
+    {
+      "id": "external-llm-basic",
+      "class": "modelprovider",
+      "product": "external-inference-basic",
+      "vendor": "Vendor",
+      "version": "1.0.0",
+      "edition": "basic",
+      "connection": { "scheme": "https", "endpoint": "https://api.vendor.example" },
+      "status": "deprecated",
+      "securitySemantics": { "egress": "open", "tenantRouting": false },
+      "capabilities": {
+        "model.usage-metering": { "version": "1.0.0", "level": "advisory" }
+      }
+    },
+
+    {
+      "id": "sqlite-local",
+      "class": "database",
+      "product": "sqlite",
+      "vendor": "DkCompany",
+      "version": "3.0.0",
+      "edition": "embedded",
+      "connection": { "scheme": "file", "endpoint": "/var/lib/dkc/platform.db" },
+      "status": "supported",
+      "securitySemantics": { "tls": "not-applicable", "encryptionAtRest": "filesystem", "rowTenantIsolation": "enforced" },
+      "capabilities": {
+        "database.tls": { "version": "1.0.0", "level": "advisory" },
+        "database.encryption-at-rest": { "version": "1.0.0", "level": "advisory" },
+        "database.row-tenant-isolation": { "version": "3.0.0", "level": "enforced" },
+        "database.pitr": { "version": "1.0.0", "level": "advisory" }
+      }
+    },
+    {
+      "id": "postgres-managed",
+      "class": "database",
+      "product": "postgresql",
+      "vendor": "Managed",
+      "version": "16.0.0",
+      "edition": "managed",
+      "connection": { "scheme": "postgres", "endpoint": "postgres://db.acme.example:5432/dkc" },
+      "status": "supported",
+      "securitySemantics": { "tls": "verify-full", "encryptionAtRest": "aes-256", "rowTenantIsolation": "enforced" },
+      "capabilities": {
+        "database.tls": { "version": "16.0.0", "level": "enforced" },
+        "database.encryption-at-rest": { "version": "16.0.0", "level": "enforced" },
+        "database.row-tenant-isolation": { "version": "16.0.0", "level": "enforced" },
+        "database.pitr": { "version": "16.0.0", "level": "enforced" },
+        "database.read-only-replica": { "version": "16.0.0", "level": "enforced" },
+        "database.transactional-migration": { "version": "16.0.0", "level": "enforced" }
+      }
+    },
+    {
+      "id": "mysql-managed",
+      "class": "database",
+      "product": "mysql",
+      "vendor": "Managed",
+      "version": "8.0.0",
+      "edition": "managed",
+      "connection": { "scheme": "mysql", "endpoint": "mysql://db.acme.example:3306/dkc" },
+      "status": "supported",
+      "securitySemantics": { "tls": "required", "encryptionAtRest": "advisory", "rowTenantIsolation": "application" },
+      "capabilities": {
+        "database.tls": { "version": "8.0.0", "level": "enforced" },
+        "database.encryption-at-rest": { "version": "8.0.0", "level": "advisory" },
+        "database.pitr": { "version": "8.0.0", "level": "enforced" }
+      }
+    },
+
+    {
+      "id": "filesystem-local",
+      "class": "storage",
+      "product": "local-filesystem",
+      "vendor": "DkCompany",
+      "version": "1.0.0",
+      "edition": "community",
+      "connection": { "scheme": "file", "endpoint": "/srv/dkc/storage" },
+      "status": "supported",
+      "securitySemantics": { "encryptionAtRest": "filesystem", "objectLock": false },
+      "capabilities": {
+        "storage.encryption-at-rest": { "version": "1.0.0", "level": "advisory" },
+        "storage.checksums": { "version": "1.0.0", "level": "enforced" },
+        "storage.acl-preservation": { "version": "1.0.0", "level": "enforced" }
+      }
+    },
+    {
+      "id": "object-store-s3",
+      "class": "storage",
+      "product": "s3-compatible",
+      "vendor": "ObjectStore",
+      "version": "2.0.0",
+      "edition": "enterprise",
+      "connection": { "scheme": "s3", "endpoint": "s3://dkc-acme-objects" },
+      "status": "supported",
+      "securitySemantics": { "encryptionAtRest": "sse-kms", "objectLock": true },
+      "capabilities": {
+        "storage.encryption-at-rest": { "version": "2.0.0", "level": "enforced" },
+        "storage.checksums": { "version": "2.0.0", "level": "enforced" },
+        "storage.acl-preservation": { "version": "2.0.0", "level": "enforced" },
+        "storage.object-lock": { "version": "2.0.0", "level": "enforced" },
+        "storage.versioning": { "version": "2.0.0", "level": "enforced" }
+      }
+    },
+    {
+      "id": "nfs-shared",
+      "class": "storage",
+      "product": "nfs",
+      "vendor": "Community",
+      "version": "1.0.0",
+      "edition": "community",
+      "connection": { "scheme": "nfs", "endpoint": "nfs://storage.acme.example/export" },
+      "status": "deprecated",
+      "securitySemantics": { "encryptionAtRest": "none", "objectLock": false },
+      "capabilities": {
+        "storage.checksums": { "version": "1.0.0", "level": "advisory" },
+        "storage.acl-preservation": { "version": "1.0.0", "level": "advisory" }
+      }
+    },
+
+    {
+      "id": "vault-local",
+      "class": "backup",
+      "product": "local-vault",
+      "vendor": "DkCompany",
+      "version": "1.0.0",
+      "edition": "community",
+      "connection": { "scheme": "file", "endpoint": "/srv/dkc/backup" },
+      "status": "supported",
+      "securitySemantics": { "encryption": "aes-256-gcm", "immutable": "advisory" },
+      "capabilities": {
+        "backup.encryption": { "version": "1.0.0", "level": "enforced" },
+        "backup.immutability": { "version": "1.0.0", "level": "advisory" },
+        "backup.separate-key-access": { "version": "1.0.0", "level": "enforced" },
+        "backup.restore-verification": { "version": "1.0.0", "level": "enforced" }
+      }
+    },
+    {
+      "id": "s3-immutable",
+      "class": "backup",
+      "product": "s3-object-lock",
+      "vendor": "ObjectStore",
+      "version": "2.0.0",
+      "edition": "enterprise",
+      "connection": { "scheme": "s3", "endpoint": "s3://dkc-acme-backup" },
+      "status": "supported",
+      "securitySemantics": { "encryption": "sse-kms", "immutable": "enforced" },
+      "capabilities": {
+        "backup.encryption": { "version": "2.0.0", "level": "enforced" },
+        "backup.immutability": { "version": "2.0.0", "level": "enforced" },
+        "backup.separate-key-access": { "version": "2.0.0", "level": "enforced" },
+        "backup.restore-verification": { "version": "2.0.0", "level": "enforced" }
+      }
+    },
+
+    {
+      "id": "sqlite-queue",
+      "class": "queue",
+      "product": "sqlite-outbox",
+      "vendor": "DkCompany",
+      "version": "1.0.0",
+      "edition": "embedded",
+      "connection": { "scheme": "file", "endpoint": "/var/lib/dkc/queue.db" },
+      "status": "supported",
+      "securitySemantics": { "durable": true, "tenantIsolation": "enforced" },
+      "capabilities": {
+        "queue.durable-outbox": { "version": "1.0.0", "level": "enforced" },
+        "queue.delivery-idempotency": { "version": "1.0.0", "level": "enforced" },
+        "queue.tenant-isolation": { "version": "1.0.0", "level": "enforced" },
+        "queue.dead-letter": { "version": "1.0.0", "level": "advisory" }
+      }
+    },
+    {
+      "id": "nats-queue",
+      "class": "queue",
+      "product": "nats-jetstream",
+      "vendor": "Community",
+      "version": "2.0.0",
+      "edition": "cluster",
+      "connection": { "scheme": "nats", "endpoint": "nats://queue.acme.example:4222" },
+      "status": "supported",
+      "securitySemantics": { "durable": true, "tenantIsolation": "enforced" },
+      "capabilities": {
+        "queue.durable-outbox": { "version": "2.0.0", "level": "enforced" },
+        "queue.delivery-idempotency": { "version": "2.0.0", "level": "enforced" },
+        "queue.tenant-isolation": { "version": "2.0.0", "level": "enforced" },
+        "queue.dead-letter": { "version": "2.0.0", "level": "enforced" },
+        "queue.ordering": { "version": "2.0.0", "level": "enforced" }
+      }
+    },
+
+    {
+      "id": "nextcloud",
+      "class": "apps",
+      "product": "nextcloud",
+      "vendor": "Nextcloud",
+      "version": "30.0.0",
+      "edition": "Enterprise",
+      "connection": { "scheme": "https", "endpoint": "https://files.acme.example" },
+      "status": "supported",
+      "securitySemantics": { "acl": "native", "stableIds": true },
+      "capabilities": {
+        "app.acl": { "version": "30.0.0", "level": "enforced" },
+        "app.stable-ids": { "version": "30.0.0", "level": "enforced" },
+        "app.links": { "version": "30.0.0", "level": "enforced" },
+        "app.export-self-describing": { "version": "30.0.0", "level": "enforced" },
+        "app.comments": { "version": "30.0.0", "level": "advisory" },
+        "app.attachments": { "version": "30.0.0", "level": "enforced" }
+      }
+    },
+    {
+      "id": "bookstack",
+      "class": "apps",
+      "product": "bookstack",
+      "vendor": "BookStack",
+      "version": "24.0.0",
+      "edition": "Community",
+      "connection": { "scheme": "https", "endpoint": "https://kb.acme.example" },
+      "status": "supported",
+      "securitySemantics": { "acl": "native", "stableIds": true },
+      "capabilities": {
+        "app.acl": { "version": "24.0.0", "level": "enforced" },
+        "app.stable-ids": { "version": "24.0.0", "level": "enforced" },
+        "app.links": { "version": "24.0.0", "level": "advisory" },
+        "app.export-self-describing": { "version": "24.0.0", "level": "enforced" },
+        "app.comments": { "version": "24.0.0", "level": "advisory" }
+      }
+    },
+    {
+      "id": "dkc-apps",
+      "class": "apps",
+      "product": "dkcompany-apps",
+      "vendor": "DkCompany",
+      "version": "1.0.0",
+      "edition": "platform",
+      "connection": { "scheme": "https", "endpoint": "https://apps.acme.internal" },
+      "status": "supported",
+      "securitySemantics": { "acl": "platform", "stableIds": true },
+      "capabilities": {
+        "app.acl": { "version": "1.0.0", "level": "enforced" },
+        "app.stable-ids": { "version": "1.0.0", "level": "enforced" },
+        "app.links": { "version": "1.0.0", "level": "enforced" },
+        "app.export-self-describing": { "version": "1.0.0", "level": "enforced" },
+        "app.comments": { "version": "1.0.0", "level": "enforced" },
+        "app.attachments": { "version": "1.0.0", "level": "enforced" }
+      }
+    }
+  ]
+}

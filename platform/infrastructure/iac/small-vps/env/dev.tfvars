@@ -1,0 +1,10 @@
+environment        = "dev"
+region             = "fsn1"
+server_type        = "cpx11"
+admin_cidr         = "203.0.113.0/24"
+dns_zone           = "platform.example.org"
+hostname           = "dev.platform.example.org"
+storage_size_gb    = 10
+encryption_enabled = true
+k3s_version        = "v1.30.4+k3s1"
+model_egress_allow = ["api.anthropic.com"]

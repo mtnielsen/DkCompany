@@ -1,0 +1,45 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "FeatureAccessProfile",
+  "metadata": {
+    "name": "communications",
+    "version": "1.0.0",
+    "description": "Communications' funktionsprofil. Formålet er kanalbaseret kommunikation; gæsteadgang og vedhæftninger arver kanalens og attachments bevillinger.",
+    "accountableHuman": {
+      "subject": "oidc|cecilia.christensen",
+      "name": "Cecilia Christensen",
+      "role": "Service Owner",
+      "substitute": { "subject": "oidc|david.dahl", "name": "David Dahl" }
+    },
+    "labels": { "category": "communications" }
+  },
+  "id": "communications",
+  "purpose": "team-communication",
+  "purposeDescription": "Kanal- og teamkommunikation med gæster, vedhæftninger, søgning og optagelser under kanalens adgangsregler.",
+  "modules": ["platform-core", "identity-broker", "object-store", "communications"],
+  "capabilities": ["messaging"],
+  "allowedDataClasses": ["internal", "personal"],
+  "fieldRules": {
+    "defaultDecision": "deny",
+    "fields": [
+      { "field": "message_body", "dataClass": "internal", "decision": "allow" },
+      { "field": "attachment_name", "dataClass": "internal", "decision": "allow" },
+      { "field": "attachment_content", "dataClass": "personal", "decision": "allow", "requiresGrant": "communications.attachment.read", "note": "Vedhæftningsindhold kræver en eksplicit bevilling ud over kanalmedlemskab." },
+      { "field": "guest_email", "dataClass": "personal", "decision": "redact", "note": "Gæste-e-mail tilbageholdes i søge- og eksportflader." }
+    ]
+  },
+  "rowPolicy": {
+    "tenantStrict": true,
+    "selfAttribute": "subject"
+  },
+  "externalSources": [],
+  "recipientTrust": [
+    {
+      "id": "channel-members",
+      "kind": "human",
+      "dataSharingRef": "docs/compliance/data-sharing.md#channel-members",
+      "revalidateAt": ["delivery"]
+    }
+  ],
+  "surfaces": ["ui", "api", "connector", "search", "export", "cache", "ai-tool"]
+}

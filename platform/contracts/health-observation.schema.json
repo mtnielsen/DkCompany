@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/health-observation.schema.json",
+  "title": "HealthObservation",
+  "description": "Healthcheck af et brugerflow over en observationstid. En måling under baseline minus tolerance (eller en falsk boolsk check) gør observationen degraderet og stopper forløbet, så der kan rulles tilbage eller faldes tilbage.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "check", "target", "baseline", "tolerance", "observationSeconds", "intervalSeconds", "readings", "healthy", "degraded"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "HealthObservation" },
+    "check": { "type": "string", "minLength": 2 },
+    "target": { "type": "string", "minLength": 1 },
+    "baseline": { "type": "number" },
+    "tolerance": { "type": "number", "minimum": 0 },
+    "observationSeconds": { "type": "integer", "minimum": 1 },
+    "intervalSeconds": { "type": "integer", "minimum": 1 },
+    "readings": { "type": "array", "items": { "type": ["number", "boolean"] } },
+    "healthy": { "type": "boolean" },
+    "degraded": { "type": "boolean" },
+    "reason": { "type": ["string", "null"] }
+  }
+}

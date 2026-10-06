@@ -1,0 +1,81 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "AdapterSdkRegistry",
+  "metadata": {
+    "name": "adapter-sdk",
+    "version": "1.0.0",
+    "description": "Hvilke adaptere der er koblet på den fælles SDK, hvilken kandidat/version/edition de er godkendt på, og hvilke versionsserier de forhandler med."
+  },
+  "adapters": [
+    {
+      "module": "mattermost-adapter",
+      "candidate": "integration-candidate.mattermost-adapter.example.json",
+      "releaseProfile": "upstream-release-profile.mattermost-adapter.example.json",
+      "supportedRanges": ["^10.0.0"],
+      "supportedEditions": ["Enterprise"],
+      "onUnsupported": "refuse",
+      "requiredSso": true,
+      "nativeAdmin": {
+        "exposed": false,
+        "protectedBy": ["adapter", "pdp", "network-policy"],
+        "evidence": ["gitops/manifests/dev/model-egress-default-deny.json", "infrastructure/src/netpol.mjs"]
+      }
+    },
+    {
+      "module": "keycloak-adapter",
+      "candidate": "integration-candidate.keycloak-adapter.example.json",
+      "releaseProfile": "upstream-release-profile.keycloak-adapter.example.json",
+      "supportedRanges": ["^26.0.0"],
+      "supportedEditions": ["upstream"],
+      "onUnsupported": "refuse",
+      "requiredSso": true,
+      "nativeAdmin": {
+        "exposed": false,
+        "protectedBy": ["adapter", "pdp", "network-policy"],
+        "evidence": ["gitops/manifests/dev/model-egress-default-deny.json", "infrastructure/src/netpol.mjs"]
+      }
+    },
+    {
+      "module": "nextcloud-adapter",
+      "candidate": "integration-candidate.nextcloud-adapter.example.json",
+      "releaseProfile": "upstream-release-profile.nextcloud-adapter.example.json",
+      "supportedRanges": ["^30.0.0"],
+      "supportedEditions": ["Enterprise"],
+      "onUnsupported": "refuse",
+      "requiredSso": true,
+      "nativeAdmin": {
+        "exposed": false,
+        "protectedBy": ["adapter", "pdp", "network-policy"],
+        "evidence": ["gitops/manifests/dev/model-egress-default-deny.json", "infrastructure/src/netpol.mjs"]
+      }
+    },
+    {
+      "module": "itsm-adapter",
+      "candidate": "integration-candidate.itsm-adapter.example.json",
+      "releaseProfile": "upstream-release-profile.itsm-adapter.example.json",
+      "supportedRanges": ["^10.0.0"],
+      "supportedEditions": ["Network", "Community"],
+      "onUnsupported": "refuse",
+      "requiredSso": true,
+      "nativeAdmin": {
+        "exposed": false,
+        "protectedBy": ["adapter", "pdp", "network-policy"],
+        "evidence": ["gitops/manifests/dev/model-egress-default-deny.json", "infrastructure/src/netpol.mjs"]
+      }
+    },
+    {
+      "module": "openproject-adapter",
+      "candidate": "integration-candidate.openproject-adapter.example.json",
+      "releaseProfile": "upstream-release-profile.openproject-adapter.example.json",
+      "supportedRanges": ["^14.0.0"],
+      "supportedEditions": ["Enterprise"],
+      "onUnsupported": "refuse",
+      "requiredSso": true,
+      "nativeAdmin": {
+        "exposed": false,
+        "protectedBy": ["adapter", "pdp", "network-policy"],
+        "evidence": ["gitops/manifests/dev/model-egress-default-deny.json", "infrastructure/src/netpol.mjs"]
+      }
+    }
+  ]
+}

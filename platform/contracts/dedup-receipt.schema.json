@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/dedup-receipt.schema.json",
+  "title": "Dedup Receipt",
+  "description": "DKC-043: målt receipt for en dedup-kørsel. Receiptet binder logiske og fysiske bytes til et dedup-domæne, viser referencekæden og kræver at både integritetskontrollen og den fulde restore bestod før `savingsActive` må være sand. Et receipt erstatter ikke en målt dedup-effekt på et levende objektlager.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "receiptId", "backupId", "createdAt", "domain", "logicalBytes", "physicalBytes", "savedBytes", "physicalToLogicalRatio", "uniqueChunks", "references", "snapshots", "integrity", "restore", "savingsActive"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "DedupReceipt" },
+    "receiptId": { "type": "string", "minLength": 3 },
+    "backupId": { "oneOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }] },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "domain": {
+      "type": "object",
+      "required": ["tenantId", "encryptionDomain", "retentionClass", "category"],
+      "additionalProperties": false,
+      "properties": {
+        "tenantId": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,63}$" },
+        "encryptionDomain": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,63}$" },
+        "retentionClass": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,63}$" },
+        "category": { "enum": ["backup-blocks", "primary-objects", "job-events", "business-records"] }
+      }
+    },
+    "logicalBytes": { "type": "integer", "minimum": 0 },
+    "physicalBytes": { "type": "integer", "minimum": 0 },
+    "savedBytes": { "type": "integer", "minimum": 0 },
+    "physicalToLogicalRatio": { "type": "number", "minimum": 0 },
+    "uniqueChunks": { "type": "integer", "minimum": 0 },
+    "references": { "type": "integer", "minimum": 0 },
+    "snapshots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "logicalBytes", "digest", "protected"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "logicalBytes": { "type": "integer", "minimum": 0 },
+          "digest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "protected": { "type": "boolean" },
+          "retentionUntil": { "oneOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }] }
+        }
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "required": ["checked", "ok", "corruptions"],
+      "additionalProperties": false,
+      "properties": {
+        "checked": { "type": "integer", "minimum": 0 },
+        "ok": { "type": "boolean" },
+        "corruptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["chunkId", "reason", "snapshots"],
+            "additionalProperties": false,
+            "properties": {
+              "chunkId": { "type": "string", "minLength": 1 },
+              "reason": { "type": "string", "minLength": 3 },
+              "snapshots": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+    "restore": {
+      "type": "object",
+      "required": ["ok", "snapshots"],
+      "additionalProperties": false,
+      "properties": {
+        "ok": { "type": "boolean" },
+        "snapshots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["snapshotId", "ok", "bytes"],
+            "additionalProperties": false,
+            "properties": {
+              "snapshotId": { "type": "string", "minLength": 1 },
+              "ok": { "type": "boolean" },
+              "bytes": { "type": "integer", "minimum": 0 }
+            }
+          }
+        }
+      }
+    },
+    "savingsActive": { "type": "boolean" },
+    "notes": { "oneOf": [{ "type": "string" }, { "type": "null" }] }
+  }
+}

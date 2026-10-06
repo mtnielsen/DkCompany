@@ -1,0 +1,320 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ProviderReport",
+  "metadata": {
+    "name": "platform-provider-report",
+    "version": "1.0.0",
+    "description": "Deterministisk rapport for providerkontrakter og migrationskontrol: versionsstyret capability-forhandling, en supportmatrix over drop-in/planlagt/ikke-understøttet skift, en verificeret backendudskiftning, en appmigration og et IAM-skift med afstemning af data, ACL, id-mapping og funktionstab samt cutover med read-only, credentialrevokation og rollback.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner"
+      }
+    },
+    "labels": {
+      "tier": "provider-registry",
+      "wave": "5"
+    }
+  },
+  "generatedAt": "2026-03-01T00:00:00Z",
+  "measured": false,
+  "policyRef": "provider-registry/policy.json",
+  "totals": {
+    "classes": 7,
+    "capabilities": 36,
+    "mandatory": 27,
+    "securityCritical": 22,
+    "providers": 19,
+    "compatibilityRows": 12,
+    "fixtures": 3
+  },
+  "compatibility": [
+    {
+      "id": "storage-filesystem-to-object-store",
+      "class": "storage",
+      "from": "filesystem-local",
+      "to": "object-store-s3",
+      "mode": "planned-migration",
+      "allowed": true,
+      "status": "supported",
+      "problems": []
+    },
+    {
+      "id": "storage-object-store-to-filesystem",
+      "class": "storage",
+      "from": "object-store-s3",
+      "to": "filesystem-local",
+      "mode": "unsupported",
+      "allowed": false,
+      "status": "unsupported",
+      "problems": [
+        "security_downgrade_level",
+        "security_capability_missing",
+        "unsupported_switch"
+      ]
+    },
+    {
+      "id": "database-sqlite-to-postgres",
+      "class": "database",
+      "from": "sqlite-local",
+      "to": "postgres-managed",
+      "mode": "planned-migration",
+      "allowed": true,
+      "status": "supported",
+      "problems": []
+    },
+    {
+      "id": "database-sqlite-to-mysql",
+      "class": "database",
+      "from": "sqlite-local",
+      "to": "mysql-managed",
+      "mode": "unsupported",
+      "allowed": false,
+      "status": "unsupported",
+      "problems": [
+        "missing_mandatory_capability",
+        "unsupported_switch"
+      ]
+    },
+    {
+      "id": "iam-keycloak-to-entra",
+      "class": "iam",
+      "from": "keycloak-iam",
+      "to": "entra-iam",
+      "mode": "planned-migration",
+      "allowed": true,
+      "status": "supported",
+      "problems": []
+    },
+    {
+      "id": "iam-keycloak-to-legacy-ldap",
+      "class": "iam",
+      "from": "keycloak-iam",
+      "to": "legacy-ldap-iam",
+      "mode": "unsupported",
+      "allowed": false,
+      "status": "unsupported",
+      "problems": [
+        "security_downgrade_level",
+        "missing_mandatory_capability",
+        "missing_mandatory_capability",
+        "security_downgrade_level",
+        "missing_mandatory_capability",
+        "unsupported_switch"
+      ]
+    },
+    {
+      "id": "modelprovider-local-to-external",
+      "class": "modelprovider",
+      "from": "local-llm",
+      "to": "external-llm",
+      "mode": "drop-in",
+      "allowed": true,
+      "status": "supported",
+      "problems": []
+    },
+    {
+      "id": "modelprovider-local-to-basic",
+      "class": "modelprovider",
+      "from": "local-llm",
+      "to": "external-llm-basic",
+      "mode": "unsupported",
+      "allowed": false,
+      "status": "unsupported",
+      "problems": [
+        "missing_mandatory_capability",
+        "missing_mandatory_capability",
+        "unsupported_switch"
+      ]
+    },
+    {
+      "id": "queue-sqlite-to-nats",
+      "class": "queue",
+      "from": "sqlite-queue",
+      "to": "nats-queue",
+      "mode": "planned-migration",
+      "allowed": true,
+      "status": "supported",
+      "problems": []
+    },
+    {
+      "id": "backup-vault-to-s3-immutable",
+      "class": "backup",
+      "from": "vault-local",
+      "to": "s3-immutable",
+      "mode": "planned-migration",
+      "allowed": true,
+      "status": "supported",
+      "problems": []
+    },
+    {
+      "id": "apps-nextcloud-to-dkc-apps",
+      "class": "apps",
+      "from": "nextcloud",
+      "to": "dkc-apps",
+      "mode": "planned-migration",
+      "allowed": true,
+      "status": "supported",
+      "problems": []
+    },
+    {
+      "id": "apps-nextcloud-to-bookstack",
+      "class": "apps",
+      "from": "nextcloud",
+      "to": "bookstack",
+      "mode": "unsupported",
+      "allowed": false,
+      "status": "degraded",
+      "problems": [
+        "unsupported_switch",
+        "degraded_not_allowed"
+      ]
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "capability-catalog-and-registry",
+      "problems": [],
+      "principal": "platform:provider",
+      "tenant": null,
+      "visible": [
+        "iam",
+        "modelprovider",
+        "database",
+        "storage",
+        "backup",
+        "queue",
+        "apps"
+      ],
+      "hidden": [],
+      "capabilities": 36
+    },
+    {
+      "id": "support-matrix-classifies-switches",
+      "problems": [],
+      "principal": "platform:provider",
+      "tenant": null,
+      "visible": [
+        "storage-filesystem-to-object-store:planned-migration:allowed",
+        "storage-object-store-to-filesystem:unsupported:blocked",
+        "database-sqlite-to-postgres:planned-migration:allowed",
+        "database-sqlite-to-mysql:unsupported:blocked",
+        "iam-keycloak-to-entra:planned-migration:allowed",
+        "iam-keycloak-to-legacy-ldap:unsupported:blocked",
+        "modelprovider-local-to-external:drop-in:allowed",
+        "modelprovider-local-to-basic:unsupported:blocked",
+        "queue-sqlite-to-nats:planned-migration:allowed",
+        "backup-vault-to-s3-immutable:planned-migration:allowed",
+        "apps-nextcloud-to-dkc-apps:planned-migration:allowed",
+        "apps-nextcloud-to-bookstack:unsupported:blocked"
+      ],
+      "hidden": []
+    },
+    {
+      "id": "missing-capability-stops-switch",
+      "problems": [],
+      "principal": "platform:provider",
+      "tenant": null,
+      "visible": [
+        "missing_mandatory_capability",
+        "unsupported_switch"
+      ],
+      "hidden": [],
+      "connectionStringMatches": true
+    },
+    {
+      "id": "security-critical-not-downgraded",
+      "problems": [],
+      "principal": "platform:security",
+      "tenant": null,
+      "visible": [
+        "storage-object-store-to-filesystem",
+        "database-sqlite-to-mysql",
+        "iam-keycloak-to-legacy-ldap",
+        "modelprovider-local-to-basic",
+        "apps-nextcloud-to-bookstack"
+      ],
+      "hidden": []
+    },
+    {
+      "id": "verified-backend-replacement",
+      "problems": [],
+      "principal": "oidc|ada.acme",
+      "tenant": "acme",
+      "visible": [
+        "filesystem-local->object-store-s3",
+        "cutover",
+        "rolled-back"
+      ],
+      "hidden": [],
+      "evidenceLevel": "fixture"
+    },
+    {
+      "id": "verified-app-migration",
+      "problems": [],
+      "principal": "oidc|ada.acme",
+      "tenant": "acme",
+      "visible": [
+        "nextcloud->dkc-apps",
+        "cutover",
+        "rolled-back"
+      ],
+      "hidden": [],
+      "functionalityLoss": [
+        {
+          "entityType": "File",
+          "facet": "comments",
+          "status": "partial",
+          "note": "Nextcloud-kommentarer overføres uden @-mention-metadata; selve teksten bevares."
+        },
+        {
+          "entityType": "Folder",
+          "facet": "comments",
+          "status": "unsupported",
+          "note": "Mapper i Nextcloud har ingen kommentarfunktion; feltet er tomt og vises som tabt funktionalitet før cutover."
+        }
+      ],
+      "evidenceLevel": "fixture"
+    },
+    {
+      "id": "iam-switch-preserves-identity-and-audit",
+      "problems": [],
+      "principal": "oidc|ada.acme",
+      "tenant": "acme",
+      "visible": [
+        "keycloak-iam->entra-iam",
+        "cutover",
+        "rolled-back"
+      ],
+      "hidden": [],
+      "evidenceLevel": "fixture"
+    },
+    {
+      "id": "unsupported-swap-rejected",
+      "problems": [],
+      "principal": "oidc|ada.acme",
+      "tenant": "acme",
+      "visible": [
+        "unsupported_switch",
+        "degraded_not_allowed"
+      ],
+      "hidden": []
+    },
+    {
+      "id": "tenant-isolation-default-deny",
+      "problems": [],
+      "principal": "oidc|gus.globex",
+      "tenant": "globex",
+      "visible": [
+        "globex"
+      ],
+      "hidden": [
+        "acme"
+      ]
+    }
+  ]
+}

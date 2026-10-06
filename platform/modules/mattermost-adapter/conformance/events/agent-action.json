@@ -1,0 +1,20 @@
+{
+  "specversion": "1.0",
+  "id": "2fceb930-234f-4924-b8b7-e6e784527820",
+  "source": "urn:platform:module:mattermost-adapter",
+  "type": "dk.platform.mattermost-adapter.subject-locate.completed",
+  "time": "2026-09-16T21:14:18.948Z",
+  "datacontenttype": "application/json",
+  "tenantid": "acme",
+  "traceid": "aeb0f4d98c37c32411c00153ff95475f",
+  "spanid": "bae6599798a42c1e",
+  "principal": {
+    "kind": "agent",
+    "id": "spiffe://platform.example.org/agents/mattermost-adapter"
+  },
+  "dataclassification": "personal",
+  "data": {
+    "verb": "subject.locate",
+    "decision": "allow"
+  }
+}

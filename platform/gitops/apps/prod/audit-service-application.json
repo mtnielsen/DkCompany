@@ -1,0 +1,37 @@
+{
+  "apiVersion": "argoproj.io/v1alpha1",
+  "kind": "Application",
+  "metadata": {
+    "name": "audit-service-prod",
+    "namespace": "argocd",
+    "labels": {
+      "app.kubernetes.io/name": "audit-service",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "audit-service",
+      "platform.example.org/environment": "prod"
+    }
+  },
+  "spec": {
+    "project": "platform",
+    "source": {
+      "repoURL": "https://git.example.org/platform/contracts.git",
+      "targetRevision": "main",
+      "path": "gitops/manifests/prod"
+    },
+    "destination": {
+      "server": "https://kubernetes.default.svc",
+      "namespace": "platform-prod"
+    },
+    "syncPolicy": {
+      "automated": {
+        "prune": true,
+        "selfHeal": true,
+        "allowEmpty": false
+      },
+      "syncOptions": [
+        "CreateNamespace=true",
+        "PrunePropagationPolicy=foreground"
+      ]
+    }
+  }
+}

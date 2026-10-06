@@ -1,0 +1,140 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "UpstreamReleaseProfile",
+  "metadata": {
+    "name": "nextcloud-hub-30-0-0",
+    "version": "1.0.0",
+    "description": "Releaseprofil for Nextcloud Hub 30.0.0 (Enterprise).",
+    "accountableHuman": {
+      "subject": "oidc|hans.hansen",
+      "name": "Hans Hansen",
+      "role": "Solution Architect"
+    }
+  },
+  "upstream": {
+    "vendor": "Nextcloud GmbH",
+    "product": "Nextcloud Hub",
+    "exactVersion": "30.0.0",
+    "edition": "Enterprise",
+    "tier": "enterprise"
+  },
+  "candidateRef": "nextcloud-adapter-30-0-0.json",
+  "negotiation": {
+    "supportedRanges": [
+      "^30.0.0"
+    ],
+    "supportedEditions": [
+      "Enterprise"
+    ],
+    "onUnsupported": "refuse"
+  },
+  "verbMatrix": {
+    "backup": {
+      "conformance": "partial",
+      "reason": "Nextclouds data- og versionslag kræver volume-snapshot. Adapteren kan eksportere app-konfiguration og databasedump, men ikke garantere et konsistent filsnapshot gennem API'et."
+    },
+    "restore": {
+      "conformance": "unsupported",
+      "reason": "Gendannelse sker på volume-/database-niveau og kan ikke udføres gennem Nextclouds API."
+    },
+    "verify-restore": {
+      "conformance": "unsupported",
+      "reason": "Verifikation af en gendannelse kræver adgang til backup-lagret og det gendannede volume."
+    },
+    "drain": {
+      "conformance": "partial",
+      "reason": "Adapteren kan sætte Nextcloud i vedligeholdelsestilstand og lukke sessioner, men kan ikke dræne aktive WebDAV-/websocket-forbindelser."
+    },
+    "upgrade.dry-run": {
+      "conformance": "partial",
+      "reason": "Adapteren kan rapportere nuværende og ønsket version samt manglende migrationer, men Nextcloud tilbyder ikke en egentlig dry-run af opgraderingen."
+    },
+    "upgrade": {
+      "conformance": "unsupported",
+      "reason": "Nextcloud opgraderes ved at udskifte containeren/appen; det ligger uden for adapterens verbkontrakt."
+    },
+    "migrate": {
+      "conformance": "unsupported",
+      "reason": "Nextcloud kører sine egne database- og app-migrationer ved opstart; adapteren kan ikke styre dem."
+    },
+    "rollback": {
+      "conformance": "unsupported",
+      "reason": "Rollback kræver gendannelse fra backup og er derfor ikke mulig gennem adapteren."
+    },
+    "health": {
+      "conformance": "full",
+      "endpoint": "https://nextcloud-adapter.example.org/healthz",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/health.json"
+      }
+    },
+    "slo": {
+      "conformance": "partial",
+      "reason": "Adapteren måler sin egen svartid, men Nextclouds SLO og fejlbudget ligger hos upstream-drift."
+    }
+  },
+  "privacyMatrix": {
+    "subject.locate": {
+      "conformance": "full",
+      "endpoint": "https://nextcloud-adapter.example.org/v1/privacy/locate",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/subject.locate.json"
+      }
+    },
+    "subject.export": {
+      "conformance": "full",
+      "endpoint": "https://nextcloud-adapter.example.org/v1/privacy/export",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/subject.export.json"
+      }
+    },
+    "subject.erase": {
+      "conformance": "partial",
+      "reason": "Adapteren kan slette brugerens filer, delinger og sessioner gennem API'et, men ikke kopier i backups, versions-/papirkurvshistorik og søgeindeks; de kræver en upstream-oprydning (DKC-021)."
+    },
+    "subject.legal_hold": {
+      "conformance": "unsupported",
+      "reason": "Nextcloud har ingen API til legal hold; et hold håndteres af retention-modulet (DKC-021) og en manuel upstream-indgriben."
+    },
+    "retention.policy": {
+      "conformance": "partial",
+      "reason": "Nextcloud har globale opbevaringsindstillinger, men de kan ikke sættes eller rapporteres pr. subjekt gennem adapteren."
+    }
+  },
+  "nativeAdmin": {
+    "exposed": false,
+    "protectedBy": [
+      "adapter",
+      "pdp",
+      "network-policy"
+    ],
+    "evidence": [
+      "gitops/manifests/dev/model-egress-default-deny.json",
+      "infrastructure/src/netpol.mjs"
+    ]
+  },
+  "approvalGate": {
+    "requiredSso": true,
+    "licenseType": "mixed",
+    "status": "blocked",
+    "blockers": [
+      "kandidaten er ikke godkendt af et navngivet menneske"
+    ]
+  },
+  "verification": {
+    "status": "candidate_not_approved",
+    "verifiedBy": {
+      "subject": "oidc|hans.hansen",
+      "name": "Hans Hansen",
+      "role": "Solution Architect"
+    },
+    "verifiedAt": "2025-01-10",
+    "evidence": [
+      "https://nextcloud.com/pricing/",
+      "https://docs.nextcloud.com/server/latest/developer_manual/"
+    ]
+  }
+}

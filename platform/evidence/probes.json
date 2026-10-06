@@ -1,0 +1,77 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ProbeManifest",
+  "metadata": {
+    "name": "platform-probes",
+    "version": "1.0.0",
+    "description": "DKC-018: integration- og runtime-prober mod en kørende installation. Endpoints sættes via miljøvariabler; uden dem skrives posten som not-run, aldrig som pass."
+  },
+  "ttlDays": 7,
+  "probes": [
+    {
+      "id": "staging-pdp-health",
+      "subject": { "kind": "component", "name": "pdp" },
+      "mode": "integration",
+      "method": "GET",
+      "urlEnv": "DKC_PROBE_PDP_URL",
+      "path": "/healthz",
+      "expectStatus": 200,
+      "expectJsonContains": "bundle"
+    },
+    {
+      "id": "staging-audit-health",
+      "subject": { "kind": "component", "name": "audit-service" },
+      "mode": "integration",
+      "method": "GET",
+      "urlEnv": "DKC_PROBE_AUDIT_URL",
+      "path": "/healthz",
+      "expectStatus": 200
+    },
+    {
+      "id": "staging-gateway-health",
+      "subject": { "kind": "component", "name": "ai-gateway" },
+      "mode": "integration",
+      "method": "GET",
+      "urlEnv": "DKC_PROBE_GATEWAY_URL",
+      "path": "/healthz",
+      "expectStatus": 200
+    },
+    {
+      "id": "staging-direct-runtime-deny",
+      "subject": { "kind": "component", "name": "runtime" },
+      "mode": "integration",
+      "method": "POST",
+      "urlEnv": "DKC_PROBE_RUNTIME_URL",
+      "path": "/ops/backup",
+      "body": { "target": "staging-db" },
+      "expectDeny": true
+    },
+    {
+      "id": "staging-pdp-denies-staging-agent-in-prod",
+      "subject": { "kind": "component", "name": "pdp" },
+      "mode": "runtime",
+      "method": "POST",
+      "urlEnv": "DKC_PROBE_PDP_URL",
+      "path": "/v1/data/platform/ops/decision",
+      "body": {
+        "input": {
+          "principal": { "kind": "agent", "id": "spiffe://platform.example.org/modules/dummy-ok", "spiffeId": "spiffe://platform.example.org/modules/dummy-ok", "role": "implementer", "autonomyClass": "A2" },
+          "action": { "verb": "upgrade", "target": "prod/db", "environment": "prod", "autonomyClass": "A2", "role": "implementer" },
+          "context": { "tenantId": "acme", "evidence": ["policy-allow"] }
+        }
+      },
+      "expectStatus": 200,
+      "expectJsonContains": "\"deny\""
+    },
+    {
+      "id": "runtime-pdp-outage-blocks-mutation",
+      "subject": { "kind": "component", "name": "runtime" },
+      "mode": "runtime",
+      "method": "GET",
+      "urlEnv": "DKC_PROBE_RUNTIME_URL",
+      "path": "/healthz",
+      "expectStatus": 200,
+      "notes": "Selve PDP-afbrydelses-scenariet håndhæves af runtime-testen (frakoblet PDP → halted, ingen executor). Denne probe bekræfter at runtime-endpointet lever."
+    }
+  ]
+}

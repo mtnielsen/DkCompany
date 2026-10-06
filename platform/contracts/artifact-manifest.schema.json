@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/artifact-manifest.schema.json",
+  "title": "Artifact Manifest",
+  "description": "DKC-014: den kanoniske fortegnelse over hvilke artefakter CI faktisk har bygget, hvilken digest de har, hvilken SBOM og proveniens der hører til, og hvilken signatur der dækker dem. GitOps må kun installere digests der står her som byggede og signerede.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "sourceCommit", "trustAnchor", "policy", "artifacts"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "ArtifactManifest" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{3,63}$" },
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/namedHuman" }
+      }
+    },
+    "sourceCommit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+    "trustAnchor": {
+      "type": "object",
+      "required": ["keys"],
+      "additionalProperties": false,
+      "properties": {
+        "keys": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/trustedKey" }
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "required": ["requirePinnedDigest", "requireSignature", "requireSbom", "requireProvenance"],
+      "additionalProperties": false,
+      "properties": {
+        "requirePinnedDigest": { "const": true },
+        "requireSignature": { "const": true },
+        "requireSbom": { "const": true },
+        "requireProvenance": { "const": true }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/artifact" }
+    }
+  },
+  "$defs": {
+    "namedHuman": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 }
+      }
+    },
+    "trustedKey": {
+      "type": "object",
+      "required": ["keyId", "algorithm", "publicKeyPem", "owner"],
+      "additionalProperties": false,
+      "properties": {
+        "keyId": { "type": "string", "pattern": "^[a-f0-9]{16}$" },
+        "algorithm": { "const": "ed25519" },
+        "publicKeyPem": { "type": "string", "pattern": "^-----BEGIN PUBLIC KEY-----" },
+        "owner": { "$ref": "#/$defs/namedHuman" }
+      }
+    },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "signature": {
+      "type": "object",
+      "required": ["algorithm", "keyId", "value"],
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": { "const": "ed25519" },
+        "keyId": { "type": "string", "pattern": "^[a-f0-9]{16}$" },
+        "value": { "type": "string", "minLength": 16 }
+      }
+    },
+    "reference": {
+      "type": "object",
+      "required": ["ref", "sha256"],
+      "additionalProperties": false,
+      "properties": {
+        "ref": { "type": "string", "minLength": 3 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "required": ["name", "type", "status", "builder", "sourceCommit", "digest", "signature", "sbom", "provenance"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9][a-z0-9./-]{2,127}$" },
+        "type": { "enum": ["container-image", "source-bundle", "sbom", "provenance"] },
+        "repository": { "type": "string", "minLength": 3 },
+        "uri": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["signed", "built-unsigned", "not-built"] },
+        "reason": { "type": "string", "minLength": 3 },
+        "builder": { "type": "string", "minLength": 3 },
+        "sourceCommit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+        "builtAt": { "type": "string", "format": "date-time" },
+        "digest": { "oneOf": [{ "$ref": "#/$defs/sha256" }, { "type": "null" }] },
+        "baseImage": {
+          "type": "object",
+          "required": ["ref", "digest"],
+          "additionalProperties": false,
+          "properties": {
+            "ref": { "type": "string", "minLength": 3 },
+            "digest": { "$ref": "#/$defs/sha256" }
+          }
+        },
+        "signature": { "oneOf": [{ "$ref": "#/$defs/signature" }, { "type": "null" }] },
+        "sbom": { "oneOf": [{ "$ref": "#/$defs/reference" }, { "type": "null" }] },
+        "provenance": { "oneOf": [{ "$ref": "#/$defs/reference" }, { "type": "null" }] }
+      }
+    }
+  }
+}

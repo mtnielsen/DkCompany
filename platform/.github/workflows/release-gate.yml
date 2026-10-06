@@ -1,0 +1,99 @@
+name: Release gate
+
+# DKC-063 — CI-trin og release-gate.
+#
+# Workflowet er den deklarerede CI-sti for testmatricen. GitHub Actions er slået
+# fra på repo-niveau i dette miljø, så det er dokumentation og konfiguration, der
+# kan køres lokalt med de samme kommandoer via `make release`. Baselinens
+# `integration-github-actions`-check registrerer dette som NOT RUN, indtil
+# Actions faktisk kører.
+
+on:
+  pull_request:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  release-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install
+        run: make install
+
+      - name: Contract stage
+        run: |
+          make validate
+          make lint
+          make release-check
+
+      - name: Evidence mode stage
+        # DKC-018: fixture/contract adskilles fra integration/runtime-bevis.
+        run: |
+          make evidence-mode-check
+          make evidence-mode-test
+
+      - name: Runtime probe stage
+        # DKC-018: prober mod den kørende installation. Uden DKC_PROBE_*-binding
+        # og levende endpoints skrives posten som not-run; gaten afgør sagen.
+        run: make evidence-probe
+        continue-on-error: true
+
+      - name: Unit stage
+        run: make test
+
+      - name: Authorization stage
+        run: |
+          make tenant-test
+          make identity-test
+          make approval-test
+          make credentials-test
+          make tool-boundary-test
+
+      - name: Integration stage
+        run: |
+          make gateway-test
+          make model-gateway-test
+          make adapter-test
+          make iam-adapter-test
+
+      - name: Installation stage
+        run: |
+          make distribution-check
+          make distribution-test
+          make persistence-check
+
+      - name: Recovery stage
+        run: |
+          make audit-durability-test
+          make jobs-test
+          make continuity-test
+
+      - name: Baseline evidence
+        # --no-fail: baseline skriver altid evidens; release-gaten afgør sagen.
+        run: node tools/baseline/baseline.mjs run --no-fail
+
+      - name: Release gate
+        run: make release-gate
+
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-evidence
+          path: |
+            .conformance-out/baseline
+            .conformance-out/release-gate.json
+            docs/status/release-gate.md

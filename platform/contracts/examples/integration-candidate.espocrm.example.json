@@ -1,0 +1,96 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "IntegrationCandidate",
+  "metadata": {
+    "name": "espocrm-8-4-2",
+    "version": "1.0.0",
+    "description": "Kandidatvurdering af EspoCRM 8.4.2 (Community) som CRM-kerne (virksomheder, kontakter, salgsforløb og aktiviteter) bag den fælles adapter-SDK. Gratis/betalt-skellet er dokumenteret med kilde.",
+    "accountableHuman": {
+      "subject": "oidc|hans.hansen",
+      "name": "Hans Hansen",
+      "role": "Solution Architect"
+    },
+    "labels": { "application": "APP-047", "adapter": "crm-adapter", "product": "espocrm" }
+  },
+  "applicationId": "APP-047",
+  "name": "EspoCRM",
+  "upstream": {
+    "vendor": "EspoCRM",
+    "projectUrl": "https://www.espocrm.com/",
+    "documentationUrl": "https://docs.espocrm.com/",
+    "sourceUrl": "https://github.com/espocrm/espocrm"
+  },
+  "exactVersion": "8.4.2",
+  "edition": { "name": "Community", "tier": "community", "notes": "Kernen er GPLv3 og gratis; visse udvidelser (fx avanceret support) er betalte." },
+  "license": {
+    "spdx": "GPL-3.0-or-later",
+    "type": "mixed",
+    "paidFeaturesRequired": true,
+    "redistributionAllowed": true,
+    "notes": "Kernen er GPL-3.0-or-later; enkelte udvidelser er proprietary og betalte. Platformen videredistribuerer ikke binæren."
+  },
+  "hosting": {
+    "mode": "customer-self-hosted",
+    "commercialRedistribution": false,
+    "commercialHostingAllowed": true,
+    "notes": "Hostes for kunden i kundens eget miljø; én installation og én database pr. kunde."
+  },
+  "sso": { "capability": "full", "supported": true, "protocols": ["oidc", "saml2"], "notes": "OIDC/OAuth2 og SAML understøttes natively til autentificering." },
+  "scim": { "capability": "partial", "supported": false, "provisioningAlternative": "Brugere, teams og roller provisioneres gennem REST API'et og en SCIM-bro; SCIM er ikke i kernen.", "notes": "Ingen SCIM i kernen; adapteren bruger REST API'ets bruger- og teamendpoints." },
+  "api": {
+    "capability": "full",
+    "documented": true,
+    "protocols": ["rest"],
+    "authentication": ["api-key", "oauth2"],
+    "notes": "REST API til alle entiteter (Account, Contact, Opportunity, Activity) med filtrering og relationer."
+  },
+  "isolation": {
+    "capability": "full",
+    "tenantModel": "dedicated-installation",
+    "databasePerTenant": true,
+    "notes": "Én installation og én database pr. kunde; platformens tenantgrænse håndhæves i adapter og netværkspolitik."
+  },
+  "export": {
+    "capability": "partial",
+    "formats": ["json"],
+    "aclPreserved": true,
+    "apiAccessible": true,
+    "notes": "Alle entiteter kan eksporteres gennem API'et med relationer og ejerskab; aktivitetshistorik følger med."
+  },
+  "backup": {
+    "capability": "partial",
+    "supported": true,
+    "pointInTime": false,
+    "restoreTested": false,
+    "notes": "EspoCRM understøtter database- og vedhæftningsbackup, men adapteren kan ikke garantere et konsistent snapshot gennem API'et; restore er ikke testet i dette miljø."
+  },
+  "price": {
+    "model": "mixed",
+    "currency": "EUR",
+    "recurring": false,
+    "priceBasis": "Kernen er gratis; betalte udvidelser og support købes særskilt.",
+    "notes": "Community-kernen dækker CRM-behovet; avancerede udvidelser er valgfrie."
+  },
+  "maintenance": {
+    "vendorSupport": "commercial",
+    "releaseCadence": "Månedlige patch- og feature-udgivelser.",
+    "securityResponse": "Offentlig sikkerhedsproces og advisories.",
+    "upgradePath": "Trinvis opgradering inden for en major-serie via dokumenterede migrations."
+  },
+  "freeVsPaid": {
+    "documented": true,
+    "freeTierLimitations": [
+      "Visse avancerede udvidelser og kommerciel support er betalte.",
+      "Ingen central SCIM-provisionering i kernen."
+    ],
+    "requiredPaidFeatures": ["Avancerede udvidelser", "Kommerciel support"],
+    "sourceUrl": "https://www.espocrm.com/pricing/"
+  },
+  "verification": {
+    "status": "candidate_not_approved",
+    "verifiedBy": { "subject": "oidc|hans.hansen", "name": "Hans Hansen", "role": "Solution Architect" },
+    "verifiedAt": "2025-01-15",
+    "evidence": ["https://docs.espocrm.com/administration/oidc/", "https://docs.espocrm.com/development/api/"],
+    "notes": "Licens, OIDC-SSO, REST-API, isolation og eksport er vurderet. Kandidaten godkendes ikke endnu: en testet gendannelse af EspoCRM (DKC-016) mangler i dette miljø."
+  }
+}

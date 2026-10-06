@@ -1,0 +1,112 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ComponentManifest",
+  "requires": [
+    {
+      "ref": "platform-core",
+      "range": "^1.0.0",
+      "reason": "Tidsregistrering bruger kontrolplanens policy og audit til at spore rettelser."
+    },
+    {
+      "ref": "identity-broker",
+      "range": "^1.0.0",
+      "reason": "Tidsregistrering skal gå gennem den fælles identitetsbroker med verificerede medarbejderidentiteter."
+    },
+    {
+      "ref": "primary-database",
+      "range": "^1.0.0",
+      "reason": "Tidsregistreringer kræver en tenantadskilt relationel database."
+    }
+  ],
+  "optionalRequires": [
+    {
+      "ref": "invoicing",
+      "range": "^1.0.0",
+      "reason": "Tidsregistreringer kan danne grundlag for en faktura, når fakturering er aktiveret.",
+      "default": false
+    }
+  ],
+  "conflicts": [],
+  "dataServices": [
+    {
+      "id": "sql",
+      "kind": "relational",
+      "required": true,
+      "reason": "Tidsregistreringer skal ligge i en adgangskontrolleret relationel database."
+    }
+  ],
+  "migrations": [
+    {
+      "id": "time-init",
+      "phase": "schema",
+      "description": "Opretter tabeller for sager, projekter og tidsregistreringer.",
+      "reversible": true
+    }
+  ],
+  "download": [
+    {
+      "artifact": "time-1.0.0.tar.zst",
+      "sizeMiB": 90,
+      "source": "registry.example.org/apps/time:1.0.0",
+      "verified": true,
+      "checksum": "sha256:3c4d5e6f"
+    }
+  ],
+  "operations": ["backup", "restore", "upgrade", "health", "slo"],
+  "implementation": {
+    "status": "catalog-only",
+    "notes": "Katalogpost; den faktiske adapter er en særskilt afgrænset opgave."
+  },
+  "metadata": {
+    "name": "time",
+    "version": "1.0.0",
+    "description": "Tidsregistrering pr. sag og projekt. Registreret kandidat er Kimai; ingen dansk lokalisering kræves for selve tidsregistreringen.",
+    "accountableHuman": {
+      "subject": "oidc|cecilia.christensen",
+      "name": "Cecilia Christensen",
+      "role": "Service Owner",
+      "substitute": {
+        "subject": "oidc|david.dahl",
+        "name": "David Dahl"
+      }
+    },
+    "labels": {
+      "tier": "app",
+      "category": "hr",
+      "wave": "6"
+    }
+  },
+  "componentType": "application",
+  "category": "hr",
+  "securityCore": false,
+  "provides": {
+    "capabilities": ["time-tracking"],
+    "dataServices": []
+  },
+  "supportProfile": {
+    "tier": "best-effort",
+    "supportWindow": "12 måneder fra GA",
+    "escalation": "Service Owner",
+    "notes": "Supportprofilen er foreløbig indtil en adapter er bygget og en kandidat er menneskeligt godkendt."
+  },
+  "platforms": {
+    "os": ["linux"],
+    "arch": ["x64", "arm64"],
+    "runtime": ["node>=22 <23", "node>=24 <25"]
+  },
+  "resources": {
+    "cpuMillicores": 300,
+    "memoryMiB": 768,
+    "storageGiB": 20,
+    "nodes": 0
+  },
+  "localization": {
+    "family": "time",
+    "status": "registered",
+    "dataClasses": ["personal"],
+    "localeRequirements": ["agreements", "authoritative-registers"],
+    "adapterInterface": "time-tracking",
+    "candidateRef": "integration-candidate.kimai.example.json",
+    "reason": "Tidsregistrering har ingen lovbestemt dansk lokalisering; aftaler og registeradgang er ikke-blokerende forberedelser."
+  }
+}

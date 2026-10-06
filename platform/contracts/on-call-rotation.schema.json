@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/on-call-rotation.schema.json",
+  "title": "On-Call Rotation Set",
+  "description": "Menneskelige on-call-rotationer pr. tjeneste med en strengt stigende eskalationskæde. Primær, sekundær, manager og hvert eskalationstrin er navngivne mennesker; en AI er aldrig vagthavende eller eskalationspunkt.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "rotations"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "OnCallRotationSet" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string" },
+        "description": { "type": "string", "minLength": 10 }
+      }
+    },
+    "rotations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "serviceId", "timezone", "ackMinutes", "primary", "secondary", "manager", "escalation"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "serviceId": { "type": "string", "minLength": 1 },
+          "timezone": { "type": "string", "minLength": 1 },
+          "ackMinutes": { "type": "integer", "minimum": 1 },
+          "primary": { "$ref": "#/$defs/person" },
+          "secondary": { "$ref": "#/$defs/person" },
+          "manager": { "$ref": "#/$defs/person" },
+          "escalation": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["afterMinutes", "to"],
+              "additionalProperties": false,
+              "properties": {
+                "afterMinutes": { "type": "integer", "minimum": 0 },
+                "to": { "$ref": "#/$defs/person" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "person": {
+      "type": "object",
+      "required": ["subject", "name", "role", "channel", "contact"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\|[a-z0-9][a-z0-9._-]{2,}$" },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "channel": { "enum": ["statuspage", "email", "sms", "phone", "slack", "teams"] },
+        "contact": { "type": "string", "minLength": 2 }
+      }
+    }
+  }
+}

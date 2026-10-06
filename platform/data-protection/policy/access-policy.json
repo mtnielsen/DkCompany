@@ -1,0 +1,20 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ProtectedDataPolicy",
+  "metadata": {
+    "name": "ai-immutable-access",
+    "version": "1.0.0",
+    "description": "Adgangs- og transitionsregler for beskyttede dataklasser. Adskiller forbud mod AI-ændring, WORM-retention og forbud mod AI-læsning. Denne politik er adgangs-/transitionskontrol; fysisk lager-/nøglehåndhævelse leveres af DKC-048.",
+    "lastReviewed": "2025-09-01"
+  },
+  "agentOperationMatrix": {
+    "ordinary": ["read", "retrieve", "prompt", "train", "analyze", "log-access", "append", "update", "delete", "copy", "export", "restore", "reclassify", "pointer-update", "key-rotate"],
+    "ai-read-only": ["read", "retrieve", "prompt", "train", "analyze", "log-access"],
+    "append-only": ["read", "retrieve", "prompt", "analyze", "log-access", "append"],
+    "retention-locked": ["read", "retrieve", "log-access"]
+  },
+  "noAiAccessDeniesAll": true,
+  "reclassificationHumanOnly": true,
+  "transitionPreservesProtection": ["copy", "export", "restore"],
+  "aiForbiddenOperations": ["reclassify", "pointer-update", "key-rotate", "delete"]
+}

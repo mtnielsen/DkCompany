@@ -1,0 +1,21 @@
+{
+  "verb": "subject.locate",
+  "module": "keycloak-adapter",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-16T21:47:33.363Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 20
+  },
+  "artifact": {
+    "uri": "s3://evidence/keycloak-adapter/subject.locate.json",
+    "sha256": "5a8bdba0ece8231d0392ca64b7fa86a3a223df0d95fb433f310c3abc2e2981b1"
+  }
+}

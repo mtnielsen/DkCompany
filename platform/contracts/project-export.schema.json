@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/project-export.schema.json",
+  "title": "Project Bundle",
+  "description": "DKC-027: et stabilt, tenantafgrænset udvekslingsbundt for et OpenProject-projekt med medlemskaber, arbejdspakker, afhængigheder, vedhæftninger og statushændelser. Bruges til import/eksport og bevarer ACL og den stabile externalId, så en gentaget import ikke skaber dubletter.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "project", "members", "workPackages"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "ProjectBundle" },
+    "metadata": {
+      "type": "object",
+      "required": ["formatVersion", "exportedAt", "source", "projectRef"],
+      "additionalProperties": false,
+      "properties": {
+        "formatVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+        "exportedAt": { "type": "string", "format": "date-time" },
+        "source": { "type": "string", "minLength": 3 },
+        "projectRef": { "type": "string", "minLength": 1 }
+      }
+    },
+    "project": {
+      "type": "object",
+      "required": ["externalId", "name", "tenantId", "status", "visibility"],
+      "additionalProperties": false,
+      "properties": {
+        "externalId": { "type": "string", "pattern": "^PROJECT-[A-Za-z0-9._-]+$" },
+        "identifier": { "type": ["string", "null"] },
+        "name": { "type": "string", "minLength": 1 },
+        "tenantId": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["active", "archived", "closed"] },
+        "visibility": { "enum": ["public", "private"] },
+        "parentExternalId": { "type": ["string", "null"] }
+      }
+    },
+    "members": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["externalId", "role", "tenantId"],
+        "additionalProperties": false,
+        "properties": {
+          "externalId": { "type": "string", "minLength": 1 },
+          "principal": { "type": ["string", "null"] },
+          "group": { "type": ["string", "null"] },
+          "role": { "enum": ["tenant-admin", "project-admin", "member", "reader", "external-guest", "auditor"] },
+          "tenantId": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "workPackages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["externalId", "subject", "type", "status", "dependsOn", "tenantId"],
+        "additionalProperties": false,
+        "properties": {
+          "externalId": { "type": "string", "minLength": 1 },
+          "subject": { "type": "string", "minLength": 1 },
+          "type": { "enum": ["task", "bug", "feature", "epic"] },
+          "status": { "enum": ["new", "in_progress", "on_hold", "closed"] },
+          "assigneeExternalId": { "type": ["string", "null"] },
+          "priority": { "type": ["string", "null"] },
+          "startDate": { "type": ["string", "null"] },
+          "dueDate": { "type": ["string", "null"] },
+          "parentExternalId": { "type": ["string", "null"] },
+          "dependsOn": { "type": "array", "items": { "type": "string" } },
+          "version": { "type": ["integer", "null"] },
+          "tenantId": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["externalId", "workPackageExternalId", "filename", "sizeBytes", "tenantId"],
+        "additionalProperties": false,
+        "properties": {
+          "externalId": { "type": "string", "minLength": 1 },
+          "workPackageExternalId": { "type": "string", "minLength": 1 },
+          "filename": { "type": "string", "minLength": 1 },
+          "sha256": { "type": ["string", "null"], "pattern": "^[a-f0-9]{64}$" },
+          "sizeBytes": { "type": "integer", "minimum": 0 },
+          "tenantId": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "statusEvents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "workPackageExternalId", "type", "at"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "workPackageExternalId": { "type": "string", "minLength": 1 },
+          "type": { "type": "string", "minLength": 1 },
+          "at": { "type": "string", "format": "date-time" },
+          "actor": { "type": ["string", "null"] }
+        }
+      }
+    }
+  }
+}

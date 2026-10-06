@@ -1,0 +1,44 @@
+{
+  "apiVersion": "rbac.authorization.k8s.io/v1",
+  "kind": "Role",
+  "metadata": {
+    "name": "audit-ingest-append-only",
+    "namespace": "platform-data-protection",
+    "labels": {
+      "app.kubernetes.io/name": "audit-ingest",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "audit-ingest",
+      "platform.example.org/environment": "data-protection"
+    }
+  },
+  "rules": [
+    {
+      "apiGroups": [
+        "objectstore.platform.example.org"
+      ],
+      "resources": [
+        "objectstoreobjects"
+      ],
+      "verbs": [
+        "create"
+      ]
+    },
+    {
+      "apiGroups": [
+        "objectstorage.k8s.io"
+      ],
+      "resources": [
+        "objects"
+      ],
+      "verbs": [
+        "create"
+      ]
+    }
+  ],
+  "annotations": {
+    "platform.example.org/mode": "append-only",
+    "platform.example.org/cannot-delete": "true",
+    "platform.example.org/cannot-update": "true",
+    "platform.example.org/separate-from-admin": "true"
+  }
+}

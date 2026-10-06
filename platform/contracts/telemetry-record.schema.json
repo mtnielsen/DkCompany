@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/telemetry-record.schema.json",
+  "title": "Telemetry Record",
+  "description": "Én minimeret telemetri-post (metric, log eller trace) med en normaliseret tenant, en datakilde og et tidspunkt. Hemmeligheder og persondata er fjernet under indsamlingen; `personalData.digest` bevarer muligheden for at korrelere en sag uden at opbevare de rå værdier.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "id", "signal", "tenantId", "source", "capturedAt", "minimized"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "TelemetryRecord" },
+    "id": { "type": "string", "minLength": 1 },
+    "signal": { "enum": ["metric", "log", "trace"] },
+    "tenantId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+    "source": { "$ref": "#/$defs/source" },
+    "capturedAt": { "type": "string", "format": "date-time" },
+    "minimized": { "const": true },
+    "subject": { "$ref": "#/$defs/subject" },
+    "metric": {
+      "type": "object",
+      "required": ["name", "value"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "value": { "type": "number" },
+        "unit": { "type": "string" }
+      }
+    },
+    "log": {
+      "type": "object",
+      "required": ["event"],
+      "additionalProperties": false,
+      "properties": {
+        "event": { "type": "string", "minLength": 1 },
+        "level": { "enum": ["debug", "info", "warn", "error", "critical"] }
+      }
+    },
+    "trace": {
+      "type": "object",
+      "required": ["traceId", "spanId", "durationMs", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "traceId": { "type": "string", "minLength": 1 },
+        "spanId": { "type": "string", "minLength": 1 },
+        "parentSpanId": { "type": "string" },
+        "durationMs": { "type": "number", "minimum": 0 },
+        "status": { "enum": ["ok", "error", "unset"] }
+      }
+    },
+    "attributes": { "type": "object" },
+    "personalData": {
+      "type": "object",
+      "required": ["removed", "digest"],
+      "additionalProperties": false,
+      "properties": {
+        "removed": { "type": "array", "items": { "type": "string" } },
+        "redactions": { "type": "array", "items": { "type": "string" } },
+        "digest": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": ["type", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "enum": ["metric", "log", "trace", "scanner", "runtime", "backup", "credentials"] },
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string" }
+      }
+    },
+    "subject": {
+      "type": "object",
+      "required": ["kind", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "enum": ["agent", "service", "human", "tenant", "anonymous"] },
+        "name": { "type": "string", "minLength": 1 },
+        "subject": { "type": "string" }
+      }
+    }
+  }
+}

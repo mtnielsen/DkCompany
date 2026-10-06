@@ -1,0 +1,93 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "IntegrationCandidate",
+  "metadata": {
+    "name": "tryton-7-0-0",
+    "version": "1.0.0",
+    "description": "Kandidatvurdering af Tryton 7.0.0 (Community) som dansk økonomi-/ERP-kernel bag en afgrænset adapter. Bogføring, moms og årsafslutning kræver en dansk fagpersons afgørelse og er ikke godkendt her.",
+    "accountableHuman": {
+      "subject": "oidc|hans.hansen",
+      "name": "Hans Hansen",
+      "role": "Solution Architect"
+    },
+    "labels": { "application": "APP-049", "adapter": "finance-adapter", "product": "tryton" }
+  },
+  "applicationId": "APP-049",
+  "name": "Tryton",
+  "upstream": {
+    "vendor": "Tryton",
+    "projectUrl": "https://www.tryton.org/",
+    "documentationUrl": "https://docs.tryton.org/",
+    "sourceUrl": "https://github.com/tryton/tryton"
+  },
+  "exactVersion": "7.0.0",
+  "edition": { "name": "Community", "tier": "community", "notes": "Kernen er GPL-3.0-or-later og gratis; visse moduler og support er separate." },
+  "license": {
+    "spdx": "GPL-3.0-or-later",
+    "type": "open-source",
+    "paidFeaturesRequired": false,
+    "redistributionAllowed": true,
+    "notes": "Kernen er fri software. Platformen videredistribuerer ikke binæren, men installerer den for kunden."
+  },
+  "hosting": {
+    "mode": "customer-self-hosted",
+    "commercialRedistribution": false,
+    "commercialHostingAllowed": true,
+    "notes": "Hostes for kunden; én installation og én database pr. kunde."
+  },
+  "sso": { "capability": "partial", "supported": true, "protocols": ["oidc"], "notes": "OIDC understøttes gennem et trytond-auth-modul, ikke i selve kernen." },
+  "scim": { "capability": "none", "supported": false, "provisioningAlternative": "Brugere og grupper provisioneres gennem et afgrænset modul eller REST-API'et; SCIM er ikke i kernen.", "notes": "Ingen SCIM." },
+  "api": {
+    "capability": "full",
+    "documented": true,
+    "protocols": ["rest", "other"],
+    "authentication": ["oauth2", "api-key"],
+    "notes": "JSON-RPC og et REST-lag dækker kontoplan, bilag og rapporter."
+  },
+  "isolation": {
+    "capability": "full",
+    "tenantModel": "dedicated-installation",
+    "databasePerTenant": true,
+    "notes": "Én installation og én database pr. kunde; tenantgrænsen håndhæves i adapter og netværkspolitik."
+  },
+  "export": {
+    "capability": "partial",
+    "formats": ["json", "csv"],
+    "aclPreserved": true,
+    "apiAccessible": true,
+    "notes": "Bilag og kontoplan kan eksporteres; bankafstemning følger delvist med."
+  },
+  "backup": {
+    "capability": "partial",
+    "supported": true,
+    "pointInTime": false,
+    "restoreTested": false,
+    "notes": "Databasebackup understøttes, men en konsistent gendannelse gennem API'et er ikke testet i dette miljø."
+  },
+  "price": {
+    "model": "mixed",
+    "currency": "EUR",
+    "recurring": false,
+    "priceBasis": "Kernen er gratis; betalte moduler og support købes særskilt.",
+    "notes": "Driftsprisen er primært kundens egen drift og eventuel support."
+  },
+  "maintenance": {
+    "vendorSupport": "community",
+    "releaseCadence": "Årlige feature-udgivelser og løbende patch.",
+    "securityResponse": "Offentlig sikkerhedsproces og advisories.",
+    "upgradePath": "Trinvis opgradering inden for en major-serie via dokumenterede migrations."
+  },
+  "freeVsPaid": {
+    "documented": true,
+    "freeTierLimitations": ["Visse moduler og kommerciel support er separate.", "Ingen central SCIM-provisionering i kernen."],
+    "requiredPaidFeatures": [],
+    "sourceUrl": "https://www.tryton.org/download"
+  },
+  "verification": {
+    "status": "candidate_not_approved",
+    "verifiedBy": { "subject": "oidc|hans.hansen", "name": "Hans Hansen", "role": "Solution Architect" },
+    "verifiedAt": "2025-01-15",
+    "evidence": ["https://docs.tryton.org/", "https://pypi.org/project/trytond/"],
+    "notes": "Licens, SSO, API og isolation er vurderet. Kandidaten godkendes ikke endnu: dansk bogføring/moms er ikke fagligt bekræftet, og en testet gendannelse mangler."
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "InfrastructurePlan",
+  "metadata": {
+    "name": "small-vps-staging",
+    "version": "1.0.0",
+    "description": "Konkret infrastrukturplan for den valgte hostingprofil small-vps med adskilte dev/staging/prod-miljøer, TLS, DNS, krypteret storage, secret-injektion og netværksisolering.",
+    "accountableHuman": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" }
+  },
+  "hostingProfileRef": "catalog/profiles/small-vps.profile.json",
+  "provider": { "name": "hetzner", "region": "fsn1", "zone": "fsn1-dc14" },
+  "environments": [
+    {
+      "id": "dev",
+      "namespace": "platform",
+      "isolation": "namespace",
+      "replicas": 1,
+      "hostname": "dev.platform.example.org",
+      "tls": { "issuer": "letsencrypt-staging", "secretName": "dev-platform-tls" },
+      "dns": {
+        "zone": "platform.example.org",
+        "records": [{ "name": "dev", "type": "A", "target": "203.0.113.10" }]
+      },
+      "storage": { "className": "hcloud-volumes", "sizeGiB": 10, "encrypted": true },
+      "secrets": {
+        "backend": "sealed-secrets",
+        "references": [{ "name": "dev-pdp-signing", "keys": ["signing-key"], "purpose": "PDP-bundlesignering" }]
+      },
+      "network": { "defaultDeny": true, "crossTenantDeny": true, "egressAllow": ["kube-system/kube-dns:53", "model-egress:443"] },
+      "services": [
+        { "name": "pdp", "module": "pdp", "image": "ghcr.io/example/platform-pdp", "port": 8181, "workload": "deployment" },
+        { "name": "ai-gateway", "module": "ai-gateway", "image": "ghcr.io/example/platform-ai-gateway", "port": 8283, "workload": "deployment" },
+        { "name": "audit-service", "module": "audit-service", "image": "ghcr.io/example/audit-service", "port": 8284, "workload": "deployment" },
+        { "name": "approvals", "module": "approvals", "image": "ghcr.io/example/platform-approvals", "port": 8285, "workload": "deployment" },
+        { "name": "runtime", "module": "runtime", "image": "ghcr.io/example/platform-runtime", "workload": "cronjob" }
+      ]
+    },
+    {
+      "id": "staging",
+      "namespace": "platform-staging",
+      "isolation": "namespace",
+      "replicas": 2,
+      "hostname": "staging.platform.example.org",
+      "tls": { "issuer": "letsencrypt-staging", "secretName": "staging-platform-tls" },
+      "dns": {
+        "zone": "platform.example.org",
+        "records": [{ "name": "staging", "type": "A", "target": "203.0.113.20" }]
+      },
+      "storage": { "className": "hcloud-volumes", "sizeGiB": 50, "encrypted": true },
+      "secrets": {
+        "backend": "external-secrets",
+        "references": [
+          { "name": "staging-pdp-signing", "keys": ["signing-key"], "purpose": "PDP-bundlesignering" },
+          { "name": "staging-db", "keys": ["username", "password"], "purpose": "Databaseadgang" }
+        ]
+      },
+      "network": { "defaultDeny": true, "crossTenantDeny": true, "egressAllow": ["kube-system/kube-dns:53", "model-egress:443", "object-store:443"] },
+      "services": [
+        { "name": "pdp", "module": "pdp", "image": "ghcr.io/example/platform-pdp", "port": 8181, "workload": "deployment" },
+        { "name": "ai-gateway", "module": "ai-gateway", "image": "ghcr.io/example/platform-ai-gateway", "port": 8283, "workload": "deployment" },
+        { "name": "audit-service", "module": "audit-service", "image": "ghcr.io/example/audit-service", "port": 8284, "workload": "deployment" },
+        { "name": "approvals", "module": "approvals", "image": "ghcr.io/example/platform-approvals", "port": 8285, "workload": "deployment" },
+        { "name": "runtime", "module": "runtime", "image": "ghcr.io/example/platform-runtime", "workload": "cronjob" }
+      ]
+    },
+    {
+      "id": "prod",
+      "namespace": "platform-prod",
+      "isolation": "cluster",
+      "replicas": 3,
+      "hostname": "platform.example.org",
+      "tls": { "issuer": "letsencrypt-prod", "secretName": "prod-platform-tls" },
+      "dns": {
+        "zone": "platform.example.org",
+        "records": [
+          { "name": "@", "type": "A", "target": "203.0.113.30" },
+          { "name": "www", "type": "CNAME", "target": "platform.example.org" }
+        ]
+      },
+      "storage": { "className": "hcloud-volumes", "sizeGiB": 200, "encrypted": true },
+      "secrets": {
+        "backend": "vault",
+        "references": [
+          { "name": "prod-pdp-signing", "keys": ["signing-key"], "purpose": "PDP-bundlesignering" },
+          { "name": "prod-db", "keys": ["username", "password"], "purpose": "Databaseadgang" }
+        ]
+      },
+      "network": { "defaultDeny": true, "crossTenantDeny": true, "egressAllow": ["kube-system/kube-dns:53", "model-egress:443", "object-store:443", "backup-destination:443"] },
+      "services": [
+        { "name": "pdp", "module": "pdp", "image": "ghcr.io/example/platform-pdp", "port": 8181, "workload": "deployment" },
+        { "name": "ai-gateway", "module": "ai-gateway", "image": "ghcr.io/example/platform-ai-gateway", "port": 8283, "workload": "deployment" },
+        { "name": "audit-service", "module": "audit-service", "image": "ghcr.io/example/audit-service", "port": 8284, "workload": "deployment" },
+        { "name": "approvals", "module": "approvals", "image": "ghcr.io/example/platform-approvals", "port": 8285, "workload": "deployment" },
+        { "name": "runtime", "module": "runtime", "image": "ghcr.io/example/platform-runtime", "workload": "cronjob" }
+      ]
+    }
+  ],
+  "bootstrap": {
+    "steps": [
+      { "id": "provision", "description": "Opret privat netværk, firewall og k3s-server via OpenTofu-modulet.", "command": "tofu -chdir=infrastructure/iac/small-vps init && tofu -chdir=infrastructure/iac/small-vps apply -var-file=env/staging.tfvars" },
+      { "id": "secrets", "description": "Læg de nødvendige secrets ind i secret-backenden; intet hemmeligt materiale i git.", "command": "make infrastructure-secret-plan ENV=staging" },
+      { "id": "gitops", "description": "Peg Argo CD på gitops/apps/staging og lad selfHeal+prune føre klyngen til git." },
+      { "id": "verify", "description": "Kør infra-check, GitOps-verifikation og den rigtige driftskontrol (kræver klynge)." }
+    ],
+    "keyManagement": {
+      "backend": "vault",
+      "rotationDays": 90,
+      "references": [
+        { "name": "platform-release-signing", "keys": ["private-key"], "purpose": "Signering af releaseartefakter (DKC-014)" },
+        { "name": "platform-pdp-signing", "keys": ["private-key"], "purpose": "Signering af policy-bundles" },
+        { "name": "platform-break-glass", "keys": ["private-key"], "purpose": "Break-glass-adgang" }
+      ]
+    },
+    "breakGlass": {
+      "owner": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Security Owner" },
+      "requiresApproval": true,
+      "maxDurationMinutes": 120,
+      "scope": ["read-audit", "restart-workload", "rotate-credential"],
+      "contact": "security@example.org (Security Owner, 24/7)"
+    }
+  },
+  "cost": {
+    "currency": "EUR",
+    "monthlyEstimate": 96.0,
+    "items": [
+      { "id": "compute", "description": "k3s-server (small-vps, 4 vCPU / 16 GiB)", "monthly": 32.0 },
+      { "id": "storage", "description": "Krypteret block-storage til applikationsdata og backups", "monthly": 24.0 },
+      { "id": "egress", "description": "Udgående trafik til model- og backupmål", "monthly": 20.0 },
+      { "id": "object-store", "description": "Backup-destination (S3-kompatibel)", "monthly": 20.0 }
+    ]
+  }
+}

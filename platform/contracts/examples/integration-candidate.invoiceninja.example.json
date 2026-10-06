@@ -1,0 +1,93 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "IntegrationCandidate",
+  "metadata": {
+    "name": "invoiceninja-5-11-0",
+    "version": "1.0.0",
+    "description": "Kandidatvurdering af Invoice Ninja 5.11.0 som faktureringskernel. Dansk e-faktura (OIOUBL/NemHandel), moms og bogføring kræver en fagpersons afgørelse og er ikke godkendt her.",
+    "accountableHuman": {
+      "subject": "oidc|hans.hansen",
+      "name": "Hans Hansen",
+      "role": "Solution Architect"
+    },
+    "labels": { "application": "APP-052", "adapter": "invoicing-adapter", "product": "invoiceninja" }
+  },
+  "applicationId": "APP-052",
+  "name": "Invoice Ninja",
+  "upstream": {
+    "vendor": "Invoice Ninja",
+    "projectUrl": "https://www.invoiceninja.com/",
+    "documentationUrl": "https://invoiceninja.github.io/",
+    "sourceUrl": "https://github.com/invoiceninja/invoiceninja"
+  },
+  "exactVersion": "5.11.0",
+  "edition": { "name": "Self-hosted", "tier": "self-hosted", "notes": "Selvhostet kerne; white-label og hosted drift er betalte tjenester." },
+  "license": {
+    "spdx": "Elastic-2.0",
+    "type": "source-available",
+    "paidFeaturesRequired": true,
+    "redistributionAllowed": true,
+    "notes": "Kernen kan selvhostes; visse funktioner (white-label, hosted drift) er betalte."
+  },
+  "hosting": {
+    "mode": "customer-self-hosted",
+    "commercialRedistribution": false,
+    "commercialHostingAllowed": true,
+    "notes": "Hostes for kunden; én database pr. installation."
+  },
+  "sso": { "capability": "full", "supported": true, "protocols": ["oidc", "saml2"], "notes": "OIDC/SAML understøttes gennem indbyggede providere." },
+  "scim": { "capability": "none", "supported": false, "provisioningAlternative": "Brugere provisioneres gennem REST-API'et eller en SCIM-bro.", "notes": "Ingen SCIM." },
+  "api": {
+    "capability": "full",
+    "documented": true,
+    "protocols": ["rest"],
+    "authentication": ["api-key", "oauth2"],
+    "notes": "REST API dækker fakturaer, kunder, produkter og betalinger."
+  },
+  "isolation": {
+    "capability": "full",
+    "tenantModel": "dedicated-installation",
+    "databasePerTenant": true,
+    "notes": "Dedikeret installation pr. kunde; tenantgrænsen håndhæves i adapter og netværkspolitik."
+  },
+  "export": {
+    "capability": "partial",
+    "formats": ["json", "csv", "xml"],
+    "aclPreserved": true,
+    "apiAccessible": true,
+    "notes": "Fakturaer kan eksporteres; OIOUBL kræver en særskilt formatter og et access point."
+  },
+  "backup": {
+    "capability": "partial",
+    "supported": true,
+    "pointInTime": false,
+    "restoreTested": false,
+    "notes": "Databasebackup understøttes, men gendannelse er ikke testet i dette miljø."
+  },
+  "price": {
+    "model": "mixed",
+    "currency": "USD",
+    "recurring": true,
+    "priceBasis": "Selvhostet kerne er gratis; hosted drift og white-label er abonnement.",
+    "notes": "Driftsprisen afhænger af valgt edition."
+  },
+  "maintenance": {
+    "vendorSupport": "commercial",
+    "releaseCadence": "Løbende patch og regelmæssige feature-udgivelser.",
+    "securityResponse": "Offentlig sikkerhedsproces og advisories.",
+    "upgradePath": "Trinvis opgradering inden for en major-serie."
+  },
+  "freeVsPaid": {
+    "documented": true,
+    "freeTierLimitations": ["White-label og hosted drift er betalte.", "Dansk e-faktura kræver en særskilt formatter/access point."],
+    "requiredPaidFeatures": ["White-label", "Hosted drift"],
+    "sourceUrl": "https://www.invoiceninja.com/pricing/"
+  },
+  "verification": {
+    "status": "candidate_not_approved",
+    "verifiedBy": { "subject": "oidc|hans.hansen", "name": "Hans Hansen", "role": "Solution Architect" },
+    "verifiedAt": "2025-01-15",
+    "evidence": ["https://invoiceninja.github.io/", "https://github.com/invoiceninja/invoiceninja"],
+    "notes": "Licens, SSO, API og isolation er vurderet. Kandidaten godkendes ikke endnu: dansk e-faktura/moms er ikke fagligt bekræftet, og en testet gendannelse mangler."
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/service-catalog.schema.json",
+  "title": "Service Catalog",
+  "description": "Den autoritative servicekatalog. Hver tjeneste har et navngivet menneske som ejer, en on-call-rotation, en kommunikationskanal uden for platformen, en runbook, SLA/OLA og CI-relationer. Kataloget er kilden adapteren læser; upstream ITSM registrerer sagerne.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "services"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "ServiceCatalog" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string" },
+        "description": { "type": "string", "minLength": 10 }
+      }
+    },
+    "services": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "tier", "owner", "onCallRotation", "severityDefault", "communicationChannel", "runbook", "sla", "cis"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+          "name": { "type": "string", "minLength": 2 },
+          "tier": { "enum": ["customer-critical", "platform-critical", "platform-standard", "internal"] },
+          "owner": { "$ref": "#/$defs/human" },
+          "onCallRotation": { "type": "string", "minLength": 1 },
+          "severityDefault": { "enum": ["sev1", "sev2", "sev3", "sev4"] },
+          "communicationChannel": { "enum": ["statuspage", "email", "sms", "phone", "slack", "teams"] },
+          "runbook": { "type": "string", "minLength": 1 },
+          "sla": {
+            "type": "array",
+            "minItems": 4,
+            "items": {
+              "type": "object",
+              "required": ["severity", "responseMinutes", "resolutionMinutes"],
+              "additionalProperties": false,
+              "properties": {
+                "severity": { "enum": ["sev1", "sev2", "sev3", "sev4"] },
+                "responseMinutes": { "type": "integer", "minimum": 1 },
+                "resolutionMinutes": { "type": "integer", "minimum": 1 }
+              }
+            }
+          },
+          "ola": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["team", "severity", "responseMinutes"],
+              "additionalProperties": false,
+              "properties": {
+                "team": { "type": "string", "minLength": 2 },
+                "severity": { "enum": ["sev1", "sev2", "sev3", "sev4"] },
+                "responseMinutes": { "type": "integer", "minimum": 1 }
+              }
+            }
+          },
+          "dependsOn": { "type": "array", "items": { "type": "string" } },
+          "cis": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["id", "kind", "relation"],
+              "additionalProperties": false,
+              "properties": {
+                "id": { "type": "string", "minLength": 1 },
+                "kind": { "enum": ["service", "application", "database", "network", "host"] },
+                "relation": { "enum": ["provides", "depends-on", "hosts", "connects"] }
+              }
+            }
+          },
+          "knowledgeArticleIds": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "human": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\|[a-z0-9][a-z0-9._-]{2,}$" },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 }
+      }
+    }
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/installer-plan.schema.json",
+  "title": "Installer Plan",
+  "description": "DKC-054 — en signeret, deterministisk installationsplan. Planen indeholder preflight-resultatet, de idempotente trin med resumable tilstand, eksplicitte begrænsninger (ingen diskformatering, ingen overtagelse af databaseskema, ingen host-OS-ændring uden scope) og et diagnosticeringsbevis uden hemmeligheder. Signaturen dækker hele det kanoniske indhold undtagen signaturfeltet.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "installationId", "profileRef", "platformId", "hostScopeRef", "configDigest", "preflight", "steps", "resume", "diagnostics", "restrictions", "signature"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "InstallerPlan" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "createdAt", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "description": { "type": "string", "minLength": 10 }
+      }
+    },
+    "installationId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+    "profileRef": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+    "platformId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9.-]{1,63}$" },
+    "hostScopeRef": { "type": "string", "minLength": 3 },
+    "configDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "preflight": {
+      "type": "object",
+      "required": ["ok", "checks", "blockingProblems"],
+      "additionalProperties": false,
+      "properties": {
+        "ok": { "type": "boolean" },
+        "checks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "title", "status", "detail"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+              "title": { "type": "string", "minLength": 3 },
+              "status": { "enum": ["pass", "fail", "warn", "skip"] },
+              "detail": { "type": "string" }
+            }
+          }
+        },
+        "blockingProblems": { "type": "array", "items": { "type": "string", "minLength": 3 } }
+      }
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "order", "kind", "description", "idempotencyKey", "mutating", "requiresApproval", "dependsOn", "state"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+          "order": { "type": "integer", "minimum": 1 },
+          "kind": { "enum": ["preflight", "provision", "migrate", "configure", "verify"] },
+          "description": { "type": "string", "minLength": 5 },
+          "idempotencyKey": { "type": "string", "pattern": "^[a-f0-9]{32,64}$" },
+          "mutating": { "type": "boolean" },
+          "requiresApproval": { "type": "boolean" },
+          "dependsOn": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" } },
+          "state": { "enum": ["pending", "running", "done", "failed", "skipped"] }
+        }
+      }
+    },
+    "resume": {
+      "type": "object",
+      "required": ["stateRef", "lastCompletedStep", "resumable"],
+      "additionalProperties": false,
+      "properties": {
+        "stateRef": { "type": "string", "minLength": 3 },
+        "lastCompletedStep": { "type": ["string", "null"] },
+        "resumable": { "const": true }
+      }
+    },
+    "diagnostics": {
+      "type": "object",
+      "required": ["redacted", "secretScan", "artifactRef"],
+      "additionalProperties": false,
+      "properties": {
+        "redacted": { "const": true },
+        "secretScan": { "enum": ["pass", "fail"] },
+        "artifactRef": { "type": "string", "minLength": 3 }
+      }
+    },
+    "restrictions": {
+      "type": "object",
+      "required": ["formatDisks", "adoptExistingSchema", "changeHostOs"],
+      "additionalProperties": false,
+      "properties": {
+        "formatDisks": { "const": false },
+        "adoptExistingSchema": { "const": false },
+        "changeHostOs": { "const": false }
+      }
+    },
+    "signature": {
+      "type": "object",
+      "required": ["algorithm", "keyId", "value", "signedAt"],
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": { "enum": ["hmac-sha256"] },
+        "keyId": { "type": "string", "minLength": 3 },
+        "value": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "signedAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}

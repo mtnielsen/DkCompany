@@ -1,0 +1,124 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "UpstreamUpgradePlan",
+  "metadata": {
+    "name": "keycloak-adapter-26.0.0-til-26.1.0",
+    "version": "1.0.0",
+    "description": "Opgraderings- og rollbackplan for keycloak-adapter fra 26.0.0 til 26.1.0.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner"
+    }
+  },
+  "adapter": "keycloak-adapter",
+  "from": {
+    "version": "26.0.0",
+    "edition": "upstream"
+  },
+  "to": {
+    "version": "26.1.0",
+    "edition": "upstream"
+  },
+  "matchesRange": "^26.0.0",
+  "downgrade": false,
+  "preflight": [
+    {
+      "id": "negotiate",
+      "title": "Forhandl version/edition",
+      "role": "operator",
+      "description": "Bekræft at målversionen ligger i en understøttet serie, og at editionen er understøttet.",
+      "criteria": "integrationCandidate for 26.1.0 (upstream) findes og er godkendt"
+    },
+    {
+      "id": "backup-verified",
+      "title": "Bekræft frisk, verificeret backup",
+      "role": "operator",
+      "description": "Backup skal være taget efter sidste ændring og gendannelsen skal være verificeret i et isoleret miljø.",
+      "criteria": "backup-alder < RPO og restore-check er grøn"
+    },
+    {
+      "id": "capacity",
+      "title": "Kontrollér kapacitet og vedligeholdelsesvindue",
+      "role": "operator",
+      "description": "Der skal være plads til både gammel og ny version under skiftet, og vinduet skal være annonceret.",
+      "criteria": "ledig kapacitet og annonceret vindue"
+    }
+  ],
+  "steps": [
+    {
+      "id": "drain",
+      "title": "Sæt adapteren i læse-/dræntilstand",
+      "role": "executor",
+      "description": "Stop nye skrivninger og lad igangværende kald afslutte.",
+      "criteria": "ingen nye skrivninger; aktive kald er afsluttet"
+    },
+    {
+      "id": "snapshot",
+      "title": "Tag øjebliksbillede og notér digest",
+      "role": "executor",
+      "description": "Tag backup umiddelbart før ændringen og notér digest/version for rollback.",
+      "criteria": "backup-digest og versionsstempel er registreret"
+    },
+    {
+      "id": "upgrade",
+      "title": "Udfør upstream-opgraderingen",
+      "role": "executor",
+      "description": "Skift container/binære og lad upstreams egne migrationer køre.",
+      "criteria": "upstream rapporterer målversionen"
+    },
+    {
+      "id": "unfreeze",
+      "title": "Genåbn for trafik",
+      "role": "executor",
+      "description": "Genoptag skrivninger efter grøn verifikation.",
+      "criteria": "adapteren svarer på health og privacy-verber"
+    }
+  ],
+  "verification": [
+    {
+      "id": "health",
+      "title": "Health og versionsforhandling",
+      "role": "verifier",
+      "description": "Bekræft at adapterens health rapporterer målversionen som supported.",
+      "criteria": "health = ok og negotiation.status = supported"
+    },
+    {
+      "id": "identity",
+      "title": "Central identitet virker",
+      "role": "verifier",
+      "description": "Bekræft at den testede edition kan bruge den valgte centrale identitet (OIDC).",
+      "criteria": "OIDC-login og tenantbinding virker"
+    },
+    {
+      "id": "privacy",
+      "title": "Privacy-verber",
+      "role": "verifier",
+      "description": "Kør locate/export/erase med syntetiske data og bekræft den erklærede conformance.",
+      "criteria": "verbernes svar matcher releaseprofilens conformance"
+    }
+  ],
+  "rollback": {
+    "strategy": "restore-from-backup",
+    "backupRequired": true,
+    "maxDowntimeMinutes": 30,
+    "steps": [
+      {
+        "id": "rollback-restore",
+        "title": "Gendan øjebliksbilledet",
+        "role": "executor",
+        "description": "Gendan backup fra 'snapshot' og genstart upstream.",
+        "criteria": "upstream rapporterer den oprindelige version"
+      },
+      {
+        "id": "rollback-verify",
+        "title": "Verificér gendannelsen",
+        "role": "verifier",
+        "description": "Kør health, identitet og privacy-verber igen.",
+        "criteria": "samme kriterier som 'verification' er grønne"
+      }
+    ]
+  },
+  "status": "planned",
+  "blockers": []
+}

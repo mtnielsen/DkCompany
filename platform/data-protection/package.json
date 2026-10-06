@@ -1,0 +1,14 @@
+{
+  "name": "@platform/data-protection",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "DKC-047: beskyttede dataklasser (AI-immutable). Adskiller forbud mod AI-ændring, WORM-retention og forbud mod AI-læsning; håndhæver adgangs- og transitionsregler. DKC-048 leverer den fysiske lager-/nøglehåndhævelse (object-lock, rollematrix, beskyttet nøglebutik og to-personers kontrol).",
+  "bin": {
+    "data-protection": "./src/cli.mjs"
+  },
+  "scripts": {
+    "test": "node --test",
+    "check": "node src/check.mjs"
+  }
+}

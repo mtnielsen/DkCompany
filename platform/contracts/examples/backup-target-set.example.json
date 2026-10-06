@@ -1,0 +1,44 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "BackupTargetSet",
+  "metadata": {
+    "name": "acme-backup-targets",
+    "version": "1.0.0",
+    "description": "Backupmål for tenanten acme: et nyt offsite objektlager som aktivt mål, det tidligere mål bevaret indtil den vedtagne retention er opfyldt, og eksplicit håndtering af tenantens eksterne HR-kilde.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+    }
+  },
+  "tenantId": "acme",
+  "serviceClassRef": "continuity/service-classes/audit-service.service-class.json",
+  "activeTargetRef": "offsite-object-store",
+  "previousTargets": [
+    {
+      "targetRef": "legacy-nas",
+      "retainedUntil": "2026-12-31T00:00:00Z",
+      "retentionDays": 365,
+      "purgeApprovedBy": null
+    }
+  ],
+  "primaryFailureDomain": { "id": "primary-zone-a", "accessDomain": "platform-prod-account", "region": "eu-west-1" },
+  "externalSources": [
+    {
+      "sourceRef": "hr-source",
+      "handling": "owner-backup",
+      "owner": { "subject": "oidc|ingrid.iversen", "name": "Ingrid Iversen", "role": "HR Data Owner" },
+      "agreementRef": "scope://customer/hr-source/read-only-2026",
+      "verifiedRestore": false
+    },
+    {
+      "sourceRef": "billing-source",
+      "handling": "no-backup",
+      "owner": null,
+      "agreementRef": null,
+      "verifiedRestore": false
+    }
+  ],
+  "recoveryOwner": { "subject": "oidc|cont.officer", "name": "Carla Officer", "role": "Continuity Officer" }
+}

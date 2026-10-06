@@ -1,0 +1,73 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "InstallationProfile",
+  "metadata": {
+    "name": "small-vps",
+    "version": "1.0.0",
+    "description": "Lille VPS eller lokal server. Single-server non-HA med eksplicit accepteret nedetid og ekstern offsite backup.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen"
+      }
+    },
+    "labels": {
+      "segment": "smv",
+      "ha": "false"
+    }
+  },
+  "profileType": "single-server",
+  "deploymentProfileRef": "contracts/examples/deployment-profile.smv.example.json",
+  "highAvailability": {
+    "enabled": false,
+    "acceptedNonHaServiceClass": false,
+    "externalBackupRequired": true
+  },
+  "hostManagement": {
+    "optIn": false,
+    "component": "host-management",
+    "justification": "Host-styring er slået fra i SMV-profilen. Den kan tilvælges separat, men fjerner ikke den out-of-band recoveryvej."
+  },
+  "securityCore": [
+    "platform-core",
+    "identity-broker",
+    "audit-service"
+  ],
+  "defaultApplications": [],
+  "optionalApplications": [
+    "communications",
+    "hr",
+    "bi",
+    "reporting"
+  ],
+  "supportedPlatforms": [
+    "linux-amd64-node22",
+    "linux-arm64-node22",
+    "windows-wsl2-amd64-node22"
+  ],
+  "capacity": {
+    "cpuMillicores": 8000,
+    "memoryMiB": 16384,
+    "storageGiB": 1000,
+    "nodes": 1
+  },
+  "supportProfile": {
+    "tier": "supported",
+    "supportWindow": "12 måneder fra GA",
+    "escalation": "Platform Owner via platform@example.org"
+  },
+  "migration": {
+    "from": "greenfield",
+    "to": "small-vps",
+    "pathRef": "docs/spec/distribution-profiles.md",
+    "expectedDowntimeMinutes": 0,
+    "steps": [
+      "Klargør VPS eller lokal server inden for de understøttede platformskombinationer.",
+      "Installér sikkerhedskernen og vælg de ønskede valgfrie applikationer.",
+      "Bekræft eksplicit non-HA-serviceklassen og den eksterne, offsite backupdestination."
+    ]
+  }
+}

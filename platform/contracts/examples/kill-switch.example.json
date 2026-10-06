@@ -1,0 +1,10 @@
+{
+  "scope": "agent",
+  "subjectId": "spiffe://platform.example.org/agents/dummy-ok-upgrader",
+  "active": true,
+  "reason": "mistanke om prompt-injection i utroværdigt input",
+  "activatedBy": "oidc|security.officer",
+  "activatedAt": "2025-09-23T10:00:00Z",
+  "clearedBy": null,
+  "clearedAt": null
+}

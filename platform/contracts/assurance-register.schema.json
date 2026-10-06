@@ -1,0 +1,270 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/assurance-register.schema.json",
+  "title": "Assurance Register",
+  "description": "DKC-022: evidens- og risikoregister. Registeret knytter krav til faktiske kontroller, ansvarlige personer og verificeret evidens. Det beskriver desuden DPIA-screening, databehandleraftaler, underdatabehandlere og overførselsvurdering, AI Act-/NIS2-anvendelighed efter brug/rolle/sektor, incidentproces, adgangsrevision, informationspligt og kundens exitprocedure. Registeret er en påstand om mekanismer og beslutninger, ikke en certificering.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "roleStatement", "applicability", "dataProtection", "incidentAndExit", "requirements", "risks", "decisions"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "AssuranceRegister" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman", "lastReviewed", "certificationClaim"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{3,63}$" },
+        "version": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 20 },
+        "accountableHuman": { "$ref": "#/$defs/human" },
+        "lastReviewed": { "type": "string", "format": "date" },
+        "certificationClaim": { "const": false }
+      }
+    },
+    "roleStatement": {
+      "type": "object",
+      "required": ["issuer", "deployer", "shared"],
+      "additionalProperties": false,
+      "properties": {
+        "issuer": { "type": "string", "minLength": 20 },
+        "deployer": { "type": "string", "minLength": 20 },
+        "shared": { "type": "string", "minLength": 20 }
+      }
+    },
+    "applicability": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["framework", "use", "sector", "role", "applicable", "assessedBy", "assessedAt", "rationale"],
+        "additionalProperties": false,
+        "properties": {
+          "framework": { "enum": ["nis2", "ai-act", "gdpr"] },
+          "use": { "type": "string", "minLength": 5 },
+          "sector": { "type": "string", "minLength": 2 },
+          "role": { "enum": ["issuer", "deployer", "shared"] },
+          "applicable": { "type": "boolean" },
+          "assessedBy": { "$ref": "#/$defs/human" },
+          "assessedAt": { "type": "string", "format": "date" },
+          "rationale": { "type": "string", "minLength": 20 }
+        }
+      }
+    },
+    "dataProtection": {
+      "type": "object",
+      "required": ["dpiaScreenings", "processorAgreements", "transferAssessments"],
+      "additionalProperties": false,
+      "properties": {
+        "dpiaScreenings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "processingRef", "criteria", "outcome", "reason", "dpiaRef", "assessedBy", "assessedAt", "pendingBlocker"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$" },
+              "processingRef": { "type": "string", "minLength": 2 },
+              "criteria": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 3 } },
+              "outcome": { "enum": ["required", "not-required", "pending"] },
+              "reason": { "type": "string", "minLength": 10 },
+              "dpiaRef": { "oneOf": [{ "type": "string", "minLength": 3 }, { "type": "null" }] },
+              "assessedBy": { "oneOf": [{ "$ref": "#/$defs/human" }, { "type": "null" }] },
+              "assessedAt": { "oneOf": [{ "type": "string", "format": "date" }, { "type": "null" }] },
+              "pendingBlocker": { "type": "boolean" }
+            }
+          }
+        },
+        "processorAgreements": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "party", "dpaRef", "approvedBy", "approvedAt", "subprocessorRefs"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$" },
+              "party": { "type": "string", "minLength": 2 },
+              "dpaRef": { "type": "string", "minLength": 3 },
+              "approvedBy": { "$ref": "#/$defs/human" },
+              "approvedAt": { "type": "string", "format": "date" },
+              "subprocessorRefs": { "type": "array", "items": { "type": "string", "minLength": 2 } }
+            }
+          }
+        },
+        "transferAssessments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "subprocessorRef", "status", "mechanisms", "assessedBy", "assessedAt", "note"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$" },
+              "subprocessorRef": { "type": "string", "minLength": 2 },
+              "status": { "enum": ["present", "absent", "pending"] },
+              "mechanisms": { "type": "array", "items": { "type": "string", "minLength": 2 } },
+              "assessedBy": { "oneOf": [{ "$ref": "#/$defs/human" }, { "type": "null" }] },
+              "assessedAt": { "oneOf": [{ "type": "string", "format": "date" }, { "type": "null" }] },
+              "note": { "type": "string", "minLength": 10 }
+            }
+          }
+        }
+      }
+    },
+    "incidentAndExit": {
+      "type": "object",
+      "required": ["incidentProcessRef", "notificationDuties", "accessReview", "informationDuty", "exitProcedure"],
+      "additionalProperties": false,
+      "properties": {
+        "incidentProcessRef": { "type": "string", "minLength": 3 },
+        "notificationDuties": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "regime", "deadlineHours", "recipient", "owner", "procedureRef"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$" },
+              "regime": { "type": "string", "minLength": 3 },
+              "deadlineHours": { "type": "integer", "minimum": 1 },
+              "recipient": { "type": "string", "minLength": 2 },
+              "owner": { "$ref": "#/$defs/human" },
+              "procedureRef": { "type": "string", "minLength": 3 }
+            }
+          }
+        },
+        "accessReview": {
+          "type": "object",
+          "required": ["frequencyDays", "lastReviewedAt", "owner", "procedureRef", "findingsSummary"],
+          "additionalProperties": false,
+          "properties": {
+            "frequencyDays": { "type": "integer", "minimum": 1 },
+            "lastReviewedAt": { "type": "string", "format": "date" },
+            "owner": { "$ref": "#/$defs/human" },
+            "procedureRef": { "type": "string", "minLength": 3 },
+            "findingsSummary": { "type": "string", "minLength": 10 }
+          }
+        },
+        "informationDuty": {
+          "type": "object",
+          "required": ["owner", "procedureRef", "description"],
+          "additionalProperties": false,
+          "properties": {
+            "owner": { "$ref": "#/$defs/human" },
+            "procedureRef": { "type": "string", "minLength": 3 },
+            "description": { "type": "string", "minLength": 10 }
+          }
+        },
+        "exitProcedure": {
+          "type": "object",
+          "required": ["documented", "procedureRef", "dataExport", "deletion", "transitionDays", "owner"],
+          "additionalProperties": false,
+          "properties": {
+            "documented": { "const": true },
+            "procedureRef": { "type": "string", "minLength": 3 },
+            "dataExport": { "type": "boolean" },
+            "deletion": { "type": "boolean" },
+            "transitionDays": { "type": "integer", "minimum": 1 },
+            "owner": { "$ref": "#/$defs/human" }
+          }
+        }
+      }
+    },
+    "requirements": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "source", "sourceDate", "owner", "status", "lastReviewedAt", "controlRef", "evidenceRefs", "riskRefs", "decisionRef"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^REQ-[A-Z0-9-]{2,40}$" },
+          "title": { "type": "string", "minLength": 5 },
+          "source": { "type": "string", "minLength": 3 },
+          "sourceDate": { "type": "string", "format": "date" },
+          "owner": { "$ref": "#/$defs/human" },
+          "status": { "enum": ["open", "implemented", "verified", "accepted", "missing-evidence"] },
+          "lastReviewedAt": { "oneOf": [{ "type": "string", "format": "date" }, { "type": "null" }] },
+          "controlRef": { "type": "string", "minLength": 2 },
+          "evidenceRefs": { "type": "array", "items": { "type": "string", "minLength": 2 } },
+          "riskRefs": { "type": "array", "items": { "type": "string", "minLength": 2 } },
+          "decisionRef": { "oneOf": [{ "type": "string", "minLength": 2 }, { "type": "null" }] }
+        }
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "category", "owner", "inherent", "residualRisk", "status", "mitigation", "assessmentRef", "requirementRefs", "material", "blocksPersonalDataPilot"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^RISK-[A-Z0-9-]{2,40}$" },
+          "title": { "type": "string", "minLength": 5 },
+          "category": { "type": "string", "minLength": 3 },
+          "owner": { "$ref": "#/$defs/human" },
+          "inherent": {
+            "type": "object",
+            "required": ["likelihood", "impact"],
+            "additionalProperties": false,
+            "properties": {
+              "likelihood": { "enum": ["low", "medium", "high"] },
+              "impact": { "enum": ["low", "medium", "high", "critical"] }
+            }
+          },
+          "residualRisk": { "enum": ["low", "medium", "high", "critical"] },
+          "status": { "enum": ["open", "mitigated", "accepted", "closed"] },
+          "mitigation": { "type": "string", "minLength": 10 },
+          "assessmentRef": { "oneOf": [{ "type": "string", "minLength": 3 }, { "type": "null" }] },
+          "requirementRefs": { "type": "array", "items": { "type": "string", "minLength": 2 } },
+          "material": { "type": "boolean" },
+          "blocksPersonalDataPilot": { "type": "boolean" }
+        }
+      }
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "title", "status", "responsible", "ownerDecision", "rationale", "requirementRefs", "blocksPersonalDataPilot"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^DEC-[A-Z0-9-]{2,40}$" },
+          "kind": { "enum": ["legal", "organisational"] },
+          "title": { "type": "string", "minLength": 5 },
+          "status": { "enum": ["open", "decided", "accepted"] },
+          "responsible": { "$ref": "#/$defs/human" },
+          "ownerDecision": { "oneOf": [{ "$ref": "#/$defs/humanDecision" }, { "type": "null" }] },
+          "rationale": { "type": "string", "minLength": 10 },
+          "requirementRefs": { "type": "array", "items": { "type": "string", "minLength": 2 } },
+          "blocksPersonalDataPilot": { "type": "boolean" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "human": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 }
+      }
+    },
+    "humanDecision": {
+      "type": "object",
+      "required": ["subject", "name", "role", "date", "decisionRef"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "date": { "type": "string", "format": "date" },
+        "decisionRef": { "type": "string", "minLength": 3 }
+      }
+    }
+  }
+}

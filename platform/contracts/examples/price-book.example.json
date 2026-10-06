@@ -1,0 +1,256 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "PriceBook",
+  "metadata": {
+    "name": "platform-price-book-example",
+    "version": "1.0.0",
+    "description": "Konfigurerbare listepriser for compute, storage, backup, modelkald, integrationer, driftstid, support, betalte upstreamfeatures og migration. Priserne er input til modellen og udgør ikke en faktura.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner"
+      }
+    },
+    "labels": {
+      "wave": "3",
+      "task": "DKC-034"
+    }
+  },
+  "defaultCurrency": "EUR",
+  "supportedCurrencies": [
+    "EUR",
+    "DKK",
+    "USD"
+  ],
+  "fxRates": [
+    {
+      "from": "DKK",
+      "to": "EUR",
+      "rate": 0.134,
+      "asOf": "2026-01-01T00:00:00Z",
+      "source": "synthetic-test-rate"
+    },
+    {
+      "from": "USD",
+      "to": "EUR",
+      "rate": 0.92,
+      "asOf": "2026-01-01T00:00:00Z",
+      "source": "synthetic-test-rate"
+    }
+  ],
+  "prices": [
+    {
+      "id": "compute-vcpu-hour",
+      "meter": "compute",
+      "unit": "vcpu-hour",
+      "currency": "EUR",
+      "unitPrice": 0.021,
+      "effectiveFrom": "2026-01-01T00:00:00Z",
+      "source": "hosting-contract-2026",
+      "vendorRef": "hetzner"
+    },
+    {
+      "id": "storage-gb-month",
+      "meter": "storage",
+      "unit": "gb-month",
+      "currency": "EUR",
+      "unitPrice": 0.018,
+      "effectiveFrom": "2026-01-01T00:00:00Z",
+      "source": "hosting-contract-2026",
+      "vendorRef": "hetzner"
+    },
+    {
+      "id": "backup-gb-month",
+      "meter": "backup",
+      "unit": "gb-month",
+      "currency": "EUR",
+      "unitPrice": 0.011,
+      "effectiveFrom": "2026-01-01T00:00:00Z",
+      "source": "backup-contract-2026",
+      "vendorRef": "wasabi"
+    },
+    {
+      "id": "model-1k-tokens",
+      "meter": "model-calls",
+      "unit": "1k-tokens",
+      "currency": "EUR",
+      "unitPrice": 0.002,
+      "effectiveFrom": "2026-01-01T00:00:00Z",
+      "source": "model-price-list-2026",
+      "vendorRef": "model-gateway"
+    },
+    {
+      "id": "integration-instance-month",
+      "meter": "integrations",
+      "unit": "instance-month",
+      "currency": "EUR",
+      "unitPrice": 6.5,
+      "effectiveFrom": "2026-01-01T00:00:00Z",
+      "source": "integration-contract-2026",
+      "vendorRef": "bookstack"
+    },
+    {
+      "id": "runtime-vcpu-hour",
+      "meter": "runtime",
+      "unit": "vcpu-hour",
+      "currency": "EUR",
+      "unitPrice": 0.024,
+      "effectiveFrom": "2026-01-01T00:00:00Z",
+      "source": "platform-overhead-2026",
+      "vendorRef": "platform"
+    },
+    {
+      "id": "support-hour",
+      "meter": "support",
+      "unit": "hour",
+      "currency": "EUR",
+      "unitPrice": 65,
+      "effectiveFrom": "2026-01-01T00:00:00Z",
+      "source": "internal-support-rate-2026",
+      "vendorRef": "platform"
+    },
+    {
+      "id": "upstream-seat-month",
+      "meter": "upstream-features",
+      "unit": "seat-month",
+      "currency": "EUR",
+      "unitPrice": 12,
+      "effectiveFrom": "2026-01-01T00:00:00Z",
+      "source": "upstream-price-list-2026",
+      "vendorRef": "espo"
+    },
+    {
+      "id": "migration-hour",
+      "meter": "migration",
+      "unit": "hour",
+      "currency": "EUR",
+      "unitPrice": 80,
+      "effectiveFrom": "2026-01-01T00:00:00Z",
+      "source": "migration-rate-2026",
+      "vendorRef": "platform"
+    }
+  ],
+  "missingPricePolicy": "reject",
+  "manualCosts": [
+    {
+      "id": "support-oncall-retainer",
+      "meter": "support",
+      "unit": "month",
+      "currency": "EUR",
+      "monthlyValue": null,
+      "owner": {
+        "subject": "oidc|carina.christensen",
+        "name": "Carina Christensen",
+        "role": "Support Lead"
+      },
+      "note": "On-call-vagtbelastning er ikke udmålt i denne model; den skal indtastes manuelt pr. tenant og kan først afstemmes mod en faktisk løn-/vagtudgift."
+    },
+    {
+      "id": "vendor-upstream-feature-fee",
+      "meter": "upstream-features",
+      "unit": "month",
+      "currency": "EUR",
+      "monthlyValue": null,
+      "owner": {
+        "subject": "oidc|david.dahl",
+        "name": "David Dahl",
+        "role": "Vendor Manager"
+      },
+      "note": "Betalte upstreamfeatures (fx SSO/SCIM i en community-udgave) er en manuel leverandøromkostning uden en automatisk måler i denne model."
+    }
+  ],
+  "vendors": [
+    {
+      "id": "hetzner",
+      "name": "Hetzner",
+      "maintenanceStatus": "supported",
+      "patchWindow": "tirsdag 02:00-04:00 CET",
+      "paidFeatures": [],
+      "supportOwner": {
+        "subject": "oidc|erik.eriksen",
+        "name": "Erik Eriksen",
+        "role": "Platform Engineer"
+      }
+    },
+    {
+      "id": "wasabi",
+      "name": "Wasabi",
+      "maintenanceStatus": "supported",
+      "patchWindow": "løbende, varslet 7 dage før",
+      "paidFeatures": [],
+      "supportOwner": {
+        "subject": "oidc|erik.eriksen",
+        "name": "Erik Eriksen",
+        "role": "Platform Engineer"
+      }
+    },
+    {
+      "id": "bookstack",
+      "name": "BookStack",
+      "maintenanceStatus": "supported",
+      "patchWindow": "månedlig, første søndag",
+      "paidFeatures": [],
+      "supportOwner": {
+        "subject": "oidc|freja.frederiksen",
+        "name": "Freja Frederiksen",
+        "role": "Knowledge Manager"
+      }
+    },
+    {
+      "id": "zammad",
+      "name": "Zammad",
+      "maintenanceStatus": "supported",
+      "patchWindow": "månedlig, anden søndag",
+      "paidFeatures": [
+        "advanced-reporting"
+      ],
+      "supportOwner": {
+        "subject": "oidc|carina.christensen",
+        "name": "Carina Christensen",
+        "role": "Support Lead"
+      }
+    },
+    {
+      "id": "espo",
+      "name": "EspoCRM",
+      "maintenanceStatus": "maintenance",
+      "patchWindow": "kvartalsvis",
+      "paidFeatures": [
+        "advanced-pack"
+      ],
+      "supportOwner": {
+        "subject": "oidc|gustav.gundersen",
+        "name": "Gustav Gundersen",
+        "role": "Sales Operations"
+      }
+    },
+    {
+      "id": "model-gateway",
+      "name": "Model Gateway",
+      "maintenanceStatus": "supported",
+      "patchWindow": "løbende",
+      "paidFeatures": [],
+      "supportOwner": {
+        "subject": "oidc|hana.hansen",
+        "name": "Hana Hansen",
+        "role": "AI Platform Engineer"
+      }
+    },
+    {
+      "id": "platform",
+      "name": "Platform (førstepart)",
+      "maintenanceStatus": "supported",
+      "patchWindow": "løbende, månedlig patchdag",
+      "paidFeatures": [],
+      "supportOwner": {
+        "subject": "oidc|erik.eriksen",
+        "name": "Erik Eriksen",
+        "role": "Platform Engineer"
+      }
+    }
+  ]
+}

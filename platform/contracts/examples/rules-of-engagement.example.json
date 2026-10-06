@@ -1,0 +1,187 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "RulesOfEngagement",
+  "metadata": {
+    "name": "platform-security-assessment-roe",
+    "version": "1.0.0",
+    "description": "Forberedt rules of engagement for den uafhængige sikkerhedsvurdering af platformen. Dokumentet autoriserer den isolerede lokale regressionsharness mod loopback med syntetiske data; levende penetrationstest af staging/produktion forbliver uautoriseret indtil et navngivet menneske har godkendt scope.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen"
+      }
+    }
+  },
+  "classification": "confidential",
+  "preparationOnly": true,
+  "authorization": {
+    "approved": false,
+    "approvedBy": null,
+    "approvedAt": null,
+    "reference": null,
+    "statement": "Forberedelse af vurderingen. Intet eksternt eller produktionsnært mål er autoriseret; kun den lokale loopback-regressionsharness med syntetiske data må køres. Levende penetrationstest kræver en særskilt, navngivet menneskelig scope-godkendelse."
+  },
+  "targets": [
+    {
+      "id": "local-loopback",
+      "kind": "loopback",
+      "scope": "http://127.0.0.1:0",
+      "environment": "local",
+      "tenantRef": "acme",
+      "authorized": true,
+      "authorizationRef": "DKC-065-preparation",
+      "syntheticOnly": true,
+      "dataClassification": "synthetic",
+      "artifactRefs": [
+        "telemetry-api",
+        "agent-registry",
+        "host-management"
+      ]
+    },
+    {
+      "id": "staging-platform",
+      "kind": "staging",
+      "scope": "https://staging.example.org",
+      "environment": "staging",
+      "tenantRef": null,
+      "authorized": false,
+      "authorizationRef": null,
+      "syntheticOnly": true,
+      "dataClassification": "synthetic",
+      "artifactRefs": [
+        "gateway",
+        "telemetry-api",
+        "runtime"
+      ]
+    }
+  ],
+  "identities": [
+    {
+      "id": "implementer-suite",
+      "subject": "process|security-assessment-suite",
+      "name": "Security Assessment Suite",
+      "role": "implementer",
+      "kind": "implementer",
+      "authorized": true
+    },
+    {
+      "id": "platform-owner",
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "kind": "observer",
+      "authorized": true
+    }
+  ],
+  "techniques": [
+    {
+      "id": "auth-probing",
+      "category": "authentication",
+      "description": "Uautentificerede og fejlscopede kald mod API'et for at bekræfte 401/403.",
+      "destructive": false,
+      "allowed": true
+    },
+    {
+      "id": "tenant-isolation",
+      "category": "cross-tenant",
+      "description": "Læsning af en anden tenants data med en verificeret principal for at bekræfte tenant-spærringen.",
+      "destructive": false,
+      "allowed": true
+    },
+    {
+      "id": "input-fuzzing",
+      "category": "injection",
+      "description": "Ikke-destruktive injektions- og parser-payloads mod indtagsruten.",
+      "destructive": false,
+      "allowed": true
+    },
+    {
+      "id": "role-separation",
+      "category": "agent-abuse",
+      "description": "Forsøg på at lade én agent udføre to roller eller omgå den menneskelige godkendelse.",
+      "destructive": false,
+      "allowed": true
+    },
+    {
+      "id": "host-broker-tamper",
+      "category": "host-escape",
+      "description": "Manipulation af en signeret host-operation for at bekræfte brokerens afvisning.",
+      "destructive": false,
+      "allowed": true
+    },
+    {
+      "id": "destructive-exploitation",
+      "category": "injection",
+      "description": "Destruktiv udnyttelse, dataeksfiltrering eller denial-of-service.",
+      "destructive": true,
+      "allowed": false
+    }
+  ],
+  "window": {
+    "from": "2026-03-01T00:00:00Z",
+    "to": "2026-04-01T00:00:00Z",
+    "timezone": "Europe/Copenhagen",
+    "status": "open"
+  },
+  "exclusions": [
+    {
+      "id": "no-production",
+      "description": "Produktionsmiljøet og kundedata er udelukket fra denne forberedelse.",
+      "reason": "Kun syntetiske lokale/stagingdata må anvendes før en navngivet scope-godkendelse."
+    },
+    {
+      "id": "no-third-party",
+      "description": "Tredjepartsendpoints må ikke testes uden deres eksplicitte autorisation.",
+      "reason": "En ekstern leverandør har ikke givet skriftlig tilladelse i denne opgave."
+    }
+  ],
+  "rateLimits": {
+    "requestsPerSecond": 5,
+    "concurrency": 2,
+    "maxPayloadBytes": 262144,
+    "notes": "Lav, ikke-destruktiv rate mod loopback; backpressure respekteres."
+  },
+  "stopConditions": [
+    {
+      "id": "unexpected-write",
+      "condition": "En sonde forårsager en uventet tilstandsmutation eller et datatab.",
+      "action": "Stop øjeblikkeligt, bevar evidens og kontakt den ansvarlige."
+    },
+    {
+      "id": "cross-tenant-leak",
+      "condition": "En sonde læser data fra en anden tenant end den verificerede principal.",
+      "action": "Stop, klassificér som kritisk fund og eskalér til Security Owner."
+    },
+    {
+      "id": "out-of-window",
+      "condition": "Kørslen falder uden for det godkendte tidsvindue.",
+      "action": "Afbryd kørslen; scope er ikke længere gyldigt."
+    }
+  ],
+  "emergencyContacts": [
+    {
+      "role": "Platform Owner",
+      "name": "Anna Andersen",
+      "subject": "oidc|anna.andersen",
+      "channel": "phone:+45-00000000"
+    },
+    {
+      "role": "Security Owner",
+      "name": "Cecilia Christensen",
+      "subject": "oidc|cecilia.christensen",
+      "channel": "phone:+45-00000001"
+    }
+  ],
+  "evidenceHandling": {
+    "classification": "confidential",
+    "accessControl": "Kun Security Owner, Platform Owner og en navngivet uafhængig assessor må læse rå evidens; rapporter er redigerede.",
+    "redactionRequired": true,
+    "secretHandling": "Tokens, secrets og persondata erstattes med [REDACTED]; den syntetiske canary er ikke et rigtigt credential.",
+    "provenance": "Hvert fund og hver sonde bevarer tid, aktør, mål og artefakt-digest uændret gennem import og retest.",
+    "retentionDays": 365,
+    "storageRef": "security-assessment/report/"
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "OnCallRotationSet",
+  "metadata": {
+    "name": "platform-on-call",
+    "version": "1.0.0",
+    "description": "Menneskelig on-call pr. tjeneste med en stigende eskalationskæde. Primær, sekundær og manager er navngivne mennesker; en AI er aldrig on-call eller eskalationspunkt."
+  },
+  "rotations": [
+    {
+      "id": "checkout-primary",
+      "serviceId": "checkout",
+      "timezone": "Europe/Copenhagen",
+      "ackMinutes": 15,
+      "primary": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "On-call Engineer", "channel": "phone", "contact": "+45 20 00 00 01" },
+      "secondary": { "subject": "oidc|maja.mortensen", "name": "Maja Mortensen", "role": "Service Owner", "channel": "phone", "contact": "+45 20 00 00 02" },
+      "manager": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner", "channel": "phone", "contact": "+45 20 00 00 03" },
+      "escalation": [
+        { "afterMinutes": 15, "to": { "subject": "oidc|maja.mortensen", "name": "Maja Mortensen", "role": "Service Owner", "channel": "phone", "contact": "+45 20 00 00 02" } },
+        { "afterMinutes": 30, "to": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner", "channel": "phone", "contact": "+45 20 00 00 03" } }
+      ]
+    },
+    {
+      "id": "identity-primary",
+      "serviceId": "identity",
+      "timezone": "Europe/Copenhagen",
+      "ackMinutes": 5,
+      "primary": { "subject": "oidc|ib.iversen", "name": "Ib Iversen", "role": "IAM Lead", "channel": "phone", "contact": "+45 20 00 00 11" },
+      "secondary": { "subject": "oidc|karl.kristensen", "name": "Karl Kristensen", "role": "Platform Engineer", "channel": "phone", "contact": "+45 20 00 00 12" },
+      "manager": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner", "channel": "phone", "contact": "+45 20 00 00 03" },
+      "escalation": [
+        { "afterMinutes": 5, "to": { "subject": "oidc|karl.kristensen", "name": "Karl Kristensen", "role": "Platform Engineer", "channel": "phone", "contact": "+45 20 00 00 12" } },
+        { "afterMinutes": 15, "to": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner", "channel": "phone", "contact": "+45 20 00 00 03" } }
+      ]
+    },
+    {
+      "id": "database-primary",
+      "serviceId": "database",
+      "timezone": "Europe/Copenhagen",
+      "ackMinutes": 5,
+      "primary": { "subject": "oidc|dorte.dahl", "name": "Dorte Dahl", "role": "Database Owner", "channel": "phone", "contact": "+45 20 00 00 21" },
+      "secondary": { "subject": "oidc|karl.kristensen", "name": "Karl Kristensen", "role": "Platform Engineer", "channel": "phone", "contact": "+45 20 00 00 12" },
+      "manager": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner", "channel": "phone", "contact": "+45 20 00 00 03" },
+      "escalation": [
+        { "afterMinutes": 5, "to": { "subject": "oidc|karl.kristensen", "name": "Karl Kristensen", "role": "Platform Engineer", "channel": "phone", "contact": "+45 20 00 00 12" } },
+        { "afterMinutes": 15, "to": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner", "channel": "phone", "contact": "+45 20 00 00 03" } }
+      ]
+    },
+    {
+      "id": "notifications-primary",
+      "serviceId": "notifications",
+      "timezone": "Europe/Copenhagen",
+      "ackMinutes": 30,
+      "primary": { "subject": "oidc|niels.nielsen", "name": "Niels Nielsen", "role": "Messaging Owner", "channel": "slack", "contact": "#platform-oncall" },
+      "secondary": { "subject": "oidc|pia.petersen", "name": "Pia Petersen", "role": "Reporting Owner", "channel": "slack", "contact": "#platform-oncall" },
+      "manager": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner", "channel": "phone", "contact": "+45 20 00 00 03" },
+      "escalation": [
+        { "afterMinutes": 30, "to": { "subject": "oidc|pia.petersen", "name": "Pia Petersen", "role": "Reporting Owner", "channel": "slack", "contact": "#platform-oncall" } },
+        { "afterMinutes": 60, "to": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner", "channel": "phone", "contact": "+45 20 00 00 03" } }
+      ]
+    },
+    {
+      "id": "reporting-primary",
+      "serviceId": "reporting",
+      "timezone": "Europe/Copenhagen",
+      "ackMinutes": 30,
+      "primary": { "subject": "oidc|pia.petersen", "name": "Pia Petersen", "role": "Reporting Owner", "channel": "email", "contact": "pia.petersen@example.org" },
+      "secondary": { "subject": "oidc|niels.nielsen", "name": "Niels Nielsen", "role": "Messaging Owner", "channel": "email", "contact": "niels.nielsen@example.org" },
+      "manager": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner", "channel": "phone", "contact": "+45 20 00 00 03" },
+      "escalation": [
+        { "afterMinutes": 30, "to": { "subject": "oidc|niels.nielsen", "name": "Niels Nielsen", "role": "Messaging Owner", "channel": "email", "contact": "niels.nielsen@example.org" } },
+        { "afterMinutes": 60, "to": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner", "channel": "phone", "contact": "+45 20 00 00 03" } }
+      ]
+    }
+  ]
+}

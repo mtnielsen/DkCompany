@@ -1,0 +1,21 @@
+{
+  "verb": "health",
+  "module": "keycloak-adapter",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-16T21:47:33.340Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 27
+  },
+  "artifact": {
+    "uri": "s3://evidence/keycloak-adapter/health.json",
+    "sha256": "af235c1586cd868bf34d47bb602ac38d347f63a4b1abfbf0958b16ad64d13929"
+  }
+}

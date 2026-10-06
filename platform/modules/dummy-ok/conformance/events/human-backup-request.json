@@ -1,0 +1,23 @@
+{
+  "specversion": "1.0",
+  "id": "018f3c2a-1b2c-7def-8a01-111111111111",
+  "source": "urn:platform:module:dummy-ok",
+  "type": "dk.platform.dummy-ok.backup.completed",
+  "time": "2025-09-01T08:00:05Z",
+  "datacontenttype": "application/json",
+  "subject": "dummy-ok/db",
+  "tenantid": "acme",
+  "traceid": "4bf92f3577b34da6a3ce929d0e0e4736",
+  "spanid": "00f067aa0ba902b7",
+  "principal": {
+    "kind": "human",
+    "id": "oidc|anna.andersen",
+    "oidcSub": "oidc|anna.andersen"
+  },
+  "dataclassification": "operational",
+  "data": {
+    "verb": "backup",
+    "result": "pass",
+    "artifact": "s3://evidence/dummy-ok/backup/2025-09-01T08:00:00Z.json"
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ComponentManifest",
+  "requires": [
+    {
+      "ref": "object-store",
+      "range": "^1.0.0",
+      "reason": "Backupdestinationen skriver krypterede snapshots til objektlageret."
+    }
+  ],
+  "optionalRequires": [],
+  "conflicts": [],
+  "dataServices": [
+    {
+      "id": "object-store",
+      "kind": "object",
+      "required": true,
+      "reason": "Offsite backup skal ligge i et objektlager uden for det primære fejldomæne."
+    }
+  ],
+  "migrations": [],
+  "download": [],
+  "operations": [
+    "backup",
+    "restore",
+    "verify-restore",
+    "health",
+    "slo"
+  ],
+  "implementation": {
+    "status": "external",
+    "notes": "Leveres som et eksternt produkt; installationsvejen beskrives i driftsdokumentationen."
+  },
+  "metadata": {
+    "name": "backup-destination",
+    "version": "1.0.0",
+    "description": "Ekstern, offsite backupdestination med kryptering og verificeret gendannelse.",
+    "accountableHuman": {
+      "subject": "oidc|cecilia.christensen",
+      "name": "Cecilia Christensen",
+      "role": "Service Owner",
+      "substitute": {
+        "subject": "oidc|david.dahl",
+        "name": "David Dahl"
+      }
+    },
+    "labels": {
+      "tier": "data"
+    }
+  },
+  "componentType": "data-service",
+  "category": "data",
+  "securityCore": false,
+  "provides": {
+    "capabilities": [
+      "backup"
+    ],
+    "dataServices": [
+      {
+        "id": "backup",
+        "kind": "backup"
+      }
+    ]
+  },
+  "supportProfile": {
+    "tier": "supported",
+    "supportWindow": "24 måneder fra GA",
+    "escalation": "Continuity Owner"
+  },
+  "platforms": {
+    "os": [
+      "linux"
+    ],
+    "arch": [
+      "x64",
+      "arm64"
+    ],
+    "runtime": [
+      "node>=22 <23",
+      "node>=24 <25"
+    ]
+  },
+  "resources": {
+    "cpuMillicores": 100,
+    "memoryMiB": 256,
+    "storageGiB": 0,
+    "nodes": 0
+  }
+}

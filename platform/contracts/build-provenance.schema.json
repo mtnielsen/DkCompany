@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/build-provenance.schema.json",
+  "title": "Build Provenance",
+  "description": "DKC-014: et in-toto/SLSA-inspireret proveniensudsagn der binder et artefakt (subject) til den præcise builder, kilde-commit, parametre og tid. Proveniensen er det, GitOps-verifikationen læser, før en digest accepteres som 'den CI byggede'.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "_type", "subject", "predicateType", "predicate", "signature"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "BuildProvenance" },
+    "_type": { "const": "https://in-toto.io/Statement/v1" },
+    "predicateType": { "const": "https://slsa.dev/provenance/v1" },
+    "subject": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/subject" }
+    },
+    "predicate": {
+      "type": "object",
+      "required": ["buildDefinition", "runDetails"],
+      "additionalProperties": false,
+      "properties": {
+        "buildDefinition": {
+          "type": "object",
+          "required": ["buildType", "externalParameters", "resolvedDependencies"],
+          "additionalProperties": false,
+          "properties": {
+            "buildType": { "type": "string", "minLength": 3 },
+            "buildTypeVersion": { "type": "string", "minLength": 1 },
+            "externalParameters": {
+              "type": "object",
+              "required": ["sourceCommit", "profile"],
+              "additionalProperties": false,
+              "properties": {
+                "sourceCommit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+                "profile": { "type": "string", "minLength": 1 },
+                "reproducible": { "type": "boolean" },
+                "artifactName": { "type": "string", "minLength": 1 }
+              }
+            },
+            "resolvedDependencies": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/resolvedDependency" }
+            }
+          }
+        },
+        "runDetails": {
+          "type": "object",
+          "required": ["builder", "metadata"],
+          "additionalProperties": false,
+          "properties": {
+            "builder": {
+              "type": "object",
+              "required": ["id"],
+              "additionalProperties": false,
+              "properties": {
+                "id": { "type": "string", "minLength": 3 },
+                "version": { "type": "string" }
+              }
+            },
+            "metadata": {
+              "type": "object",
+              "required": ["invocationId", "startedOn", "finishedOn"],
+              "additionalProperties": false,
+              "properties": {
+                "invocationId": { "type": "string", "minLength": 1 },
+                "startedOn": { "type": "string", "format": "date-time" },
+                "finishedOn": { "type": "string", "format": "date-time" }
+              }
+            },
+            "byproducts": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "digest"],
+                "additionalProperties": false,
+                "properties": {
+                  "name": { "type": "string", "minLength": 1 },
+                  "digest": { "$ref": "#/$defs/digest" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "signature": { "$ref": "#/$defs/signature" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "digest": {
+      "type": "object",
+      "required": ["sha256"],
+      "additionalProperties": false,
+      "properties": { "sha256": { "$ref": "#/$defs/sha256" } }
+    },
+    "subject": {
+      "type": "object",
+      "required": ["name", "digest"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "digest": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "resolvedDependency": {
+      "type": "object",
+      "required": ["uri", "digest"],
+      "additionalProperties": false,
+      "properties": {
+        "uri": { "type": "string", "minLength": 3 },
+        "digest": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "signature": {
+      "type": "object",
+      "required": ["algorithm", "keyId", "value"],
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": { "const": "ed25519" },
+        "keyId": { "type": "string", "minLength": 8 },
+        "value": { "type": "string", "minLength": 16 }
+      }
+    }
+  }
+}

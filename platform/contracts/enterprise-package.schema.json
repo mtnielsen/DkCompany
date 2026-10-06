@@ -1,0 +1,363 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/enterprise-package.schema.json",
+  "title": "Enterprise and Industry Package Registration",
+  "description": "Versioneret registrering af enterprise- og branchepakker (enterprise, handel, produktion, feltservice og regulerede brancher). Hver pakke er sammensat oven på en af de tre størrelsesprofiler (small-vps, ha-cluster, enterprise-dedicated) og beskriver apps, kapabilitetskrav, dataejerskab, ekstra isolation, integrationer og faglige krav. Pakken må ikke forke kontrolplanet: sikkerhedskontrakterne arves fra de tre størrelsesprofiler, og en katalogpost bliver ikke automatisk til en bestilt byggeopgave. Specialiserede juridiske og sikkerhedsmæssige godkendelser samt højrisiko-AI er eksplicitte, uafklarede inputs. Semantikken, som skemaet ikke kan udtrykke, håndhæves af `enterprise/src/model.mjs` og `enterprise/src/gate.mjs`.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "capabilitiesRef", "securityContracts", "packages"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "EnterprisePackage" },
+    "metadata": { "$ref": "#/$defs/metadata" },
+    "capabilitiesRef": { "const": "enterprise/capabilities.json" },
+    "securityContracts": { "$ref": "#/$defs/securityContracts" },
+    "packages": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/package" }
+    }
+  },
+  "$defs": {
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$" },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/accountableHuman" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "accountableHuman": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": {
+          "type": "object",
+          "required": ["subject", "name"],
+          "additionalProperties": false,
+          "properties": {
+            "subject": { "type": "string", "minLength": 3 },
+            "name": { "type": "string", "minLength": 2 },
+            "role": { "type": "string" }
+          }
+        }
+      }
+    },
+    "securityContracts": {
+      "type": "object",
+      "description": "De fælles sikkerhedskontrakter som ALLE tre størrelsesprofiler deler. Pakker arver dem og kan ikke erstatte eller svække dem.",
+      "required": ["ref", "sharedBy", "contracts"],
+      "additionalProperties": false,
+      "properties": {
+        "ref": { "const": "distribution/acceptance/gate-policy.json" },
+        "sharedBy": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": { "enum": ["small-vps", "ha-cluster", "enterprise-dedicated"] }
+        },
+        "contracts": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/securityContract" }
+        }
+      }
+    },
+    "securityContract": {
+      "type": "object",
+      "required": ["id", "title", "kind", "requirementRefs"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+        "title": { "type": "string", "minLength": 3 },
+        "kind": { "const": "common" },
+        "requirementRefs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^REQ-[A-Z0-9-]+$" }
+        }
+      }
+    },
+    "demand": {
+      "type": "object",
+      "required": ["segments", "pilotProfileRefs", "businessProfileRefs", "demandRank", "rationale"],
+      "additionalProperties": false,
+      "properties": {
+        "segments": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["smv", "service", "enterprise"] }
+        },
+        "pilotProfileRefs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "enum": ["smv", "it-service", "enterprise"] }
+        },
+        "businessProfileRefs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["solo", "team", "enterprise"] }
+        },
+        "demandRank": { "type": "integer", "minimum": 1, "description": "Begyndelsesrækkefølge efter dokumenteret efterspørgsel; unik på tværs af pakker." },
+        "rationale": { "type": "string", "minLength": 20 }
+      }
+    },
+    "capabilityConstraints": {
+      "type": "object",
+      "description": "Kapabilitetskrav til pakken. Resolveren kontrollerer dem mod den valgte closure. Et kontrolplans-kapabilitetskrav skal være arvet fra størrelsesprofilen og kan ikke forkes.",
+      "required": ["required", "forbidden", "controlPlane"],
+      "additionalProperties": false,
+      "properties": {
+        "required": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9.-]{1,63}$" }
+        },
+        "forbidden": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9.-]{1,63}$" }
+        },
+        "controlPlane": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9.-]{1,63}$" }
+        }
+      }
+    },
+    "dataOwnership": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["dataClass", "owner", "purpose", "residency", "retentionRef"],
+        "additionalProperties": false,
+        "properties": {
+          "dataClass": { "enum": ["none", "operational", "personal", "special-category", "financial"] },
+          "owner": { "$ref": "#/$defs/accountableHuman" },
+          "purpose": { "type": "string", "minLength": 10 },
+          "residency": { "enum": ["dk", "eu", "global"] },
+          "retentionRef": { "type": "string", "minLength": 3 }
+        }
+      }
+    },
+    "isolation": {
+      "type": "object",
+      "required": ["level", "dedicatedDatabases", "networkSegmentation", "immutableAudit", "notes"],
+      "additionalProperties": false,
+      "properties": {
+        "level": { "enum": ["standard", "enhanced", "dedicated"] },
+        "dedicatedDatabases": { "type": "boolean" },
+        "networkSegmentation": { "type": "boolean" },
+        "immutableAudit": { "type": "boolean" },
+        "notes": { "type": "string", "minLength": 20 }
+      }
+    },
+    "integration": {
+      "type": "object",
+      "required": ["candidateRef", "kind", "purpose", "availability"],
+      "additionalProperties": false,
+      "properties": {
+        "candidateRef": { "type": "string", "pattern": "^integration-candidate\\.[a-z0-9-]+\\.example\\.json$" },
+        "kind": { "type": "string", "pattern": "^[a-z0-9-]{2,32}$" },
+        "purpose": { "type": "string", "minLength": 10 },
+        "availability": { "enum": ["included", "opt-in", "unavailable"] },
+        "reason": { "type": "string", "minLength": 10 }
+      }
+    },
+    "professionalRequirement": {
+      "type": "object",
+      "description": "Et fagligt krav (fx revisor, lønansvarlig, sektorregel). Et ubekræftet krav blokerer implementering; det udledes aldrig af en grøn teknisk check.",
+      "required": ["id", "title", "authority", "status", "blocksImplementation"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$" },
+        "title": { "type": "string", "minLength": 3 },
+        "authority": { "type": "string", "minLength": 3 },
+        "status": { "enum": ["unreviewed", "pending", "confirmed", "not-applicable"] },
+        "blocksImplementation": { "type": "boolean" },
+        "reviewer": { "anyOf": [{ "$ref": "#/$defs/accountableHuman" }, { "type": "null" }] },
+        "reviewedAt": { "anyOf": [{ "type": "string", "minLength": 10 }, { "type": "null" }] },
+        "evidence": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 3 }
+        }
+      }
+    },
+    "sectorRules": {
+      "type": "object",
+      "description": "Sektorregler for pakken. En uafklaret sektorvurdering er et eksplicit input og blokerer implementering.",
+      "required": ["regimes", "status", "assessmentRef", "notes"],
+      "additionalProperties": false,
+      "properties": {
+        "regimes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 3 }
+        },
+        "status": { "enum": ["not-applicable", "required", "pending", "confirmed"] },
+        "assessmentRef": { "anyOf": [{ "type": "string", "minLength": 3 }, { "type": "null" }] },
+        "reviewer": { "anyOf": [{ "$ref": "#/$defs/accountableHuman" }, { "type": "null" }] },
+        "reviewedAt": { "anyOf": [{ "type": "string", "minLength": 10 }, { "type": "null" }] },
+        "notes": { "type": "string", "minLength": 20 }
+      }
+    },
+    "highRiskAi": {
+      "type": "object",
+      "description": "Højrisiko-AI kræver en særskilt vurdering. `applicable: true` med en ikke-bekræftet vurdering blokerer pakken.",
+      "required": ["applicable", "assessmentRef", "status", "reason"],
+      "additionalProperties": false,
+      "properties": {
+        "applicable": { "type": "boolean" },
+        "assessmentRef": { "anyOf": [{ "type": "string", "minLength": 3 }, { "type": "null" }] },
+        "status": { "enum": ["not-applicable", "required", "pending", "confirmed"] },
+        "reviewer": { "anyOf": [{ "$ref": "#/$defs/accountableHuman" }, { "type": "null" }] },
+        "reviewedAt": { "anyOf": [{ "type": "string", "minLength": 10 }, { "type": "null" }] },
+        "reason": { "type": "string", "minLength": 20 }
+      }
+    },
+    "testCustomer": {
+      "type": "object",
+      "required": ["name", "contact", "status", "contractRef", "synthetic"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 2 },
+        "contact": { "$ref": "#/$defs/accountableHuman" },
+        "status": { "enum": ["identified", "consented", "declined"] },
+        "contractRef": { "anyOf": [{ "type": "string", "minLength": 3 }, { "type": "null" }] },
+        "synthetic": { "type": "boolean", "description": "Sand når testkunden er en syntetisk reference uden en underskrevet aftale." }
+      }
+    },
+    "implementation": {
+      "type": "object",
+      "required": ["status", "reason"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "enum": ["blocked", "planned", "approved", "ordered"] },
+        "reason": { "type": "string", "minLength": 20 },
+        "orderRef": { "anyOf": [{ "type": "string", "minLength": 3 }, { "type": "null" }] },
+        "approvedBy": { "anyOf": [{ "$ref": "#/$defs/accountableHuman" }, { "type": "null" }] },
+        "approvedAt": { "anyOf": [{ "type": "string", "minLength": 10 }, { "type": "null" }] }
+      }
+    },
+    "tcoRef": {
+      "type": "object",
+      "required": ["profileId", "tcoComparisonRef"],
+      "additionalProperties": false,
+      "properties": {
+        "profileId": { "enum": ["solo", "team", "enterprise"] },
+        "tcoComparisonRef": { "const": "metering/report/tco-comparison.json" }
+      }
+    },
+    "exclusion": {
+      "type": "object",
+      "required": ["candidate", "reason"],
+      "additionalProperties": false,
+      "properties": {
+        "candidate": { "type": "string", "minLength": 2 },
+        "reason": { "type": "string", "minLength": 20 }
+      }
+    },
+    "package": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "segment",
+        "order",
+        "baseProfileRef",
+        "selectionRationale",
+        "demand",
+        "apps",
+        "capabilityConstraints",
+        "dataOwnership",
+        "isolation",
+        "integrations",
+        "professionalRequirements",
+        "sectorRules",
+        "highRiskAi",
+        "productOwner",
+        "testCustomer",
+        "implementation",
+        "tcoRef",
+        "exclusions"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+        "title": { "type": "string", "minLength": 3 },
+        "segment": { "enum": ["enterprise", "commerce", "manufacturing", "field-service", "regulated"] },
+        "order": { "type": "integer", "minimum": 1 },
+        "baseProfileRef": { "enum": ["small-vps", "ha-cluster", "enterprise-dedicated"] },
+        "selectionRationale": { "type": "string", "minLength": 20 },
+        "demand": { "$ref": "#/$defs/demand" },
+        "apps": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" }
+        },
+        "capabilityConstraints": { "$ref": "#/$defs/capabilityConstraints" },
+        "dataOwnership": { "$ref": "#/$defs/dataOwnership" },
+        "isolation": { "$ref": "#/$defs/isolation" },
+        "integrations": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/integration" }
+        },
+        "professionalRequirements": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/professionalRequirement" }
+        },
+        "sectorRules": { "$ref": "#/$defs/sectorRules" },
+        "highRiskAi": { "$ref": "#/$defs/highRiskAi" },
+        "productOwner": { "$ref": "#/$defs/accountableHuman" },
+        "testCustomer": { "$ref": "#/$defs/testCustomer" },
+        "implementation": { "$ref": "#/$defs/implementation" },
+        "tcoRef": { "$ref": "#/$defs/tcoRef" },
+        "exclusions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/exclusion" }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "highRiskAi": {
+                "properties": { "applicable": { "const": true }, "status": { "const": "confirmed" } },
+                "required": ["applicable", "status"]
+              }
+            },
+            "required": ["highRiskAi"]
+          },
+          "then": {
+            "properties": {
+              "highRiskAi": {
+                "properties": {
+                  "assessmentRef": { "not": { "type": "null" } },
+                  "reviewer": { "not": { "type": "null" } },
+                  "reviewedAt": { "not": { "type": "null" } }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

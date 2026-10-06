@@ -1,0 +1,57 @@
+{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "keycloak-adapter",
+    "namespace": "platform",
+    "labels": {
+      "app.kubernetes.io/name": "keycloak-adapter",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "keycloak-adapter",
+      "platform.example.org/environment": "dev"
+    }
+  },
+  "spec": {
+    "replicas": 2,
+    "selector": { "matchLabels": { "app.kubernetes.io/name": "keycloak-adapter" } },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app.kubernetes.io/name": "keycloak-adapter",
+          "platform.example.org/module": "keycloak-adapter",
+          "platform.example.org/environment": "dev"
+        }
+      },
+      "spec": {
+        "serviceAccountName": "keycloak-adapter",
+        "securityContext": { "runAsNonRoot": true, "seccompProfile": { "type": "RuntimeDefault" } },
+        "containers": [
+          {
+            "name": "keycloak-adapter",
+            "image": "ghcr.io/example/keycloak-adapter@sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "args": ["--port", "8091", "--environment", "dev"],
+            "ports": [{ "containerPort": 8091, "name": "http" }],
+            "env": [
+              { "name": "PDP_ENDPOINT", "value": "https://pdp.platform.svc.cluster.local/v1/data/platform/ops/decision" },
+              { "name": "PDP_FAIL_MODE", "value": "closed" },
+              { "name": "KEYCLOAK_BASE_URL", "value": "https://id.example.org" },
+              { "name": "KEYCLOAK_REALM", "value": "platform" },
+              { "name": "OIDC_ISSUER", "value": "https://id.example.org/realms/platform" }
+            ],
+            "securityContext": {
+              "readOnlyRootFilesystem": true,
+              "allowPrivilegeEscalation": false,
+              "capabilities": { "drop": ["ALL"] }
+            },
+            "readinessProbe": { "httpGet": { "path": "/healthz", "port": 8091 } },
+            "livenessProbe": { "httpGet": { "path": "/healthz", "port": 8091 } },
+            "resources": {
+              "requests": { "cpu": "100m", "memory": "128Mi" },
+              "limits": { "cpu": "500m", "memory": "256Mi" }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

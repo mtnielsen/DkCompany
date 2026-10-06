@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/migration-approval.schema.json",
+  "title": "Migration Approval",
+  "description": "DKC-031: en pilotgodkendelse af både indhold og adgangsrettigheder efter en migration. Godkendelsen kommer fra et navngivet, verificeret menneske i kundens tenant og kan ikke gives af den der udførte migrationen (to-personers-kontrol).",
+  "type": "object",
+  "required": ["apiVersion", "kind", "tenantId", "appId", "approvedBy", "contentApproved", "aclApproved", "method", "evidenceRef", "approvedAt"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "MigrationApproval" },
+    "tenantId": { "type": "string", "minLength": 1 },
+    "appId": { "enum": ["files", "projects", "knowledge", "support", "crm"] },
+    "approvedBy": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\|[a-z0-9][a-z0-9._-]{2,}$" },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 }
+      }
+    },
+    "contentApproved": { "const": true },
+    "aclApproved": { "const": true },
+    "method": { "enum": ["two-person-review", "pilot-user-sign-off"] },
+    "evidenceRef": { "type": "string", "minLength": 3 },
+    "approvedAt": { "type": "string", "format": "date-time" },
+    "operatorSubject": { "type": ["string", "null"] }
+  }
+}

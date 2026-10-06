@@ -1,0 +1,10 @@
+{
+  "name": "dkcompany-migration",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "DKC-031: migrations- og exitværktøjer. Ét valgt, dokumenteret kildeformat pr. pilotapp, dry-run med mapping, dublethåndtering, fejlliste og resumable import, en dækningsmatrix for ejerskab/timestamps/kommentarer/bilag/ACL/links, og en exit-eksport der kan læses uden en aktiv DkCompany-installation med cutover- og rollback-procedure.",
+  "scripts": {
+    "test": "node --test"
+  }
+}

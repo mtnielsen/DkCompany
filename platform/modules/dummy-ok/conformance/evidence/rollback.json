@@ -1,0 +1,30 @@
+{
+  "verb": "rollback",
+  "module": "dummy-ok",
+  "moduleVersion": "1.2.0",
+  "capturedAt": "2025-09-01T09:10:00.000Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "preflight",
+      "status": "pass",
+      "detail": "policy allow + ingen aktive inciden"
+    },
+    {
+      "name": "idempotens",
+      "status": "pass"
+    },
+    {
+      "name": "verify",
+      "status": "pass",
+      "detail": "post-condition bekræftet"
+    }
+  ],
+  "measurements": {
+    "durationMs": 1459
+  },
+  "artifact": {
+    "uri": "s3://evidence/dummy-ok/rollback/2025-09-01T09:10:00.000Z.json",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+  }
+}

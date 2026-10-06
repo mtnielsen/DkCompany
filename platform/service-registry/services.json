@@ -1,0 +1,124 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ServiceCatalog",
+  "metadata": {
+    "name": "platform-service-catalog",
+    "version": "1.0.0",
+    "description": "Den autoritative servicekatalog for piloten. Hver tjeneste har et navngivet menneske som ejer, en on-call-rotation, en kommunikationskanal uden for platformen, en runbook, SLA/OLA og sine CI-relationer. Kataloget er kilden adapteren læser; upstream GLPI er systemet der registrerer sagerne."
+  },
+  "services": [
+    {
+      "id": "checkout",
+      "name": "Checkout",
+      "tier": "customer-critical",
+      "owner": { "subject": "oidc|maja.mortensen", "name": "Maja Mortensen", "role": "Service Owner" },
+      "onCallRotation": "checkout-primary",
+      "severityDefault": "sev2",
+      "communicationChannel": "statuspage",
+      "runbook": "docs/runbooks/itsm-incident-response.md",
+      "sla": [
+        { "severity": "sev1", "responseMinutes": 5, "resolutionMinutes": 120 },
+        { "severity": "sev2", "responseMinutes": 15, "resolutionMinutes": 480 },
+        { "severity": "sev3", "responseMinutes": 60, "resolutionMinutes": 2880 },
+        { "severity": "sev4", "responseMinutes": 240, "resolutionMinutes": 7200 }
+      ],
+      "ola": [
+        { "team": "platform", "severity": "sev1", "responseMinutes": 5 },
+        { "team": "platform", "severity": "sev2", "responseMinutes": 15 }
+      ],
+      "dependsOn": ["identity", "database", "notifications"],
+      "cis": [
+        { "id": "ci-checkout-api", "kind": "application", "relation": "provides" },
+        { "id": "ci-checkout-db", "kind": "database", "relation": "depends-on" },
+        { "id": "ci-ingress", "kind": "network", "relation": "connects" }
+      ],
+      "knowledgeArticleIds": ["kb-restart-checkout", "kb-db-failover"]
+    },
+    {
+      "id": "identity",
+      "name": "Identitet",
+      "tier": "platform-critical",
+      "owner": { "subject": "oidc|ib.iversen", "name": "Ib Iversen", "role": "IAM Lead" },
+      "onCallRotation": "identity-primary",
+      "severityDefault": "sev1",
+      "communicationChannel": "statuspage",
+      "runbook": "docs/runbooks/itsm-incident-response.md",
+      "sla": [
+        { "severity": "sev1", "responseMinutes": 5, "resolutionMinutes": 60 },
+        { "severity": "sev2", "responseMinutes": 15, "resolutionMinutes": 240 },
+        { "severity": "sev3", "responseMinutes": 60, "resolutionMinutes": 1440 },
+        { "severity": "sev4", "responseMinutes": 240, "resolutionMinutes": 4320 }
+      ],
+      "ola": [{ "team": "iam", "severity": "sev1", "responseMinutes": 5 }],
+      "dependsOn": ["database"],
+      "cis": [
+        { "id": "ci-keycloak", "kind": "application", "relation": "provides" },
+        { "id": "ci-identity-db", "kind": "database", "relation": "depends-on" }
+      ],
+      "knowledgeArticleIds": ["kb-rotate-idp-cert"]
+    },
+    {
+      "id": "database",
+      "name": "Database",
+      "tier": "platform-critical",
+      "owner": { "subject": "oidc|dorte.dahl", "name": "Dorte Dahl", "role": "Database Owner" },
+      "onCallRotation": "database-primary",
+      "severityDefault": "sev1",
+      "communicationChannel": "phone",
+      "runbook": "docs/runbooks/itsm-incident-response.md",
+      "sla": [
+        { "severity": "sev1", "responseMinutes": 5, "resolutionMinutes": 60 },
+        { "severity": "sev2", "responseMinutes": 15, "resolutionMinutes": 240 },
+        { "severity": "sev3", "responseMinutes": 60, "resolutionMinutes": 1440 },
+        { "severity": "sev4", "responseMinutes": 240, "resolutionMinutes": 4320 }
+      ],
+      "ola": [{ "team": "platform", "severity": "sev1", "responseMinutes": 5 }],
+      "dependsOn": [],
+      "cis": [
+        { "id": "ci-pg-primary", "kind": "database", "relation": "provides" },
+        { "id": "ci-pg-standby", "kind": "database", "relation": "hosts" }
+      ],
+      "knowledgeArticleIds": ["kb-db-failover"]
+    },
+    {
+      "id": "notifications",
+      "name": "Notifikationer",
+      "tier": "platform-standard",
+      "owner": { "subject": "oidc|niels.nielsen", "name": "Niels Nielsen", "role": "Messaging Owner" },
+      "onCallRotation": "notifications-primary",
+      "severityDefault": "sev3",
+      "communicationChannel": "slack",
+      "runbook": "docs/runbooks/itsm-incident-response.md",
+      "sla": [
+        { "severity": "sev1", "responseMinutes": 10, "resolutionMinutes": 120 },
+        { "severity": "sev2", "responseMinutes": 30, "resolutionMinutes": 360 },
+        { "severity": "sev3", "responseMinutes": 120, "resolutionMinutes": 1440 },
+        { "severity": "sev4", "responseMinutes": 480, "resolutionMinutes": 4320 }
+      ],
+      "ola": [{ "team": "platform", "severity": "sev1", "responseMinutes": 10 }],
+      "dependsOn": ["database"],
+      "cis": [{ "id": "ci-mattermost", "kind": "application", "relation": "provides" }],
+      "knowledgeArticleIds": ["kb-restart-messaging"]
+    },
+    {
+      "id": "reporting",
+      "name": "Rapportering",
+      "tier": "platform-standard",
+      "owner": { "subject": "oidc|pia.petersen", "name": "Pia Petersen", "role": "Reporting Owner" },
+      "onCallRotation": "reporting-primary",
+      "severityDefault": "sev3",
+      "communicationChannel": "email",
+      "runbook": "docs/runbooks/itsm-incident-response.md",
+      "sla": [
+        { "severity": "sev1", "responseMinutes": 10, "resolutionMinutes": 180 },
+        { "severity": "sev2", "responseMinutes": 30, "resolutionMinutes": 480 },
+        { "severity": "sev3", "responseMinutes": 120, "resolutionMinutes": 2880 },
+        { "severity": "sev4", "responseMinutes": 480, "resolutionMinutes": 7200 }
+      ],
+      "ola": [{ "team": "platform", "severity": "sev2", "responseMinutes": 30 }],
+      "dependsOn": ["database", "notifications"],
+      "cis": [{ "id": "ci-reporting-api", "kind": "application", "relation": "provides" }],
+      "knowledgeArticleIds": ["kb-reporting-timeout"]
+    }
+  ]
+}

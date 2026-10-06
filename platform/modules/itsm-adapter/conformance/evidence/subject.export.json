@@ -1,0 +1,21 @@
+{
+  "verb": "subject.export",
+  "module": "itsm-adapter",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-24T11:12:35.857Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 4
+  },
+  "artifact": {
+    "uri": "s3://evidence/itsm-adapter/subject.export.json",
+    "sha256": "e107024b1970593c2ef81827fa50e5cd4176ae4dbcbbd0fceaa7ee26af5d2f9e"
+  }
+}

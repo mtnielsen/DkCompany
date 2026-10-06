@@ -1,0 +1,73 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ProjectBundle",
+  "metadata": {
+    "formatVersion": "1.0.0",
+    "exportedAt": "2026-01-12T09:00:00.000Z",
+    "source": "openproject-adapter",
+    "projectRef": "PROJECT-10"
+  },
+  "project": {
+    "externalId": "PROJECT-10",
+    "identifier": "projekt-alpha",
+    "name": "Projekt Alpha",
+    "tenantId": "acme",
+    "status": "active",
+    "visibility": "private",
+    "parentExternalId": null
+  },
+  "members": [
+    { "externalId": "anna", "principal": "anna", "group": null, "role": "project-admin", "tenantId": "acme" },
+    { "externalId": "bo", "principal": "bo", "group": null, "role": "member", "tenantId": "acme" },
+    { "externalId": "gus", "principal": "gus", "group": null, "role": "external-guest", "tenantId": "acme" }
+  ],
+  "workPackages": [
+    {
+      "externalId": "WP-1",
+      "subject": "Planlæg pilot",
+      "type": "task",
+      "status": "in_progress",
+      "assigneeExternalId": "bo",
+      "priority": "high",
+      "startDate": "2026-01-05",
+      "dueDate": "2026-02-01",
+      "parentExternalId": null,
+      "dependsOn": [],
+      "version": 3,
+      "tenantId": "acme"
+    },
+    {
+      "externalId": "WP-2",
+      "subject": "Skriv runbook",
+      "type": "task",
+      "status": "new",
+      "assigneeExternalId": "anna",
+      "priority": "normal",
+      "startDate": null,
+      "dueDate": null,
+      "parentExternalId": null,
+      "dependsOn": ["WP-1"],
+      "version": 1,
+      "tenantId": "acme"
+    }
+  ],
+  "attachments": [
+    {
+      "externalId": "ATT-700",
+      "workPackageExternalId": "WP-1",
+      "filename": "plan.pdf",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sizeBytes": 1234,
+      "tenantId": "acme"
+    }
+  ],
+  "statusEvents": [
+    {
+      "id": "evt-1",
+      "workPackageExternalId": "WP-1",
+      "type": "created",
+      "at": "2026-01-04T08:00:00.000Z",
+      "actor": "anna"
+    }
+  ]
+}

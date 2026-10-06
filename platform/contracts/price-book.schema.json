@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/price-book.schema.json",
+  "title": "Price Book",
+  "description": "Konfigurerbare prisinput til forbrugs- og driftsomkostningsmåling (DKC-034): pris pr. måler med valuta og gyldighedstidspunkt, valutakryds, leverandørvedligeholdelse og manuelt indtastede omkostninger. Et manglende prisinput afvises (missingPricePolicy=reject); en pris må ikke stiltiende antages at være nul.",
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "defaultCurrency",
+    "supportedCurrencies",
+    "fxRates",
+    "prices",
+    "missingPricePolicy",
+    "manualCosts",
+    "vendors"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "PriceBook" },
+    "metadata": { "$ref": "#/$defs/metadata" },
+    "defaultCurrency": { "type": "string", "minLength": 3 },
+    "supportedCurrencies": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 3 }
+    },
+    "fxRates": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/fxRate" }
+    },
+    "prices": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/price" }
+    },
+    "missingPricePolicy": { "const": "reject" },
+    "manualCosts": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/manualCost" }
+    },
+    "vendors": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/vendor" }
+    }
+  },
+  "$defs": {
+    "human": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\|[a-z0-9][a-z0-9._-]{2,}$" },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": { "$ref": "#/$defs/human" }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman", "labels"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/human" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "fxRate": {
+      "type": "object",
+      "required": ["from", "to", "rate", "asOf"],
+      "additionalProperties": false,
+      "properties": {
+        "from": { "type": "string", "minLength": 3 },
+        "to": { "type": "string", "minLength": 3 },
+        "rate": { "type": "number", "exclusiveMinimum": 0 },
+        "asOf": { "type": "string", "format": "date-time" },
+        "source": { "type": "string", "minLength": 1 }
+      }
+    },
+    "price": {
+      "type": "object",
+      "required": ["id", "meter", "unit", "currency", "unitPrice", "effectiveFrom", "source"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,60}$" },
+        "meter": { "$ref": "#/$defs/meter" },
+        "unit": { "type": "string", "minLength": 1 },
+        "currency": { "type": "string", "minLength": 3 },
+        "unitPrice": { "type": "number", "minimum": 0 },
+        "effectiveFrom": { "type": "string", "format": "date-time" },
+        "effectiveTo": { "type": "string", "format": "date-time" },
+        "source": { "type": "string", "minLength": 2 },
+        "vendorRef": { "type": "string", "minLength": 1 }
+      }
+    },
+    "manualCost": {
+      "type": "object",
+      "required": ["id", "meter", "unit", "currency", "owner", "note"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,60}$" },
+        "meter": { "$ref": "#/$defs/meter" },
+        "unit": { "type": "string", "minLength": 1 },
+        "currency": { "type": "string", "minLength": 3 },
+        "monthlyValue": { "type": ["number", "null"], "minimum": 0 },
+        "owner": { "$ref": "#/$defs/human" },
+        "note": { "type": "string", "minLength": 20 }
+      }
+    },
+    "vendor": {
+      "type": "object",
+      "required": ["id", "name", "maintenanceStatus", "patchWindow", "paidFeatures", "supportOwner"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$" },
+        "name": { "type": "string", "minLength": 2 },
+        "maintenanceStatus": { "enum": ["supported", "maintenance", "eol", "unknown"] },
+        "patchWindow": { "type": "string", "minLength": 3 },
+        "paidFeatures": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "supportOwner": { "$ref": "#/$defs/human" }
+      }
+    },
+    "meter": {
+      "enum": [
+        "compute",
+        "storage",
+        "backup",
+        "model-calls",
+        "integrations",
+        "runtime",
+        "support",
+        "upstream-features",
+        "migration"
+      ]
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "BackupTarget",
+  "metadata": {
+    "name": "offsite-object-store",
+    "version": "1.0.0",
+    "description": "S3-kompatibelt objektlager i et separat cloud-konto og fejldomæne. Bruges som uafhængigt offsite backupmål med object-lock i compliance-tilstand.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+    },
+    "labels": { "tier": "backup", "protocol": "s3" }
+  },
+  "environment": "production",
+  "targetType": "object-store",
+  "support": {
+    "status": "supported",
+    "validatedAt": "2026-09-23T08:00:00Z",
+    "validatedBy": { "subject": "oidc|cont.officer", "name": "Carla Officer", "role": "Continuity Officer" }
+  },
+  "endpoint": {
+    "url": "https://s3.backup.example.org",
+    "region": "eu-west-1",
+    "bucket": "platform-backups",
+    "pathPrefix": "prod"
+  },
+  "credentialsRef": "vault:secret/data/backup/offsite#access",
+  "tls": {
+    "verify": true,
+    "minVersion": "1.3",
+    "caRef": "vault:secret/data/backup/offsite-ca#pem",
+    "certSha256": null
+  },
+  "encryption": {
+    "mode": "customer-managed",
+    "keyRef": "kms:alias/platform-backup",
+    "keySeparated": true
+  },
+  "retention": {
+    "days": 365,
+    "immutability": {
+      "required": true,
+      "mode": "object-lock-compliance",
+      "verified": true,
+      "evidenceRef": "docs/evidence/backup/object-lock-2026-09.md",
+      "minRetentionDays": 90
+    }
+  },
+  "schedule": { "cron": "0 */4 * * *", "timezone": "Europe/Copenhagen" },
+  "bandwidth": { "maxMbps": 200, "window": "22:00-05:00" },
+  "failureDomain": { "id": "offsite-zone-b", "accessDomain": "backup-prod-account", "region": "eu-west-1" },
+  "recoveryOwner": { "subject": "oidc|cont.officer", "name": "Carla Officer", "role": "Continuity Officer" },
+  "status": "approved",
+  "approvedBy": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+  "approvedAt": "2026-09-23T09:00:00Z"
+}

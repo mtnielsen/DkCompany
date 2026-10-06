@@ -1,0 +1,32 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "DeploymentProfile",
+  "metadata": {
+    "name": "bad-shared",
+    "version": "1.0.0",
+    "description": "Ugyldig: fælles kontrolplan uden særskilte app-instanser og databaser pr. kunde.",
+    "accountableHuman": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" }
+  },
+  "profileType": "single-server",
+  "tenantModel": {
+    "mode": "shared-control-plane",
+    "applicationInstancesPerTenant": false,
+    "databasePerTenant": false,
+    "tenantBoundaryEnforcedAt": ["storage"]
+  },
+  "highAvailability": { "enabled": false },
+  "hostManagement": { "enabled": false },
+  "dataServices": [
+    {
+      "id": "primary-db",
+      "kind": "built-in-database",
+      "provider": "PostgreSQL 16",
+      "responsibilityOwner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "credentialsRef": "secrets/primary-db",
+      "tenantBound": true
+    }
+  ],
+  "serviceTargets": { "availability": "99.0%", "rpoMinutes": 60, "rtoMinutes": 240 },
+  "cost": { "model": "infrastructure", "currency": "DKK", "recurring": true, "notes": "Drift koster penge." },
+  "limitations": ["Nedetid forekommer på single-server."]
+}

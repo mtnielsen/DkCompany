@@ -1,0 +1,123 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "Runbook",
+  "metadata": {
+    "name": "patch-dummy-ok",
+    "version": "1.0.0",
+    "description": "Patchopdaterer dummy-ok efter dry-run, tests og rollback. Bruges som forhåndsgodkendt standard change i staging.",
+    "owner": {
+      "team": "platform",
+      "contact": "platform@example.org"
+    },
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "role": "Platform Owner",
+      "name": "Anna Andersen"
+    }
+  },
+  "scope": {
+    "verbs": [
+      "upgrade.patch"
+    ],
+    "targets": [
+      "dummy-ok"
+    ],
+    "environments": [
+      "staging"
+    ],
+    "tenants": [
+      "*"
+    ]
+  },
+  "parameters": {
+    "schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "library": {
+          "type": "string",
+          "minLength": 1
+        },
+        "to": {
+          "type": "string",
+          "minLength": 1
+        },
+        "maxDurationSeconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 300,
+          "required": true
+        }
+      }
+    },
+    "limits": {
+      "maxDurationSeconds": 300,
+      "maxTargets": 1
+    }
+  },
+  "preconditions": [
+    {
+      "id": "dry-run-clean",
+      "check": "dryrun",
+      "expect": "clean",
+      "evidenceRef": "conformance/evidence/dry-run.json"
+    },
+    {
+      "id": "rollback-tested",
+      "check": "rollback-tested",
+      "expect": true
+    }
+  ],
+  "maxImpact": {
+    "blastRadius": "single-service",
+    "maxTargets": 1,
+    "customerVisible": false,
+    "maxDurationSeconds": 300
+  },
+  "expiry": {
+    "approvedAt": "2025-09-01T00:00:00Z",
+    "expiresAt": "2025-09-03T00:00:00Z",
+    "maxAgeSeconds": 604800
+  },
+  "attempts": {
+    "maxAttempts": 3,
+    "windowSeconds": 3600
+  },
+  "rollback": {
+    "required": true,
+    "method": "git-revert",
+    "runbookRef": "patch-dummy-ok@1.0.0",
+    "tested": true
+  },
+  "postchecks": [
+    {
+      "id": "tests-after",
+      "check": "tests",
+      "expect": "green",
+      "timeoutSeconds": 120,
+      "onFailure": "rollback"
+    },
+    {
+      "id": "health-after",
+      "check": "healthcheck",
+      "expect": "green",
+      "timeoutSeconds": 180,
+      "onFailure": "rollback"
+    }
+  ],
+  "approval": {
+    "flow": "standard",
+    "preApproved": true,
+    "preApprovalRef": "APR-2025-09-01-0001",
+    "requiredApprovals": 2,
+    "eligibleGroups": [
+      "platform-approvers"
+    ]
+  },
+  "signature": {
+    "algorithm": "hmac-sha256",
+    "keyId": "runbook-example-key",
+    "value": "dde54de9774465a38e39c7705988eb8527333d8306ec70b35c41ee278d84d989",
+    "signedAt": "2025-09-01T00:00:00Z"
+  }
+}

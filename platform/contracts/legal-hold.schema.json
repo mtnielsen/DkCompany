@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/legal-hold.schema.json",
+  "title": "Legal Hold",
+  "description": "DKC-021: et aktivt tilbagehold (legal hold) med en dokumenteret begrundelse, et navngivet menneske der har lagt det, og en separat navngivet godkender. Et hold blokerer sletning inden for sin dokumenterede scope (tenant, subjektets digest og dataklasser) indtil det frigives med begrundelse.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "holdId", "tenantId", "subjectDigest", "dataClasses", "reason", "placedBy", "approvedBy", "placedAt", "status"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "LegalHold" },
+    "holdId": { "type": "string", "pattern": "^[a-zA-Z0-9:._-]{3,128}$" },
+    "tenantId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+    "subjectDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$", "description": "SHA-256 af subjektnøglen; rå identifikatorer gemmes ikke." },
+    "dataClasses": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 2 } },
+    "moduleRef": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$" },
+    "reason": { "type": "string", "minLength": 10, "description": "Begrundelsen for tilbageholdet; et hold uden begrundelse afvises." },
+    "placedBy": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string" },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 }
+      }
+    },
+    "approvedBy": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string" },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 }
+      }
+    },
+    "placedAt": { "type": "string", "format": "date-time" },
+    "reviewAt": { "type": "string", "format": "date-time" },
+    "status": { "enum": ["active", "released"] },
+    "releaseReason": { "type": "string", "minLength": 10 },
+    "releasedBy": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string" },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 }
+      }
+    },
+    "releasedAt": { "type": "string", "format": "date-time" }
+  }
+}

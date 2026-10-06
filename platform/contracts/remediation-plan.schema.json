@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/remediation-plan.schema.json",
+  "title": "RemediationPlan",
+  "description": "En deterministisk selvreparationskørsel. State machine: detect, correlate, diagnose, propose, policy/approval, durable intent, execute, verify, rollback/fallback, escalate. Kun en godkendt runbook med verificerede parametergrænser udføres; to agenter kan ikke reparere samme ressource samtidigt (resource lease + cooldown), og et samlet budget begrænser forsøg, fejl og ændringer.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "id", "tenantId", "target", "environment", "runbook", "parameters", "states", "outcome"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "RemediationPlan" },
+    "id": { "type": "string", "pattern": "^rem-[a-f0-9-]{8,}$" },
+    "tenantId": { "type": "string", "minLength": 1 },
+    "target": { "type": "string", "minLength": 1 },
+    "environment": { "enum": ["dev", "staging", "prod"] },
+    "runbook": {
+      "type": "object",
+      "required": ["ref", "digest"],
+      "additionalProperties": false,
+      "properties": {
+        "ref": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}@\\d+\\.\\d+\\.\\d+$" },
+        "digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "evidenceRef": { "type": "string", "minLength": 3 }
+      }
+    },
+    "parameters": { "type": "object" },
+    "roles": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "detector": { "$ref": "#/$defs/agentRef" },
+        "planner": { "$ref": "#/$defs/agentRef" },
+        "executor": { "$ref": "#/$defs/agentRef" },
+        "verifier": { "$ref": "#/$defs/agentRef" }
+      }
+    },
+    "reversibility": {
+      "type": "object",
+      "required": ["verb", "reversible", "classification", "fallback"],
+      "additionalProperties": false,
+      "properties": {
+        "verb": { "type": "string", "minLength": 1 },
+        "reversible": { "type": "boolean" },
+        "classification": { "enum": ["read", "reversible-write", "irreversible-write"] },
+        "compensation": { "type": ["string", "null"] },
+        "fallback": { "enum": ["none", "compensation", "stop-and-escalate"] }
+      }
+    },
+    "fallback": {
+      "type": "object",
+      "required": ["actions"],
+      "additionalProperties": false,
+      "properties": {
+        "actions": { "type": "array", "items": { "enum": ["pause", "read-only", "isolation"] } },
+        "authorizedBy": { "$ref": "#/$defs/humanRef" },
+        "ran": { "type": "array", "items": { "enum": ["pause", "read-only", "isolation"] } }
+      }
+    },
+    "states": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["state", "at"],
+        "additionalProperties": false,
+        "properties": {
+          "state": { "enum": ["detected", "correlated", "diagnosed", "proposed", "authorized", "intent", "executing", "verifying", "recovered", "rolled_back", "escalated", "halted", "cooldown"] },
+          "at": { "type": "string", "format": "date-time" },
+          "detail": { "type": ["object", "null"] }
+        }
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "maxAttempts": { "type": "integer", "minimum": 1 },
+        "maxFailures": { "type": "integer", "minimum": 1 },
+        "maxChanges": { "type": "integer", "minimum": 1 },
+        "windowSeconds": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "lease": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "resource": { "type": "string", "minLength": 1 },
+        "owner": { "type": "string", "minLength": 1 },
+        "fencingToken": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "aiChangesStopped": { "type": "boolean" },
+    "outcome": {
+      "type": "object",
+      "required": ["state"],
+      "additionalProperties": false,
+      "properties": {
+        "state": { "enum": ["recovered", "rolled_back", "escalated", "halted", "cooldown"] },
+        "reason": { "type": ["string", "null"] }
+      }
+    }
+  },
+  "$defs": {
+    "agentRef": {
+      "type": "object",
+      "required": ["spiffeId", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "spiffeId": { "type": "string", "pattern": "^spiffe://" },
+        "role": { "enum": ["observer", "planner", "implementer", "verifier", "executor", "auditor"] }
+      }
+    },
+    "humanRef": {
+      "type": "object",
+      "required": ["subject"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\|[a-z0-9][a-z0-9._-]{2,}$" },
+        "name": { "type": "string" }
+      }
+    }
+  }
+}
