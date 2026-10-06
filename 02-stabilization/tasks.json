@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "reviewedBaseCommit": "5e3706b5e7ad569c0ec68c4b63ceeaad15c237a3",
   "firstTask": "S1-01",
-  "statusMeaning": "ready means assignable; no implementation or independent verification is complete",
+  "statusMeaning": "ready means assignable; in-progress means implementation started; awaiting-verification means a tested implementation commit exists and independent verification is pending; no task is done without recorded technical verification and human acceptance",
   "tasks": [
     {
       "id": "S1-01",
@@ -28,8 +28,8 @@
         "Existing review probes can target platform/ and expose the known findings. Missing legacy evidence remains reported; no synthetic replacement logs.",
         "All future task source paths resolve to platform/, and no changes are required in 00-core or historical deliverables."
       ],
-      "status": "ready",
-      "implementationCommit": null,
+      "status": "awaiting-verification",
+      "implementationCommit": "19407f6d6d741f69e049d27729a8f987b47aff71",
       "verification": null,
       "humanAcceptance": null
     },
