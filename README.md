@@ -13,6 +13,23 @@ og er ikke en del af det tracked indhold (se [`.gitignore`](.gitignore)).
 
 ---
 
+## Aktuel fortsættelse: stabilisering og første testinstallation
+
+Start med [`02-stabilization/README.md`](02-stabilization/README.md) og
+[`START-IMPLEMENTER.md`](02-stabilization/START-IMPLEMENTER.md). Pakken indeholder
+tre sprints med konkrete kodeopgaver, separate verifier-prompts, afhængigheder
+og acceptkriterier. Første opgave er **S1-01**: saml implementeringen i `platform/`.
+Det nye kildekodetræ oprettes af opgaven; det er ikke allerede integreret.
+
+1. Sikkerhedsrettelser og samlet kildekode.
+2. Reproducerbar Linux-installation, CI og adgangskontrol ved merge.
+3. Autoriseret VPS-staging med syntetiske data, backup/restore og rollback.
+
+`00-core/` og `01-step1/` er historiske input til denne fortsættelse. Ny kode
+vedligeholdes direkte i `platform/` efter S1-01. Ingen af sprintopgaverne er
+erklæret færdige ved publicering af pakken; teknisk verifikation og menneskelig
+accept skal registreres særskilt. HA og kundeproduktion kræver senere live-tests.
+
 ## 1. `00-core/` — platformen
 
 Et monorepo for de kontrakter, der gør en fler-modul-platform styrbar og
@@ -122,10 +139,12 @@ sha256sum -c OVERLAY-MANIFEST.txt     # forventet: 79/79 OK, exit 0
 
 ---
 
-## Arbejdsmetode (bevares)
+## Historisk arbejdsmetode for 01-step1
 
-Al videre udvikling følger denne arbejdsmetode, så `00-core/` forbliver
-uforanderligt og hvert skridt er reproducerbart:
+Følgende metode beskriver de eksisterende overlays i `01-step1/`. Ny stabilisering
+følger [`02-stabilization/`](02-stabilization/README.md): S1-01 opretter `platform/`
+som vedligeholdt kildekode. `00-core/` og de historiske overlays bevares uændret.
+Metoden nedenfor gælder kun ved reproduktion af de historiske leverancer:
 
 1. **`00-core/` må ikke ændres.** `git status --porcelain -- 00-core` skal være tom.
 2. **Disposable klon:** `git clone --no-hardlinks /mnt/c/projects/DkCompany /tmp/dkc-XXX`,

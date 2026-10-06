@@ -1,0 +1,14 @@
+{
+  "taskId": null,
+  "agentIdentity": null,
+  "role": "verifier",
+  "sourceCommit": null,
+  "implementationAgentIdentity": null,
+  "independentSession": null,
+  "verdict": "NOT_RUN",
+  "commands": [],
+  "acceptanceCriteria": [],
+  "findings": [],
+  "artifactReferences": [],
+  "humanAcceptance": null
+}

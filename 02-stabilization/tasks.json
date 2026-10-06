@@ -1,0 +1,393 @@
+{
+  "schemaVersion": 1,
+  "reviewedBaseCommit": "5e3706b5e7ad569c0ec68c4b63ceeaad15c237a3",
+  "firstTask": "S1-01",
+  "statusMeaning": "ready means assignable; no implementation or independent verification is complete",
+  "tasks": [
+    {
+      "id": "S1-01",
+      "sprint": 1,
+      "title": "Create the canonical platform source tree",
+      "dependsOn": [],
+      "sourceHints": [
+        "00-core/",
+        "01-step1/output/dkc-036/apply.sh",
+        "01-step1/output/**/deliverable/",
+        "README.md"
+      ],
+      "deliverables": [
+        "Implement a deterministic assembler that materializes all 66 overlays in their actual dependency order, ending at DKC-036. Do not sort numerically. Handle the DKC-002 -> DKC-001 special case; reject cycles, missing dependencies and path escapes.",
+        "Commit the assembled source as platform/. Preserve 00-core/ and 01-step1/ as historical inputs. Future application changes go directly into platform/, not another chain of copied deliverables.",
+        "Record base commit, overlay order, per-file source and SHA256, and a pre-fix tree digest in platform provenance. Exclude caches, credentials and generated run output. Preserve license and attribution. Make the assembler safe on rerun: refuse an existing nonempty target by default.",
+        "Add a root validation entry point and update active documentation and an ADR for this migration. Carry contracts, package locks, tests and module manifests across without silently changing semantics.",
+        "Run the current focused and conformance suites, recording inherited failures accurately. This task establishes the tree; later assignments fix the security defects."
+      ],
+      "acceptanceCriteria": [
+        "A clean Linux checkout materializes a byte-identical pre-fix platform tree twice without mutating source inputs. Provenance accounts for all 66 overlays and every canonical source file.",
+        "The assembler rejects an out-of-workspace target, a cycle, a missing predecessor and an attempted traversal; it cannot recursively overwrite user files.",
+        "Existing review probes can target platform/ and expose the known findings. Missing legacy evidence remains reported; no synthetic replacement logs.",
+        "All future task source paths resolve to platform/, and no changes are required in 00-core or historical deliverables."
+      ],
+      "status": "ready",
+      "implementationCommit": null,
+      "verification": null,
+      "humanAcceptance": null
+    },
+    {
+      "id": "S1-02",
+      "sprint": 1,
+      "title": "Enforce server-owned protected-data classification",
+      "dependsOn": [
+        "S1-01"
+      ],
+      "sourceHints": [
+        "platform/runtime/src/runtime.mjs",
+        "platform/data-protection/",
+        "platform/runtime/test/protected-data-runtime.test.mjs"
+      ],
+      "deliverables": [
+        "Reproduce review R1 before changing behavior. Resolve data classification from trusted server registry state, never from action.protectedData. Derive the operation from the trusted tool/executor registration rather than action.operation.",
+        "Define how missing registry data and unavailable classification services fail closed for protected resources; distinguish an explicit ordinary classification from an unknown lookup.",
+        "Enforce no-AI-access, AI-read-only, append-only and retention-locked restrictions across reads, mutations, retrieval, logging and restore adapters. Caller metadata may only tighten policy, not lower it.",
+        "Add boundary regressions at runtime and relevant adapter entry points; retain valid ordinary-data workflows."
+      ],
+      "acceptanceCriteria": [
+        "The paired R1 probe denies both baseline no-AI-access and caller-supplied ordinary/noAiAccess=false variants, with zero executor calls.",
+        "A mutating verb cannot be disguised as a read by action.operation; unknown or failed classification does not silently allow it.",
+        "Protected-data decisions preserve tenant scope and mandatory audit without copying forbidden data into logs; permitted ordinary reads still work."
+      ],
+      "status": "planned",
+      "implementationCommit": null,
+      "verification": null,
+      "humanAcceptance": null
+    },
+    {
+      "id": "S1-03",
+      "sprint": 1,
+      "title": "Apply tenant and role authorization to every approval endpoint",
+      "dependsOn": [
+        "S1-02"
+      ],
+      "sourceHints": [
+        "platform/approvals/src/approval-service.mjs",
+        "platform/identity/src/tenant.mjs",
+        "platform/approvals/test/"
+      ],
+      "deliverables": [
+        "Reproduce R2 and R4. Authenticate list/read/view/create/decide/revoke/authorize routes, then apply operation-specific resource and tenant authorization consistently.",
+        "Filter list results by authorized tenant scope; require explicit tenant grants for cross-tenant platform actors. Treat missing tenant identity as denied unless a narrowly scoped platform grant applies.",
+        "Bind authorizeExecution access to the authenticated executor identity and server-owned request, instead of merely accepting any authenticated caller with a descriptor.",
+        "Prevent request-ID replacement and external mutation of approval state through returned object references. Apply the same checks to public service methods or explicitly separate trusted internal methods."
+      ],
+      "acceptanceCriteria": [
+        "Anonymous approval listing returns 401/403 with no request IDs; tenant B cannot list, inspect, decide, revoke or consume tenant A requests.",
+        "The R2 probe returns 403, leaves the request pending and emits the permitted audit record. Explicit tenant-scoped platform access and legitimate human decisions still work.",
+        "Duplicate IDs, duplicate approvers, client-supplied identity/groups/training and client-supplied approved state fail safely.",
+        "HTTP and in-process tests cover both permitted and forbidden calls, including workload versus human actors."
+      ],
+      "status": "planned",
+      "implementationCommit": null,
+      "verification": null,
+      "humanAcceptance": null
+    },
+    {
+      "id": "S1-04",
+      "sprint": 1,
+      "title": "Bind execution to the effective approval policy",
+      "dependsOn": [
+        "S1-03"
+      ],
+      "sourceHints": [
+        "platform/runtime/src/runtime.mjs",
+        "platform/runtime/src/clients.mjs",
+        "platform/approvals/src/binding.mjs",
+        "platform/approvals/src/approval-service.mjs"
+      ],
+      "deliverables": [
+        "Reproduce R3 with two genuine approvals and a PDP decision requiring three. Carry the trusted policy decision into execution authorization and enforce the maximum of current PDP and approval-service requirements.",
+        "Bind approval verification to tenant, executor/agent identity as applicable, operation, target, parameters, artifact/plan/runbook digest, policy identity/version and expiry. Do not accept a caller-forged lower threshold or bundle version.",
+        "Validate thresholds as positive integers; enforce distinct eligible approvers, revocation and expiry at consumption. Preserve atomic one-time claims and restart behavior.",
+        "Add drift, replay, concurrency, unavailable-service and policy-change regressions; support genuinely preapproved standard changes only within the approved runbook scope."
+      ],
+      "acceptanceCriteria": [
+        "R3 produces zero executions with two of three approvals; three valid approvers for the exact change allow one execution.",
+        "Increasing the required approval count or changing the trusted policy invalidates insufficient authorization; malformed thresholds fail closed.",
+        "Changed parameters/artifacts/tenant/target/actor and expired/revoked approvals do not execute; concurrent workers cannot double-consume an approval.",
+        "Valid bounded runbook execution and valid human-approved changes retain positive test coverage."
+      ],
+      "status": "planned",
+      "implementationCommit": null,
+      "verification": null,
+      "humanAcceptance": null
+    },
+    {
+      "id": "S1-05",
+      "sprint": 1,
+      "title": "Create the integrated security acceptance command",
+      "dependsOn": [
+        "S1-04"
+      ],
+      "sourceHints": [
+        "platform/runtime/",
+        "platform/approvals/",
+        "platform/agent-registry/",
+        "02-stabilization/evidence/"
+      ],
+      "deliverables": [
+        "Expose one deterministic command that runs the R1-R4 regressions against the maintained platform entry points, alongside identity, role-separation, audit-failure and scope-boundary tests.",
+        "Keep positive controls and negative controls together. An unavailable audit/PDP/approval service must halt mutations; no agent may implement and approve its own work.",
+        "Emit a machine-readable report with tested commit, commands, exit codes, durations and evidence hashes. Distinguish local tests from live integrations.",
+        "Document unresolved integration gaps for Sprint 2; do not claim a full pentest, real HA or production readiness."
+      ],
+      "acceptanceCriteria": [
+        "All four review security findings are closed with executable regressions and independently rerun evidence for the same source commit.",
+        "Tests use actual service boundaries where applicable, plus explicitly labeled stubs for external effects, and never customer data.",
+        "S1 exit package identifies remaining known packaging/platform failures instead of silently skipping them. Human acceptance is separate from this implementation report."
+      ],
+      "status": "planned",
+      "implementationCommit": null,
+      "verification": null,
+      "humanAcceptance": null
+    },
+    {
+      "id": "S2-01",
+      "sprint": 2,
+      "title": "Make checkout integrity and path handling portable",
+      "dependsOn": [
+        "S1-05"
+      ],
+      "sourceHints": [
+        "platform/conformance/src/manifest.mjs",
+        "platform/tools/",
+        "01-step1/output/dkc-036/OVERLAY-MANIFEST.txt",
+        ".gitignore",
+        ".gitattributes"
+      ],
+      "deliverables": [
+        "Fix R7 using platform-aware path containment. Reject absolute and parent traversal references and handle symlink escapes where evidence loading follows links.",
+        "Provide executable active shell entry points and consistent LF policy, with Windows-compatible developer commands where supported. Do not rewrite the archived overlay history just to make it look green.",
+        "Create a current artifact manifest containing only actually published source/evidence. Retain an explicit legacy-integrity report listing the 18 absent historical logs; never reconstruct them as original observations.",
+        "Scope generated artifacts and ignore rules so intended evidence is publishable, secret-bearing files are excluded and immutable audit requirements are preserved."
+      ],
+      "acceptanceCriteria": [
+        "The prior Windows C-004 failure is fixed; intended Windows developer checks and the supported Linux checks pass.",
+        "A clean checkout can execute the active installer/validation scripts without manual chmod. The current artifact manifest verifies from a fresh clone.",
+        "Tampered or missing current files fail verification; historical missing logs are clearly separated from current release evidence.",
+        "Path traversal and relevant symlink escapes are rejected while valid module-relative references load."
+      ],
+      "status": "planned",
+      "implementationCommit": null,
+      "verification": null,
+      "humanAcceptance": null
+    },
+    {
+      "id": "S2-02",
+      "sprint": 2,
+      "title": "Implement a real single-server installation profile",
+      "dependsOn": [
+        "S2-01"
+      ],
+      "sourceHints": [
+        "platform/distribution/",
+        "platform/configuration/",
+        "platform/identity/",
+        "platform/approvals/",
+        "platform/persistence/",
+        "platform/Makefile"
+      ],
+      "deliverables": [
+        "Implement one supported Linux installation path, selecting an OS/runtime/deployment mechanism compatible with the actual code and recording the choice. Prefer the existing deployment approach when viable; do not introduce a second unmaintained orchestrator.",
+        "Build and wire the minimum real services: identity provider integration, policy, approval service, runtime with a harmless test executor, durable audit, persistent storage and basic health/telemetry. Surface missing service implementations as work to complete, not successful mocks.",
+        "Provide versioned configuration, validation and defaults for log level, retention, TLS/ingress, tenant identity, managed versus external database and separately configured external backup. Ordinary logging settings must not disable required audit.",
+        "Deliver preflight, install, status and diagnostics commands with meaningful exit codes, repeatable install behavior and persistent volumes. No embedded development keys or default production passwords; secrets are injected outside Git.",
+        "Document minimum measured CPU/RAM/disk and supported component versions. Mark the profile non-HA. Make a clean local disposable Linux VM usable before requiring a paid VPS."
+      ],
+      "acceptanceCriteria": [
+        "A documented command installs and starts real processes from a clean supported Linux VM; replacing installer-live with another NOT RUN echo is not acceptance.",
+        "Authenticated API calls reach policy and approval services with durable audit. A reboot preserves tenant and approval data.",
+        "Invalid configuration fails before mutation; repeated installation does not destroy data. Missing secrets/TLS prerequisites cannot yield a healthy deployment.",
+        "The module dependency resolver selects only the minimal supported stack; unimplemented optional modules are not advertised as installed."
+      ],
+      "status": "planned",
+      "implementationCommit": null,
+      "verification": null,
+      "humanAcceptance": null
+    },
+    {
+      "id": "S2-03",
+      "sprint": 2,
+      "title": "Run reproducible checks in GitHub CI",
+      "dependsOn": [
+        "S2-02"
+      ],
+      "sourceHints": [
+        ".github/workflows/",
+        "platform/Makefile",
+        "platform/release/",
+        "00-core/.github/scripts/check-dco.sh"
+      ],
+      "deliverables": [
+        "Add root GitHub workflows for PRs and main covering clean checkout, current artifact integrity, schema checks, focused security regressions, conformance, build and a minimal service integration smoke test.",
+        "Pin third-party Actions to reviewed immutable commits and use least-privilege workflow permissions. PR validation must not receive deployment secrets or run untrusted code with elevated tokens.",
+        "Check DCO for newly introduced commits using an explicit trusted base; report historical unsigned commits separately without altering history or suppressing new violations.",
+        "Produce actual SBOM/scanner results where supported; unavailable scanners or required integrations cannot silently pass. Configure artifact retention and redaction.",
+        "Supply an idempotent branch-protection configuration/checker and exact required-check names. Apply repository settings only with repository-admin authorization; if access is missing, report that specific gate pending while finishing all code."
+      ],
+      "acceptanceCriteria": [
+        "The actual GitHub PR run at the tested SHA completes the required jobs; local make output alone is not a GitHub CI result.",
+        "A negative fixture/security regression causes a failing required job, and unsigned newly introduced commits fail the DCO job.",
+        "Main requires passing checks and independent human review, or the report explicitly leaves admin activation pending. No automatic self-approval or bypass.",
+        "Workflow failure and missing jobs cannot be summarized as a passing release."
+      ],
+      "status": "planned",
+      "implementationCommit": null,
+      "verification": null,
+      "humanAcceptance": null
+    },
+    {
+      "id": "S2-04",
+      "sprint": 2,
+      "title": "Prove readiness for VPS staging",
+      "dependsOn": [
+        "S2-03"
+      ],
+      "sourceHints": [
+        "platform/release/",
+        "platform/distribution/",
+        "platform/docs/",
+        "02-stabilization/evidence/"
+      ],
+      "deliverables": [
+        "Automate a clean disposable Linux VM exercise: install, synthetic two-tenant login/API flow, service restart, full reboot, failure diagnostics and teardown limited to the test environment.",
+        "Bind evidence to exact commit/image digests and measured resource use. Derive a VPS sizing and storage specification from that evidence rather than inventing capacity.",
+        "Create a staging input template for host/SSH identity, domain/DNS, secret references, backup endpoint, allowed CIDRs, named human owner and budget cap; keep credentials out of Git.",
+        "Implement a readiness gate separating local functional success, GitHub CI, independent verification, human acceptance and missing infrastructure inputs."
+      ],
+      "acceptanceCriteria": [
+        "The clean-VM run is reproduced independently with real services and persisted state; supported OS/runtime are explicit.",
+        "All S1 security gates and S2 installation/CI gates are met for the candidate commit. Missing admin settings remain a blocker, not a waiver.",
+        "The report gives a concrete server specification, backup requirements and operating cost inputs for the human to approve before any purchase.",
+        "S2 acceptance permits synthetic-data staging only; it does not assert HA, compliance certification or customer-production readiness."
+      ],
+      "status": "planned",
+      "implementationCommit": null,
+      "verification": null,
+      "humanAcceptance": null
+    },
+    {
+      "id": "S3-01",
+      "sprint": 3,
+      "title": "Prepare and validate the authorized staging host",
+      "dependsOn": [
+        "S2-04"
+      ],
+      "sourceHints": [
+        "platform/distribution/",
+        "platform/infrastructure/",
+        "platform/configuration/"
+      ],
+      "deliverables": [
+        "Implement staging preflight/provisioning automation using the approved server specification and supplied connection details. If none are supplied, finish dry-runable code and report the required host/domain/backup inputs; do not purchase resources.",
+        "Limit deployment credentials to staging. Configure SSH access, explicit firewall/ingress rules, TLS and secret injection; preserve recovery access while changing networking.",
+        "Record host identity, OS/version, storage layout, component versions and the independent backup failure domain without exposing secrets.",
+        "Require an authorized executor identity for live host changes, separate from the implementer and verifier; bind the approved deployment to the candidate digest."
+      ],
+      "acceptanceCriteria": [
+        "Read-only preflight confirms the intended host and backup destination; mismatched environment/host/digest or missing authorization stops deployment.",
+        "No customer data, main-branch mutation or production credentials are used. A VPS purchase is not triggered by running tests.",
+        "Recovery access and rollback for host configuration changes are verified before exposing services."
+      ],
+      "status": "planned",
+      "implementationCommit": null,
+      "verification": null,
+      "humanAcceptance": null
+    },
+    {
+      "id": "S3-02",
+      "sprint": 3,
+      "title": "Deploy and verify the first real staging workflow",
+      "dependsOn": [
+        "S3-01"
+      ],
+      "sourceHints": [
+        "platform/distribution/",
+        "platform/identity/",
+        "platform/approvals/",
+        "platform/runtime/",
+        "platform/telemetry-api/"
+      ],
+      "deliverables": [
+        "Deploy the accepted candidate through the controlled staging deployment entry point. Record real endpoint and process/container health, image digests and TLS status.",
+        "Implement and execute a synthetic two-company workflow: login, create a harmless change request, collect the required distinct human approvals, execute a scoped action, inspect audit, revoke a test user and verify access loss.",
+        "Test unauthorized cross-tenant operations and the R1-R4 regressions through deployed API boundaries. Human approvals in the live exercise come from real participants; automated fixtures are labeled separate tests.",
+        "Feed performance/errors and unavailable collectors to the operations view; missing signals show unknown/stale, not healthy."
+      ],
+      "acceptanceCriteria": [
+        "The workflow reaches real identity, approval, policy and audit components across process boundaries; results are linked by tenant/action/trace identifiers.",
+        "Two synthetic tenants remain isolated and revoked users cannot retain effective access beyond the documented token/session revocation behavior.",
+        "Service/PDP/audit failures produce controlled denial or halt, alerts and recoverable operator diagnostics. No unsupported self-healing privileges are added."
+      ],
+      "status": "planned",
+      "implementationCommit": null,
+      "verification": null,
+      "humanAcceptance": null
+    },
+    {
+      "id": "S3-03",
+      "sprint": 3,
+      "title": "Prove persistence and independent backup recovery",
+      "dependsOn": [
+        "S3-02"
+      ],
+      "sourceHints": [
+        "platform/backup/",
+        "platform/persistence/",
+        "platform/continuity/"
+      ],
+      "deliverables": [
+        "Run a consistent encrypted backup of synthetic platform state to the configured independent destination with separately scoped credentials.",
+        "Restore into an isolated replacement instance, validate records, tenant ACLs, approval state and audit continuity, then test retention/holds and credential recovery.",
+        "Measure backup age, acknowledged records recovered, recovery time and any actual loss against the declared profile RPO/RTO. Exercise restart and storage errors without destroying the only viable backup.",
+        "Preserve protected-data restrictions and deletion/hold semantics during restore. Record any unsupported WORM enforcement rather than representing a local flag as immutable storage."
+      ],
+      "acceptanceCriteria": [
+        "Recovery succeeds without reading the original instance data volumes; the backup is not merely another directory on the same server.",
+        "Recovered data and authorization are validated per tenant; logs contain no secrets or forbidden payloads.",
+        "Measured results meet the approved staging profile objectives or the gate fails with actual measurements. An unexecuted drill is NOT RUN."
+      ],
+      "status": "planned",
+      "implementationCommit": null,
+      "verification": null,
+      "humanAcceptance": null
+    },
+    {
+      "id": "S3-04",
+      "sprint": 3,
+      "title": "Prove upgrade rollback and human takeover",
+      "dependsOn": [
+        "S3-03"
+      ],
+      "sourceHints": [
+        "platform/lifecycle/",
+        "platform/continuity/",
+        "platform/runbooks/",
+        "platform/release/"
+      ],
+      "deliverables": [
+        "Execute a controlled upgrade and deliberate failed-release scenario using synthetic state. Validate migration compatibility, rollback to the prior accepted artifact and data integrity.",
+        "Exercise agent kill switch, credential revocation, escalation and human takeover through a bounded, preapproved recovery runbook. No unrestricted shell/root or self-approval.",
+        "Produce the staging acceptance report with linked deployment, workflow, backup/recovery and rollback evidence for the exact artifacts.",
+        "List the next HA/multi-server verification work explicitly: quorum, split brain, partitions, failover, fencing, worker coordination and independent failure domains. These are subsequent work, not claims made by this single-server sprint."
+      ],
+      "acceptanceCriteria": [
+        "Upgrade and rollback preserve data and permissions; an irreversible migration cannot advertise automatic rollback without a tested recovery alternative.",
+        "An authorized human can halt agents and take over; unauthorized actors cannot disable audit or mutate protected data.",
+        "Independent verifier and human owner accept the measured single-server staging evidence. Production/HA readiness remains false until separate live gates are fulfilled."
+      ],
+      "status": "planned",
+      "implementationCommit": null,
+      "verification": null,
+      "humanAcceptance": null
+    }
+  ]
+}
