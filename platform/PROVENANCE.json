@@ -3,7 +3,7 @@
   "tool": {
     "path": "tools/assemble-platform.mjs",
     "version": "1.0.0",
-    "sha256": "ec4d0fad251fad1d6e4cb277832d35c902752e4985203107d5340a5e6ec7f43a"
+    "sha256": "06cf456775a7bc47308779c43018d85172a67b74f8e3faecfa28bf264d5fb245"
   },
   "stack": {
     "path": "tools/overlay-stack.json",
