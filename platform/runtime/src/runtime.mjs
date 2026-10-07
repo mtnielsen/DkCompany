@@ -299,7 +299,7 @@ export function createAgentRuntime({
         const recordMatchesTarget = trustedRecord.id === target
           || (trustedRecord.authoritativePointer && (target === trustedRecord.authoritativePointer || target.startsWith(`${trustedRecord.authoritativePointer}/`)))
           || (trustedRecord.consumerModules ?? []).some((consumer) => targetSegments.includes(consumer))
-          || (trustedRecord.id && target.includes(trustedRecord.id));
+          || (trustedRecord.id && targetSegments.includes(trustedRecord.id));
         if (!target || !recordMatchesTarget) throw new Error("classification record does not match target");
       } catch {
         const message = "beskyttelsesklassifikation ukendt eller utilgængelig — fail-closed";

@@ -78,7 +78,7 @@ function isExplicitOrdinary(classification, { target, tenantId }) {
     record.id === targetText
     || (record.authoritativePointer && (targetText === record.authoritativePointer || targetText.startsWith(`${record.authoritativePointer}/`)))
     || (record.consumerModules ?? []).some((consumer) => targetSegments.includes(consumer))
-    || (record.id && targetText.includes(record.id))
+    || (record.id && targetSegments.includes(record.id))
   ));
 }
 

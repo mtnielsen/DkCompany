@@ -124,6 +124,7 @@ test("unknown, cross-tenant and unavailable classifications fail closed", async 
     { classify: () => ({ status: "classified", record: { id: "dummy-ok", dataClass: "custom-unknown", noAiAccess: false, tenantId: "acme" } }) },
     { classify: () => ({ status: "classified", record: { id: "dummy-ok", dataClass: "ordinary", noAiAccess: false, tenantId: "contoso" } }) },
     { classify: () => ({ status: "classified", record: { id: "other-target", dataClass: "ordinary", noAiAccess: false } }) },
+    { classify: () => ({ status: "classified", record: { id: "dummy", dataClass: "ordinary", noAiAccess: false } }) },
     { classify() { throw new Error("registry unavailable"); } },
     undefined,
   ]) {
