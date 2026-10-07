@@ -1,0 +1,176 @@
+{
+  "taskId": "S1-02",
+  "agentIdentity": "/root/s102_luna_verifier",
+  "requestedModel": "gpt-6-luna",
+  "role": "independent verifier",
+  "sourceCommit": "612bca5eaeb213e72c4f62f96e874625d50989f0",
+  "sourceTree": "8ee185e79a62af883f39722dd6818e6ed12b6290",
+  "implementationAgentIdentity": "/root/s102_luna_implementer",
+  "independentSession": "Fresh Linux checkout in DkCompany-Test WSL2 Ubuntu 24.04, user dkcverify uid 1000, linux-x64, Node v22.22.3, npm 10.9.8. Tests and probes ran against detached sourceCommit; app worktree remained clean.",
+  "verdict": "PASS",
+  "summary": "Exact source passed independent install, historical assembly, validation, all root suites (820 tests), the separate logging suite (43 tests), the paired R1 probe, and independent adversarial classification, tenant, guard, logging, and positive-flow probes. The earlier failures at 940043b and c34bf3f were reproduced, preserved, fixed by later source commits, and retested.",
+  "supersedes": [
+    {
+      "report": "02-stabilization/evidence/S1-02/verification-attempts/verification-940043b.json",
+      "sourceCommit": "940043baf11c915338d513b92e1031823fcd2459",
+      "verdict": "FAIL",
+      "resolution": "Malformed/foreign classification, forged guard records, and protected log payload failures were fixed and retested on 612bca5."
+    },
+    {
+      "report": "02-stabilization/evidence/S1-02/verification-attempts/guard-evaluate-probes-c34.json",
+      "sourceCommit": "c34bf3f461881cb0e571cf061e2e88a2c3acce19",
+      "verdict": "FAIL",
+      "resolution": "Direct guard evaluation failures for foreign-tenant, substring, unknown-class and malformed records were fixed and retested on 612bca5."
+    }
+  ],
+  "commands": [
+    {
+      "command": "git checkout --detach 612bca5eaeb213e72c4f62f96e874625d50989f0; git rev-parse HEAD; git rev-parse HEAD^{tree}; git status --porcelain",
+      "exitCode": 0,
+      "result": "Exact source and tree matched; clean before and after verification."
+    },
+    {
+      "command": "make install",
+      "exitCode": 0,
+      "log": "install.log",
+      "logSha256": "85a7c5cfb12589c1f950285320cf46dfddd9917bb242766b528e31fdc322bae0"
+    },
+    {
+      "command": "make historical-assemble-check",
+      "exitCode": 0,
+      "log": "historical-assemble-check.log",
+      "logSha256": "98b66d5ebefbbf9209d23b890f7f8004b943c3125756d566028ba0f80deb0831"
+    },
+    {
+      "command": "make validate",
+      "exitCode": 0,
+      "log": "validate.log",
+      "logSha256": "ac71678b257c934c21aeff7601db987e3ab42dca757e2440fe2cdbaf1bdb1d5d"
+    },
+    {
+      "command": "make test",
+      "exitCode": 0,
+      "result": "820 passed, 0 failed across assembler 13, runtime 120, approvals 30, identity 52, data-protection 44, agent-registry 33, conformance 528.",
+      "log": "test.log",
+      "logSha256": "ff3811c9102344b9efb18af8a216643f90d3700212b6157ff90bd29df0607357"
+    },
+    {
+      "command": "cd platform/logging && node --test",
+      "exitCode": 0,
+      "result": "43 passed, 0 failed.",
+      "log": "logging-tests.log",
+      "logSha256": "dc973886251769f6d062df237856db6f3531085611eb8aa111770b1c3c77c34c"
+    },
+    {
+      "command": "node /tmp/s1-02-guard-final.mjs",
+      "exitCode": 0,
+      "result": "Direct and adapter guard probes deny foreign-tenant, conflicting-hint, caller-only-tenant, substring, unknown-class, malformed noAiAccess and unknown-target cases. Caller record cannot override policy-bundle. Positive tenant ordinary read and append-only append pass; append-only update denies. Runtime malformed/foreign/substring cases deny with 0 executor calls. Protected logger redacts; ordinary logger positive control persists summary.",
+      "log": "adversarial-probes.json",
+      "logSha256": "da180abeababa227b0ad22381b7c05cd67a0ede2db3296d1ddbc0cf7807a4289"
+    },
+    {
+      "command": "node 02-stabilization/reference/security-probes.mjs platform /home/dkcverify/logs/S1-02-Luna-final2-2026-10-07/security-probes.json",
+      "exitCode": 0,
+      "result": "R1 server no-AI baseline and caller override both denied with 0 stub executions. R2/R4 remained visible as later-task findings. R3-shaped probe was denied at unknown classification, so this run does not assess its approval threshold.",
+      "log": "security-probes.stdout.json",
+      "logSha256": "5609bf98e4e14bb094ad19d4588c82c9661cf209b8cc4c2bd8a89509dc8f6c19",
+      "reportSha256": "4f890e4b64f7a39a503d8677ca1818a868a7f6254f6609212bee7ef777cf13c2"
+    },
+    {
+      "command": "git diff --check 612bca5eaeb213e72c4f62f96e874625d50989f0^..612bca5eaeb213e72c4f62f96e874625d50989f0",
+      "exitCode": 0,
+      "result": "No whitespace errors."
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "id": "R1 paired no-AI denial with zero executors",
+      "status": "PASS"
+    },
+    {
+      "id": "Trusted registered operation; caller operation cannot disguise mutation; unknown/unavailable/malformed classification fails closed",
+      "status": "PASS",
+      "detail": "Runtime tests cover operation override and unavailable/unknown cases; independent probes deny unknown class, foreign tenant, and substring mismatch."
+    },
+    {
+      "id": "Tenant scope and audit preserved; protected payload excluded from logs; ordinary positive flow retained",
+      "status": "PASS",
+      "detail": "Denied actions audit; probes show no protected canary in logs and valid ordinary logging/read controls succeed."
+    },
+    {
+      "id": "No-AI, AI-read-only, append-only and retention-lock policy enforced at runtime/guard adapters",
+      "status": "PASS",
+      "detail": "Full runtime/data-protection tests and direct app adapter probes pass, including append allow/update deny."
+    },
+    {
+      "id": "Retrieval and restore operation semantics",
+      "status": "PASS",
+      "detail": "subject.locate maps to retrieve and restore maps to restore in trusted operation mapping; both run through runtime protection guard. Adapter guard matrix tests cover app/admin/restore."
+    },
+    {
+      "id": "GitHub-hosted CI",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "Live integrations",
+      "status": "NOT_RUN",
+      "detail": "Local Linux fixtures, stub executors and synthetic canaries only."
+    },
+    {
+      "id": "Human acceptance",
+      "status": "PENDING"
+    }
+  ],
+  "deferredFindings": [
+    {
+      "id": "R2",
+      "status": "OPEN_OUT_OF_SCOPE",
+      "detail": "Reference probe still reproduces cross-tenant approval revocation; later task owns this issue."
+    },
+    {
+      "id": "R3",
+      "status": "OPEN_UNVERIFIED_HERE",
+      "detail": "Reference probe reaches unknown-target fail-closed before the approval-threshold check; this S1-02 run does not assess R3."
+    },
+    {
+      "id": "R4",
+      "status": "OPEN_OUT_OF_SCOPE",
+      "detail": "Reference probe still reproduces anonymous global approval listing; later task owns this issue."
+    }
+  ],
+  "artifactReferences": [
+    {
+      "path": "/home/dkcverify/logs/S1-02-Luna-final2-2026-10-07/install.log",
+      "sha256": "85a7c5cfb12589c1f950285320cf46dfddd9917bb242766b528e31fdc322bae0"
+    },
+    {
+      "path": "/home/dkcverify/logs/S1-02-Luna-final2-2026-10-07/historical-assemble-check.log",
+      "sha256": "98b66d5ebefbbf9209d23b890f7f8004b943c3125756d566028ba0f80deb0831"
+    },
+    {
+      "path": "/home/dkcverify/logs/S1-02-Luna-final2-2026-10-07/validate.log",
+      "sha256": "ac71678b257c934c21aeff7601db987e3ab42dca757e2440fe2cdbaf1bdb1d5d"
+    },
+    {
+      "path": "/home/dkcverify/logs/S1-02-Luna-final2-2026-10-07/test.log",
+      "sha256": "ff3811c9102344b9efb18af8a216643f90d3700212b6157ff90bd29df0607357"
+    },
+    {
+      "path": "/home/dkcverify/logs/S1-02-Luna-final2-2026-10-07/logging-tests.log",
+      "sha256": "dc973886251769f6d062df237856db6f3531085611eb8aa111770b1c3c77c34c"
+    },
+    {
+      "path": "/home/dkcverify/logs/S1-02-Luna-final2-2026-10-07/adversarial-probes.json",
+      "sha256": "da180abeababa227b0ad22381b7c05cd67a0ede2db3296d1ddbc0cf7807a4289"
+    },
+    {
+      "path": "/home/dkcverify/logs/S1-02-Luna-final2-2026-10-07/security-probes.stdout.json",
+      "sha256": "5609bf98e4e14bb094ad19d4588c82c9661cf209b8cc4c2bd8a89509dc8f6c19"
+    },
+    {
+      "path": "/home/dkcverify/logs/S1-02-Luna-final2-2026-10-07/security-probes.json",
+      "sha256": "4f890e4b64f7a39a503d8677ca1818a868a7f6254f6609212bee7ef777cf13c2"
+    }
+  ],
+  "humanAcceptance": "PENDING"
+}

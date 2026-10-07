@@ -1,0 +1,157 @@
+[
+  {
+    "probe": "foreign_acme_ordinary_with_principal_and_option",
+    "result": {
+      "decision": "deny",
+      "allowed": false,
+      "reasons": [
+        "ukendt beskyttelsespost — fail-closed"
+      ],
+      "obligations": []
+    }
+  },
+  {
+    "probe": "foreign_acme_ordinary_with_adapter",
+    "result": {
+      "decision": "deny",
+      "allowed": false,
+      "reasons": [
+        "ukendt beskyttelsespost via 'app'-adapteren — fail-closed"
+      ],
+      "obligations": []
+    }
+  },
+  {
+    "probe": "conflicting_tenant_hint",
+    "result": {
+      "decision": "deny",
+      "allowed": false,
+      "reasons": [
+        "ukendt beskyttelsespost — fail-closed"
+      ],
+      "obligations": []
+    }
+  },
+  {
+    "probe": "missing_principal_tenant",
+    "result": {
+      "decision": "deny",
+      "allowed": false,
+      "reasons": [
+        "ukendt beskyttelsespost — fail-closed"
+      ],
+      "obligations": []
+    }
+  },
+  {
+    "probe": "substring_target",
+    "result": {
+      "decision": "deny",
+      "allowed": false,
+      "reasons": [
+        "ukendt beskyttelsespost — fail-closed"
+      ],
+      "obligations": []
+    }
+  },
+  {
+    "probe": "unknown_class",
+    "result": {
+      "decision": "deny",
+      "allowed": false,
+      "reasons": [
+        "ukendt beskyttelsespost — fail-closed"
+      ],
+      "obligations": []
+    }
+  },
+  {
+    "probe": "malformed_noai",
+    "result": {
+      "decision": "deny",
+      "allowed": false,
+      "reasons": [
+        "ukendt beskyttelsespost — fail-closed"
+      ],
+      "obligations": []
+    }
+  },
+  {
+    "probe": "unknown_target",
+    "result": {
+      "decision": "deny",
+      "allowed": false,
+      "reasons": [
+        "ukendt beskyttelsespost — fail-closed"
+      ],
+      "obligations": []
+    }
+  },
+  {
+    "probe": "caller_record_override_on_policy_bundle",
+    "result": {
+      "decision": "deny",
+      "allowed": false,
+      "reasons": [
+        "AI må ikke udføre 'delete' på den beskyttede post 'policy-bundle'"
+      ],
+      "obligations": []
+    }
+  },
+  {
+    "probe": "positive_tenant_ordinary",
+    "result": {
+      "decision": "allow",
+      "allowed": true,
+      "reasons": [],
+      "obligations": []
+    }
+  },
+  {
+    "probe": "positive_append_only_append_adapter",
+    "result": {
+      "decision": "allow",
+      "allowed": true,
+      "reasons": [],
+      "obligations": []
+    }
+  },
+  {
+    "probe": "append_only_update_adapter",
+    "result": {
+      "decision": "deny",
+      "allowed": false,
+      "reasons": [
+        "operationen 'update' er ikke tilladt for AI på klassen 'append-only' via 'app'-adapteren"
+      ],
+      "obligations": []
+    }
+  },
+  {
+    "probe": "runtime_unknown_class",
+    "status": "denied",
+    "executorCalls": 0
+  },
+  {
+    "probe": "runtime_foreign_tenant",
+    "status": "denied",
+    "executorCalls": 0
+  },
+  {
+    "probe": "runtime_substring_target",
+    "status": "denied",
+    "executorCalls": 0
+  },
+  {
+    "probe": "protected_logger",
+    "canaryPersisted": false,
+    "value": {
+      "decision": null,
+      "protectedDataRedacted": true
+    }
+  },
+  {
+    "probe": "ordinary_logger_positive",
+    "summaryPersisted": true
+  }
+]
