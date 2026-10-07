@@ -1,0 +1,111 @@
+{
+  "taskId": "S1-01",
+  "role": "independent verifier",
+  "requestedModel": "gpt-6-luna",
+  "agentIdentity": "Codex GPT-6 verifier agent; serving variant not exposed",
+  "verificationScope": "assembler delta and assigned Windows path-boundary cases only",
+  "sourceCommit": "a0bcbf4e44ac3ae03cb1477933f772597020df89",
+  "sourceTree": "5d38f4ec383226496ba7eb93fc37fa5e0f08ab1c",
+  "verdict": "PASS",
+  "summary": "The scoped assembler and Windows path-boundary verification passes on the exact source commit in a fresh Windows clone configured with core.autocrlf=true and core.eol=crlf. The prior source e15f449 failed the Windows provenance check; that failure is retained below as superseded by this source commit.",
+  "environment": {
+    "platform": "win32",
+    "node": "v22.22.3",
+    "freshCheckout": "C:\\Users\\Zhalakin\\Documents\\Codex\\2026-09-22\\vi-er-igang-med-et-projekt\\work\\DkCompany-luna-a0-verify",
+    "gitSystemCoreAutocrlf": true,
+    "checkoutCommand": "git -C <fresh-clone> -c core.autocrlf=true -c core.eol=crlf checkout --detach a0bcbf4e44ac3ae03cb1477933f772597020df89"
+  },
+  "commands": [
+    {
+      "command": "node --test tools/test/assemble-platform.test.mjs",
+      "workingDirectory": "fresh Windows clone at sourceCommit",
+      "exitCode": 0,
+      "result": "13 passed, 0 failed. Includes junction/source ancestry refusal, valid nested target, traversal, mode and canonical committed-tree cases.",
+      "log": "outputs/S1-01-luna-verification-2026-10-07/candidate/focused-tests.txt",
+      "logSha256": "1deb7e0e277aa6c6dada239df088102f73494dd71c9caa8f92c73fe7a11277a60"
+    },
+    {
+      "command": "node tools/assemble-platform.mjs --check --json",
+      "workingDirectory": "fresh Windows clone at sourceCommit",
+      "exitCode": 0,
+      "result": "Verified platform: 2,176 files, 66 overlays, tree digest f940d3000c27ce73c8971352b778d4e1dcccfeee0a82a4868b04fc8ff5fb7293.",
+      "log": "outputs/S1-01-luna-verification-2026-10-07/candidate/assemble-check.txt",
+      "logSha256": "c7cb0729e3ce44ba6134bfc9688b790dd32cfce627c953d9d4b69ee2c6d551a2"
+    },
+    {
+      "command": "node ../DkCompany-verify-S1-01/02-stabilization/evidence/S1-01/verifier-boundary-probes.mjs . ../DkCompany-luna-verify/outputs/S1-01-luna-verification-2026-10-07/candidate",
+      "workingDirectory": "fresh Windows clone at sourceCommit",
+      "exitCode": 0,
+      "result": "Three target probes refused as expected: literal traversal, missing target beneath outside-workspace junction, and missing target beneath 00-core junction. No outside target or historical input was created. The legacy probe's output embeds sourceCommit 19407f6d6d741f69e049d27729a8f987b47aff71; the executable tool came from the fresh clone at sourceCommit above.",
+      "log": "outputs/S1-01-luna-verification-2026-10-07/candidate/boundary-probes.json",
+      "logSha256": "dc863759bee29384410e590b16c6943536f14754ac4c14ff66e48ddeafd0d2410"
+    },
+    {
+      "command": "git diff --quiet e15f44916cbcf6b2867cba0eba214d2538f27741 a0bcbf4e44ac3ae03cb1477933f772597020df89 -- 00-core 01-step1 platform",
+      "workingDirectory": "fresh Windows clone",
+      "exitCode": 0,
+      "result": "No historical or platform Git blobs changed between the superseded and verified source commits."
+    }
+  ],
+  "findings": [
+    {
+      "id": "V1",
+      "status": "PASS",
+      "detail": "Literal traversal is refused. Missing target paths beneath outside-workspace and preserved-input junctions are refused before writes. The focused junction test also verifies a source alias is refused and an ordinary nested target succeeds."
+    },
+    {
+      "id": "V2",
+      "status": "PASS",
+      "detail": "Windows-safe assembler tests pass, including junction-based symlink fixtures, the portable replacement for the /etc/passwd assumption, and Git-index executable-mode behavior."
+    },
+    {
+      "id": "PROVENANCE-WINDOWS-EOL",
+      "status": "PASS",
+      "detail": "The added .gitattributes rules use -text on 00-core/**, 01-step1/**, platform/**, tools/assemble-platform.mjs and tools/overlay-stack.json. In the fresh clone with core.autocrlf=true, tested representative worktree files are raw-byte equal to their Git blobs: assembler SHA 06cf4567…, stack SHA 12709faa…, 00-core README SHA dd872f94…, and platform provenance SHA 448b2b67…. No application or historical source blob was modified by the fix."
+    }
+  ],
+  "supersededFailure": {
+    "sourceCommit": "e15f44916cbcf6b2867cba0eba214d2538f27741",
+    "status": "FAIL_SUPERSEDED_BY_SOURCE_COMMIT",
+    "commands": [
+      {
+        "command": "node --test tools/test/assemble-platform.test.mjs",
+        "exitCode": 1,
+        "result": "12 passed, 1 failed: canonical stack and committed platform check reported PROVENANCE.json mismatch.",
+        "log": "outputs/S1-01-luna-verification-2026-10-07/focused-tests.txt",
+        "logSha256": "97ac9a10641669b54fc2dd307d4de97b1511f4f1a0d1085dd057c6cb1706f56b"
+      },
+      {
+        "command": "node tools/assemble-platform.mjs --check --json",
+        "exitCode": 1,
+        "result": "MISMATCH: PROVENANCE.json does not match deterministic provenance for this stack.",
+        "log": "outputs/S1-01-luna-verification-2026-10-07/assemble-check.txt",
+        "logSha256": "ae4c2f55940afd5f125cce452fc957af191392933f8784e8188bec01435fc65"
+      }
+    ],
+    "rootCause": "The Windows worktree had core.autocrlf=true and no .gitattributes. For example, the assembler source was 31,651 bytes/817 CRLF line endings versus the Git blob's 30,834 bytes/817 LF line endings; stack and input files were also changed at checkout. Since the assembler hashes raw bytes, committed and recomputed tool, stack, base and tree digests differed. The verified a0 commit adds explicit -text attributes and passes from a fresh checkout under the same Windows Git settings.",
+    "expectedDigests": {
+      "tool": "06cf456775a7bc47308779c43018d85172a67b74f8e3faecfa28bf264d5fb245",
+      "stack": "12709faaa0b8a2965d186e999b62ffdb5656219c9c57fc0653eb2c3898abd49c",
+      "base": "d31320d9e28511bcf58aeec5cfde06f1fcd472731419a057549b11a85ad4f69c",
+      "tree": "f940d3000c27ce73c8971352b778d4e1dcccfeee0a82a4868b04fc8ff5fb7293"
+    },
+    "windowsRecomputedDigests": {
+      "tool": "1f675606c1ece86046475a30d77b43e66539c9c9701fff609ebec3e92f1627a4",
+      "stack": "b8bbf869c8682e41365cf0cebd28d96fa00d17a4613afa311bb1c3e1b460d0b",
+      "base": "b0f4086ec9a70b8bb3675ab94e9ebee4be94a997ece201d519179319a7cdbb52",
+      "tree": "057330bc586e94dc38b6e7d0c786f63d8d926cd9d054f2c50bdfb319e61254cd"
+    }
+  },
+  "acceptance": {
+    "linux_clean_checkout_reproducibility": "NOT_RUN",
+    "github_ci": "NOT_RUN",
+    "live_integration": "NOT_RUN",
+    "human_acceptance": "PENDING"
+  },
+  "limitations": [
+    "No Docker executable or installed WSL distribution was available; Linux acceptance was not run.",
+    "Broad unchanged application suites and historical baseline were not rerun; this report covers the assembler delta and assigned boundary cases.",
+    "No approval, merge or deployment was performed."
+  ]
+}
