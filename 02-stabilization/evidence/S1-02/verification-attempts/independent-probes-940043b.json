@@ -1,0 +1,198 @@
+[
+  {
+    "probe": "classified_unknown_class",
+    "status": "completed",
+    "executorCalls": 1,
+    "audit": [
+      {
+        "at": "2026-10-07T10:55:44.987Z",
+        "principal": {
+          "kind": "agent",
+          "id": "spiffe://platform.example.org/agents/dummy-ok-upgrader"
+        },
+        "tenantId": "acme",
+        "type": "agent.task.started",
+        "verb": null,
+        "payload": {}
+      },
+      {
+        "at": "2026-10-07T10:55:44.996Z",
+        "principal": {
+          "kind": "agent",
+          "id": "spiffe://platform.example.org/agents/dummy-ok-upgrader"
+        },
+        "tenantId": "acme",
+        "type": "agent.action.completed",
+        "verb": "observe.read",
+        "payload": {
+          "summary": null
+        }
+      },
+      {
+        "at": "2026-10-07T10:55:44.996Z",
+        "principal": {
+          "kind": "agent",
+          "id": "spiffe://platform.example.org/agents/dummy-ok-upgrader"
+        },
+        "tenantId": "acme",
+        "type": "agent.task.completed",
+        "verb": null,
+        "payload": {
+          "actionsRun": 1
+        }
+      }
+    ],
+    "observer": [
+      {
+        "phase": "task.started",
+        "taskId": "248291ad-8e4f-453f-be0e-38cbf695dafe",
+        "agentRef": "dummy-ok-upgrader",
+        "tenantId": "acme",
+        "correlation": {
+          "correlationId": "23717d2c-c2c1-4d7f-8021-2767617771a2",
+          "executionId": "4656433a-b79d-4c42-ad9b-f9f077964a54"
+        }
+      },
+      {
+        "phase": "action.decision",
+        "decision": "allow",
+        "verb": "observe.read",
+        "target": null,
+        "policyDigest": null,
+        "approvalDigest": null,
+        "runbookDigest": null,
+        "taskId": "248291ad-8e4f-453f-be0e-38cbf695dafe",
+        "agentRef": "dummy-ok-upgrader",
+        "tenantId": "acme",
+        "correlation": {
+          "correlationId": "23717d2c-c2c1-4d7f-8021-2767617771a2",
+          "executionId": "4656433a-b79d-4c42-ad9b-f9f077964a54"
+        }
+      },
+      {
+        "phase": "action.completed",
+        "verb": "observe.read",
+        "target": null,
+        "summary": null,
+        "tokens": 0,
+        "costEur": 0,
+        "taskId": "248291ad-8e4f-453f-be0e-38cbf695dafe",
+        "agentRef": "dummy-ok-upgrader",
+        "tenantId": "acme",
+        "correlation": {
+          "correlationId": "23717d2c-c2c1-4d7f-8021-2767617771a2",
+          "executionId": "4656433a-b79d-4c42-ad9b-f9f077964a54"
+        }
+      },
+      {
+        "phase": "task.completed",
+        "actionsRun": 1,
+        "taskId": "248291ad-8e4f-453f-be0e-38cbf695dafe",
+        "agentRef": "dummy-ok-upgrader",
+        "tenantId": "acme",
+        "correlation": {
+          "correlationId": "23717d2c-c2c1-4d7f-8021-2767617771a2",
+          "executionId": "4656433a-b79d-4c42-ad9b-f9f077964a54"
+        }
+      }
+    ]
+  },
+  {
+    "probe": "classifier_returns_foreign_tenant_record",
+    "status": "completed",
+    "executorCalls": 1,
+    "audit": [
+      {
+        "at": "2026-10-07T10:55:44.996Z",
+        "principal": {
+          "kind": "agent",
+          "id": "spiffe://platform.example.org/agents/dummy-ok-upgrader"
+        },
+        "tenantId": "contoso",
+        "type": "agent.task.started",
+        "verb": null,
+        "payload": {}
+      },
+      {
+        "at": "2026-10-07T10:55:44.996Z",
+        "principal": {
+          "kind": "agent",
+          "id": "spiffe://platform.example.org/agents/dummy-ok-upgrader"
+        },
+        "tenantId": "contoso",
+        "type": "agent.action.completed",
+        "verb": "observe.read",
+        "payload": {
+          "summary": "ordinary data"
+        }
+      },
+      {
+        "at": "2026-10-07T10:55:44.996Z",
+        "principal": {
+          "kind": "agent",
+          "id": "spiffe://platform.example.org/agents/dummy-ok-upgrader"
+        },
+        "tenantId": "contoso",
+        "type": "agent.task.completed",
+        "verb": null,
+        "payload": {
+          "actionsRun": 1
+        }
+      }
+    ],
+    "observer": [
+      {
+        "phase": "task.started",
+        "taskId": "9d24cb15-0416-4174-9cb6-b809450b53ec",
+        "agentRef": "dummy-ok-upgrader",
+        "tenantId": "contoso",
+        "correlation": {
+          "correlationId": "b7463d7a-c3e8-4b41-9156-ca36d414a905",
+          "executionId": "f7d1a59b-7afb-4aa5-a071-14ef13424e55"
+        }
+      },
+      {
+        "phase": "action.decision",
+        "decision": "allow",
+        "verb": "observe.read",
+        "target": "dummy-ok",
+        "policyDigest": null,
+        "approvalDigest": null,
+        "runbookDigest": null,
+        "taskId": "9d24cb15-0416-4174-9cb6-b809450b53ec",
+        "agentRef": "dummy-ok-upgrader",
+        "tenantId": "contoso",
+        "correlation": {
+          "correlationId": "b7463d7a-c3e8-4b41-9156-ca36d414a905",
+          "executionId": "f7d1a59b-7afb-4aa5-a071-14ef13424e55"
+        }
+      },
+      {
+        "phase": "action.completed",
+        "verb": "observe.read",
+        "target": "dummy-ok",
+        "summary": "ordinary data",
+        "tokens": 0,
+        "costEur": 0,
+        "taskId": "9d24cb15-0416-4174-9cb6-b809450b53ec",
+        "agentRef": "dummy-ok-upgrader",
+        "tenantId": "contoso",
+        "correlation": {
+          "correlationId": "b7463d7a-c3e8-4b41-9156-ca36d414a905",
+          "executionId": "f7d1a59b-7afb-4aa5-a071-14ef13424e55"
+        }
+      },
+      {
+        "phase": "task.completed",
+        "actionsRun": 1,
+        "taskId": "9d24cb15-0416-4174-9cb6-b809450b53ec",
+        "agentRef": "dummy-ok-upgrader",
+        "tenantId": "contoso",
+        "correlation": {
+          "correlationId": "b7463d7a-c3e8-4b41-9156-ca36d414a905",
+          "executionId": "f7d1a59b-7afb-4aa5-a071-14ef13424e55"
+        }
+      }
+    ]
+  }
+]

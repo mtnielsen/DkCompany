@@ -1,0 +1,154 @@
+{
+  "taskId": "S1-02",
+  "agentIdentity": "GPT-6 Luna independent verifier (/root/s102_luna_verifier)",
+  "role": "independent verifier",
+  "sourceCommit": "940043baf11c915338d513b92e1031823fcd2459",
+  "sourceTree": "3668a3763de4f56f35c6da47382e1d15971fd092",
+  "implementationAgentIdentity": "separate implementation agent; identity/signature not independently verified",
+  "independentSession": "Fresh detached checkout in DkCompany-Test WSL2 Ubuntu 24.04, user dkcverify (uid 1000), Linux x64, Node v22.22.3, npm 10.9.8; no app changes made.",
+  "verdict": "FAIL",
+  "summary": "The exact candidate passes install, validation and full tests, and the paired R1 probe denies both cases with zero executor calls. Independent probes found fail-open handling of malformed/foreign-tenant classifier results, a protected-data registry evaluate override, and a direct logging observer path that persists protected payload text.",
+  "commands": [
+    {
+      "command": "GIT_TERMINAL_PROMPT=0 git clone --no-hardlinks --no-checkout https://github.com/mtnielsen/DkCompany.git /home/dkcverify/work/S1-02-verify && git -C /home/dkcverify/work/S1-02-verify checkout --detach 940043baf11c915338d513b92e1031823fcd2459 && git -C /home/dkcverify/work/S1-02-verify rev-parse HEAD && git -C /home/dkcverify/work/S1-02-verify status --porcelain",
+      "exitCode": 0,
+      "result": "Detached at exact sourceCommit; working tree clean before validation."
+    },
+    {
+      "command": "make install",
+      "exitCode": 0,
+      "log": "install.log",
+      "logSha256": "64c9680d8b842dcd5540e8714f1bb2cedbff3197212898d05429388f0b658539"
+    },
+    {
+      "command": "make validate",
+      "exitCode": 0,
+      "log": "validate.log",
+      "logSha256": "6abaaf3bd55d696632887363c81b56e50ebafd34ffc2941fad67635fde271880"
+    },
+    {
+      "command": "make test",
+      "exitCode": 0,
+      "result": "528 passed, 0 failed.",
+      "log": "test.log",
+      "logSha256": "a3ab07f47d77c25c86f2e597b54cbf3029879accc45bce10ffd0825a0ad2c8f3"
+    },
+    {
+      "command": "node 02-stabilization/reference/security-probes.mjs platform /home/dkcverify/logs/S1-02-Luna-Linux-2026-10-07/security-probes.json",
+      "exitCode": 0,
+      "result": "R1 baseline and override denied; each made 0 executor calls. R2/R4 findings remain as expected for later tasks. The R3-shaped probe was denied earlier by S1-02 unknown-target classification.",
+      "log": "security-probes.stdout.json",
+      "logSha256": "5609bf98e4e14bb094ad19d4588c82c9661cf209b8cc4c2bd8a89509dc8f6c19",
+      "reportSha256": "4f890e4b64f7a39a503d8677ca1818a868a7f6254f6609212bee7ef777cf13c2"
+    },
+    {
+      "command": "node /tmp/s1-02-independent.mjs",
+      "exitCode": 0,
+      "result": "Two probes both completed with executorCalls=1: `classified` unknown class and a classified record whose tenantId was acme for a contoso task.",
+      "log": "independent-probes.json",
+      "logSha256": "28999261fbf9a88291e19c06539d9623b3b1b308932d863a5c5fc32cac658429"
+    },
+    {
+      "command": "node /tmp/s1-02-adapter-probes.mjs",
+      "exitCode": 0,
+      "result": "Direct logging observer persisted S1_02_SECRET_CANARY; registry evaluate allowed delete on actual protected target policy-bundle when caller supplied an ordinary record.",
+      "log": "adapter-probes.json",
+      "logSha256": "7cea809bf2aae5ef51d0329116ca0ac366762fa90ca2b30c839e29570e4d3227"
+    },
+    {
+      "command": "grep -R \"guardAdapterCall\\|protectedData.classify\\|\\.classify({\" -n platform --exclude-dir=node_modules",
+      "exitCode": 0,
+      "result": "Protected-data adapter guard has no production callers beyond registry helper; direct logging observer was separately exercised."
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "id": "R1 paired denial, zero executor calls",
+      "status": "PASS",
+      "detail": "Reference paired probe denied both baseline and caller override with zero stub executions."
+    },
+    {
+      "id": "Trusted operation; unknown/failed classification fails closed",
+      "status": "FAIL",
+      "detail": "action.operation override is ignored by runtime tool resolution, and missing/unavailable lookup denies; however a classifier response marked classified with an unknown dataClass is allowed, and a foreign-tenant record returned as classified is allowed."
+    },
+    {
+      "id": "Tenant scope, mandatory audit, no forbidden payload logging, ordinary positive flow",
+      "status": "FAIL",
+      "detail": "Valid ordinary read completed and denied cases emitted audit. Runtime trusted registry tenant matching works in registry tests, but runtime accepts mismatched classifier record tenant. Direct logging observer persisted arbitrary summary text without protection classification."
+    },
+    {
+      "id": "Policy matrix and relevant adapter boundaries",
+      "status": "FAIL",
+      "detail": "Core guard matrix tests pass, but public createProtectedDataGuard.evaluate permits caller record to override target registry record; runtime logger observer has no classifier boundary."
+    },
+    {
+      "id": "Retrieval and restore runtime operations",
+      "status": "PASS",
+      "detail": "Static inspection: subject.locate maps to retrieve and restore maps to restore via server operationForVerb; both flow through the runtime protection guard. No separate retrieval adapter found."
+    },
+    {
+      "id": "GitHub CI",
+      "status": "NOT_RUN",
+      "detail": "No GitHub-hosted CI run was initiated."
+    },
+    {
+      "id": "Live integrations / human acceptance",
+      "status": "NOT_RUN",
+      "detail": "Only local Linux fixtures, stubs, and synthetic canaries were used; no live integration or human acceptance exercised."
+    }
+  ],
+  "findings": [
+    {
+      "id": "S1-02-F1",
+      "severity": "high",
+      "path": "platform/runtime/src/runtime.mjs",
+      "detail": "Classification block trusts status=classified without validating the returned dataClass or noAiAccess shape. An unknown dataClass plus noAiAccess:false passes evaluateProtectedData as ordinary and runs the observe.read executor once."
+    },
+    {
+      "id": "S1-02-F2",
+      "severity": "high",
+      "path": "platform/runtime/src/runtime.mjs",
+      "detail": "Classification block does not bind returned record.tenantId to classificationTenant. The probe returned an acme ordinary record for a contoso task; the runtime completed and called the executor once."
+    },
+    {
+      "id": "S1-02-F3",
+      "severity": "high",
+      "path": "platform/data-protection/src/registry.mjs",
+      "detail": "createProtectedDataGuard().evaluate prefers caller-supplied record over registry resolution. A caller can pass an ordinary record while target is policy-bundle (registry says retention-locked), making an agent delete decision allow."
+    },
+    {
+      "id": "S1-02-F4",
+      "severity": "high",
+      "path": "platform/logging/src/hooks.mjs",
+      "detail": "createRuntimeLogObserver accepts an event without classifying it and appendSystem copies summary/objective/target into observation.value. Direct call with S1_02_SECRET_CANARY then ledger.read returned the canary verbatim."
+    }
+  ],
+  "artifactReferences": [
+    {
+      "path": "/home/dkcverify/logs/S1-02-Luna-Linux-2026-10-07/install.log",
+      "sha256": "64c9680d8b842dcd5540e8714f1bb2cedbff3197212898d05429388f0b658539"
+    },
+    {
+      "path": "/home/dkcverify/logs/S1-02-Luna-Linux-2026-10-07/validate.log",
+      "sha256": "6abaaf3bd55d696632887363c81b56e50ebafd34ffc2941fad67635fde271880"
+    },
+    {
+      "path": "/home/dkcverify/logs/S1-02-Luna-Linux-2026-10-07/test.log",
+      "sha256": "a3ab07f47d77c25c86f2e597b54cbf3029879accc45bce10ffd0825a0ad2c8f3"
+    },
+    {
+      "path": "/home/dkcverify/logs/S1-02-Luna-Linux-2026-10-07/security-probes.stdout.json",
+      "sha256": "5609bf98e4e14bb094ad19d4588c82c9661cf209b8cc4c2bd8a89509dc8f6c19"
+    },
+    {
+      "path": "/home/dkcverify/logs/S1-02-Luna-Linux-2026-10-07/independent-probes.json",
+      "sha256": "28999261fbf9a88291e19c06539d9623b3b1b308932d863a5c5fc32cac658429"
+    },
+    {
+      "path": "/home/dkcverify/logs/S1-02-Luna-Linux-2026-10-07/adapter-probes.json",
+      "sha256": "7cea809bf2aae5ef51d0329116ca0ac366762fa90ca2b30c839e29570e4d3227"
+    }
+  ],
+  "humanAcceptance": "PENDING"
+}
