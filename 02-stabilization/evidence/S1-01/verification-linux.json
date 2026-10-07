@@ -1,0 +1,141 @@
+{
+  "taskId": "S1-01",
+  "role": "independent verifier",
+  "requestedModel": "gpt-6-luna",
+  "sourceCommit": "a0bcbf4e44ac3ae03cb1477933f772597020df89",
+  "sourceTree": "5d38f4ec383226496ba7eb93fc37fa5e0f08ab1c",
+  "verdict": "PASS",
+  "verificationScope": "S1-01 canonical platform migration, deterministic assembly, assigned path-boundary checks, and required focused suites",
+  "summary": "The exact source commit passed fresh Linux assembly, provenance, input-preservation, focused test, schema, lint, and path-boundary checks. The existing review probes also reproduced the documented R1-R4 application findings; those remain open for their later security tasks and are not counted as failures of the S1-01 migration acceptance.",
+  "environment": {
+    "distro": "Ubuntu 24.04.5 LTS under WSL2",
+    "kernel": "6.18.40.1-microsoft-standard-WSL2",
+    "user": "dkcverify (uid 1000)",
+    "platform": "linux-x64",
+    "node": "v22.22.3",
+    "npm": "10.9.8",
+    "git": "2.43.0",
+    "freshCheckout": "/home/dkcverify/work/DkCompany-a0",
+    "logs": "/home/dkcverify/logs/S1-01-Luna-Linux-2026-10-07",
+    "checkout": {
+      "command": "GIT_TERMINAL_PROMPT=0 git clone --no-hardlinks --no-checkout https://github.com/mtnielsen/DkCompany.git /home/dkcverify/work/DkCompany-a0 && git -C /home/dkcverify/work/DkCompany-a0 checkout --detach a0bcbf4e44ac3ae03cb1477933f772597020df89",
+      "exitCode": 0,
+      "head": "a0bcbf4e44ac3ae03cb1477933f772597020df89",
+      "initialWorkingTreeClean": true,
+      "coreAutocrlf": "unset"
+    }
+  },
+  "assembly": {
+    "status": "PASS",
+    "platformTreeDigest": "f940d3000c27ce73c8971352b778d4e1dcccfeee0a82a4868b04fc8ff5fb7293",
+    "manifestFilesExcludingProvenance": 2176,
+    "provenanceEntries": 2176,
+    "overlays": 66,
+    "firstOverlay": "dkc-001",
+    "lastOverlay": "dkc-036",
+    "filesOnDiskIncludingProvenance": 2177,
+    "canonicalModes": {
+      "100644": 2176
+    },
+    "comparison": "Committed platform/, materialization A and materialization B have identical file bytes and POSIX modes, including identical PROVENANCE.json.",
+    "historicalInputs": "git diff --exit-code HEAD -- 00-core 01-step1 and git status --porcelain -- 00-core 01-step1 were empty before and after the checks."
+  },
+  "commands": [
+    {
+      "command": "node tools/assemble-platform.mjs --check --json",
+      "exitCode": 0,
+      "result": "2,176 manifest files, 66 overlays, expected tree digest.",
+      "log": "assemble-check.json",
+      "logSha256": "24c1c1bfb8106b03f67eb777c0607bb98ddb1c2a690d16cc3b5fcff2b582d7df"
+    },
+    {
+      "command": "node tools/assemble-platform.mjs --target verify-luna-a --json",
+      "exitCode": 0,
+      "log": "assemble-a.json",
+      "logSha256": "9733061d5017be4a5f80180f70fa15b1c04a0b0fc2fcff7f8efb374226ec113b"
+    },
+    {
+      "command": "node tools/assemble-platform.mjs --target verify-luna-b --json",
+      "exitCode": 0,
+      "log": "assemble-b.json",
+      "logSha256": "b3b1e8e1a562278b4ae46b62396430cbb3b2d26c43d752bb2e847244dd0798d0"
+    },
+    {
+      "command": "diff -qr platform verify-luna-a; diff -qr platform verify-luna-b; diff -qr verify-luna-a verify-luna-b; compare per-file SHA256 and modes with the Python tree checker",
+      "exitCode": 0,
+      "result": "All three trees are byte-and-mode identical, with 2,177 files on disk.",
+      "log": "tree-comparison.json",
+      "logSha256": "0c0a98f8393dd9a2f37c7deef2ed675b21cf5deb827f70ad0eaf8a3e53256cad"
+    },
+    {
+      "command": "make install",
+      "exitCode": 0,
+      "result": "npm ci installed 6 locked conformance dependencies.",
+      "log": "npm-install.txt",
+      "logSha256": "fcb0039e0de78a8ed9a03cd027d53e1b0e5dfcec2989b50325b02df229614c72"
+    },
+    {
+      "command": "make validate",
+      "exitCode": 0,
+      "result": "Assembler check, schema validation and lint passed; lint examined 843 JSON files and 2,177 files.",
+      "log": "root-validate.txt",
+      "logSha256": "bf993da523991cdda96fb9058b121458efadf4fb175bd6b76ea7aceb19052130"
+    },
+    {
+      "command": "make test",
+      "exitCode": 0,
+      "result": "811 passed, 0 failed: assembler 13, runtime 114, approvals 30, identity 52, data-protection 41, agent-registry 33, conformance 528.",
+      "log": "root-tests.txt",
+      "logSha256": "9ccf0e71bf40f1ee37ea41ac50807bf9eebc764e9a1976459da90925cb8d9f94"
+    },
+    {
+      "command": "node 02-stabilization/reference/security-probes.mjs platform /home/dkcverify/logs/S1-01-Luna-Linux-2026-10-07/known-security-probes.json",
+      "exitCode": 0,
+      "result": "R1-R4 reproduced with positive controls; details below.",
+      "log": "known-security-probes.json",
+      "logSha256": "86607271621ccba2d1b645585751769f0e4a84c41791047d4a9367da6d7e5a92"
+    },
+    {
+      "command": "node /mnt/c/Users/Zhalakin/Documents/Codex/2026-09-22/vi-er-igang-med-et-projekt/work/DkCompany-linux-verify/outputs/linux-boundary-probes.mjs tools/assemble-platform.mjs /home/dkcverify/logs/S1-01-Luna-Linux-2026-10-07/linux-boundary-probes.json",
+      "exitCode": 0,
+      "result": "Outside target symlink, source symlink, and overlay symlink refused with no writes; nonempty target preserved; valid nested target assembled correctly.",
+      "log": "linux-boundary-probes.json",
+      "logSha256": "8e392f1048f250d89fc9f8107092f2fa6aa6892e381ef17be1817c0e5ed59f44",
+      "script": "02-stabilization/evidence/S1-01/linux-boundary-probes.mjs",
+      "scriptSha256": "36ef8f816c9012a2d6ba691bf3a46d9bf8c362127375919f8c3e151066ea96e5"
+    },
+    {
+      "command": "node tools/assemble-platform.mjs --check --json (post-suite final check)",
+      "exitCode": 0,
+      "result": "Expected digest remains f940d3000c27ce73c8971352b778d4e1dcccfeee0a82a4868b04fc8ff5fb7293.",
+      "log": "final-assemble-check.json",
+      "logSha256": "24c1c1bfb8106b03f67eb777c0607bb98ddb1c2a690d16cc3b5fcff2b582d7df"
+    }
+  ],
+  "knownApplicationFindings": {
+    "status": "REPRODUCED_OPEN_FOR_FUTURE_SECURITY_TASKS",
+    "scopeNote": "These expected pre-fix findings are not treated as failures of S1-01's canonical-tree migration. They remain unaccepted security behavior pending S1-02 through S1-05.",
+    "R1": "Caller override of no-AI-access completed the task and ran the stub once; server-side no-AI-access positive control was denied with zero stub executions.",
+    "R2": "Cross-tenant revocation returned HTTP 200 and state revoked for an acme request by tenant-b; cross-tenant GET positive control returned 403.",
+    "R3": "Runtime completed an action with one stub execution when the PDP required three approvals and only two approvers were present.",
+    "R4": "Anonymous global approval listing returned HTTP 200 and exposed the fixture request."
+  },
+  "acceptance": {
+    "clean_linux_deterministic_assembly": "PASS",
+    "66_overlay_provenance_and_file_accounting": "PASS",
+    "historical_input_preservation": "PASS",
+    "path_and_nonempty_target_refusals": "PASS",
+    "known_review_probes_expose_findings": "PASS",
+    "github_ci": "NOT_RUN",
+    "live_integration": "NOT_RUN",
+    "human_acceptance": "PENDING"
+  },
+  "supersedes": {
+    "report": "verification-luna.json",
+    "supersededItem": "Linux clean-checkout reproducibility was previously NOT_RUN because no Linux environment was available at that verification time."
+  },
+  "limitations": [
+    "GitHub-hosted CI was not run; these results are from a fresh local Ubuntu WSL2 checkout.",
+    "The local R1-R4 probes use stub executors and loopback HTTP only; they are not a penetration test or live integration."
+  ]
+}
