@@ -3,8 +3,8 @@
   "agentIdentity": "/root/s102_luna_implementer",
   "role": "implementer",
   "status": "awaiting-verification",
-  "sourceCommit": "28d3749dde800b2e9474ceda65f815445a374eff",
-  "sourceTreeDigest": "5ce8c7a4e365e13beed78dbc685b3e9eb58f92cf",
+  "sourceCommit": "c34bf3f461881cb0e571cf061e2e88a2c3acce19",
+  "sourceTreeDigest": "762a51dc7b64dd2ce87a8afc054ad91a41d423af",
   "artifactDigests": [],
   "commands": [
     {
@@ -66,6 +66,24 @@
       "environment": "Ubuntu 24.04 WSL2, non-root dkcverify; Node v22.22.3, npm 10.9.8; fresh checkout at exact source commit 28d3749dde800b2e9474ceda65f815445a374eff",
       "exitCode": 0,
       "result": "All commands passed on the exact committed source. Historical assembly verified 2176 files and 66 overlays in a temporary tree; validate passed; full test suite passed including Linux conformance 528/528. 00-core/ and 01-step1/ had no changes."
+    },
+    {
+      "command": "node --test test/protected-data-runtime.test.mjs",
+      "environment": "Windows PowerShell; Node v22.22.3; platform/runtime working directory; source content immediately before commit c34bf3f461881cb0e571cf061e2e88a2c3acce19",
+      "exitCode": 0,
+      "result": "9/9 focused runtime protected-data tests passed, including exact target-segment fail-closed matching."
+    },
+    {
+      "command": "node --test test/hooks.test.mjs",
+      "environment": "Windows PowerShell; Node v22.22.3; platform/logging working directory; source content immediately before commit c34bf3f461881cb0e571cf061e2e88a2c3acce19",
+      "exitCode": 0,
+      "result": "4/4 focused logging-hook tests passed, including real ledger redaction for unknown/protected resources and ordinary positive logging."
+    },
+    {
+      "command": "make install; make historical-assemble-check; make validate; make test",
+      "environment": "Ubuntu 24.04 WSL2, non-root dkcverify; Node v22.22.3, npm 10.9.8; fresh checkout at exact source commit c34bf3f461881cb0e571cf061e2e88a2c3acce19",
+      "exitCode": 0,
+      "result": "All commands passed on exact latest source. Historical assembly verified 2176 files and 66 overlays in a temporary tree; validate passed; full test suite passed including Linux conformance 528/528. 00-core/ and 01-step1/ had no changes."
     }
   ],
   "changes": [
@@ -73,13 +91,15 @@
     "Applied protected-data controls to runtime actions and adapter guards, made no-AI-access invariant, preserved tenant-scoped classifications, and scrubbed protected targets, parameters, summaries, results and raw executor errors from audit, observer, journal and durable job data.",
     "Added runtime and adapter regressions for R1, spoofed operations, unknown/service-failure/cross-tenant classification, protected reads and restore boundaries, plus an explicit ordinary-data success fixture.",
     "Separated maintained platform source validation from historical reproducibility: validate no longer compares or overwrites platform/; historical-assemble-check assembles and verifies in a disposable temporary tree. Preserved platform/PROVENANCE.json and historical 00-core/ and 01-step1/. Updated root lifecycle documentation.",
-    "Follow-up to independent review of superseded 940043b: validate classifier-returned record class, noAiAccess, tenant and target binding even when a wrapper reports classified; public guard.evaluate resolves only server registry records and ignores caller record overrides; runtime log observer now classifies targets and redacts payloads unless an explicitly matching ordinary server record permits logging. Added a logger-ledger canary regression matching the verifier probe."
+    "Follow-up to independent review of superseded 940043b: validate classifier-returned record class, noAiAccess, tenant and target binding even when a wrapper reports classified; public guard.evaluate resolves only server registry records and ignores caller record overrides; runtime log observer now classifies targets and redacts payloads unless an explicitly matching ordinary server record permits logging. Added a logger-ledger canary regression matching the verifier probe.",
+    "The follow-up exact-target commit c34bf3f requires target ID to match exactly or as a complete path segment, avoiding substring-based binding to unrelated resources."
   ],
   "limitations": [
     "Independent verification and human acceptance are pending. This commit is not merged or deployed.",
     "GitHub CI is NOT RUN. Windows conformance had 527/528 pass; the remaining failure is the known Windows path-containment issue in the out-of-scope S2-01 area. Linux conformance passed 528/528.",
     "R2-R4 findings remain assigned to later tasks and are not claimed fixed by S1-02.",
-    "Source 940043b failed independent verification on malformed-class, tenant-binding, logger-redaction and caller-record-override probes. These repairs are in 28d3749; independent verification of this replacement source is pending."
+    "Source 940043b failed independent verification on malformed-class, tenant-binding, logger-redaction and caller-record-override probes. These repairs are in 28d3749; independent verification of this replacement source is pending.",
+    "Independent verifier PASS is recorded for 28d3749. The final small exact-segment binding commit c34bf3f has full Linux validate/test and focused Windows tests; independent retest is pending."
   ],
   "blockedOn": [],
   "nextAction": "independent-verification",
@@ -87,5 +107,5 @@
   "humanAcceptance": null,
   "requestedModel": "gpt-6-luna",
   "gitAuthor": "Allan <allan.schwedler@gmail.com>",
-  "supersedesSourceCommit": "940043baf11c915338d513b92e1031823fcd2459"
+  "supersedesSourceCommit": "28d3749dde800b2e9474ceda65f815445a374eff"
 }
