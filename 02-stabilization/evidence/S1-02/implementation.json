@@ -1,0 +1,68 @@
+{
+  "taskId": "S1-02",
+  "agentIdentity": "Allan <allan.schwedler@gmail.com>",
+  "role": "implementer",
+  "status": "awaiting-verification",
+  "sourceCommit": "940043baf11c915338d513b92e1031823fcd2459",
+  "sourceTreeDigest": "3668a3763de4f56f35c6da47382e1d15971fd092",
+  "artifactDigests": [],
+  "commands": [
+    {
+      "command": "node 02-stabilization/reference/security-probes.mjs platform .\\work-r1-before.json",
+      "environment": "Windows PowerShell; Node v22.22.3; before implementation",
+      "exitCode": 0,
+      "result": "R1 reproduced: control_server_no_ai_access and caller_overrides_no_ai_access both completed; each called its executor once."
+    },
+    {
+      "command": "node 02-stabilization/reference/security-probes.mjs platform .\\work-r1-after-final.json",
+      "environment": "Windows PowerShell; Node v22.22.3; after source implementation",
+      "exitCode": 0,
+      "result": "R1 fixed: control_server_no_ai_access and caller_overrides_no_ai_access both denied with zero stub executions."
+    },
+    {
+      "command": "node --test platform/runtime/test",
+      "environment": "Windows; Node v22.22.3",
+      "exitCode": 0,
+      "result": "120/120 passed."
+    },
+    {
+      "command": "node --test platform/data-protection/test",
+      "environment": "Windows; Node v22.22.3",
+      "exitCode": 0,
+      "result": "43/43 passed."
+    },
+    {
+      "command": "node --test tools/test/assemble-platform.test.mjs",
+      "environment": "Windows; Node v22.22.3",
+      "exitCode": 0,
+      "result": "13/13 passed."
+    },
+    {
+      "command": "node --test platform/runtime/test/protected-data-runtime.test.mjs platform/data-protection/test/guard.test.mjs platform/data-protection/test/register.test.mjs tools/test/assemble-platform.test.mjs",
+      "environment": "Windows; Node v22.22.3; after line-ending cleanup",
+      "exitCode": 0,
+      "result": "39/39 passed."
+    },
+    {
+      "command": "make install && make historical-assemble-check && make validate && make test",
+      "environment": "Ubuntu 24.04 in WSL2, non-root dkcverify; Node v22.22.3, npm 10.9.8; fresh Linux checkout of the source patch",
+      "exitCode": 0,
+      "result": "All commands passed. Historical assembly verified 2176 files and 66 overlays in a temporary tree; validate passed; full test suite passed including conformance 528/528. 00-core/ and 01-step1/ had no changes."
+    }
+  ],
+  "changes": [
+    "Reproduced R1, then made runtime classification come only from the server registry and operation semantics come from trusted tool resolution. Unknown, malformed, failed and cross-tenant classification denies before executor invocation; caller declarations can tighten but cannot lower registry policy.",
+    "Applied protected-data controls to runtime actions and adapter guards, made no-AI-access invariant, preserved tenant-scoped classifications, and scrubbed protected targets, parameters, summaries, results and raw executor errors from audit, observer, journal and durable job data.",
+    "Added runtime and adapter regressions for R1, spoofed operations, unknown/service-failure/cross-tenant classification, protected reads and restore boundaries, plus an explicit ordinary-data success fixture.",
+    "Separated maintained platform source validation from historical reproducibility: validate no longer compares or overwrites platform/; historical-assemble-check assembles and verifies in a disposable temporary tree. Preserved platform/PROVENANCE.json and historical 00-core/ and 01-step1/. Updated root lifecycle documentation."
+  ],
+  "limitations": [
+    "Independent verification and human acceptance are pending. This commit is not merged or deployed.",
+    "GitHub CI is NOT RUN. Windows conformance had 527/528 pass; the remaining failure is the known Windows path-containment issue in the out-of-scope S2-01 area. Linux conformance passed 528/528.",
+    "R2-R4 findings remain assigned to later tasks and are not claimed fixed by S1-02."
+  ],
+  "blockedOn": [],
+  "nextAction": "independent-verification",
+  "verifierVerdict": null,
+  "humanAcceptance": null
+}
