@@ -3,8 +3,8 @@
   "agentIdentity": "/root/s102_luna_implementer",
   "role": "implementer",
   "status": "awaiting-verification",
-  "sourceCommit": "940043baf11c915338d513b92e1031823fcd2459",
-  "sourceTreeDigest": "3668a3763de4f56f35c6da47382e1d15971fd092",
+  "sourceCommit": "28d3749dde800b2e9474ceda65f815445a374eff",
+  "sourceTreeDigest": "5ce8c7a4e365e13beed78dbc685b3e9eb58f92cf",
   "artifactDigests": [],
   "commands": [
     {
@@ -48,23 +48,44 @@
       "environment": "Ubuntu 24.04 in WSL2, non-root dkcverify; Node v22.22.3, npm 10.9.8; fresh Linux checkout with the pre-commit source patch (content patch tested before commit 940043baf11c915338d513b92e1031823fcd2459)",
       "exitCode": 0,
       "result": "Each command exited 0. Historical assembly verified 2176 files and 66 overlays in a temporary tree; validate passed; full test suite passed including conformance 528/528. This Linux run tested the implementation patch before its source commit, not the exact committed SHA. 00-core/ and 01-step1/ had no changes."
+    },
+    {
+      "command": "node 02-stabilization/reference/security-probes.mjs platform .\\work-r1-28d3749.json",
+      "environment": "Windows PowerShell; Node v22.22.3; exact source commit 28d3749dde800b2e9474ceda65f815445a374eff",
+      "exitCode": 0,
+      "result": "R1 fixed: control_server_no_ai_access and caller_overrides_no_ai_access denied, each with 0 stub executions."
+    },
+    {
+      "command": "Push-Location platform/runtime; node --test; Pop-Location; Push-Location platform/data-protection; node --test; Pop-Location; Push-Location platform/logging; node --test; Pop-Location",
+      "environment": "Windows PowerShell; Node v22.22.3; exact source commit 28d3749dde800b2e9474ceda65f815445a374eff",
+      "exitCode": 0,
+      "result": "Runtime 120/120, data-protection 43/43, and logging 43/43 passed."
+    },
+    {
+      "command": "make install; make historical-assemble-check; make validate; make test",
+      "environment": "Ubuntu 24.04 WSL2, non-root dkcverify; Node v22.22.3, npm 10.9.8; fresh checkout at exact source commit 28d3749dde800b2e9474ceda65f815445a374eff",
+      "exitCode": 0,
+      "result": "All commands passed on the exact committed source. Historical assembly verified 2176 files and 66 overlays in a temporary tree; validate passed; full test suite passed including Linux conformance 528/528. 00-core/ and 01-step1/ had no changes."
     }
   ],
   "changes": [
     "Reproduced R1, then made runtime classification come only from the server registry and operation semantics come from trusted tool resolution. Unknown, malformed, failed and cross-tenant classification denies before executor invocation; caller declarations can tighten but cannot lower registry policy.",
     "Applied protected-data controls to runtime actions and adapter guards, made no-AI-access invariant, preserved tenant-scoped classifications, and scrubbed protected targets, parameters, summaries, results and raw executor errors from audit, observer, journal and durable job data.",
     "Added runtime and adapter regressions for R1, spoofed operations, unknown/service-failure/cross-tenant classification, protected reads and restore boundaries, plus an explicit ordinary-data success fixture.",
-    "Separated maintained platform source validation from historical reproducibility: validate no longer compares or overwrites platform/; historical-assemble-check assembles and verifies in a disposable temporary tree. Preserved platform/PROVENANCE.json and historical 00-core/ and 01-step1/. Updated root lifecycle documentation."
+    "Separated maintained platform source validation from historical reproducibility: validate no longer compares or overwrites platform/; historical-assemble-check assembles and verifies in a disposable temporary tree. Preserved platform/PROVENANCE.json and historical 00-core/ and 01-step1/. Updated root lifecycle documentation.",
+    "Follow-up to independent review of superseded 940043b: validate classifier-returned record class, noAiAccess, tenant and target binding even when a wrapper reports classified; public guard.evaluate resolves only server registry records and ignores caller record overrides; runtime log observer now classifies targets and redacts payloads unless an explicitly matching ordinary server record permits logging. Added a logger-ledger canary regression matching the verifier probe."
   ],
   "limitations": [
     "Independent verification and human acceptance are pending. This commit is not merged or deployed.",
     "GitHub CI is NOT RUN. Windows conformance had 527/528 pass; the remaining failure is the known Windows path-containment issue in the out-of-scope S2-01 area. Linux conformance passed 528/528.",
-    "R2-R4 findings remain assigned to later tasks and are not claimed fixed by S1-02."
+    "R2-R4 findings remain assigned to later tasks and are not claimed fixed by S1-02.",
+    "Source 940043b failed independent verification on malformed-class, tenant-binding, logger-redaction and caller-record-override probes. These repairs are in 28d3749; independent verification of this replacement source is pending."
   ],
   "blockedOn": [],
   "nextAction": "independent-verification",
   "verifierVerdict": null,
   "humanAcceptance": null,
   "requestedModel": "gpt-6-luna",
-  "gitAuthor": "Allan <allan.schwedler@gmail.com>"
+  "gitAuthor": "Allan <allan.schwedler@gmail.com>",
+  "supersedesSourceCommit": "940043baf11c915338d513b92e1031823fcd2459"
 }
