@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "reviewedBaseCommit": "5e3706b5e7ad569c0ec68c4b63ceeaad15c237a3",
-  "firstTask": "S1-01",
+  "firstTask": "S1-02",
   "statusMeaning": "ready means assignable; in-progress means implementation started; awaiting-verification means a tested implementation commit exists and independent verification is pending; no task is done without recorded technical verification and human acceptance",
   "tasks": [
     {
@@ -28,10 +28,19 @@
         "Existing review probes can target platform/ and expose the known findings. Missing legacy evidence remains reported; no synthetic replacement logs.",
         "All future task source paths resolve to platform/, and no changes are required in 00-core or historical deliverables."
       ],
-      "status": "awaiting-verification",
-      "implementationCommit": "19407f6d6d741f69e049d27729a8f987b47aff71",
-      "verification": null,
-      "humanAcceptance": null
+      "status": "accepted",
+      "implementationCommit": "a0bcbf4e44ac3ae03cb1477933f772597020df89",
+      "verification": {
+        "verdict": "PASS",
+        "sourceCommit": "a0bcbf4e44ac3ae03cb1477933f772597020df89",
+        "evidenceCommit": "ddbc118bde3ae5a38b82452b464c53ab0019ce4a",
+        "report": "02-stabilization/evidence/S1-01/verification-linux.json"
+      },
+      "humanAcceptance": {
+        "status": "accepted",
+        "sourceCommit": "a0bcbf4e44ac3ae03cb1477933f772597020df89",
+        "record": "02-stabilization/evidence/S1-01/continuation-acceptance.json"
+      }
     },
     {
       "id": "S1-02",
@@ -56,7 +65,7 @@
         "A mutating verb cannot be disguised as a read by action.operation; unknown or failed classification does not silently allow it.",
         "Protected-data decisions preserve tenant scope and mandatory audit without copying forbidden data into logs; permitted ordinary reads still work."
       ],
-      "status": "planned",
+      "status": "in-progress",
       "implementationCommit": null,
       "verification": null,
       "humanAcceptance": null
@@ -245,11 +254,169 @@
       "humanAcceptance": null
     },
     {
+      "id": "S2-UI-01",
+      "sprint": 2,
+      "title": "Deliver browser bootstrap, login and the management shell",
+      "dependsOn": [
+        "S2-03"
+      ],
+      "sourceHints": [
+        "platform/portal/",
+        "platform/identity/",
+        "platform/installer/",
+        "platform/configuration/"
+      ],
+      "deliverables": [
+        "Extend the existing portal and supported installation profile. Deliver a documented bootstrap command that starts an actual local setup page and prints its address. Reuse the current rendering approach unless a concrete requirement justifies a new frontend dependency.",
+        "Implement a resumable first-run wizard for administrator enrollment, company creation and identity-provider setup. Bootstrap authority must be local or bound to a short-lived single-use setup credential; disable it after enrollment. Never ship a default administrator password or log setup secrets.",
+        "Wire login, logout, session expiry and company selection to the real identity service and server-validated sessions. Apply secure session handling, CSRF protection on cookie-authenticated mutations, output escaping and server authorization. Company selection is not a tenant grant.",
+        "Build a responsive management shell with Home, Approvals, Applications, People, Agents, Operations and Settings navigation. Only advertise working capabilities as available; show unavailable integrations honestly.",
+        "Use plain-language Danish and English messages, persistent field labels, keyboard navigation, visible focus and clear loading/empty/error states. Daily administration must not require editing JSON or running shell commands."
+      ],
+      "acceptanceCriteria": [
+        "From a clean supported local Linux VM, the documented bootstrap command opens the real setup workflow; completing it persists the administrator and company and survives a service restart.",
+        "A second browser cannot replay enrollment or seize bootstrap access; anonymous, expired-session and cross-company requests are denied server-side, including direct API calls.",
+        "A real browser can sign in, navigate, switch only among authorized companies and sign out in Danish and English. Tests use real local services; synthetic users are explicitly labeled.",
+        "Automated browser checks cover keyboard navigation and accessible form names; a human usability exercise is reported separately and never fabricated."
+      ],
+      "status": "planned",
+      "implementationCommit": null,
+      "verification": null,
+      "humanAcceptance": null
+    },
+    {
+      "id": "S2-UI-02",
+      "sprint": 2,
+      "title": "Deliver people, roles and the human approval inbox",
+      "dependsOn": [
+        "S2-UI-01"
+      ],
+      "sourceHints": [
+        "platform/portal/",
+        "platform/identity/",
+        "platform/approvals/",
+        "platform/agent-registry/"
+      ],
+      "deliverables": [
+        "Implement company-scoped user enrollment/invitations using the supported identity provider, role assignment and revocation. Do not invent an email delivery success if outbound communication is not connected; provide an explicit pending state or authorized enrollment link.",
+        "Connect a real approval inbox to the S1-secured approval service. Explain requester, proposed change, affected company/resources, reason, risk, required approvals, expiry and available rollback or recovery in plain language.",
+        "Implement approve, reject and revoke actions with validation and meaningful progress. Show distinct approvers and outstanding decisions; preserve immutable audit links and actor identity. UI visibility never substitutes for backend authorization.",
+        "Enforce role separation through authenticated server identities: an implementing agent cannot approve its own work, and a user cannot grant permissions they lack. Handle concurrent decisions, expired approvals and stale pages without double execution."
+      ],
+      "acceptanceCriteria": [
+        "Through two isolated browser sessions, authorized humans can enroll/revoke a synthetic user and make valid approval decisions; state persists after restart.",
+        "A company-B user cannot enumerate company-A users, approvals or audit details through the UI or direct API, including guessed IDs and manipulated company selectors.",
+        "Changed, expired, revoked or insufficiently approved actions never execute; duplicate clicks and concurrent decisions cannot cause duplicate execution.",
+        "Required actor identities come from real authentication. Automated test principals remain labeled fixtures; claims of live human approval require actual participants."
+      ],
+      "status": "planned",
+      "implementationCommit": null,
+      "verification": null,
+      "humanAcceptance": null
+    },
+    {
+      "id": "S2-UI-03",
+      "sprint": 2,
+      "title": "Deliver application selection and validated settings",
+      "dependsOn": [
+        "S2-UI-02"
+      ],
+      "sourceHints": [
+        "platform/portal/",
+        "platform/distribution/",
+        "platform/configuration/",
+        "platform/lifecycle/",
+        "platform/provider-registry/"
+      ],
+      "deliverables": [
+        "Build an application/component catalogue from the actual distribution manifest. Distinguish installed, installable, unavailable and planned capabilities. HR/BI/communications catalogue entries do not prove those applications are implemented.",
+        "Provide install, update and removal previews with dependencies, conflicts, version compatibility, data impact and recovery options. Submit durable jobs through the approved lifecycle APIs; do not execute shell commands supplied by the browser.",
+        "Expose validated settings for managed or external databases, external data connections, separately configured external backup, retention and ordinary logging levels. Preserve required audit and protected-data rules regardless of UI settings.",
+        "Keep credentials behind server-managed secret references with masked UI values. Connection tests must be tenant-scoped, bounded and protected against arbitrary internal-network access. Prevent secret exposure in URLs, responses, logs and exports.",
+        "Show desired versus actual configuration, durable job progress, failures and safe retry/resume. Destructive actions require a clear impact preview and the platform approval policy; never silently uninstall dependencies or delete application data."
+      ],
+      "acceptanceCriteria": [
+        "A browser can select a supported component, review its dependencies, submit the approved operation and observe actual persistent installation state using real local services.",
+        "Invalid dependencies, insufficient permissions, tenant substitution and conflicting updates fail safely. Removing a required component cannot silently break another installed component.",
+        "Database/backup connection settings and log/retention edits validate and persist; mandatory audit and data protection cannot be disabled by manipulated requests.",
+        "Secrets stay masked and are absent from ordinary diagnostics and browser URLs. Jobs recover after service interruption without repeating destructive operations."
+      ],
+      "status": "planned",
+      "implementationCommit": null,
+      "verification": null,
+      "humanAcceptance": null
+    },
+    {
+      "id": "S2-UI-04",
+      "sprint": 2,
+      "title": "Deliver operations visibility and bounded agent controls",
+      "dependsOn": [
+        "S2-UI-03"
+      ],
+      "sourceHints": [
+        "platform/portal/",
+        "platform/telemetry-api/",
+        "platform/observability/",
+        "platform/agent-registry/",
+        "platform/backup/",
+        "platform/continuity/"
+      ],
+      "deliverables": [
+        "Create an operations overview from real telemetry, job and audit APIs: service health, performance, errors, security findings, backup age and restore-test status. Show timestamps and collection coverage; missing or stale signals are unknown, never healthy.",
+        "Show each agent identity, its single assigned role, current task, allowed scope, progress and recent audited actions. Separate requesting work from approving it.",
+        "Connect authorized pause, cancel, credential revocation and escalation controls to actual server mechanisms. Clearly distinguish a requested halt from an acknowledged halt; do not claim already completed actions were reversed.",
+        "Expose backup history and a safe request for an isolated restore rehearsal through existing job/approval APIs. Do not add arbitrary root/shell controls or unbounded self-healing.",
+        "Provide plain-language incident details and redacted downloadable diagnostics with tenant-scoped audit links. Preserve protected-data restrictions in dashboards, search and exports."
+      ],
+      "acceptanceCriteria": [
+        "Real local service failure or stopped telemetry produces a visible degraded/unknown state; fixture-only findings are labeled and cannot make release health appear green.",
+        "An authorized operator can pause a running bounded agent task and observe acknowledgment and audit; unauthorized and cross-tenant actors cannot control it.",
+        "Backup status reflects actual jobs and destination checks. A requested rehearsal remains pending/NOT_RUN until executed and verified; rendering a button never counts as a successful restore.",
+        "Operations pages and diagnostics expose no secrets or forbidden data, and the original failure remains visible if escalation delivery is unavailable."
+      ],
+      "status": "planned",
+      "implementationCommit": null,
+      "verification": null,
+      "humanAcceptance": null
+    },
+    {
+      "id": "S2-UI-05",
+      "sprint": 2,
+      "title": "Prove beginner browser workflows and accessibility",
+      "dependsOn": [
+        "S2-UI-04"
+      ],
+      "sourceHints": [
+        "platform/portal/test/",
+        "platform/acceptance/",
+        "platform/docs/",
+        ".github/workflows/",
+        "02-stabilization/evidence/"
+      ],
+      "deliverables": [
+        "Add a reproducible browser acceptance command against the supported local installation using the exact candidate artifacts. Reuse existing browser tooling where available; pin new dependencies and keep real-service tests separate from isolated UI fixtures.",
+        "Exercise setup, login, company selection, people/roles, application selection, settings, approval decisions, job progress, agent pause, health and backup inspection without terminal use after bootstrap.",
+        "Cover denied access, expired sessions, failed network requests, stale telemetry, duplicate submissions, interrupted jobs and service restart. Assertions must inspect persisted server state and effects, not just success messages.",
+        "Check keyboard-only use, accessible names and focus, narrow layouts, plain-language recovery messages and Danish/English coverage. Provide concise contextual help and an operator recovery guide.",
+        "Provide a repeatable beginner usability exercise with tasks and observation fields. Record actual participants and difficulties only when a human participates; otherwise report that item NOT_RUN. Feed the browser suite into CI and the S2-04 readiness gate."
+      ],
+      "acceptanceCriteria": [
+        "A fresh supported local installation passes the browser journey with real services and persistent state. No normal task in the journey requires Git, direct database edits or JSON editing.",
+        "Browser and direct-API negative cases enforce identical tenant and role boundaries; hidden buttons are not considered authorization tests.",
+        "Keyboard and responsive-layout checks pass; usability observations are traceable to actual runs and do not claim an accessibility certification.",
+        "CI stores redacted, retained browser evidence for the exact source/artifact. Missing real-service, CI or required human usability evidence remains explicit and blocks the associated acceptance item."
+      ],
+      "status": "planned",
+      "implementationCommit": null,
+      "verification": null,
+      "humanAcceptance": null
+    },
+    {
       "id": "S2-04",
       "sprint": 2,
       "title": "Prove readiness for VPS staging",
       "dependsOn": [
-        "S2-03"
+        "S2-UI-05"
       ],
       "sourceHints": [
         "platform/release/",
@@ -258,14 +425,14 @@
         "02-stabilization/evidence/"
       ],
       "deliverables": [
-        "Automate a clean disposable Linux VM exercise: install, synthetic two-tenant login/API flow, service restart, full reboot, failure diagnostics and teardown limited to the test environment.",
+        "Automate a clean disposable full Linux VM exercise: install, complete the real browser setup and synthetic two-company management journey from S2-UI-05, service restart, full reboot, failure diagnostics and teardown limited to the test environment. WSL source tests alone do not prove full-host reboot behavior.",
         "Bind evidence to exact commit/image digests and measured resource use. Derive a VPS sizing and storage specification from that evidence rather than inventing capacity.",
         "Create a staging input template for host/SSH identity, domain/DNS, secret references, backup endpoint, allowed CIDRs, named human owner and budget cap; keep credentials out of Git.",
         "Implement a readiness gate separating local functional success, GitHub CI, independent verification, human acceptance and missing infrastructure inputs."
       ],
       "acceptanceCriteria": [
         "The clean-VM run is reproduced independently with real services and persisted state; supported OS/runtime are explicit.",
-        "All S1 security gates and S2 installation/CI gates are met for the candidate commit. Missing admin settings remain a blocker, not a waiver.",
+        "All S1 security gates and S2 installation, browser usability and CI gates are met for the candidate commit. Missing admin settings or required human usability observations remain a blocker, not a waiver.",
         "The report gives a concrete server specification, backup requirements and operating cost inputs for the human to approve before any purchase.",
         "S2 acceptance permits synthetic-data staging only; it does not assert HA, compliance certification or customer-production readiness."
       ],

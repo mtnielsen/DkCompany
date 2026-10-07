@@ -1,0 +1,19 @@
+{
+  "taskId": "S1-01",
+  "sourceCommit": "a0bcbf4e44ac3ae03cb1477933f772597020df89",
+  "technicalVerification": "PASS",
+  "evidenceCommit": "ddbc118bde3ae5a38b82452b464c53ab0019ce4a",
+  "status": "accepted",
+  "date": "2026-10-07",
+  "basis": {
+    "type": "user conversation instruction",
+    "quote": "ok so we can go ahead",
+    "context": "After the S1-01 Linux PASS report and the proposed next S1-02 task, the repository owner authorized continuation."
+  },
+  "scope": "Accept the verified S1-01 canonical-source migration as the dependency for S1-02. This records the user instruction; it is not an AI approval or a fabricated signature.",
+  "exclusions": [
+    "No merge performed or implied by this record.",
+    "Known R1-R4 security findings remain open.",
+    "No production, HA, deployment or spending approval."
+  ]
+}

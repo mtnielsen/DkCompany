@@ -14,16 +14,21 @@ Sequence follows dependency acceptance, not calendar dates. Two-week timeboxes a
 
 Exit gate: R1-R4 closed by independent reproductions; canonical source maintained directly; scope, roles and audit fail closed.
 
-## Sprint 2 Reproducible installation and CI
+## Sprint 2 Installation, browser management and CI
 
 | Task | Coding outcome | Depends on |
 | --- | --- | --- |
 | [S2-01](prompts/S2-01-IMPLEMENT.md) | Make checkout integrity and path handling portable | S1-05 |
 | [S2-02](prompts/S2-02-IMPLEMENT.md) | Implement a real single-server installation profile | S2-01 |
 | [S2-03](prompts/S2-03-IMPLEMENT.md) | Run reproducible checks in GitHub CI | S2-02 |
-| [S2-04](prompts/S2-04-IMPLEMENT.md) | Prove readiness for VPS staging | S2-03 |
+| [S2-UI-01](prompts/S2-UI-01-IMPLEMENT.md) | Deliver browser bootstrap, login and the management shell | S2-03 |
+| [S2-UI-02](prompts/S2-UI-02-IMPLEMENT.md) | Deliver people, roles and the human approval inbox | S2-UI-01 |
+| [S2-UI-03](prompts/S2-UI-03-IMPLEMENT.md) | Deliver application selection and validated settings | S2-UI-02 |
+| [S2-UI-04](prompts/S2-UI-04-IMPLEMENT.md) | Deliver operations visibility and bounded agent controls | S2-UI-03 |
+| [S2-UI-05](prompts/S2-UI-05-IMPLEMENT.md) | Prove beginner browser workflows and accessibility | S2-UI-04 |
+| [S2-04](prompts/S2-04-IMPLEMENT.md) | Prove readiness for VPS staging | S2-UI-05 |
 
-Exit gate: Fresh supported Linux VM installs real services; current evidence verifies; CI and branch review gates active; approved VPS specification derived from measurements.
+Exit gate: Fresh supported full Linux VM installs real services; browser setup and everyday management work with persisted state and independently verified permissions; current evidence verifies; CI and branch review gates are active; required usability observations are recorded; approved VPS specification comes from measurements. The added UI work requires a new effort estimate.
 
 ## Sprint 3 Live single-server staging
 
