@@ -115,6 +115,33 @@ function resolveBeneath(root, candidate, context, { allowMissing = true } = {}) 
   if (rel === '' || rel.startsWith('..') || isAbsolute(rel)) {
     fail(`${context}: path escapes the workspace: ${candidate}`);
   }
+  // mkdir/reads follow a linked parent even when the final path does not yet
+  // exist. Inspect each existing component before returning the lexical path;
+  // this also rejects aliases into preserved inputs and linked source roots.
+  let current = root;
+  for (const segment of candidate.split(/[\\/]/).filter(Boolean)) {
+    current = join(current, segment);
+    let stat;
+    try {
+      stat = lstatSync(current);
+    } catch (error) {
+      if (error.code === 'ENOENT' || error.code === 'ENOTDIR') break;
+      fail(`${context}: cannot inspect path component ${current}: ${error.message}`);
+    }
+    if (stat.isSymbolicLink()) {
+      fail(`${context}: refusing symlink or junction in path: ${current}`);
+    }
+    let real;
+    try {
+      real = realpathSync(current);
+    } catch (error) {
+      fail(`${context}: cannot resolve path component ${current}: ${error.message}`);
+    }
+    const realRel = relative(root, real);
+    if (realRel === '..' || realRel.startsWith(`..${sep}`) || isAbsolute(realRel)) {
+      fail(`${context}: path component resolves outside its root: ${candidate}`);
+    }
+  }
   if (!allowMissing && !existsSync(resolved)) {
     fail(`${context}: path does not exist: ${candidate}`);
   }

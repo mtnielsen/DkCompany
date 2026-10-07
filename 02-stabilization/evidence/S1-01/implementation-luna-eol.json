@@ -1,0 +1,65 @@
+{
+  "taskId": "S1-01",
+  "agentIdentity": "GPT-6 Luna subagent; implementer role only",
+  "role": "implementer",
+  "status": "awaiting-verification",
+  "testedSourceCommit": "a0bcbf4e44ac3ae03cb1477933f772597020df89",
+  "sourceGitTree": "5d38f4ec383226496ba7eb93fc37fa5e0f08ab1c",
+  "platformTreeDigest": "sha256:f940d3000c27ce73c8971352b778d4e1dcccfeee0a82a4868b04fc8ff5fb7293",
+  "environment": {
+    "os": "Windows (win32)",
+    "node": "v22.22.3",
+    "checkout": "Fresh isolated local clone of testedSourceCommit with repository-local core.autocrlf=true and core.eol=crlf",
+    "linux": "NOT_RUN",
+    "githubCI": "NOT_RUN"
+  },
+  "priorIndependentFinding": {
+    "sourceCommit": "e15f44916cbcf6b2867cba0eba214d2538f27741",
+    "verdict": "FAIL",
+    "summary": "A separate fresh checkout with system core.autocrlf=true converted hashed source files to CRLF. The assembler and stack working bytes differed from their Git blobs, causing provenance mismatch and 12/13 assembler tests to pass.",
+    "repair": "Added scoped .gitattributes rules to disable text conversion for 00-core/, 01-step1/, platform/, tools/assemble-platform.mjs, and tools/overlay-stack.json. No historical Git blobs were rewritten."
+  },
+  "commands": [
+    {
+      "command": "git clone --no-hardlinks --config core.autocrlf=true --config core.eol=crlf --quiet . <temporary-checkout>",
+      "exitCode": 0,
+      "summary": "created an isolated fresh clone at testedSourceCommit; clone-local core.autocrlf reports true"
+    },
+    {
+      "command": "In the fresh clone: compare working bytes with `git show HEAD:<path>` for tools/assemble-platform.mjs, tools/overlay-stack.json, platform/PROVENANCE.json, 00-core/CONTRIBUTING.md, and 01-step1/output/dkc-001/deliverable/README.md",
+      "exitCode": 0,
+      "summary": "all five checkout files were byte-identical to their Git blobs; historical inputs were sampled and not modified"
+    },
+    {
+      "command": "In the fresh clone: node tools/assemble-platform.mjs --check --json",
+      "exitCode": 0,
+      "summary": "verified 2176 files and 66 overlays; platform digest f940d3000c27ce73c8971352b778d4e1dcccfeee0a82a4868b04fc8ff5fb7293"
+    },
+    {
+      "command": "In the fresh clone: node --test --test-reporter=tap tools/test/assemble-platform.test.mjs",
+      "exitCode": 0,
+      "summary": "13 passed, 0 failed"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "summary": "no whitespace errors"
+    }
+  ],
+  "artifactDigests": [
+    {
+      "path": ".gitattributes",
+      "sha256": "88db3fffd822c127d25b00d8a68ceb6fd8bd5529d5a5a3f399a9aa1a48573dd1"
+    }
+  ],
+  "changes": [
+    "Added a narrow EOL policy for deterministic assembler inputs and the canonical source tree. It preserves committed Git blob bytes under core.autocrlf=true without renormalizing historical files.",
+    "Fresh Windows checkout passes the canonical assemble check and all 13 focused assembler tests, retaining the original platform tree digest."
+  ],
+  "limitations": [
+    "Validation was performed on Windows only; Linux and GitHub CI were not run.",
+    "The sibling verifier has been asked to independently verify testedSourceCommit. Human acceptance remains pending."
+  ],
+  "humanAcceptance": null,
+  "verifierVerdict": null
+}

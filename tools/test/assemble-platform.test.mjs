@@ -6,7 +6,7 @@
 
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { chmodSync, mkdtempSync, mkdirSync, readdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { chmodSync, existsSync, mkdtempSync, mkdirSync, readdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import test from 'node:test';
@@ -50,6 +50,10 @@ function writeStack(root, overrides = {}) {
 
 function run(args, cwd = repoRoot) {
   return spawnSync(process.execPath, [tool, ...args], { cwd, encoding: 'utf8' });
+}
+
+function symlinkDirectory(target, path) {
+  symlinkSync(target, path, process.platform === 'win32' ? 'junction' : 'dir');
 }
 
 function tree(root, { skip = new Set() } = {}) {
@@ -180,6 +184,42 @@ test('rejects targets inside preserved historical inputs', () => {
   }
 });
 
+test('rejects target and source paths that traverse directory symlinks or junctions', () => {
+  const root = makeSandbox();
+  const outside = mkdtempSync(join(tmpdir(), 'dkc-assembler-outside-'));
+  const stack = writeStack(root);
+  try {
+    writeFileSync(join(outside, 'keep.txt'), 'outside stays unchanged\n');
+    symlinkDirectory(outside, join(root, 'alias-outside'));
+    const escapedTarget = run(['--workspace', root, '--stack', stack, '--target', 'alias-outside/new-platform']);
+    assert.equal(escapedTarget.status, 2);
+    assert.match(escapedTarget.stderr, /refusing symlink or junction/);
+    assert.equal(existsSync(join(outside, 'new-platform')), false, 'outside target must not be created');
+    assert.equal(readFileSync(join(outside, 'keep.txt'), 'utf8'), 'outside stays unchanged\n');
+
+    symlinkDirectory(join(root, '00-core'), join(root, 'alias-input'));
+    const aliasedTarget = run(['--workspace', root, '--stack', stack, '--target', 'alias-input/new-platform']);
+    assert.equal(aliasedTarget.status, 2);
+    assert.match(aliasedTarget.stderr, /refusing symlink or junction/);
+    assert.equal(existsSync(join(root, '00-core', 'new-platform')), false, 'historical input must stay untouched');
+
+    const sourceStack = writeStack(root, { base: { path: 'alias-input' } });
+    const aliasedSource = run(['--workspace', root, '--stack', sourceStack, '--target', 'safe-platform']);
+    assert.equal(aliasedSource.status, 2);
+    assert.match(aliasedSource.stderr, /refusing symlink or junction/);
+    assert.equal(existsSync(join(root, 'safe-platform')), false, 'source path refusal must happen before writes');
+
+    const normalStack = writeStack(root);
+    mkdirSync(join(root, 'ordinary', 'parent'), { recursive: true });
+    const valid = run(['--workspace', root, '--stack', normalStack, '--target', 'ordinary/parent/platform']);
+    assert.equal(valid.status, 0, valid.stderr);
+    assert.equal(readFileSync(join(root, 'ordinary', 'parent', 'platform', 'base.txt'), 'utf8'), 'base\n');
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+    rmSync(outside, { recursive: true, force: true });
+  }
+});
+
 test('rejects dependency cycles', () => {
   const root = makeSandbox();
   const stack = writeStack(root, {
@@ -227,7 +267,10 @@ test('rejects deliverable path escapes and symlinks', () => {
     assert.equal(result.status, 2);
     assert.match(result.stderr, /path traversal or empty segment/);
 
-    symlinkSync('/etc/passwd', join(root, '01-step1', 'output', 'dkc-001', 'deliverable', 'link'));
+    const linkTarget = join(root, 'link-target');
+    mkdirSync(linkTarget);
+    writeFileSync(join(linkTarget, 'file.txt'), 'linked fixture\n');
+    symlinkDirectory(linkTarget, join(root, '01-step1', 'output', 'dkc-001', 'deliverable', 'link'));
     const symlinkStack = writeStack(root, {
       tip: 'dkc-001',
       overlays: { 'dkc-001': { predecessor: null } },
@@ -274,6 +317,7 @@ test('uses git index modes instead of DrvFs-style executable bits', (t) => {
     }
     chmodSync(join(root, '01-step1', 'output', 'dkc-001', 'deliverable', 'a.txt'), 0o755);
     assert.equal(git(['add', '.']).status, 0);
+    assert.equal(git(['update-index', '--chmod=+x', '--', '01-step1/output/dkc-001/deliverable/a.txt']).status, 0);
     assert.equal(git(['-c', 'user.name=test', '-c', 'user.email=test@example.invalid', 'commit', '-q', '-m', 'fixture']).status, 0);
     // Simulate a DrvFs mount: git is told to ignore mode bits and every file
     // reports 0777. The git index must still win for tracked files.

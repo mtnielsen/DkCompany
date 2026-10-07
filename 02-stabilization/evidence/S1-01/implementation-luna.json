@@ -1,0 +1,63 @@
+{
+  "taskId": "S1-01",
+  "agentIdentity": "GPT-6 Luna subagent; implementer role only",
+  "role": "implementer",
+  "status": "awaiting-verification",
+  "testedSourceCommit": "e15f44916cbcf6b2867cba0eba214d2538f27741",
+  "sourceGitTree": "8060e9581d97fa159af1cfcfb34fbd2fa560f574",
+  "platformTreeDigest": "sha256:f940d3000c27ce73c8971352b778d4e1dcccfeee0a82a4868b04fc8ff5fb7293",
+  "environment": {
+    "os": "Windows (win32)",
+    "node": "v22.22.3",
+    "linux": "NOT_RUN; no WSL distribution or Docker available",
+    "githubCI": "NOT_RUN"
+  },
+  "commands": [
+    {
+      "command": "node --test --test-reporter=tap tools/test/assemble-platform.test.mjs",
+      "exitCode": 0,
+      "summary": "13 tests passed, 0 failed; includes Windows junction fixtures, zero-write assertions, valid nested target, explicit Git executable index mode, and canonical platform verification"
+    },
+    {
+      "command": "node tools/assemble-platform.mjs --check --json",
+      "exitCode": 0,
+      "summary": "verified 2176 files and 66 overlays; platform tree digest remains f940d3000c27ce73c8971352b778d4e1dcccfeee0a82a4868b04fc8ff5fb7293"
+    },
+    {
+      "command": "node ../DkCompany-verify-S1-01/02-stabilization/evidence/S1-01/verifier-boundary-probes.mjs . <temporary-output-directory>",
+      "exitCode": 0,
+      "summary": "literal traversal, missing target beneath an outside junction, and missing target beneath an alias to 00-core were refused; outside target and historical input remained unchanged. The sibling verifier script embeds the original reviewed source SHA in its report header; the probe itself executed this worktree's committed assembler at testedSourceCommit."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "summary": "no whitespace errors"
+    }
+  ],
+  "artifactDigests": [
+    {
+      "path": "platform/PROVENANCE.json",
+      "sha256": "448b2b67617d2bed80f1dbd2040ac10ef1182a6abd46c947adc037305de68df7"
+    },
+    {
+      "path": "tools/assemble-platform.mjs",
+      "sha256": "06cf456775a7bc47308779c43018d85172a67b74f8e3faecfa28bf264d5fb245"
+    },
+    {
+      "path": "tools/test/assemble-platform.test.mjs",
+      "sha256": "9f70f6ef4bf75919b0ec8041a8b4eee473c606dc1d28101496a63ee581aa5f13"
+    }
+  ],
+  "changes": [
+    "The assembler now inspects each existing path component and rejects symlink or junction traversal before target creation or source reads.",
+    "Regression coverage verifies outside targets, aliases into 00-core, linked source roots, zero writes on refusal, and valid ordinary nested targets.",
+    "Portable test fixtures use directory symlinks/junctions and explicitly set the Git index executable mode. The deterministic platform application tree is byte-identical; only its required assembler digest in PROVENANCE.json changed."
+  ],
+  "limitations": [
+    "Linux validation was not run. Windows junction behavior was exercised on native Windows.",
+    "Only the focused assembler suite, canonical assemble check, and assigned adversarial boundary probe were run; broader repository suites were not rerun.",
+    "This report records implementation evidence only. Independent verification and human acceptance remain pending. S1-02 security findings were not changed."
+  ],
+  "humanAcceptance": null,
+  "verifierVerdict": null
+}
