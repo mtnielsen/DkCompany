@@ -63,26 +63,28 @@ export function loadRegister(path = registerPath, { ajv = buildAjv().ajv } = {})
 
 /**
  * Slå den beskyttelsespost op en target hører til. Rækkefølge: eksakt id,
- * autoritativ pointer (eller barn af den), forbruger-modul og til sidst en
- * normaliseret delstreng. Tenant-specifikke poster prioriteres, og en match
- * for en anden tenant bliver synlig for klassifikatoren som mismatch.
+ * autoritativ pointer (eller barn af den), og forbruger-modul. Tenant-specifikke
+ * poster prioriteres, og en match for en anden tenant bliver synlig for
+ * klassifikatoren som mismatch. Delstrengsmatches bruges ikke som autoritet.
  */
 export function resolveRecord(register, target, { tenantId = null } = {}) {
   const t = String(target ?? "").trim();
   if (!t) return null;
   const records = register?.records ?? [];
+  if (!Array.isArray(records)) return null;
   const matchingRecords = (candidates) => {
     for (const record of candidates) {
+      if (!record || typeof record !== "object") continue;
       if (record.id === t) return record;
-      if (record.authoritativePointer && (t === record.authoritativePointer || t.startsWith(`${record.authoritativePointer}/`))) return record;
+      if (typeof record.authoritativePointer === "string"
+        && (t === record.authoritativePointer || t.startsWith(`${record.authoritativePointer}/`))) return record;
     }
     const segments = t.split("/");
     for (const record of candidates) {
-      for (const consumer of record.consumerModules ?? []) {
+      for (const consumer of Array.isArray(record?.consumerModules) ? record.consumerModules : []) {
         if (segments.includes(consumer)) return record;
       }
     }
-    for (const record of candidates) if (t.includes(record.id)) return record;
     return null;
   };
   if (tenantId != null) {
@@ -103,7 +105,12 @@ export function createProtectedDataGuard({ register = loadRegister(), policy = l
       return resolveRecord(register, target, { tenantId });
     },
     classify({ target, tenantId = null } = {}) {
-      const record = resolveRecord(register, target, { tenantId });
+      let record;
+      try {
+        record = resolveRecord(register, target, { tenantId });
+      } catch {
+        return { status: "unknown", record: null };
+      }
       if (!record) return { status: "unknown", record: null };
       if (record.tenantId != null && String(record.tenantId).toLowerCase() !== String(tenantId ?? "").toLowerCase()) {
         return { status: "tenant-mismatch", record: null };
@@ -111,13 +118,34 @@ export function createProtectedDataGuard({ register = loadRegister(), policy = l
       if (!DATA_CLASSES.includes(record.dataClass) || (record.noAiAccess !== true && record.noAiAccess !== false)) {
         return { status: "unknown", record: null };
       }
+      const targetText = String(target ?? "").trim();
+      const segments = targetText.split("/");
+      const targetMatch = Boolean(targetText && (
+        record.id === targetText
+        || (typeof record.authoritativePointer === "string"
+          && (targetText === record.authoritativePointer || targetText.startsWith(`${record.authoritativePointer}/`)))
+        || (Array.isArray(record.consumerModules) && record.consumerModules.some((consumer) => segments.includes(consumer)))
+        || (typeof record.id === "string" && segments.includes(record.id))
+      ));
+      if (!targetMatch) return { status: "unknown", record: null };
       return { status: "classified", record };
     },
     /** Evaluer en operation mod en target (eller en eksplicit post). */
     evaluate({ principal, operation, target = null, tenantId = null, destination = null, adapter = null } = {}) {
-      // Callers may identify a target, never supply its classification. The
-      // record always comes from this guard's server-owned register.
-      const resolved = target ? resolveRecord(register, target, { tenantId }) : null;
+      // Caller options cannot assert identity. Bind tenant-scoped records to
+      // the verified principal; a conflicting tenant hint denies the call.
+      const principalTenant = principal?.tenantId ?? principal?.tenant_id ?? null;
+      const tenantConflict = tenantId != null && principalTenant != null
+        && String(tenantId).toLowerCase() !== String(principalTenant).toLowerCase();
+      let classification = { status: "unknown", record: null };
+      if (target && !tenantConflict) {
+        try {
+          classification = this.classify({ target, tenantId: principalTenant });
+        } catch {
+          classification = { status: "unknown", record: null };
+        }
+      }
+      const resolved = classification.status === "classified" ? classification.record : null;
       if (adapter) return guardAdapterCall({ adapter, principal, operation, record: resolved, destination, policy });
       return evaluateProtectedData({ principal, operation, record: resolved, destination, policy });
     },
