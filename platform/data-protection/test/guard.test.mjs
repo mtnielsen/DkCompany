@@ -132,3 +132,39 @@ test("klassifikation skelner mellem eksplicit ordinary, ukendt og forkert tenant
   assert.equal(guard.classify({ target: "tenant/data", tenantId: "globex" }).record.dataClass, "ordinary");
   assert.equal(guard.classify({ target: "tenant/data", tenantId: "contoso" }).status, "tenant-mismatch");
 });
+
+test("evaluate bruger kun en valideret serverklassifikation bundet til principalens tenant", () => {
+  const guard = createProtectedDataGuard({
+    register: { records: [
+      { id: "acme-secret", dataClass: "ordinary", noAiAccess: false, authoritativePointer: "acme/private", tenantId: "acme" },
+      { id: "ordinary", dataClass: "ordinary", noAiAccess: false, authoritativePointer: "ordinary/data" },
+      { id: "unknown-class", dataClass: "custom-unknown", noAiAccess: false, authoritativePointer: "unknown-class/data" },
+      { id: "bad-flag", dataClass: "ordinary", noAiAccess: null, authoritativePointer: "bad-flag/data" },
+      { id: "ai-read-only", dataClass: "ai-read-only", noAiAccess: false, authoritativePointer: "protected/read-only" },
+      { id: "append-only", dataClass: "append-only", noAiAccess: false, authoritativePointer: "protected/append" },
+      { id: "retention-locked", dataClass: "retention-locked", noAiAccess: false, authoritativePointer: "protected/retention" },
+    ] },
+    policy,
+  });
+  const tenantAgent = { ...agent, tenantId: "contoso" };
+
+  for (const [target, operation] of [
+    ["acme/private", "read"],
+    ["unknown-class/data", "read"],
+    ["bad-flag/data", "read"],
+    ["ordinary-shadow", "read"],
+  ]) {
+    assert.equal(guard.evaluate({ principal: tenantAgent, operation, target }).allowed, false, `${target} must fail closed`);
+    assert.equal(guard.evaluate({ principal: tenantAgent, operation, target, adapter: "admin" }).allowed, false, `${target} adapter must fail closed`);
+  }
+  assert.equal(guard.evaluate({ principal: tenantAgent, operation: "read", target: "acme/private", tenantId: "acme" }).allowed, false,
+    "caller tenant hint cannot override principal tenant");
+
+  assert.equal(guard.evaluate({ principal: tenantAgent, operation: "read", target: "ordinary/data" }).allowed, true);
+  assert.equal(guard.evaluate({ principal: tenantAgent, operation: "read", target: "protected/read-only" }).allowed, true);
+  assert.equal(guard.evaluate({ principal: tenantAgent, operation: "update", target: "protected/read-only" }).allowed, false);
+  assert.equal(guard.evaluate({ principal: tenantAgent, operation: "append", target: "protected/append" }).allowed, true);
+  assert.equal(guard.evaluate({ principal: tenantAgent, operation: "delete", target: "protected/append" }).allowed, false);
+  assert.equal(guard.evaluate({ principal: tenantAgent, operation: "read", target: "protected/retention" }).allowed, true);
+  assert.equal(guard.evaluate({ principal: tenantAgent, operation: "restore", target: "protected/retention" }).allowed, false);
+});
