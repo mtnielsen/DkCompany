@@ -1,0 +1,7 @@
+# The assembler hashes committed input and platform bytes. Preserve Git blob
+# bytes for these trees regardless of a developer's core.autocrlf setting.
+00-core/** -text
+01-step1/** -text
+platform/** -text
+tools/assemble-platform.mjs -text
+tools/overlay-stack.json -text
