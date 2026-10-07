@@ -12,6 +12,8 @@
 import { isResourceId } from "../../identity/src/tenant.mjs";
 import { buildLogRecord } from "./record.mjs";
 import { digest } from "./canonical.mjs";
+import { createProtectedDataGuard } from "../../data-protection/src/registry.mjs";
+import { DATA_CLASSES } from "../../data-protection/src/classes.mjs";
 
 const iso = (ms) => new Date(ms).toISOString();
 
@@ -65,14 +67,41 @@ function appendSystem({ ledger, policy, occurredAt, correlation, scope, phase, v
   );
 }
 
-export function createRuntimeLogObserver({ ledger, manifest = null, policy = null, clock = () => Date.now() } = {}) {
+function isExplicitOrdinary(classification, { target, tenantId }) {
+  const record = classification?.record;
+  if (classification?.status !== "classified" || !record || !DATA_CLASSES.includes(record.dataClass)
+    || record.dataClass !== "ordinary" || record.noAiAccess !== false) return false;
+  if (record.tenantId != null && (tenantId == null || String(record.tenantId).toLowerCase() !== String(tenantId).toLowerCase())) return false;
+  const targetText = String(target ?? "").trim();
+  const targetSegments = targetText.split("/");
+  return Boolean(targetText && (
+    record.id === targetText
+    || (record.authoritativePointer && (targetText === record.authoritativePointer || targetText.startsWith(`${record.authoritativePointer}/`)))
+    || (record.consumerModules ?? []).some((consumer) => targetSegments.includes(consumer))
+    || (record.id && targetText.includes(record.id))
+  ));
+}
+
+export function createRuntimeLogObserver({ ledger, manifest = null, policy = null, protectedData = createProtectedDataGuard(), clock = () => Date.now() } = {}) {
   if (!ledger) throw new Error("createRuntimeLogObserver kræver en ledger");
   return async function onRuntimeEvent(event) {
     const service = event.serviceName ?? event.agentRef ?? manifest?.metadata?.name ?? "runtime";
-    const scope = scopeFor({ tenantId: event.tenantId, service, environment: event.environment, target: event.target });
+    let explicitlyOrdinary = false;
+    if (event.target != null) {
+      try {
+        explicitlyOrdinary = isExplicitOrdinary(
+          await protectedData.classify({ target: event.target, tenantId: event.tenantId ?? null }),
+          { target: event.target, tenantId: event.tenantId ?? null },
+        );
+      } catch {
+        explicitlyOrdinary = false;
+      }
+    }
+    const safeTarget = explicitlyOrdinary ? event.target : null;
+    const scope = scopeFor({ tenantId: event.tenantId, service, environment: event.environment, target: safeTarget });
     const occurredAt = iso(clock());
     const correlation = correlationFor(event, `${service}:${event.taskId ?? "task"}`);
-    if (event.phase === "action.completed" || event.phase === "action.failed") {
+    if (explicitlyOrdinary && (event.phase === "action.completed" || event.phase === "action.failed")) {
       return appendVerified({ ledger, policy, occurredAt, correlation, scope, phase: event.phase, summary: event.summary, reason: event.reason });
     }
     return appendSystem({
@@ -84,10 +113,12 @@ export function createRuntimeLogObserver({ ledger, manifest = null, policy = nul
       phase: event.phase,
       value: {
         decision: event.decision ?? null,
-        reason: event.reason ?? null,
-        summary: event.summary ?? null,
-        objective: event.objective ?? null,
-        target: event.target ?? null,
+        ...(explicitlyOrdinary ? {
+          reason: event.reason ?? null,
+          summary: event.summary ?? null,
+          objective: event.objective ?? null,
+          target: event.target ?? null,
+        } : { protectedDataRedacted: true }),
       },
     });
   };

@@ -107,6 +107,14 @@ test("registeret kan slå beskyttede targets op og guard'e dem", () => {
   assert.equal(guard.resolve("helt-ukendt"), null);
   assert.equal(guard.evaluate({ principal: agent, operation: "update", target: "policy-bundle" }).allowed, false);
   assert.equal(guard.evaluate({ principal: agent, operation: "read", target: "tenant-records" }).allowed, true);
+  assert.equal(guard.evaluate({
+    principal: agent,
+    operation: "delete",
+    target: "policy-bundle",
+    record: { id: "caller-fake", dataClass: "ordinary", noAiAccess: false },
+  }).allowed, false, "caller record må ikke erstatte registry-klassifikationen");
+  assert.equal(guard.evaluate({ principal: agent, operation: "read", record: { dataClass: "ordinary", noAiAccess: false } }).allowed, false,
+    "record uden server-resolved target skal fejle lukket");
 });
 
 test("klassifikation skelner mellem eksplicit ordinary, ukendt og forkert tenant", () => {
