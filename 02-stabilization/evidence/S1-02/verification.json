@@ -62,11 +62,13 @@
       "logSha256": "dc973886251769f6d062df237856db6f3531085611eb8aa111770b1c3c77c34c"
     },
     {
-      "command": "node /tmp/s1-02-guard-final.mjs",
+      "command": "node /mnt/c/Users/Zhalakin/Documents/Codex/2026-09-22/vi-er-igang-med-et-projekt/work/DkCompany-S1-02-verify/02-stabilization/evidence/S1-02/verification-probes/adversarial-probes.mjs /home/dkcverify/work/S1-02-final-verify > /home/dkcverify/logs/S1-02-Luna-final2-2026-10-07/adversarial-probes.json",
       "exitCode": 0,
       "result": "Direct and adapter guard probes deny foreign-tenant, conflicting-hint, caller-only-tenant, substring, unknown-class, malformed noAiAccess and unknown-target cases. Caller record cannot override policy-bundle. Positive tenant ordinary read and append-only append pass; append-only update denies. Runtime malformed/foreign/substring cases deny with 0 executor calls. Protected logger redacts; ordinary logger positive control persists summary.",
       "log": "adversarial-probes.json",
-      "logSha256": "da180abeababa227b0ad22381b7c05cd67a0ede2db3296d1ddbc0cf7807a4289"
+      "logSha256": "c38a7d1f0ddbd02b7f6c847709758118ea9833a04e089a0775f2bce8ab9e54aa",
+      "probeSource": "02-stabilization/evidence/S1-02/verification-probes/adversarial-probes.mjs",
+      "probeSourceSha256": "15000054b992be904427326b9e5e64c38e714066988d8130609950e9863df41d"
     },
     {
       "command": "node 02-stabilization/reference/security-probes.mjs platform /home/dkcverify/logs/S1-02-Luna-final2-2026-10-07/security-probes.json",
@@ -161,7 +163,11 @@
     },
     {
       "path": "/home/dkcverify/logs/S1-02-Luna-final2-2026-10-07/adversarial-probes.json",
-      "sha256": "da180abeababa227b0ad22381b7c05cd67a0ede2db3296d1ddbc0cf7807a4289"
+      "sha256": "c38a7d1f0ddbd02b7f6c847709758118ea9833a04e089a0775f2bce8ab9e54aa"
+    },
+    {
+      "path": "02-stabilization/evidence/S1-02/verification-probes/adversarial-probes.mjs",
+      "sha256": "15000054b992be904427326b9e5e64c38e714066988d8130609950e9863df41d"
     },
     {
       "path": "/home/dkcverify/logs/S1-02-Luna-final2-2026-10-07/security-probes.stdout.json",

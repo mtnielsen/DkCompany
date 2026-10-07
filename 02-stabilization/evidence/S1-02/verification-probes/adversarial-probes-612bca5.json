@@ -130,17 +130,20 @@
   {
     "probe": "runtime_unknown_class",
     "status": "denied",
-    "executorCalls": 0
+    "executorCalls": 0,
+    "reason": "beskyttelsesklassifikation ukendt eller utilgængelig — fail-closed"
   },
   {
     "probe": "runtime_foreign_tenant",
     "status": "denied",
-    "executorCalls": 0
+    "executorCalls": 0,
+    "reason": "beskyttelsesklassifikation ukendt eller utilgængelig — fail-closed"
   },
   {
     "probe": "runtime_substring_target",
     "status": "denied",
-    "executorCalls": 0
+    "executorCalls": 0,
+    "reason": "beskyttelsesklassifikation ukendt eller utilgængelig — fail-closed"
   },
   {
     "probe": "protected_logger",
