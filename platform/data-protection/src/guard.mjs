@@ -108,7 +108,7 @@ export function evaluateProtectedData({ principal, operation, record, destinatio
   const kind = principal?.kind;
 
   if (kind === "agent") {
-    if (record.noAiAccess && policy.noAiAccessDeniesAll !== false) {
+    if (record.noAiAccess === true) {
       return deny(`no-AI-access${where}: AI må ikke læse, hente, prompte, logge eller træne på '${record.id}'`);
     }
     if ((policy.aiForbiddenOperations ?? []).includes(op)) {

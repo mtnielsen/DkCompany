@@ -9,7 +9,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { loadPolicy, loadRegister, checkModuleCoverage, storageEnforcementGaps, policyProblems } from "../src/registry.mjs";
-import { protectedDataProblems } from "../../conformance/src/protected-data.mjs";
+import { protectedDataProblems, validateProtectedData } from "../../conformance/src/protected-data.mjs";
+import { buildAjv } from "../../conformance/src/schemas.mjs";
 
 const clone = () => JSON.parse(JSON.stringify(loadRegister()));
 
@@ -19,6 +20,12 @@ test("register og politik validerer og krydsrefererer", () => {
   assert.deepEqual(policyProblems(policy), []);
   assert.deepEqual(checkModuleCoverage({ register }), []);
   assert.ok(register.records.length >= 5);
+});
+
+test("tenant-afgrænsede registry-poster overholder kontrakten", () => {
+  const register = clone();
+  register.records[0].tenantId = "acme";
+  assert.equal(validateProtectedData(register, buildAjv().ajv).ok, true);
 });
 
 test("hver post erklærer fuld lager-/nøglehåndhævelse leveret af DKC-048", () => {

@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { createAgentRuntime } from "./runtime.mjs";
 import { createFileArtifactLoader } from "./evidence.mjs";
 import { createPdpClient, createGatewayClient, createMemoryAuditLog, createApprovalClient } from "./clients.mjs";
+import { createProtectedDataGuard } from "../../data-protection/src/registry.mjs";
 
 function parseArgs(argv) {
   const args = { pdp: "http://127.0.0.1:8181/v1/data/platform/ops/decision", gateway: "http://127.0.0.1:8282/v1/chat/completions", approval: null, tenant: null, evidenceIndex: null, evidenceBase: null };
@@ -60,6 +61,7 @@ async function main() {
     evidenceIndex: args.evidenceIndex ? JSON.parse(readFileSync(args.evidenceIndex, "utf8")) : task.evidenceIndex ?? null,
     artifactLoader: createFileArtifactLoader({ baseDir: args.evidenceBase ?? null }),
     executors: buildExecutors(manifest.metadata.name),
+    protectedData: createProtectedDataGuard(),
   });
 
   const result = await runtime.runTask(task);

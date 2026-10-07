@@ -11,6 +11,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import { createAgentRuntime } from "../src/runtime.mjs";
+import { ordinaryDataFixture } from "./protected-data-fixture.mjs";
 import { createMemoryActionJournal, createMemoryAuditLog, AuditUnavailable } from "../src/clients.mjs";
 import { createReconciler } from "../src/reconcile.mjs";
 import { evidenceFixture } from "./evidence-fixtures.mjs";
@@ -31,7 +32,7 @@ function executors(record = []) {
 }
 
 function makeRuntime({ journal, record = [], auditLog = createMemoryAuditLog() } = {}) {
-  return createAgentRuntime({ manifest, pdp: allowPdp(), auditLog, actionJournal: journal, executors: executors(record) });
+  return createAgentRuntime({ protectedData: ordinaryDataFixture, manifest, pdp: allowPdp(), auditLog, actionJournal: journal, executors: executors(record) });
 }
 
 test("intent-kvittering skrives før executor og outcome bagefter", async () => {

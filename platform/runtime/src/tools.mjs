@@ -1,3 +1,5 @@
+import { operationForVerb } from "../../data-protection/src/classes.mjs";
+
 /**
  * DKC-011 — servervalideret, typet værktøjsgrænse.
  *
@@ -443,11 +445,11 @@ export function resolveTool({ verb, tool = null, registry = TOOL_REGISTRY, allow
     const found = registry.find((t) => t.name === tool);
     if (!found) return { ok: false, tool: null, errors: [{ path: "/tool", message: `værktøjet '${tool}' er ikke på allowlisten` }] };
     if (!found.verbs.includes(verb)) return { ok: false, tool: found, errors: [{ path: "/tool", message: `værktøjet '${tool}' må ikke udføre '${verb}'` }] };
-    return { ok: true, tool: found, errors: [] };
+    return { ok: true, tool: found, operation: operationForVerb(verb), errors: [] };
   }
   const byVerb = registry.find((t) => t.verbs.includes(verb));
-  if (byVerb) return { ok: true, tool: byVerb, errors: [] };
-  if (allowGeneric) return { ok: true, tool: genericToolForVerb(verb), errors: [] };
+  if (byVerb) return { ok: true, tool: byVerb, operation: operationForVerb(verb), errors: [] };
+  if (allowGeneric) return { ok: true, tool: genericToolForVerb(verb), operation: operationForVerb(verb), errors: [] };
   return { ok: false, tool: null, errors: [{ path: "/verb", message: `intet typet værktøj er registreret for '${verb}'` }] };
 }
 

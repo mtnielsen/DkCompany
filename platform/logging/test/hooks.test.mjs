@@ -8,18 +8,24 @@ import { createRuntimeLogObserver, createAuditLogObserver } from "../src/hooks.m
 import { makeAuditLog, POLICY, makeCorrelation } from "./support/fixture.mjs";
 import { evidenceFixture } from "../../runtime/test/evidence-fixtures.mjs";
 import { validDecision } from "../../runtime/test/pdp-fixtures.mjs";
+import { createProtectedDataGuard, loadPolicy } from "../../data-protection/src/registry.mjs";
 
 const manifest = JSON.parse(readFileSync(new URL("../../modules/dummy-ok/agents/backup-agent.json", import.meta.url), "utf8"));
 const EVIDENCE = evidenceFixture(["tests-pass", "dry-run-clean", "rollback-tested", "restore-verified", "scan-clean"]);
+const ordinaryLogTarget = createProtectedDataGuard({
+  register: { records: [{ id: "dummy-ok", authoritativePointer: "dummy-ok", dataClass: "ordinary", noAiAccess: false }] },
+  policy: loadPolicy(),
+});
 
 test("runtimen kalder observatøren og lægger korrelerede logposter", async () => {
   const audit = makeAuditLog();
   const ledger = createLogLedger({ audit });
-  const observer = createRuntimeLogObserver({ ledger, manifest, policy: POLICY });
+  const observer = createRuntimeLogObserver({ ledger, manifest, policy: POLICY, protectedData: ordinaryLogTarget });
   const runtime = createAgentRuntime({
     manifest,
     pdp: { decide: async (input) => validDecision(input, { requiredEvidence: ["policy-allow"] }) },
     auditLog: audit,
+    protectedData: ordinaryLogTarget,
     executors: { "upgrade.dry-run": async () => ({ summary: "clean", tokens: 5, costEur: 0.001 }) },
     logObserver: observer,
   });
@@ -61,12 +67,41 @@ test("audit-service-observatøren lægger en korreleret systempost", async () =>
   assert.equal(records[0].correlation.correlationId, correlation.correlationId);
 });
 
+test("runtime-log observeren klassificerer server-side og redacter ukendt payload", async () => {
+  const audit = makeAuditLog();
+  const ledger = createLogLedger({ audit });
+  const observer = createRuntimeLogObserver({ ledger, policy: POLICY });
+  await observer({
+    phase: "action.decision",
+    tenantId: "acme",
+    agentRef: "probe",
+    target: "res://acme/service/protected",
+    summary: "S1_02_SECRET_CANARY",
+    objective: "S1_02_SECRET_CANARY",
+    reason: "S1_02_SECRET_CANARY",
+  });
+  await observer({
+    phase: "action.completed",
+    tenantId: "acme",
+    agentRef: "probe",
+    target: "policy/bundles/platform/current",
+    summary: "S1_02_SECRET_CANARY",
+  });
+  const records = await ledger.read({ tenantId: "acme" });
+  assert.equal(JSON.stringify(records).includes("S1_02_SECRET_CANARY"), false);
+  assert.equal(records[0].observation.value.protectedDataRedacted, true);
+  assert.equal(records[0].scope.resource, "res://acme/service/probe");
+  assert.equal(records[1].observation.value.protectedDataRedacted, true);
+  assert.equal(records[1].scope.resource, "res://acme/service/probe");
+});
+
 test("en observer-fejl påvirker ikke runtime-resultatet", async () => {
   const audit = makeAuditLog();
   const runtime = createAgentRuntime({
     manifest,
     pdp: { decide: async (input) => validDecision(input, { requiredEvidence: ["policy-allow"] }) },
     auditLog: audit,
+    protectedData: ordinaryLogTarget,
     executors: { "upgrade.dry-run": async () => ({ summary: "clean" }) },
     logObserver: async () => { throw new Error("loggen er nede"); },
   });

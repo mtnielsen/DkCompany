@@ -11,6 +11,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import { createAgentRuntime } from "../src/runtime.mjs";
+import { ordinaryDataFixture } from "./protected-data-fixture.mjs";
 import { createMemoryAuditLog, createApprovalClient } from "../src/clients.mjs";
 import { createApprovalService } from "../../approvals/src/approval-service.mjs";
 import { evidenceFixture } from "./evidence-fixtures.mjs";
@@ -74,7 +75,7 @@ const actionFrom = (descriptor, extra = {}) => ({
 });
 
 function runtimeWith(record, approvalVerifier, pdp = approvalPdp(2)) {
-  return createAgentRuntime({
+  return createAgentRuntime({ protectedData: ordinaryDataFixture,
     manifest,
     pdp,
     auditLog: createMemoryAuditLog(),

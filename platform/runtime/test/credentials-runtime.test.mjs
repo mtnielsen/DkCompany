@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import { createAgentRuntime } from "../src/runtime.mjs";
+import { ordinaryDataFixture } from "./protected-data-fixture.mjs";
 import { createMemoryAuditLog } from "../src/clients.mjs";
 import { createLocalSigner, signersToJwks } from "../../credentials/src/keys.mjs";
 import { createCredentialBroker } from "../../credentials/src/broker.mjs";
@@ -44,7 +45,7 @@ function makeRuntime({ creds, record = [], executors = null, killSwitch = creds.
     "upgrade.dry-run": async () => { record.push("upgrade.dry-run"); return { summary: "clean" }; },
     "upgrade.patch": async () => { record.push("upgrade.patch"); return { summary: "patched" }; },
   };
-  return createAgentRuntime({
+  return createAgentRuntime({ protectedData: ordinaryDataFixture,
     manifest,
     pdp: allowPdp(),
     auditLog: createMemoryAuditLog(),
@@ -86,7 +87,7 @@ test("credential til en anden executor afvises hos modtageren", async () => {
   // Kapabilitetens executor peger på en anden tjeneste end den der faktisk lytter.
   const other = structuredClone(manifest);
   other.capabilities.find((c) => c.verb === "upgrade.dry-run").executor = "module:other";
-  const runtime = createAgentRuntime({
+  const runtime = createAgentRuntime({ protectedData: ordinaryDataFixture,
     manifest: other,
     pdp: allowPdp(),
     auditLog: createMemoryAuditLog(),
@@ -176,7 +177,7 @@ test("agenten kan ikke ændre policy, audit, egne rettigheder eller sit eget man
   for (const target of ["policy", "audit", "credentials", "agent-registry", "gitops"]) {
     broad.capabilities.push({ verb: "upgrade.patch", target, autonomyClass: "A3", requiredEvidence: ["policy-allow"] });
   }
-  const runtime = createAgentRuntime({ manifest: broad, pdp: allowPdp(), auditLog: createMemoryAuditLog(), credentialBroker: creds.broker, killSwitch: creds.killSwitch, clock: creds.clock, executors: creds.guard.guardAll({ "upgrade.patch": async () => { record.push("ran"); return {}; } }) });
+  const runtime = createAgentRuntime({ protectedData: ordinaryDataFixture, manifest: broad, pdp: allowPdp(), auditLog: createMemoryAuditLog(), credentialBroker: creds.broker, killSwitch: creds.killSwitch, clock: creds.clock, executors: creds.guard.guardAll({ "upgrade.patch": async () => { record.push("ran"); return {}; } }) });
   for (const target of ["policy/bundles", "audit/log", "credentials/keys", "agent-registry/agents", "gitops/manifests"]) {
     const result = await runtime.runTask(task([action("upgrade.patch", { target, idempotencyId: `a4-${target}`, evidence: ["tests-pass", "dry-run-clean", "rollback-tested"] })]));
     assert.equal(result.status, "refused", `${target} skulle afvises`);

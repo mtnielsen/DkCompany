@@ -9,7 +9,7 @@ import { digestOf } from "./digest.mjs";
 import { guardRoleAction } from "../../agent-registry/src/runtime-role-guard.mjs";
 import { evaluateProtectedData } from "../../data-protection/src/guard.mjs";
 import { defaultAccessPolicy } from "../../data-protection/src/policy.mjs";
-import { operationForVerb } from "../../data-protection/src/classes.mjs";
+import { DATA_CLASSES } from "../../data-protection/src/classes.mjs";
 
 /**
  * DKC-009: et stabilt idempotency-ID pr. handling. Samme task+handling giver
@@ -117,13 +117,6 @@ export function createAgentRuntime({
         ...(action.untrustedInput !== undefined ? { untrustedInput: action.untrustedInput } : action.untrustedContent ? { untrustedInput: true } : {}),
         ...(action.changeUri ? { changeUri: action.changeUri } : {}),
         ...(action.changeDigest ? { changeSha256: action.changeDigest } : {}),
-        // DKC-047: den beskyttede dataklasse og det separate no-AI-access-flag
-        // følger med inputtet, så PDP'en kan se den og beskyttelsesguarden kan
-        // håndhæve den uden at gætte ud fra verbet.
-        ...(action.dataClass ? { dataClass: action.dataClass } : {}),
-        ...(action.noAiAccess !== undefined ? { noAiAccess: action.noAiAccess } : {}),
-        ...(action.dataClass || action.operation ? { operation: action.operation ?? operationForVerb(action.verb) } : {}),
-        ...(action.protection ? { protection: action.protection } : {}),
       },
     };
   }
@@ -169,12 +162,21 @@ export function createAgentRuntime({
     // DKC-008: holdbar jobtilstand. `ensure` er idempotent, så en genstart kan
     // fortsætte samme task uden at tabe det der allerede er committet.
     const jobTenant = task.tenantId ?? tenantId ?? null;
-    const jobState = { objective: task.objective, agentRef: manifest.metadata.name, actions: [] };
+    const jobState = { agentRef: manifest.metadata.name, actions: [] };
+    let protectedDataObserved = false;
     const persistJob = (status, extra = {}) => {
       if (!jobStore || !task.taskId) return;
       try {
-        jobStore.ensure(jobTenant, { id: task.taskId, kind: "agent-task", payload: { agentRef: manifest.metadata.name, objective: task.objective } });
-        jobStore.saveState(jobTenant, task.taskId, { status, state: { ...jobState, ...extra } });
+        const persistedExtra = { ...extra };
+        if (protectedDataObserved) {
+          if (Array.isArray(persistedExtra.results)) persistedExtra.results = persistedExtra.results.map((entry) => ({ ...entry, summary: null }));
+          delete persistedExtra.action;
+          delete persistedExtra.failedAction;
+          if (persistedExtra.reason) persistedExtra.reason = "protected-data operation";
+          if (persistedExtra.replayedOutcome) persistedExtra.replayedOutcome = { status: persistedExtra.replayedOutcome.status ?? null };
+        }
+        jobStore.ensure(jobTenant, { id: task.taskId, kind: "agent-task", payload: { agentRef: manifest.metadata.name } });
+        jobStore.saveState(jobTenant, task.taskId, { status, state: { ...jobState, ...persistedExtra } });
       } catch {
         /* jobpersistens er best-effort og må ikke ændre selve eksekveringen */
       }
@@ -208,10 +210,10 @@ export function createAgentRuntime({
       return result;
     };
 
-    if (!(await tryAudit({ tenantId: task.tenantId ?? null, type: "agent.task.started", verb: null, payload: { objective: task.objective } }))) {
+    if (!(await tryAudit({ tenantId: task.tenantId ?? null, type: "agent.task.started", verb: null, payload: {} }))) {
       return finish("halted", { reason: "audit-log utilgængelig — dødemandsgreb" });
     }
-    await observe({ phase: "task.started", objective: task.objective });
+    await observe({ phase: "task.started" });
 
     for (const [actionIndex, action] of task.actions.entries()) {
       // DKC-010: nødstop kontrolleres før hver handling (fail-closed). Et aktivt
@@ -255,32 +257,94 @@ export function createAgentRuntime({
         return finish("refused", { reason: `handlingen er i strid med agentens rolle '${manifest.role}': ${roleCheck.errors.map((e) => e.message).join("; ")}`, roleViolations: roleCheck.errors, action });
       }
 
+      const registeredTool = typeof tools.resolve === "function"
+        ? tools.resolve({ verb: action.verb, tool: action.tool ?? capability.tool ?? null })
+        : { ok: false, tool: null, errors: [{ message: "værktøjsregister utilgængeligt" }] };
+      if (!registeredTool?.ok || !registeredTool.tool?.verbs?.includes(action.verb) || !registeredTool.operation) {
+        const violations = registeredTool?.errors ?? [{ message: "verbet er ikke bundet til en registreret executor" }];
+        await tryAudit({ tenantId: task.tenantId ?? null, type: "agent.refused", verb: action.verb, payload: { reason: "værktøjsgrænse", violations } });
+        return finish("refused", { reason: `værktøjskaldet er afvist ved grænsen: ${violations.map((e) => e.message).join("; ")}`, toolViolations: violations, action });
+      }
+
       // DKC-047: beskyttelsesguard. Beskyttede dataklasser (ai-read-only,
       // append-only, retention-locked) og det separate no-AI-access-flag
       // håndhæves FØR PDP og executor. Guarden er deny-only: en allow-beslutning
       // fra PDP'en kan ikke omgå den. En AI må ikke ændre beskyttede data og
       // slet ikke læse no-AI-access-data, heller ikke gennem en app-, admin-
       // eller restore-adapter.
-      const protectedRecord = action.protectedData ?? (protectedData?.resolve ? protectedData.resolve(action.target) : null);
-      if (protectedRecord) {
-        const operation = action.operation ?? operationForVerb(action.verb);
-        const protectionPolicy = protectedData?.policy ?? defaultAccessPolicy();
-        const protectedGuard = evaluateProtectedData({
+      // Classification and operation semantics come only from trusted server
+      // state. An absent/failed lookup is unknown and denies before PDP,
+      // logging observers, retrieval adapters or executors can see the action.
+      let trustedRecord = null;
+      let protectedDecision = null;
+      const classificationTenant = task.tenantId ?? tenantId ?? null;
+      let classification;
+      try {
+        if (!registeredTool?.ok || !registeredTool.tool?.verbs?.includes(action.verb)) throw new Error("unregistered operation");
+        if (!protectedData || typeof protectedData.classify !== "function") throw new Error("classification service unavailable");
+        classification = await protectedData.classify({ target: action.target, tenantId: classificationTenant });
+        if (classification?.status !== "classified" || !classification.record) throw new Error(classification?.status ?? "unknown classification");
+        trustedRecord = classification.record;
+        if (typeof trustedRecord !== "object"
+          || !DATA_CLASSES.includes(trustedRecord.dataClass)
+          || (trustedRecord.noAiAccess !== true && trustedRecord.noAiAccess !== false)) {
+          throw new Error("malformed classification record");
+        }
+        if (trustedRecord.tenantId != null
+          && (classificationTenant == null || String(trustedRecord.tenantId).toLowerCase() !== String(classificationTenant).toLowerCase())) {
+          throw new Error("classification record tenant mismatch");
+        }
+        const target = String(action.target ?? "").trim();
+        const targetSegments = target.split("/");
+        const recordMatchesTarget = trustedRecord.id === target
+          || (trustedRecord.authoritativePointer && (target === trustedRecord.authoritativePointer || target.startsWith(`${trustedRecord.authoritativePointer}/`)))
+          || (trustedRecord.consumerModules ?? []).some((consumer) => targetSegments.includes(consumer))
+          || (trustedRecord.id && targetSegments.includes(trustedRecord.id));
+        if (!target || !recordMatchesTarget) throw new Error("classification record does not match target");
+      } catch {
+        const message = "beskyttelsesklassifikation ukendt eller utilgængelig — fail-closed";
+        if (!(await tryAudit({ tenantId: classificationTenant, type: "agent.denied", verb: action.verb, payload: { reason: "beskyttelsesklassifikation afvist" } }))) {
+          return finish("halted", { reason: "audit-log utilgængelig ved klassifikationsafvisning — dødemandsgreb" });
+        }
+        return finish("denied", { reason: message, protectedData: { allowed: false, reasons: [message] } });
+      }
+      protectedDataObserved = trustedRecord.dataClass !== "ordinary" || trustedRecord.noAiAccess === true;
+      const auditTarget = protectedDataObserved ? null : action.target;
+      const operation = registeredTool.operation;
+      const protectionPolicy = protectedData.policy ?? defaultAccessPolicy();
+      protectedDecision = evaluateProtectedData({
+        principal: { kind: "agent", id: spiffeId, autonomyClass: capability.autonomyClass },
+        operation,
+        record: trustedRecord,
+        destination: action.destination ?? null,
+        policy: protectionPolicy,
+      });
+      // Optional caller declarations may add restrictions; they never replace
+      // the server classification. In particular, "ordinary" and
+      // noAiAccess=false cannot lower registry protection.
+      const callerClass = action.dataClass ?? action.protectedData?.dataClass ?? null;
+      const callerNoAi = action.noAiAccess === true || action.protectedData?.noAiAccess === true;
+      if (callerClass && !["ordinary", "ai-read-only", "append-only", "retention-locked"].includes(callerClass)) {
+        protectedDecision = { allowed: false, reasons: ["callerens beskyttelsesklassifikation er ukendt"] };
+      }
+      if (callerNoAi || (callerClass && callerClass !== "ordinary")) {
+        const tighteningClass = callerClass && callerClass !== "ordinary" ? callerClass : trustedRecord.dataClass;
+        const tightening = evaluateProtectedData({
           principal: { kind: "agent", id: spiffeId, autonomyClass: capability.autonomyClass },
           operation,
-          record: protectedRecord,
+          record: { ...trustedRecord, dataClass: tighteningClass, noAiAccess: callerNoAi || trustedRecord.noAiAccess === true },
           destination: action.destination ?? null,
           policy: protectionPolicy,
         });
-        if (!protectedGuard.allowed) {
-          await tryAudit({ tenantId: task.tenantId ?? null, type: "agent.denied", verb: action.verb, payload: { reason: "beskyttet dataklasse", violations: protectedGuard.reasons } });
-          return finish("denied", { reason: `beskyttet dataklasse afviste handlingen: ${protectedGuard.reasons.join("; ")}`, protectedData: protectedGuard, action });
+        if (!tightening.allowed) protectedDecision = tightening;
+      }
+      if (!protectedDecision.allowed) {
+        if (!(await tryAudit({ tenantId: classificationTenant, type: "agent.denied", verb: action.verb, payload: { reason: "beskyttet dataklasse", violations: protectedDecision.reasons } }))) {
+          return finish("halted", { reason: "audit-log utilgængelig ved beskyttelsesafvisning — dødemandsgreb" });
         }
+        return finish("denied", { reason: `beskyttet dataklasse afviste handlingen: ${protectedDecision.reasons.join("; ")}`, protectedData: protectedDecision });
       }
 
-      // DKC-011: servervalideret, typet værktøjskald. Ukendte værktøjer, forkerte
-      // parametre, for store input, farlige parameternavne og uautoriserede
-      // URL'er afvises, før nogen executor ser kaldet. Der findes ingen fri shell.
       const toolCheck = tools.validate({
         verb: action.verb,
         tool: action.tool ?? capability.tool ?? null,
@@ -349,10 +413,10 @@ export function createAgentRuntime({
 
       if (decision.decision === "deny") {
         await tryAudit({ tenantId: task.tenantId ?? null, type: "agent.denied", verb: action.verb, payload: { reason: decision.reasons?.[0] } });
-        await observe({ phase: "action.decision", decision: "deny", verb: action.verb, target: action.target, reason: decision.reasons?.[0] ?? "policy deny" });
+        await observe({ phase: "action.decision", decision: "deny", verb: action.verb, target: auditTarget, reason: decision.reasons?.[0] ?? "policy deny" });
         return finish("denied", { reason: decision.reasons?.[0] ?? "policy deny", action });
       }
-      await observe({ phase: "action.decision", decision: decision.decision, verb: action.verb, target: action.target, policyDigest: action.policyDigest ?? null, approvalDigest: action.changeDigest ?? null, runbookDigest: action.runbookDigest ?? null });
+      await observe({ phase: "action.decision", decision: decision.decision, verb: action.verb, target: auditTarget, policyDigest: action.policyDigest ?? null, approvalDigest: action.changeDigest ?? null, runbookDigest: action.runbookDigest ?? null });
 
       // DKC-045: resolver den godkendte runbookversion server-side. Klienten kan
       // ikke medsende runbook-digesten; den udledes af den signerede runbook,
@@ -523,8 +587,8 @@ export function createAgentRuntime({
             target: action.target,
             environment: action.environment,
             actor: spiffeId,
-            request: { parameters: action.parameters ?? null, changeDigest: action.changeDigest ?? null },
-            dataCategories: action.dataCategories ?? [],
+            request: { parameters: protectedDataObserved ? null : action.parameters ?? null, changeDigest: action.changeDigest ?? null },
+            dataCategories: protectedDataObserved ? [] : action.dataCategories ?? [],
           });
         } catch (err) {
           await tryAudit({ tenantId: task.tenantId ?? null, type: "agent.halted", verb: action.verb, payload: { reason: "audit-log utilgængelig før handling", error: err.message } });
@@ -549,8 +613,10 @@ export function createAgentRuntime({
 
       let result;
       try {
-        result = await executor({ ...action, tenantId: jobTenant, agentRef: manifest.metadata.name, credential: activeCredential, gateway });
+        const { operation: _callerOperation, protectedData: _callerClassification, ...trustedAction } = action;
+        result = await executor({ ...trustedAction, tenantId: jobTenant, agentRef: manifest.metadata.name, credential: activeCredential, gateway });
       } catch (err) {
+        const safeError = protectedDataObserved ? "protected action failed" : err.message;
         if (runbookResolution?.changeId && typeof runbookResolver.finalize === "function") {
           try {
             await runbookResolver.finalize({ changeId: runbookResolution.changeId, outcome: "failed", result: null });
@@ -560,21 +626,21 @@ export function createAgentRuntime({
         }
         if (actionJournal) {
           try {
-            await actionJournal.complete({ tenantId: jobTenant, idempotencyId, outcome: "failed", error: err.message });
+            await actionJournal.complete({ tenantId: jobTenant, idempotencyId, outcome: "failed", error: safeError });
           } catch {
             return finish("unknown", { reason: "handling fejlede, og outcome kunne ikke logges — afventer reconciliation", idempotencyId, action });
           }
         }
-        await tryAudit({ tenantId: task.tenantId ?? null, type: "agent.action.failed", verb: action.verb, payload: { error: err.message } });
-        await observe({ phase: "action.failed", verb: action.verb, target: action.target, reason: err.message });
-        return finish("escalated", { reason: `handling fejlede: ${err.message}`, failedAction: action });
+        await tryAudit({ tenantId: task.tenantId ?? null, type: "agent.action.failed", verb: action.verb, payload: { error: safeError } });
+        await observe({ phase: "action.failed", verb: action.verb, target: auditTarget, reason: safeError });
+        return finish("escalated", { reason: protectedDataObserved ? "beskyttet handling fejlede" : `handling fejlede: ${err.message}`, ...(protectedDataObserved ? {} : { failedAction: action }) });
       }
 
       // DKC-009: den eksterne ændring er sket. Outcome skal være holdbart, før
       // der kan rapporteres success — ellers er resultatet `unknown`.
       if (actionJournal) {
         try {
-          const completed = await actionJournal.complete({ tenantId: jobTenant, idempotencyId, outcome: "succeeded", result: result ?? null });
+          const completed = await actionJournal.complete({ tenantId: jobTenant, idempotencyId, outcome: "succeeded", result: protectedDataObserved ? null : result ?? null });
           if (!completed?.ok) throw new Error("outcome blev ikke bekræftet");
         } catch {
           return finish("unknown", { reason: "handlingen blev udført, men outcome kunne ikke logges — afventer reconciliation", idempotencyId, action });
@@ -584,20 +650,22 @@ export function createAgentRuntime({
       state.tokens += result?.tokens ?? 0;
       state.costEur += result?.costEur ?? 0;
       state.results.push({ verb: action.verb, target: action.target, summary: result?.summary ?? null });
+      jobState.actions.push({ verb: action.verb, target: auditTarget, summary: protectedDataObserved ? null : result?.summary ?? null });
       // Committet handling: gem jobtilstanden før næste handling, så et
       // procesnedbrud ikke taber hvad der allerede er udført.
       if (jobStore && task.taskId) {
         try {
-          jobStore.saveState(jobTenant, task.taskId, { status: "running", state: { ...jobState, actions: state.results } });
+          jobStore.saveState(jobTenant, task.taskId, { status: "running", state: jobState });
         } catch {
           /* best-effort */
         }
       }
 
-      if (!(await tryAudit({ tenantId: task.tenantId ?? null, type: "agent.action.completed", verb: action.verb, payload: { summary: result?.summary ?? null } }))) {
+      const safeSummary = protectedDataObserved ? null : result?.summary ?? null;
+      if (!(await tryAudit({ tenantId: task.tenantId ?? null, type: "agent.action.completed", verb: action.verb, payload: { summary: safeSummary } }))) {
         return finish("halted", { reason: "audit-log utilgængelig — dødemandsgreb", action });
       }
-      await observe({ phase: "action.completed", verb: action.verb, target: action.target, summary: result?.summary ?? null, tokens: result?.tokens ?? 0, costEur: result?.costEur ?? 0 });
+      await observe({ phase: "action.completed", verb: action.verb, target: auditTarget, summary: safeSummary, tokens: result?.tokens ?? 0, costEur: result?.costEur ?? 0 });
 
       // DKC-045: afslut change-forløbet. Postchecks køres, og en fejlet
       // postcheck udløser den testede rollback. Låsen frigives altid.

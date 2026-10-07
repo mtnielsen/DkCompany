@@ -63,38 +63,89 @@ export function loadRegister(path = registerPath, { ajv = buildAjv().ajv } = {})
 
 /**
  * Slå den beskyttelsespost op en target hører til. Rækkefølge: eksakt id,
- * autoritativ pointer (eller barn af den), forbruger-modul og til sidst en
- * normaliseret delstreng. Returnerer null hvis target ikke er beskyttet.
+ * autoritativ pointer (eller barn af den), og forbruger-modul. Tenant-specifikke
+ * poster prioriteres, og en match for en anden tenant bliver synlig for
+ * klassifikatoren som mismatch. Delstrengsmatches bruges ikke som autoritet.
  */
-export function resolveRecord(register, target) {
+export function resolveRecord(register, target, { tenantId = null } = {}) {
   const t = String(target ?? "").trim();
   if (!t) return null;
-  for (const record of register?.records ?? []) {
-    if (record.id === t) return record;
-    if (record.authoritativePointer && (t === record.authoritativePointer || t.startsWith(`${record.authoritativePointer}/`))) return record;
-  }
-  const segments = t.split("/");
-  for (const record of register?.records ?? []) {
-    for (const consumer of record.consumerModules ?? []) {
-      if (segments.includes(consumer)) return record;
+  const records = register?.records ?? [];
+  if (!Array.isArray(records)) return null;
+  const matchingRecords = (candidates) => {
+    for (const record of candidates) {
+      if (!record || typeof record !== "object") continue;
+      if (record.id === t) return record;
+      if (typeof record.authoritativePointer === "string"
+        && (t === record.authoritativePointer || t.startsWith(`${record.authoritativePointer}/`))) return record;
     }
+    const segments = t.split("/");
+    for (const record of candidates) {
+      for (const consumer of Array.isArray(record?.consumerModules) ? record.consumerModules : []) {
+        if (segments.includes(consumer)) return record;
+      }
+    }
+    return null;
+  };
+  if (tenantId != null) {
+    const tenantRecords = records.filter((record) => record.tenantId != null && String(record.tenantId).toLowerCase() === String(tenantId).toLowerCase());
+    const tenantMatch = matchingRecords(tenantRecords);
+    if (tenantMatch) return tenantMatch;
+    const foreignRecords = records.filter((record) => record.tenantId != null && String(record.tenantId).toLowerCase() !== String(tenantId).toLowerCase());
+    if (matchingRecords(foreignRecords)) return matchingRecords(foreignRecords);
   }
-  for (const record of register?.records ?? []) {
-    if (t.includes(record.id)) return record;
-  }
-  return null;
+  return matchingRecords(records.filter((record) => record.tenantId == null));
 }
 
 export function createProtectedDataGuard({ register = loadRegister(), policy = loadPolicy() } = {}) {
   return {
     policy,
     register,
-    resolve(target) {
-      return resolveRecord(register, target);
+    resolve(target, { tenantId = null } = {}) {
+      return resolveRecord(register, target, { tenantId });
+    },
+    classify({ target, tenantId = null } = {}) {
+      let record;
+      try {
+        record = resolveRecord(register, target, { tenantId });
+      } catch {
+        return { status: "unknown", record: null };
+      }
+      if (!record) return { status: "unknown", record: null };
+      if (record.tenantId != null && String(record.tenantId).toLowerCase() !== String(tenantId ?? "").toLowerCase()) {
+        return { status: "tenant-mismatch", record: null };
+      }
+      if (!DATA_CLASSES.includes(record.dataClass) || (record.noAiAccess !== true && record.noAiAccess !== false)) {
+        return { status: "unknown", record: null };
+      }
+      const targetText = String(target ?? "").trim();
+      const segments = targetText.split("/");
+      const targetMatch = Boolean(targetText && (
+        record.id === targetText
+        || (typeof record.authoritativePointer === "string"
+          && (targetText === record.authoritativePointer || targetText.startsWith(`${record.authoritativePointer}/`)))
+        || (Array.isArray(record.consumerModules) && record.consumerModules.some((consumer) => segments.includes(consumer)))
+        || (typeof record.id === "string" && segments.includes(record.id))
+      ));
+      if (!targetMatch) return { status: "unknown", record: null };
+      return { status: "classified", record };
     },
     /** Evaluer en operation mod en target (eller en eksplicit post). */
-    evaluate({ principal, operation, target = null, record = null, destination = null, adapter = null } = {}) {
-      const resolved = record ?? (target ? resolveRecord(register, target) : null);
+    evaluate({ principal, operation, target = null, tenantId = null, destination = null, adapter = null } = {}) {
+      // Caller options cannot assert identity. Bind tenant-scoped records to
+      // the verified principal; a conflicting tenant hint denies the call.
+      const principalTenant = principal?.tenantId ?? principal?.tenant_id ?? null;
+      const tenantConflict = tenantId != null && principalTenant != null
+        && String(tenantId).toLowerCase() !== String(principalTenant).toLowerCase();
+      let classification = { status: "unknown", record: null };
+      if (target && !tenantConflict) {
+        try {
+          classification = this.classify({ target, tenantId: principalTenant });
+        } catch {
+          classification = { status: "unknown", record: null };
+        }
+      }
+      const resolved = classification.status === "classified" ? classification.record : null;
       if (adapter) return guardAdapterCall({ adapter, principal, operation, record: resolved, destination, policy });
       return evaluateProtectedData({ principal, operation, record: resolved, destination, policy });
     },
