@@ -1,0 +1,238 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/integration-candidate.schema.json",
+  "title": "Integration Candidate",
+  "description": "Kandidatskema for et upstream-produkt: eksakt version, edition, licens, hosting/videredistribution, SSO, SCIM, API, isolation, eksport, backup, pris, vedligeholdelse og det eksplicitte gratis/betalte funktionsskel. En kandidat er ikke godkendt, så længe en nødvendig egenskab er 'unknown'.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "applicationId", "name", "upstream", "exactVersion", "edition", "license", "hosting", "sso", "scim", "api", "isolation", "export", "backup", "price", "maintenance", "freeVsPaid", "verification"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "IntegrationCandidate" },
+
+    "metadata": { "$ref": "#/$defs/metadata" },
+
+    "applicationId": {
+      "type": "string",
+      "pattern": "^APP-[0-9]{3}$",
+      "description": "Reference til applikationskatalogets APP-id."
+    },
+    "name": { "type": "string", "minLength": 2 },
+    "upstream": {
+      "type": "object",
+      "required": ["vendor", "projectUrl", "documentationUrl"],
+      "additionalProperties": false,
+      "properties": {
+        "vendor": { "type": "string", "minLength": 1 },
+        "projectUrl": { "type": "string", "format": "uri" },
+        "documentationUrl": { "type": "string", "format": "uri" },
+        "sourceUrl": { "type": "string", "format": "uri" }
+      }
+    },
+
+    "exactVersion": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Den præcise version der vurderes, fx '24.0.1'. 'latest' eller et versionsinterval er ikke en eksakt version."
+    },
+    "edition": {
+      "type": "object",
+      "required": ["name", "tier"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "tier": { "enum": ["community", "enterprise", "cloud", "self-hosted", "other"] },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "license": {
+      "type": "object",
+      "required": ["spdx", "type", "paidFeaturesRequired", "redistributionAllowed"],
+      "additionalProperties": false,
+      "properties": {
+        "spdx": { "type": "string", "minLength": 1 },
+        "type": { "enum": ["open-source", "source-available", "proprietary", "mixed", "unknown"] },
+        "paidFeaturesRequired": { "type": "boolean" },
+        "redistributionAllowed": { "type": "boolean" },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "hosting": {
+      "type": "object",
+      "required": ["mode", "commercialRedistribution", "commercialHostingAllowed"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": { "enum": ["customer-self-hosted", "vendor-saas", "platform-hosted", "hybrid", "unknown"] },
+        "commercialRedistribution": { "type": "boolean", "description": "Om platformen må videredistribuere/hoste produktet kommercielt." },
+        "commercialHostingAllowed": { "type": "boolean" },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "sso": {
+      "type": "object",
+      "required": ["capability", "supported", "protocols"],
+      "additionalProperties": false,
+      "properties": {
+        "capability": { "$ref": "#/$defs/capability" },
+        "supported": { "type": "boolean" },
+        "protocols": { "type": "array", "items": { "enum": ["oidc", "saml2", "ldap", "other"] }, "uniqueItems": true },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "scim": {
+      "type": "object",
+      "required": ["capability", "supported"],
+      "additionalProperties": false,
+      "properties": {
+        "capability": { "$ref": "#/$defs/capability" },
+        "supported": { "type": "boolean" },
+        "version": { "type": "string" },
+        "provisioningAlternative": { "type": "string", "description": "Påkrævet når SCIM ikke understøttes." },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "api": {
+      "type": "object",
+      "required": ["capability", "documented", "protocols"],
+      "additionalProperties": false,
+      "properties": {
+        "capability": { "$ref": "#/$defs/capability" },
+        "documented": { "type": "boolean" },
+        "protocols": { "type": "array", "items": { "enum": ["rest", "graphql", "grpc", "webhook", "other"] }, "uniqueItems": true },
+        "authentication": { "type": "array", "items": { "enum": ["oauth2", "oidc", "api-key", "mTLS", "other"] } },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "isolation": {
+      "type": "object",
+      "required": ["capability", "tenantModel", "databasePerTenant"],
+      "additionalProperties": false,
+      "properties": {
+        "capability": { "$ref": "#/$defs/capability" },
+        "tenantModel": { "enum": ["shared-control-plane", "dedicated-installation", "single-tenant-only", "unsupported", "unknown"] },
+        "databasePerTenant": { "type": "boolean" },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "export": {
+      "type": "object",
+      "required": ["capability", "formats", "aclPreserved", "apiAccessible"],
+      "additionalProperties": false,
+      "properties": {
+        "capability": { "$ref": "#/$defs/capability" },
+        "formats": { "type": "array", "items": { "type": "string" } },
+        "aclPreserved": { "type": "boolean" },
+        "apiAccessible": { "type": "boolean" },
+        "manualProcedure": { "type": "string", "description": "Påkrævet når eksport ikke kan gøres via API." },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "backup": {
+      "type": "object",
+      "required": ["capability", "supported", "pointInTime", "restoreTested"],
+      "additionalProperties": false,
+      "properties": {
+        "capability": { "$ref": "#/$defs/capability" },
+        "supported": { "type": "boolean" },
+        "pointInTime": { "type": "boolean" },
+        "restoreTested": { "type": "boolean" },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "price": {
+      "type": "object",
+      "required": ["model", "currency", "recurring"],
+      "additionalProperties": false,
+      "properties": {
+        "model": { "enum": ["free", "per-user", "per-instance", "usage", "license", "support", "mixed"] },
+        "currency": { "type": "string", "pattern": "^[A-Z]{3}$" },
+        "recurring": { "type": "boolean" },
+        "listPriceMinor": { "type": "integer", "minimum": 0 },
+        "priceBasis": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "maintenance": {
+      "type": "object",
+      "required": ["vendorSupport", "releaseCadence", "securityResponse"],
+      "additionalProperties": false,
+      "properties": {
+        "vendorSupport": { "enum": ["community", "commercial", "none", "unknown"] },
+        "releaseCadence": { "type": "string", "minLength": 1 },
+        "securityResponse": { "type": "string", "minLength": 1 },
+        "eol": { "type": "string", "description": "Dato eller versionsserie for end-of-life, hvis kendt." },
+        "upgradePath": { "type": "string" }
+      }
+    },
+
+    "freeVsPaid": {
+      "type": "object",
+      "description": "Det eksplicitte gratis/betalte funktionsskel. Ukendt er ikke godkendt.",
+      "required": ["documented", "freeTierLimitations"],
+      "additionalProperties": false,
+      "properties": {
+        "documented": { "type": "boolean" },
+        "freeTierLimitations": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "requiredPaidFeatures": { "type": "array", "items": { "type": "string" } },
+        "sourceUrl": { "type": "string", "format": "uri" }
+      }
+    },
+
+    "verification": {
+      "type": "object",
+      "required": ["status", "verifiedBy", "evidence"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "enum": ["approved", "candidate_not_approved", "rejected"] },
+        "verifiedBy": { "$ref": "#/$defs/accountableHuman" },
+        "verifiedAt": { "type": "string", "format": "date" },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" },
+          "description": "Konkrete kilder/beviser for den vurderede version. En påstand uden kilde er ikke verifikation."
+        },
+        "notes": { "type": "string" }
+      }
+    }
+  },
+
+  "$defs": {
+    "capability": {
+      "enum": ["full", "partial", "none", "unknown"],
+      "description": "full = dokumenteret for den eksakte version; partial = med begrænsninger; none = findes ikke; unknown = ikke undersøgt."
+    },
+    "accountableHuman": {
+      "type": "object",
+      "required": ["subject", "role", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{3,63}$" },
+        "version": { "type": "string" },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/accountableHuman" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    }
+  }
+}

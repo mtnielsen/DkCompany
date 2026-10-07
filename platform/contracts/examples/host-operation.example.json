@@ -1,0 +1,75 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "HostOperation",
+  "metadata": {
+    "name": "host-op-package-update-001",
+    "version": "1.0.0",
+    "createdAt": "2026-09-24T09:00:00Z",
+    "description": "Godkendt pakkeopdatering af acme-prod-node1 i et HA-rollout med canary."
+  },
+  "installationId": "acme-prod",
+  "tenantId": "acme",
+  "environment": "staging",
+  "hostRef": "acme-prod-node1",
+  "operation": {
+    "id": "op-package-update-001",
+    "verb": "package-update",
+    "target": "host/acme-prod-node1",
+    "parameters": {},
+    "dryRun": false
+  },
+  "package": {
+    "source": "ubuntu-security",
+    "version": "1.2.3",
+    "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "signatureVerified": true,
+    "signedBy": "ubuntu-archive-key",
+    "sourceAllowlisted": true
+  },
+  "payload": {
+    "type": "builtin",
+    "digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+  },
+  "approval": {
+    "humanSubject": "oidc|anna.andersen",
+    "role": "Platform Owner",
+    "changeId": "CHG-HOST-PKG-001",
+    "runbookRef": "host-package-update@1.0.0",
+    "runbookDigest": "c43104666f0414b1786a2372f2bb8abc336b87eb931d82e03982dea5c7e54798",
+    "approvedAt": "2026-09-24T08:30:00Z",
+    "expiresAt": "2026-09-24T12:00:00Z",
+    "decisionDigest": "f61e339d9746072b8388e09e16541e43b7e8f596f86e71d4d40711b9184a3e73"
+  },
+  "safety": {
+    "stopCriteria": [
+      "canary utilgængelig i 60 sekunder",
+      "fejlrate over 1%"
+    ],
+    "recoveryConsoleRef": "console://provider/out-of-band/acme-prod-node1",
+    "backupRef": "backup-target://acme-prod/offsite",
+    "backupVerified": true,
+    "maintenanceWindowRef": "window://acme-prod/2026-09-24",
+    "announcedDowntimeSeconds": 0
+  },
+  "scope": {
+    "mode": "ha",
+    "nodeCount": 3,
+    "canary": {
+      "hostRef": "acme-prod-node1",
+      "waitSeconds": 120
+    }
+  },
+  "restrictions": {
+    "arbitraryShell": false,
+    "uploadedScript": false,
+    "brokerConfigChange": false,
+    "immutableWrite": false,
+    "externalKeyDestroy": false
+  },
+  "signature": {
+    "algorithm": "hmac-sha256",
+    "keyId": "host-broker-key",
+    "value": "ca44a7e4c849a2ca2f4fa0e80e77abe0eeaefb73d5495d3af176c9565fe55984",
+    "signedAt": "2026-09-24T09:00:00Z"
+  }
+}

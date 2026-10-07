@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/logging-policy.schema.json",
+  "title": "Logging Policy",
+  "description": "DKC-049: den kanoniske loggepolitik. Den fastlægger hvilke korrelationsfelter hver post skal bære, at provenance-klasserne er adskilte, hvilken retention og hvilke arkivlag (med krav om uafhængige fejldomæner og WORM) hver dataklasse kræver, hvem der må læse loggen (default-deny), og hvor meget uregelmæssig tid må afvige. Politikken er data, ikke kode, så den kan versioneres og efterprøves.",
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "correlationFields",
+    "provenance",
+    "retention",
+    "archive",
+    "access",
+    "timeSync",
+    "redaction"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "LoggingPolicy" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "description": { "type": "string" }
+      }
+    },
+    "correlationFields": {
+      "type": "array",
+      "minItems": 4,
+      "uniqueItems": true,
+      "items": { "enum": ["correlationId", "executionId", "tenantId", "resource", "incidentId", "changeId", "traceId", "parentId"] }
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["classes", "separated"],
+      "additionalProperties": false,
+      "properties": {
+        "classes": {
+          "type": "array",
+          "minItems": 5,
+          "uniqueItems": true,
+          "items": { "enum": ["sensor", "model", "verified", "human", "system"] }
+        },
+        "separated": { "const": true }
+      }
+    },
+    "retention": {
+      "type": "object",
+      "required": ["operational", "personal", "security"],
+      "additionalProperties": false,
+      "properties": {
+        "operational": { "type": "integer", "minimum": 1 },
+        "personal": { "type": "integer", "minimum": 1 },
+        "security": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "archive": {
+      "type": "object",
+      "required": ["minFailureDomains", "requireImmutableFor", "targets"],
+      "additionalProperties": false,
+      "properties": {
+        "minFailureDomains": { "type": "integer", "minimum": 2 },
+        "requireImmutableFor": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "enum": ["operational", "personal", "security"] }
+        },
+        "targets": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": ["id", "kind", "failureDomain", "immutable", "dataClasses", "classification"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "kind": { "enum": ["primary", "writable", "external", "offline"] },
+              "failureDomain": { "type": "string", "minLength": 1 },
+              "immutable": { "type": "boolean" },
+              "dataClasses": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "enum": ["operational", "personal", "security"] }
+              },
+              "classification": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    },
+    "access": {
+      "type": "object",
+      "required": ["defaultDeny", "readerRoles", "auditAccess"],
+      "additionalProperties": false,
+      "properties": {
+        "defaultDeny": { "const": true },
+        "readerRoles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "auditAccess": { "const": true },
+        "retentionBypassRoles": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "timeSync": {
+      "type": "object",
+      "required": ["maxSkewSeconds", "monotonicSequences"],
+      "additionalProperties": false,
+      "properties": {
+        "maxSkewSeconds": { "type": "integer", "minimum": 0 },
+        "monotonicSequences": { "const": true }
+      }
+    },
+    "redaction": {
+      "type": "object",
+      "required": ["forbiddenReasoningKeys", "personalDataPolicy"],
+      "additionalProperties": false,
+      "properties": {
+        "forbiddenReasoningKeys": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "personalDataPolicy": { "enum": ["minimize-and-digest", "pseudonymise"] }
+      }
+    }
+  }
+}

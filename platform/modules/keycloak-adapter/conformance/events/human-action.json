@@ -1,0 +1,20 @@
+{
+  "specversion": "1.0",
+  "id": "907421c0-b4a7-4f5f-b4be-1a894c44b044",
+  "source": "urn:platform:module:keycloak-adapter",
+  "type": "dk.platform.keycloak-adapter.subject-locate.completed",
+  "time": "2026-09-16T21:47:33.383Z",
+  "datacontenttype": "application/json",
+  "tenantid": "acme",
+  "traceid": "8d60df9f84e7f218ec307d0fe161f267",
+  "spanid": "c83a830b86c4fe1b",
+  "principal": {
+    "kind": "human",
+    "id": "oidc|dpo@example.org"
+  },
+  "dataclassification": "personal",
+  "data": {
+    "verb": "subject.locate",
+    "decision": "allow"
+  }
+}

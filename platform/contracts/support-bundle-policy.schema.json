@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/support-bundle-policy.schema.json",
+  "title": "Support Bundle Policy",
+  "description": "DKC-061: politik for redigerede supportbundles og diagnostik. Bundlen må ikke indeholde hemmeligheder eller ikke-godkendt HR-indhold (fx personalesager, løn, sygefravær eller fagforeningsforhold), der må ikke findes skjult remote supportadgang, og enhver fjernadgang kræver et navngivent menneskes udtrykkelige, tidsbegrænsede samtykke og et revisionsspor. Adgang er default-deny.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "policy", "allowlist"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "SupportBundlePolicy" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman", "labels"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/human" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "required": [
+        "redactionRequired",
+        "secretScanRequired",
+        "hrContentAllowed",
+        "forbiddenContentClasses",
+        "remoteAccessDefaultDeny",
+        "hiddenRemoteAccessAllowed",
+        "remoteAccessRequiresHumanConsent",
+        "remoteAccessMaxTtlMinutes",
+        "auditRemoteAccess"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "redactionRequired": { "type": "boolean" },
+        "secretScanRequired": { "type": "boolean" },
+        "hrContentAllowed": { "type": "boolean" },
+        "forbiddenContentClasses": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": { "enum": ["secret", "hr-personal", "payroll", "health", "union-membership", "customer-personal", "raw-payload"] }
+        },
+        "remoteAccessDefaultDeny": { "type": "boolean" },
+        "hiddenRemoteAccessAllowed": { "type": "boolean" },
+        "remoteAccessRequiresHumanConsent": { "type": "boolean" },
+        "remoteAccessMaxTtlMinutes": { "type": "integer", "minimum": 1, "maximum": 480 },
+        "auditRemoteAccess": { "type": "boolean" }
+      }
+    },
+    "allowlist": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "source", "dataClass", "description"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{2,62}$" },
+          "source": { "type": "string", "minLength": 3 },
+          "dataClass": { "enum": ["public", "internal", "operational", "configuration"] },
+          "description": { "type": "string", "minLength": 5 },
+          "optional": { "type": "boolean" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "human": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\|[a-z0-9][a-z0-9._-]{2,}$" },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": { "$ref": "#/$defs/human" }
+      }
+    }
+  }
+}

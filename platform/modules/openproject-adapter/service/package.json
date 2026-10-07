@@ -1,0 +1,13 @@
+{
+  "name": "@platform/openproject-adapter",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "DKC-027 projektstyringsadapter: wrapper OpenProject (projekter, arbejdspakker, medlemskaber, filer og statushændelser) bag den fælles adapter-SDK. Default-deny projekttilgang, projektgæst isoleret til eget projekt, ACL-bevidst søge-/AI-projektion og ærlig partial/unsupported backup/sletning.",
+  "bin": {
+    "openproject-adapter": "./src/cli.mjs"
+  },
+  "scripts": {
+    "test": "node --test"
+  }
+}

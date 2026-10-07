@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/upstream-release-profile.schema.json",
+  "title": "Upstream Release Profile",
+  "description": "Releaseprofil pr. upstream-version/edition. Binder en IntegrationCandidate til adapterens verbumskontrakt: conformance pr. verbum, forhandlede versionsserier, beskyttelse mod native admin-omgåelse og den hårde godkendelsesgate (manglende SSO eller uafklaret licens stopper kandidaten).",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "upstream", "negotiation", "verbMatrix", "privacyMatrix", "nativeAdmin", "approvalGate", "verification"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "UpstreamReleaseProfile" },
+    "metadata": { "$ref": "#/$defs/metadata" },
+    "candidateRef": { "type": ["string", "null"] },
+    "upstream": {
+      "type": "object",
+      "required": ["vendor", "product", "exactVersion", "edition", "tier"],
+      "additionalProperties": false,
+      "properties": {
+        "vendor": { "type": "string", "minLength": 1 },
+        "product": { "type": "string", "minLength": 1 },
+        "exactVersion": { "type": "string", "minLength": 1 },
+        "edition": { "type": ["string", "null"] },
+        "tier": { "enum": ["community", "enterprise", "cloud", "self-hosted", "other"] }
+      }
+    },
+    "negotiation": {
+      "type": "object",
+      "required": ["supportedRanges", "supportedEditions", "onUnsupported"],
+      "additionalProperties": false,
+      "properties": {
+        "supportedRanges": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "supportedEditions": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "onUnsupported": { "enum": ["refuse", "degrade"] }
+      }
+    },
+    "verbMatrix": { "$ref": "#/$defs/verbMatrix" },
+    "privacyMatrix": { "$ref": "#/$defs/privacyMatrix" },
+    "nativeAdmin": {
+      "type": "object",
+      "required": ["exposed", "protectedBy", "evidence"],
+      "additionalProperties": false,
+      "properties": {
+        "exposed": { "type": "boolean", "description": "Må native upstream-admin-endpoints kaldes direkte uden om adapteren? Skal være false." },
+        "protectedBy": { "type": "array", "items": { "enum": ["adapter", "pdp", "network-policy", "identity"] }, "minItems": 2 },
+        "evidence": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+      }
+    },
+    "approvalGate": {
+      "type": "object",
+      "required": ["requiredSso", "licenseType", "status", "blockers"],
+      "additionalProperties": false,
+      "properties": {
+        "requiredSso": { "type": "boolean" },
+        "licenseType": { "enum": ["open-source", "source-available", "proprietary", "mixed", "unknown"] },
+        "status": { "enum": ["approved", "blocked"] },
+        "blockers": { "type": "array", "items": { "type": "string", "minLength": 3 } }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "required": ["status", "verifiedBy", "evidence"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "enum": ["approved", "candidate_not_approved", "rejected"] },
+        "verifiedBy": { "$ref": "#/$defs/accountableHuman" },
+        "verifiedAt": { "type": "string", "format": "date" },
+        "evidence": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+      }
+    }
+  },
+
+  "$defs": {
+    "verbSupport": {
+      "type": "object",
+      "required": ["conformance"],
+      "additionalProperties": false,
+      "properties": {
+        "conformance": { "enum": ["full", "partial", "unsupported"] },
+        "reason": { "type": "string", "minLength": 10 },
+        "endpoint": { "type": "string" },
+        "evidence": { "type": "object" }
+      },
+      "allOf": [
+        {
+          "if": { "required": ["conformance"], "properties": { "conformance": { "enum": ["partial", "unsupported"] } } },
+          "then": { "required": ["reason"], "properties": { "reason": { "type": "string", "minLength": 10 } } }
+        },
+        {
+          "if": { "required": ["conformance"], "properties": { "conformance": { "const": "full" } } },
+          "then": { "required": ["endpoint", "evidence"] }
+        }
+      ]
+    },
+    "verbMatrix": {
+      "type": "object",
+      "required": ["backup", "restore", "verify-restore", "drain", "upgrade.dry-run", "upgrade", "migrate", "rollback", "health", "slo"],
+      "additionalProperties": false,
+      "properties": {
+        "backup": { "$ref": "#/$defs/verbSupport" },
+        "restore": { "$ref": "#/$defs/verbSupport" },
+        "verify-restore": { "$ref": "#/$defs/verbSupport" },
+        "drain": { "$ref": "#/$defs/verbSupport" },
+        "upgrade.dry-run": { "$ref": "#/$defs/verbSupport" },
+        "upgrade": { "$ref": "#/$defs/verbSupport" },
+        "migrate": { "$ref": "#/$defs/verbSupport" },
+        "rollback": { "$ref": "#/$defs/verbSupport" },
+        "health": { "$ref": "#/$defs/verbSupport" },
+        "slo": { "$ref": "#/$defs/verbSupport" }
+      }
+    },
+    "privacyMatrix": {
+      "type": "object",
+      "required": ["subject.locate", "subject.export", "subject.erase", "subject.legal_hold", "retention.policy"],
+      "additionalProperties": false,
+      "properties": {
+        "subject.locate": { "$ref": "#/$defs/verbSupport" },
+        "subject.export": { "$ref": "#/$defs/verbSupport" },
+        "subject.erase": { "$ref": "#/$defs/verbSupport" },
+        "subject.legal_hold": { "$ref": "#/$defs/verbSupport" },
+        "retention.policy": { "$ref": "#/$defs/verbSupport" }
+      }
+    },
+    "accountableHuman": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{3,63}$" },
+        "version": { "type": "string" },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/accountableHuman" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    }
+  }
+}

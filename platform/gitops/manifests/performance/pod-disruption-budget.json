@@ -1,0 +1,21 @@
+{
+  "apiVersion": "policy/v1",
+  "kind": "PodDisruptionBudget",
+  "metadata": {
+    "name": "performance-stateless-pdb",
+    "labels": {
+      "app.kubernetes.io/name": "performance",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "performance",
+      "platform.example.org/environment": "performance"
+    }
+  },
+  "spec": {
+    "minAvailable": 2,
+    "selector": {
+      "matchLabels": {
+        "platform.example.org/tier": "stateless"
+      }
+    }
+  }
+}

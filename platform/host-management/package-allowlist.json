@@ -1,0 +1,25 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "HostPackageSourceAllowlist",
+  "metadata": {
+    "name": "host-package-sources",
+    "version": "1.0.0",
+    "description": "Allowlistede, signerede pakkekilder for host-operationer."
+  },
+  "sources": [
+    {
+      "id": "ubuntu-security",
+      "kind": "apt",
+      "signedBy": "ubuntu-archive-key",
+      "allowlisted": true,
+      "note": "Distributionens security-pocket med signerede pakker."
+    },
+    {
+      "id": "ubuntu-updates",
+      "kind": "apt",
+      "signedBy": "ubuntu-archive-key",
+      "allowlisted": true,
+      "note": "Distributionens opdateringspocket med signerede pakker."
+    }
+  ]
+}

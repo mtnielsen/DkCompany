@@ -1,0 +1,10 @@
+{
+  "name": "dkcompany-persistence",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "DKC-008: holdbar tilstand, versionsstyrede migrationer og adskilte databaseidentiteter (node:sqlite).",
+  "scripts": {
+    "test": "node --test"
+  }
+}

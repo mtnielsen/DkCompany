@@ -1,0 +1,21 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "BaseImageLock",
+  "description": "DKC-014: pinnede base-images for kontroltjenesterne. Digesterne er løst fra de rigtige registries og må kun opdateres af 'make supply-chain-base-resolve'. Et Dockerfile der ikke matcher låsen afvises.",
+  "resolvedAt": "2026-09-23T00:00:00Z",
+  "resolver": "supply-chain/src/containers.mjs resolveBaseImages",
+  "images": [
+    {
+      "repository": "docker.io/library/node",
+      "tag": "22.22.1-bookworm-slim",
+      "digest": "4f77a690f2f8946ab16fe1e791a3ac0667ae1c3575c3e4d0d4589e9ed5bfaf3d",
+      "registry": "registry-1.docker.io"
+    },
+    {
+      "repository": "gcr.io/distroless/nodejs22-debian12",
+      "tag": "nonroot",
+      "digest": "13593b7570658e8477de39e2f4a1dd25db2f836d68a0ba771251572d23bb4f8e",
+      "registry": "gcr.io"
+    }
+  ]
+}

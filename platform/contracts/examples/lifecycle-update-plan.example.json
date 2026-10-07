@@ -1,0 +1,348 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "LifecycleUpdatePlan",
+  "metadata": {
+    "name": "update-plan-acme-prod-1.4.0",
+    "version": "1.0.0",
+    "createdAt": "2026-03-01T00:00:00Z",
+    "description": "Opdatering fra 1.3.0 til 1.4.0 med påvirkningsplan, migrationskontrol, rollback og godkendelse.",
+    "installationId": "acme-prod"
+  },
+  "fromRelease": "1.3.0",
+  "toRelease": "1.4.0",
+  "catalogDigest": "7109f479b010a4f76e01fb971efa78c646780e1031213d2907e2b77bcb27e363",
+  "impact": {
+    "added": [],
+    "removed": [],
+    "upgraded": [
+      {
+        "id": "audit-service",
+        "from": "1.4.0",
+        "to": "1.5.0",
+        "componentType": "security-core"
+      },
+      {
+        "id": "bi",
+        "from": "2.9.0",
+        "to": "3.0.0",
+        "componentType": "application"
+      },
+      {
+        "id": "communications",
+        "from": "2.0.0",
+        "to": "2.1.0",
+        "componentType": "application"
+      },
+      {
+        "id": "hr",
+        "from": "1.3.0",
+        "to": "1.4.0",
+        "componentType": "application"
+      },
+      {
+        "id": "identity-broker",
+        "from": "1.1.0",
+        "to": "1.2.0",
+        "componentType": "security-core"
+      },
+      {
+        "id": "platform-core",
+        "from": "1.3.0",
+        "to": "1.4.0",
+        "componentType": "security-core"
+      },
+      {
+        "id": "reporting",
+        "from": "1.0.0",
+        "to": "1.1.0",
+        "componentType": "application"
+      }
+    ],
+    "downgraded": [],
+    "sharedDataServices": [
+      {
+        "id": "analytics",
+        "kind": "columnar",
+        "requiredBy": [
+          "bi"
+        ],
+        "providedBy": [
+          "analytics-store"
+        ]
+      },
+      {
+        "id": "object-store",
+        "kind": "object",
+        "requiredBy": [
+          "analytics-store",
+          "backup-destination",
+          "reporting"
+        ],
+        "providedBy": [
+          "object-store"
+        ]
+      },
+      {
+        "id": "sql",
+        "kind": "relational",
+        "requiredBy": [
+          "analytics-store",
+          "audit-service",
+          "communications",
+          "hr",
+          "identity-broker",
+          "platform-core"
+        ],
+        "providedBy": [
+          "primary-database"
+        ]
+      }
+    ],
+    "affectedTenants": [
+      "acme"
+    ]
+  },
+  "migrationCheck": {
+    "required": true,
+    "phases": [
+      "pre",
+      "schema",
+      "data"
+    ],
+    "reversible": false,
+    "problems": []
+  },
+  "preflight": {
+    "ok": true,
+    "checks": [
+      {
+        "id": "release-known",
+        "title": "Målreleasen findes i det signerede katalog",
+        "status": "pass",
+        "detail": "release '1.4.0'"
+      },
+      {
+        "id": "release-runnable",
+        "title": "Kun stable/security-releases må køres",
+        "status": "pass",
+        "detail": "kanal stable"
+      },
+      {
+        "id": "closure",
+        "title": "Kompatibilitetslåsen kan resolveres",
+        "status": "pass",
+        "detail": "11 komponenter"
+      },
+      {
+        "id": "migration",
+        "title": "Migrationskontrol",
+        "status": "warn",
+        "detail": "7 migrationer, 2 irreversible"
+      },
+      {
+        "id": "preserve-data",
+        "title": "Data bevares og diske formateres ikke",
+        "status": "pass",
+        "detail": "restriktioner aktiv"
+      },
+      {
+        "id": "recovery-path",
+        "title": "Dokumenteret rollback-/gendannelsesvej",
+        "status": "pass",
+        "detail": "docs/runbooks/module-update-rollback.md"
+      }
+    ],
+    "blockingProblems": []
+  },
+  "authorization": {
+    "required": true,
+    "humanSubject": "oidc|ada.acme",
+    "approvalRef": "approval://lifecycle/example-update",
+    "twoPerson": true
+  },
+  "rollback": {
+    "strategy": "snapshot-restore",
+    "snapshotRef": "lifecycle://snapshot/acme-prod/1.4.0",
+    "restoresRights": true,
+    "documentedProcedureRef": "docs/runbooks/module-update-rollback.md"
+  },
+  "steps": [
+    {
+      "id": "preflight",
+      "order": 1,
+      "kind": "preflight",
+      "description": "Kør read-only preflight og verificér releasekanal, signatur og closure",
+      "mutating": false,
+      "requiresApproval": false,
+      "dependsOn": [],
+      "state": "pending"
+    },
+    {
+      "id": "snapshot",
+      "order": 2,
+      "kind": "snapshot",
+      "description": "Tag et snapshot af release, komponenter og records før mutation",
+      "mutating": false,
+      "requiresApproval": false,
+      "dependsOn": [
+        "preflight"
+      ],
+      "state": "pending"
+    },
+    {
+      "id": "provision-audit-service",
+      "order": 3,
+      "kind": "provision",
+      "description": "Klargør komponenten 'audit-service' (1.4.0 → 1.5.0)",
+      "mutating": true,
+      "requiresApproval": true,
+      "dependsOn": [
+        "snapshot"
+      ],
+      "state": "pending"
+    },
+    {
+      "id": "provision-bi",
+      "order": 4,
+      "kind": "provision",
+      "description": "Klargør komponenten 'bi' (2.9.0 → 3.0.0)",
+      "mutating": true,
+      "requiresApproval": true,
+      "dependsOn": [
+        "snapshot"
+      ],
+      "state": "pending"
+    },
+    {
+      "id": "provision-communications",
+      "order": 5,
+      "kind": "provision",
+      "description": "Klargør komponenten 'communications' (2.0.0 → 2.1.0)",
+      "mutating": true,
+      "requiresApproval": true,
+      "dependsOn": [
+        "snapshot"
+      ],
+      "state": "pending"
+    },
+    {
+      "id": "provision-hr",
+      "order": 6,
+      "kind": "provision",
+      "description": "Klargør komponenten 'hr' (1.3.0 → 1.4.0)",
+      "mutating": true,
+      "requiresApproval": true,
+      "dependsOn": [
+        "snapshot"
+      ],
+      "state": "pending"
+    },
+    {
+      "id": "provision-identity-broker",
+      "order": 7,
+      "kind": "provision",
+      "description": "Klargør komponenten 'identity-broker' (1.1.0 → 1.2.0)",
+      "mutating": true,
+      "requiresApproval": true,
+      "dependsOn": [
+        "snapshot"
+      ],
+      "state": "pending"
+    },
+    {
+      "id": "provision-platform-core",
+      "order": 8,
+      "kind": "provision",
+      "description": "Klargør komponenten 'platform-core' (1.3.0 → 1.4.0)",
+      "mutating": true,
+      "requiresApproval": true,
+      "dependsOn": [
+        "snapshot"
+      ],
+      "state": "pending"
+    },
+    {
+      "id": "provision-reporting",
+      "order": 9,
+      "kind": "provision",
+      "description": "Klargør komponenten 'reporting' (1.0.0 → 1.1.0)",
+      "mutating": true,
+      "requiresApproval": true,
+      "dependsOn": [
+        "snapshot"
+      ],
+      "state": "pending"
+    },
+    {
+      "id": "migrate-schema",
+      "order": 10,
+      "kind": "migrate",
+      "description": "Anvend versionerede skema- og datamigrationer for målreleasen",
+      "mutating": true,
+      "requiresApproval": true,
+      "dependsOn": [
+        "provision-audit-service",
+        "provision-bi",
+        "provision-communications",
+        "provision-hr",
+        "provision-identity-broker",
+        "provision-platform-core",
+        "provision-reporting"
+      ],
+      "state": "pending"
+    },
+    {
+      "id": "configure",
+      "order": 11,
+      "kind": "configure",
+      "description": "Anvend den ene ønskede konfiguration og opdater komponentversioner",
+      "mutating": true,
+      "requiresApproval": true,
+      "dependsOn": [
+        "migrate-schema"
+      ],
+      "state": "pending"
+    },
+    {
+      "id": "verify",
+      "order": 12,
+      "kind": "verify",
+      "description": "Verificér faktisk tilstand mod den låste målrelease",
+      "mutating": false,
+      "requiresApproval": false,
+      "dependsOn": [
+        "configure"
+      ],
+      "state": "pending"
+    },
+    {
+      "id": "rollback-ready",
+      "order": 13,
+      "kind": "rollback",
+      "description": "Bekræft at snapshot og rollback-procedure er klar",
+      "mutating": false,
+      "requiresApproval": false,
+      "dependsOn": [
+        "verify"
+      ],
+      "state": "pending"
+    }
+  ],
+  "resume": {
+    "stateRef": "lifecycle://update/acme-prod/1.4.0",
+    "lastCompletedStep": null,
+    "resumable": true
+  },
+  "restrictions": {
+    "preserveData": true,
+    "formatDisks": false,
+    "adoptExistingSchema": false,
+    "unsignedPackage": false
+  },
+  "signature": {
+    "algorithm": "hmac-sha256",
+    "keyId": "installer-example-key",
+    "value": "6e979198aa2d8153a2a6643d17f7181489e110a74fe8baf591193089319b6955",
+    "signedAt": "2026-03-01T00:00:00Z"
+  }
+}

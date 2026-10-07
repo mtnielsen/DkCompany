@@ -1,0 +1,133 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "AcceptanceGatePolicy",
+  "metadata": {
+    "name": "platform-acceptance-gates",
+    "version": "1.0.0",
+    "description": "Profilbevidst gate-politik for installations- og releaseacceptance. Fælles gates for sikkerhed, privacy, restore og roller gælder altid. HA, host management, immutable og self-healing er særskilte gates der kun aktiveres når profilen/kapabiliteten er valgt. Hver aktiv gate kræver forudsætningskapabiliteter i koden, et gyldigt testbevis og en særskilt registreret menneskelig ejeraccept.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+    },
+    "labels": { "wave": "5" }
+  },
+  "freshnessDays": 30,
+  "gates": [
+    {
+      "id": "security",
+      "title": "Fælles sikkerhedsgate",
+      "kind": "common",
+      "description": "Identitet, default-deny policy, audit, credentials, værktøjsgrænse, sårbarheder samt installer, konfiguration og produktlivscyklus.",
+      "appliesWhen": { "always": true },
+      "requiresCapabilities": ["identity-verification", "policy", "audit-durability", "credentials", "tool-boundary", "security-plan", "vulnerability-management", "installer-configuration", "lifecycle"],
+      "requirementRefs": ["REQ-INSTALL-001", "REQ-CONFIGURATION-001", "REQ-LIFECYCLE-001", "REQ-IDENTITY-001", "REQ-POLICY-001", "REQ-AUDIT-001", "REQ-CREDENTIALS-001", "REQ-TOOL-001", "REQ-SECURITY-001", "REQ-VULN-001"],
+      "checks": ["identity-test", "policy-test", "boundary-test", "policy-verify", "audit-durability-test", "audit-durability-check", "credentials-test", "tool-boundary-test", "tool-boundary-check", "security-test", "security-check", "vulnerability-check", "vulnerability-test", "distribution-check", "distribution-test", "configuration-check", "configuration-test", "installer-preflight", "installer-plan", "lifecycle-check", "lifecycle-test", "lifecycle-run", "lifecycle-report"],
+      "journeys": ["install", "configure", "add-remove", "upgrade", "provider-switch"],
+      "mandatory": true,
+      "owner": { "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer", "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" } }
+    },
+    {
+      "id": "privacy",
+      "title": "Fælles privacygate",
+      "kind": "common",
+      "description": "Privacy-verber, DSAR-eksport, dataregister, retention/sletning og logdækning.",
+      "appliesWhen": { "always": true },
+      "requiresCapabilities": ["privacy", "data-register", "retention", "logging"],
+      "requirementRefs": ["REQ-PRIVACY-001", "REQ-PRIVACY-002", "REQ-RETENTION-001", "REQ-LOGGING-001"],
+      "checks": ["privacy-check", "privacy-test", "data-register-check", "data-register-test", "retention-check", "retention-test", "logging-check", "logging-test"],
+      "journeys": ["exit"],
+      "mandatory": true,
+      "owner": { "subject": "oidc|ditte.dpo", "name": "Ditte DPO", "role": "Data Protection Officer", "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" } }
+    },
+    {
+      "id": "restore",
+      "title": "Fælles restoregate",
+      "kind": "common",
+      "description": "Krypteret backup, eksterne backupmål, uafhængig PITR/katastrofegendannelse, serviceklasser og menneskelig overtagelse.",
+      "appliesWhen": { "always": true },
+      "requiresCapabilities": ["backup", "backup-targets", "disaster-recovery", "continuity", "recovery-takeover"],
+      "requirementRefs": ["REQ-BACKUP-001", "REQ-BACKUP-002", "REQ-DR-001", "REQ-CONTINUITY-001", "REQ-TAKEOVER-001"],
+      "checks": ["backup-check", "backup-test", "backup-target-check", "backup-target-test", "dr-check", "dr-test", "continuity-check", "continuity-test", "takeover-check", "takeover-test", "takeover-run"],
+      "journeys": ["recovery"],
+      "mandatory": true,
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner", "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" } }
+    },
+    {
+      "id": "role",
+      "title": "Fælles rollegate",
+      "kind": "common",
+      "description": "Præcis én uforanderlig rolle pr. agent, verificeret handoff, menneskelig godkendelse og menneskestyret change.",
+      "appliesWhen": { "always": true },
+      "requiresCapabilities": ["agent-registry", "agent-conformance", "approval-service", "change-runbooks"],
+      "requirementRefs": ["REQ-AGENT-ROLE-001", "REQ-AGENT-HANDOFF-001", "REQ-APPROVAL-001", "REQ-CHANGE-001"],
+      "checks": ["agent-registry-check", "agent-registry-test", "agent-conformance-test", "approval-check", "approval-test", "runbook-check", "runbook-test"],
+      "journeys": ["escalation"],
+      "mandatory": true,
+      "owner": { "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer", "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" } }
+    },
+    {
+      "id": "ha",
+      "title": "HA-gate (kun ved valgt HA-profil)",
+      "kind": "profile",
+      "description": "HA-klynge, database-HA, beskedudveksling, lager, dedup, kapacitet, chaos og menneskelig overtagelse. Aktiveres kun når profilen er multiple-servers.",
+      "appliesWhen": { "profileType": "multiple-servers" },
+      "requiresCapabilities": ["ha-cluster", "database-ha", "messaging", "storage", "disaster-recovery", "deduplication", "performance-capacity", "chaos-continuity", "recovery-takeover"],
+      "requirementRefs": ["REQ-HA-001", "REQ-DBHA-001", "REQ-MSG-001", "REQ-STORAGE-001", "REQ-DR-001", "REQ-DEDUP-001", "REQ-CAPACITY-001", "REQ-CHAOS-001", "REQ-TAKEOVER-001"],
+      "checks": ["ha-check", "ha-test", "ha-drill", "db-ha-check", "db-ha-test", "db-ha-drill", "messaging-check", "messaging-test", "storage-check", "storage-test", "storage-drill", "dedup-check", "dedup-test", "dedup-drill", "performance-check", "performance-test", "performance-drill", "chaos-check", "chaos-test", "chaos-run", "takeover-check", "takeover-test", "takeover-run"],
+      "journeys": ["install"],
+      "mandatory": true,
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner", "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" } }
+    },
+    {
+      "id": "host-management",
+      "title": "Host management-gate (kun ved opt-in)",
+      "kind": "profile",
+      "description": "Valgfri sikker host- og OS-administration med enrollment, lukkede operationer, broker og recoveryvej. Aktiveres kun når host management er tilvalgt.",
+      "appliesWhen": { "hostManagement": true },
+      "requiresCapabilities": ["host-management"],
+      "requirementRefs": ["REQ-HOST-001"],
+      "checks": ["host-management-check", "host-management-test", "host-management-status"],
+      "journeys": ["install"],
+      "mandatory": true,
+      "owner": { "subject": "oidc|sven.security", "name": "Sven Security", "role": "Security Officer", "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" } }
+    },
+    {
+      "id": "immutable",
+      "title": "Immutable-gate (kun ved valgt immutable-profil)",
+      "kind": "profile",
+      "description": "Beskyttede dataklasser, WORM-håndhævelse uden for agentens kontrol og uforanderlig audit/logning. Aktiveres kun når immutable er valgt; fravalg ophæver ikke den obligatoriske auditbeskyttelse, som fortsat kræves af sikkerhedsgaten.",
+      "appliesWhen": { "immutable": true },
+      "requiresCapabilities": ["data-protection", "immutable-enforcement", "logging", "audit-durability"],
+      "requirementRefs": ["REQ-IMMUTABLE-001", "REQ-RETENTION-001", "REQ-LOGGING-001", "REQ-AUDIT-001"],
+      "checks": ["data-protection-check", "data-protection-test", "immutable-check", "immutable-test", "logging-check", "logging-test", "audit-durability-check", "audit-durability-test"],
+      "journeys": [],
+      "mandatory": true,
+      "owner": { "subject": "oidc|ditte.dpo", "name": "Ditte DPO", "role": "Data Protection Officer", "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" } }
+    },
+    {
+      "id": "self-healing",
+      "title": "Self-healing-gate (kun når aktiveret)",
+      "kind": "profile",
+      "description": "Menneskestyret change/runbook og begrænset selvreparation med sikker fallback. Aktiveres kun når self-healing er valgt, og kræver en uafhængig menneskelig recoveryøvelse ud over testbeviset.",
+      "appliesWhen": { "selfHealing": true },
+      "requiresCapabilities": ["change-runbooks", "self-remediation"],
+      "requirementRefs": ["REQ-REMEDIATION-001", "REQ-CHANGE-001"],
+      "checks": ["runbook-check", "runbook-test", "remediation-check", "remediation-test"],
+      "journeys": [],
+      "mandatory": true,
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner", "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" } }
+    }
+  ],
+  "roleSeparation": {
+    "checks": ["agent-registry-check", "agent-registry-test", "agent-conformance-test"],
+    "rejections": ["role-rotation", "alias", "subagent", "shared-credential", "multi-role-manifest"]
+  },
+  "ownerAcceptance": {
+    "registryRef": "distribution/acceptance/owner-acceptance.json",
+    "requireForEveryActiveGate": true,
+    "maxAgeDays": 30,
+    "acceptedByRoles": ["Platform Owner", "Deputy Platform Owner", "Security Officer", "Data Protection Officer"]
+  }
+}

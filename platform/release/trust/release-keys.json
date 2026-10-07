@@ -1,0 +1,13 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "TrustAnchor",
+  "description": "DKC-014: den offentlige halvdel af releasesignaturnøglen. Den private halvdel ligger i CI-hemmeligheden DKC_RELEASE_SIGNING_KEY og committes aldrig. Verifikation af et deployet image kræver en gyldig signatur fra denne nøgle.",
+  "keys": [
+    {
+      "keyId": "8042494d66640bc7",
+      "algorithm": "ed25519",
+      "publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAv36/L5+oOZJuaPd5IAyaGsOpJeU/ZxKmX5cVkA0CnCw=\n-----END PUBLIC KEY-----\n",
+      "owner": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Security Owner" }
+    }
+  ]
+}

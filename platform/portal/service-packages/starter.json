@@ -1,0 +1,67 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ServicePackage",
+  "metadata": {
+    "name": "starter",
+    "version": "1.0.0",
+    "description": "Grundpakken: sikkerhedskernen med kontrolplan, identitetsbroker og holdbar audit. Udgangspunktet for alle kunder.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+    },
+    "labels": { "segment": "smv" }
+  },
+  "category": "platform",
+  "modules": [
+    {
+      "id": "platform-core",
+      "versionRange": ">=1.0.0 <2.0.0",
+      "required": true,
+      "reason": "Kontrolplan, policy-beslutningspunkt og job-runner er obligatorisk."
+    },
+    {
+      "id": "identity-broker",
+      "versionRange": ">=1.0.0 <2.0.0",
+      "required": true,
+      "reason": "Verificeret SSO og tjenesteidentiteter er en forudsætning for adgang."
+    },
+    {
+      "id": "audit-service",
+      "versionRange": ">=1.0.0 <2.0.0",
+      "required": true,
+      "reason": "Revisionssporet skal være holdbart og fail-closed fra dag ét."
+    }
+  ],
+  "price": {
+    "currency": "DKK",
+    "monthly": 1500,
+    "implementation": 5000,
+    "components": [
+      { "id": "platform-core", "moduleId": "platform-core", "monthly": 900, "unit": "md", "note": "Delt kontrolplan." },
+      { "id": "identity-broker", "moduleId": "identity-broker", "monthly": 300, "unit": "md", "note": "Identitetsbroker pr. kunde." },
+      { "id": "audit-service", "moduleId": "audit-service", "monthly": 300, "unit": "md", "note": "Holdbar audit." }
+    ]
+  },
+  "consequences": [
+    {
+      "id": "shared-control-plane",
+      "severity": "material",
+      "description": "Kunden deler kontrolplan med andre kunder; data er tenantadskilt, men kontrolplanen er fælles driftet.",
+      "requiresAcknowledgment": true
+    },
+    {
+      "id": "onboarding-time",
+      "severity": "notice",
+      "description": "Onboarding tager typisk op til fem arbejdsdage inkl. verifikation af kundens identitet."
+    }
+  ],
+  "dataProcessing": { "personalData": false, "subprocessorRefs": [] },
+  "supportProfile": {
+    "tier": "supported",
+    "supportWindow": "12 måneder fra GA",
+    "escalation": "Platform Owner via platform@example.org"
+  },
+  "lifecycle": { "orderable": true }
+}

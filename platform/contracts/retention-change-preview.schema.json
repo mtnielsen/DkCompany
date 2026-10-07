@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/retention-change-preview.schema.json",
+  "title": "Retention Change Preview",
+  "description": "DKC-054 — preview af en retentionændring. Previewet viser hvilke dataklasser og databærende artefakter ændringen berører, hvilke holds/WORM-lag der gælder, og om ændringen ligger inden for den menneskeligt vedtagne ramme. En ændring uden for rammen eller i strid med hold/WORM afvises, og en retentionændring kræver altid en navngiven menneskelig autorisation.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "installationId", "changeId", "requested", "affectedDataClasses", "holds", "frames", "decisions", "requiresHumanApproval", "authorization"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "RetentionChangePreview" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+        "description": { "type": "string", "minLength": 10 }
+      }
+    },
+    "installationId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+    "changeId": { "type": "string", "minLength": 3 },
+    "requested": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["dataClass", "fromDays", "toDays"],
+        "additionalProperties": false,
+        "properties": {
+          "dataClass": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$" },
+          "fromDays": { "type": "integer", "minimum": 1 },
+          "toDays": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+    "affectedDataClasses": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["dataClass", "records", "personalData", "artifacts"],
+        "additionalProperties": false,
+        "properties": {
+          "dataClass": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$" },
+          "records": { "type": "integer", "minimum": 0 },
+          "personalData": { "type": "boolean" },
+          "artifacts": { "type": "array", "items": { "type": "string", "minLength": 3 } }
+        }
+      }
+    },
+    "holds": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["dataClass", "legalHoldRef", "worm", "until"],
+        "additionalProperties": false,
+        "properties": {
+          "dataClass": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$" },
+          "legalHoldRef": { "type": "string", "minLength": 3 },
+          "worm": { "type": "boolean" },
+          "until": { "type": ["string", "null"], "format": "date-time" }
+        }
+      }
+    },
+    "frames": {
+      "type": "object",
+      "required": ["frameRef", "approvedBy", "approvedAt", "maxRetentionDays", "minRetentionDays"],
+      "additionalProperties": false,
+      "properties": {
+        "frameRef": { "type": "string", "minLength": 3 },
+        "approvedBy": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\|[a-z0-9._@-]+$" },
+        "approvedAt": { "type": "string", "format": "date-time" },
+        "maxRetentionDays": { "type": "integer", "minimum": 1 },
+        "minRetentionDays": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "decisions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["dataClass", "allowed", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "dataClass": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$" },
+          "allowed": { "type": "boolean" },
+          "reason": { "type": "string", "minLength": 5 }
+        }
+      }
+    },
+    "requiresHumanApproval": { "const": true },
+    "authorization": {
+      "type": "object",
+      "required": ["humanSubject", "role", "grantedAt", "expiresAt", "decisionDigest"],
+      "additionalProperties": false,
+      "properties": {
+        "humanSubject": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\|[a-z0-9._@-]+$" },
+        "role": { "type": "string", "minLength": 2 },
+        "grantedAt": { "type": "string", "format": "date-time" },
+        "expiresAt": { "type": "string", "format": "date-time" },
+        "decisionDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    }
+  }
+}

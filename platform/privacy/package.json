@@ -1,0 +1,13 @@
+{
+  "name": "@platform/privacy",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "DKC-020 — holdbar, autoriseret DSAR-sag med per-modul status (found/partial/unsupported/failed/unknown) og sikret eksport med udløb, digest og revisionsspor.",
+  "exports": {
+    ".": "./src/index.mjs"
+  },
+  "scripts": {
+    "test": "node --test"
+  }
+}

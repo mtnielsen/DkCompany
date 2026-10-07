@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/service-package.schema.json",
+  "title": "Service Package",
+  "description": "Versioneret, kundevendt servicepakke: en samling moduler med en pris og en række konsekvenser, som kunden skal se og kvittere for før bestilling. Adskilt fra det tekniske komponentkatalog.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "category", "modules", "price", "consequences", "dataProcessing", "supportProfile", "lifecycle"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "ServicePackage" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?$" },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/accountableHuman" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "category": { "enum": ["platform", "communications", "hr", "bi", "reporting", "integration", "other"] },
+    "modules": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": ["id", "versionRange", "required", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,63}$" },
+          "versionRange": { "type": "string", "minLength": 3 },
+          "required": { "type": "boolean" },
+          "reason": { "type": "string", "minLength": 10 }
+        }
+      }
+    },
+    "price": {
+      "type": "object",
+      "required": ["currency", "monthly", "implementation", "components"],
+      "additionalProperties": false,
+      "properties": {
+        "currency": { "const": "DKK" },
+        "monthly": { "type": "number", "minimum": 0 },
+        "implementation": { "type": "number", "minimum": 0 },
+        "components": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "monthly", "unit"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string", "minLength": 2 },
+              "moduleId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,63}$" },
+              "monthly": { "type": "number", "minimum": 0 },
+              "unit": { "type": "string", "minLength": 1 },
+              "note": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "consequences": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "severity", "description"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,63}$" },
+          "severity": { "enum": ["info", "notice", "material"] },
+          "description": { "type": "string", "minLength": 10 },
+          "requiresAcknowledgment": { "type": "boolean" }
+        }
+      }
+    },
+    "dataProcessing": {
+      "type": "object",
+      "required": ["personalData", "subprocessorRefs"],
+      "additionalProperties": false,
+      "properties": {
+        "personalData": { "type": "boolean" },
+        "subprocessorRefs": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 2 } },
+        "purpose": { "type": "string" }
+      }
+    },
+    "supportProfile": {
+      "type": "object",
+      "required": ["tier", "supportWindow", "escalation"],
+      "additionalProperties": false,
+      "properties": {
+        "tier": { "enum": ["supported", "best-effort", "community"] },
+        "supportWindow": { "type": "string", "minLength": 3 },
+        "escalation": { "type": "string", "minLength": 3 }
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "required": ["orderable"],
+      "additionalProperties": false,
+      "properties": {
+        "orderable": { "type": "boolean" },
+        "deprecatedAt": { "type": "string" },
+        "sunsetAt": { "type": "string" }
+      }
+    }
+  },
+  "$defs": {
+    "accountableHuman": {
+      "type": "object",
+      "required": ["subject", "role", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": {
+          "type": "object",
+          "required": ["subject", "name"],
+          "additionalProperties": false,
+          "properties": {
+            "subject": { "type": "string", "minLength": 3 },
+            "name": { "type": "string", "minLength": 2 }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "PilotProfileSet",
+  "metadata": {
+    "name": "platform-pilot-business-profiles",
+    "version": "1.0.0",
+    "description": "Tre repræsentative pilotvirksomheder med forskellig størrelse, segment, roller og integrationsbehov. Profilerne er syntetiske og bruges som fælles grundlag for de kørebare pilotscenarier og readiness-aggregatoren; de er ikke kundedata.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+    },
+    "labels": { "wave": "5", "task": "DKC-033" }
+  },
+  "profiles": [
+    {
+      "id": "smv",
+      "name": "Solo Håndværk ApS",
+      "segment": "smv",
+      "companySizeEmployees": 18,
+      "deploymentProfileRef": "small-vps",
+      "ledgerTenantId": "globex",
+      "tenantFixtures": [
+        { "tenantId": "globex", "name": "Solo Håndværk", "kind": "customer", "synthetic": true }
+      ],
+      "roles": [
+        { "id": "owner", "kind": "human", "description": "Ejer og platformansvarlig", "namedHuman": { "subject": "oidc|peter.pilot", "name": "Peter Pilot" } },
+        { "id": "employee", "kind": "human", "description": "Medarbejder med daglig sags- og filadgang" },
+        { "id": "external-accountant", "kind": "human", "description": "Ekstern revisor med tidsbegrænset adgang", "external": true },
+        { "id": "integration-service", "kind": "service", "description": "Tjenesteidentitet for den lokale integration" }
+      ],
+      "integrations": [
+        { "id": "mattermost", "kind": "chat", "need": "team-chat", "availability": "included" },
+        { "id": "nextcloud", "kind": "files", "need": "delt-dokumentlager", "availability": "included" },
+        { "id": "crm", "kind": "crm", "need": "kundekartotek", "availability": "opt-in" },
+        { "id": "finance-erp", "kind": "erp", "need": "dansk bogføring og moms", "availability": "unavailable", "reason": "Der findes endnu ikke et registreret økonomimodul med dansk lokalisering; kræver DKC-035 og en faglig gennemgang." }
+      ],
+      "criticalWorkflows": ["login-offboarding", "daily-work", "restore", "privacy-case", "upgrade", "exit"],
+      "resourceEnvelope": { "cpuMillicores": 8000, "memoryMiB": 16384, "storageGiB": 1000, "nodes": 1 },
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+      }
+    },
+    {
+      "id": "it-service",
+      "name": "Team Viden A/S",
+      "segment": "service",
+      "companySizeEmployees": 120,
+      "deploymentProfileRef": "ha-cluster",
+      "ledgerTenantId": "acme",
+      "tenantFixtures": [
+        { "tenantId": "acme", "name": "Team Viden", "kind": "customer", "synthetic": true },
+        { "tenantId": "acme-partner", "name": "Team Viden Partner", "kind": "tenant", "synthetic": true }
+      ],
+      "roles": [
+        { "id": "service-owner", "kind": "human", "description": "Serviceejer med ansvar for driftsaftalen", "namedHuman": { "subject": "oidc|sofia.sorensen", "name": "Sofia Sørensen" } },
+        { "id": "service-desk-agent", "kind": "human", "description": "Sagsbehandler på service desk" },
+        { "id": "technician", "kind": "human", "description": "Tekniker med scoped projekt- og systemadgang" },
+        { "id": "team-lead", "kind": "human", "description": "Teamleder der godkender ændringer" },
+        { "id": "integration-service", "kind": "service", "description": "Tjenesteidentitet for ITSM- og projektintegrationer" }
+      ],
+      "integrations": [
+        { "id": "mattermost", "kind": "chat", "need": "team- og kundekanaler", "availability": "included" },
+        { "id": "nextcloud", "kind": "files", "need": "kundedokumenter pr. sag", "availability": "included" },
+        { "id": "itsm", "kind": "itsm", "need": "alarm- og sagskorrelation", "availability": "included", "scopeNote": "GLPI-adapteren er den valgte ITSM-kandidat." },
+        { "id": "openproject", "kind": "projects", "need": "projekt- og opgaveplanlægning", "availability": "included" },
+        { "id": "keycloak", "kind": "iam", "need": "fælles SSO og gruppeprovisionering", "availability": "included" },
+        { "id": "hr-payroll", "kind": "hr", "need": "medarbejderstamdata og løn", "availability": "opt-in", "reason": "HR er valgfrit; løn kræver en separat dansk lokaliseringsvurdering." }
+      ],
+      "criticalWorkflows": ["login-offboarding", "daily-work", "restore", "privacy-case", "upgrade", "exit"],
+      "resourceEnvelope": { "cpuMillicores": 24000, "memoryMiB": 49152, "storageGiB": 4000, "nodes": 3 },
+      "owner": {
+        "subject": "oidc|sofia.sorensen",
+        "name": "Sofia Sørensen",
+        "role": "Service Delivery Owner",
+        "substitute": { "subject": "oidc|sven.svendsen", "name": "Sven Svendsen" }
+      }
+    },
+    {
+      "id": "enterprise",
+      "name": "Enterprise Nord A/S",
+      "segment": "enterprise",
+      "companySizeEmployees": 900,
+      "deploymentProfileRef": "enterprise-dedicated",
+      "ledgerTenantId": "initech",
+      "tenantFixtures": [
+        { "tenantId": "initech", "name": "Enterprise Nord", "kind": "customer", "synthetic": true },
+        { "tenantId": "initech-shared", "name": "Enterprise Nord Shared Services", "kind": "shared", "synthetic": true }
+      ],
+      "roles": [
+        { "id": "enterprise-owner", "kind": "human", "description": "Enterprise delivery owner", "namedHuman": { "subject": "oidc|erik.eriksen", "name": "Erik Eriksen" } },
+        { "id": "security-officer", "kind": "human", "description": "Sikkerhedsansvarlig med auditadgang", "namedHuman": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen" } },
+        { "id": "hr-admin", "kind": "human", "description": "HR-administrator med beskyttet feltadgang" },
+        { "id": "finance-admin", "kind": "human", "description": "Økonomiansvarlig med rapportadgang" },
+        { "id": "integration-service", "kind": "service", "description": "Tjenesteidentitet for dedikerede integrationer" }
+      ],
+      "integrations": [
+        { "id": "mattermost", "kind": "chat", "need": "virksomhedskanaler", "availability": "included" },
+        { "id": "nextcloud", "kind": "files", "need": "dokumentlager med dataklassifikation", "availability": "included" },
+        { "id": "itsm", "kind": "itsm", "need": "incident- og change-korrelation", "availability": "included" },
+        { "id": "openproject", "kind": "projects", "need": "porteføljestyring", "availability": "included" },
+        { "id": "keycloak", "kind": "iam", "need": "federeret identitet og grupper", "availability": "included" },
+        { "id": "host-management", "kind": "infrastructure", "need": "afgrænset host-styring som opt-in", "availability": "opt-in", "reason": "Host-styring kræver en særskilt risikovurdering og bevarer kundens out-of-band-adgang." },
+        { "id": "finance-erp", "kind": "erp", "need": "koncernøkonomi og dansk moms", "availability": "unavailable", "reason": "Økonomimodul med dansk lokalisering er ikke registreret endnu; kræver DKC-035 og en faglig gennemgang." }
+      ],
+      "criticalWorkflows": ["login-offboarding", "daily-work", "restore", "privacy-case", "upgrade", "exit"],
+      "resourceEnvelope": { "cpuMillicores": 48000, "memoryMiB": 98304, "storageGiB": 8000, "nodes": 6 },
+      "owner": {
+        "subject": "oidc|erik.eriksen",
+        "name": "Erik Eriksen",
+        "role": "Enterprise Delivery Owner",
+        "substitute": { "subject": "oidc|freja.fischer", "name": "Freja Fischer" }
+      }
+    }
+  ]
+}

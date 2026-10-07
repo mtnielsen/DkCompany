@@ -1,0 +1,22 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "PrivacyExport",
+  "exportId": "6f2b1c9e-2a4d-4c8b-9f1a-7d3e5b0c1a22",
+  "tenantId": "acme",
+  "caseId": "c1f7a2b0-4e6d-4a3c-8b9f-0d1e2f3a4b5c",
+  "verb": "subject.export",
+  "recipient": "oidc|dpo.anna",
+  "status": "active",
+  "recordCount": 3,
+  "dropped": 1,
+  "createdAt": "2026-09-23T09:00:00Z",
+  "expiresAt": "2026-09-23T10:00:00Z",
+  "redeemedAt": null,
+  "revokedAt": null,
+  "artifact": {
+    "uri": "memory://dsar/6f2b1c9e-2a4d-4c8b-9f1a-7d3e5b0c1a22.json",
+    "sha256": "3b1f9c0a2d4e6f8a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a",
+    "bytes": 412
+  },
+  "auditRef": "audit:privacy.export.6f2b1c9e-2a4d-4c8b-9f1a-7d3e5b0c1a22"
+}

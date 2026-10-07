@@ -1,0 +1,257 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/service-class.schema.json",
+  "title": "Service Class",
+  "description": "Versioneret kontrakt for én tjenestes serviceklasse: holdbarheds-/fejlmodel, adfærd ved netværkspartition, tilgængelighed, adskilte RPO-mål (bekræftede writes, regionsnedbrud, korruption), RTO, replikering, backup og tilladte healinghandlinger. Kontrakten beskriver både de mål mennesket har vedtaget og de foreslåede mål, og den kan ikke i sig selv certificere et målt serviceniveau. Den er kompatibilitetskontrakten mellem et modul og en deployment-profil.",
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "moduleRef",
+    "criticality",
+    "biaRef",
+    "failureModel",
+    "availability",
+    "durability",
+    "recovery",
+    "replication",
+    "backup",
+    "deploymentProfileCompatibility",
+    "serviceCommitment"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "ServiceClass" },
+
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{3,63}$" },
+        "version": { "type": "string", "description": "SemVer for serviceklassekonfigurationen." },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/accountableHuman" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+
+    "moduleRef": { "type": "string", "pattern": "^[a-z0-9-]{3,63}$", "description": "Modulet denne serviceklasse beskriver." },
+    "criticality": { "enum": ["critical", "high", "medium", "low"] },
+    "biaRef": { "type": "string", "minLength": 3, "description": "Reference til den forretningskonsekvensanalyse (BIA) der begrunder klassen." },
+
+    "failureModel": {
+      "type": "object",
+      "required": ["networkPartition", "corruptionDetection"],
+      "additionalProperties": false,
+      "properties": {
+        "networkPartition": {
+          "type": "object",
+          "required": ["behavior", "splitBrain", "description"],
+          "additionalProperties": false,
+          "properties": {
+            "behavior": {
+              "enum": ["fail-closed", "read-only", "degraded", "continue"],
+              "description": "Eksplicit adfærd når tjenesten mister forbindelsen til sine peers/afhængigheder."
+            },
+            "splitBrain": { "enum": ["forbidden", "mitigated"] },
+            "quorumRequired": { "type": "boolean" },
+            "description": { "type": "string", "minLength": 10 }
+          }
+        },
+        "corruptionDetection": {
+          "type": "object",
+          "required": ["method", "detectionWindowMinutes"],
+          "additionalProperties": false,
+          "properties": {
+            "method": { "type": "string", "minLength": 3 },
+            "detectionWindowMinutes": { "type": "integer", "minimum": 1 }
+          }
+        }
+      }
+    },
+
+    "availability": {
+      "type": "object",
+      "required": ["targetPercent", "measurementWindowDays", "acceptedDowntime"],
+      "additionalProperties": false,
+      "properties": {
+        "targetPercent": { "type": "number", "minimum": 0, "maximum": 100, "description": "Målt forventning, ikke et løfte." },
+        "measurementWindowDays": { "type": "integer", "minimum": 1 },
+        "acceptedDowntime": { "type": "boolean", "description": "Om mennesket har accepteret nedetid (påkrævet for single-server/non-HA)." }
+      }
+    },
+
+    "durability": {
+      "type": "object",
+      "description": "Tre adskilte holdbarhedsmål. De må ikke slås sammen til ét tal: et bekræftet write, et regionsnedbrud og en korruption er forskellige hændelser med forskellige tab.",
+      "required": ["confirmedWrites", "regionFailure", "corruption"],
+      "additionalProperties": false,
+      "properties": {
+        "confirmedWrites": { "$ref": "#/$defs/durabilityTarget" },
+        "regionFailure": { "$ref": "#/$defs/durabilityTarget" },
+        "corruption": { "$ref": "#/$defs/durabilityTarget" }
+      }
+    },
+
+    "recovery": {
+      "type": "object",
+      "required": ["rtoMinutes", "restoreOrder", "healing"],
+      "additionalProperties": false,
+      "properties": {
+        "rtoMinutes": { "type": "integer", "minimum": 0 },
+        "restoreOrder": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 2 } },
+        "healing": {
+          "type": "object",
+          "required": ["automated", "allowedActions", "forbiddenActions", "requiresHumanApproval"],
+          "additionalProperties": false,
+          "properties": {
+            "automated": { "type": "boolean" },
+            "allowedActions": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": { "enum": ["restart", "reschedule", "failover", "restore-from-backup", "rebuild-replica", "quarantine-node", "replay-from-log"] }
+            },
+            "forbiddenActions": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 2 } },
+            "requiresHumanApproval": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    },
+
+    "replication": {
+      "type": "object",
+      "required": ["replicas", "statefulMode", "consistency", "writeMode", "activeWriters", "upstreamSupportsMultiWriter"],
+      "additionalProperties": false,
+      "properties": {
+        "replicas": { "type": "integer", "minimum": 1 },
+        "statefulMode": { "enum": ["stateless", "stateful", "statefulset"] },
+        "storageClass": { "type": "string", "description": "Påkrævet når statefulMode ikke er 'stateless'." },
+        "consistency": { "enum": ["strong", "read-your-writes", "eventual"] },
+        "writeMode": { "enum": ["single-writer", "leader-elected", "multi-writer"] },
+        "activeWriters": { "type": "integer", "minimum": 0, "description": "Antal samtidige aktive skrivere. Standard er 1; flere kræver eksplicit upstream-understøttelse." },
+        "upstreamSupportsMultiWriter": { "type": "boolean" }
+      }
+    },
+
+    "backup": {
+      "type": "object",
+      "required": ["required", "mode", "offsite", "encrypted", "restoreTested"],
+      "additionalProperties": false,
+      "properties": {
+        "required": { "type": "boolean" },
+        "mode": { "enum": ["none", "built-in", "external"] },
+        "offsite": { "type": "boolean" },
+        "encrypted": { "type": "boolean" },
+        "restoreTested": { "type": "boolean" },
+        "verifyRestoreRef": { "type": "string" },
+        "retentionDays": { "type": "integer", "minimum": 1 }
+      }
+    },
+
+    "deploymentProfileCompatibility": {
+      "type": "object",
+      "required": ["profiles", "haEligible", "failureDomains", "nPlusOne"],
+      "additionalProperties": false,
+      "properties": {
+        "profiles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["single-server", "multiple-servers", "dedicated-customer", "external-data-services"] }
+        },
+        "haEligible": { "type": "boolean", "description": "Om tjenesten må bære HA-badge. Kræver mindst tre failure domains, N+1, replikaer og særskilt recovery-lokation." },
+        "failureDomains": { "type": "integer", "minimum": 1 },
+        "nPlusOne": { "type": "boolean" },
+        "recoveryLocation": { "type": "string", "minLength": 3, "description": "En særskilt recovery-lokation, ikke den primære fejldomæne." }
+      }
+    },
+
+    "serviceCommitment": {
+      "type": "object",
+      "required": ["state"],
+      "additionalProperties": false,
+      "properties": {
+        "state": { "enum": ["proposed", "accepted", "retired"], "description": "Foreslåede mål er ikke vedtaget af et menneske og må ikke fremstilles som en forpligtelse." },
+        "acceptedBy": { "$ref": "#/$defs/accountableHuman" },
+        "acceptedAt": { "type": "string", "format": "date-time" },
+        "measured": {
+          "type": "object",
+          "description": "En erklæret måling med evidens. En konfigurationspost uden dette er ikke et målt serviceniveau.",
+          "required": ["availabilityPercent", "capturedAt", "evidenceRef", "source"],
+          "additionalProperties": false,
+          "properties": {
+            "availabilityPercent": { "type": "number", "minimum": 0, "maximum": 100 },
+            "capturedAt": { "type": "string", "format": "date-time" },
+            "evidenceRef": { "type": "string", "minLength": 3 },
+            "source": { "enum": ["probe", "independent-assessment"] }
+          }
+        }
+      }
+    }
+  },
+
+  "$defs": {
+    "accountableHuman": {
+      "type": "object",
+      "description": "Et navngivet menneske. Et team-alias eller en rolle uden en person er ikke en ejer.",
+      "required": ["subject", "role", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3, "description": "Fx 'oidc|anna.andersen'. Skal navngive en person, ikke et team." },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": {
+          "type": "object",
+          "required": ["subject", "name"],
+          "additionalProperties": false,
+          "properties": {
+            "subject": { "type": "string", "minLength": 3 },
+            "name": { "type": "string", "minLength": 2 }
+          }
+        }
+      }
+    },
+    "durabilityTarget": {
+      "type": "object",
+      "required": ["rpoMinutes", "strategy", "basis"],
+      "additionalProperties": false,
+      "properties": {
+        "rpoMinutes": { "type": "integer", "minimum": 0 },
+        "strategy": { "type": "string", "minLength": 3 },
+        "basis": { "type": "string", "minLength": 10, "description": "Hvad målet bygger på (måling, BIA, leverandørgaranti)." }
+      }
+    }
+  },
+
+  "allOf": [
+    {
+      "if": {
+        "type": "object",
+        "required": ["serviceCommitment"],
+        "properties": {
+          "serviceCommitment": {
+            "type": "object",
+            "required": ["state"],
+            "properties": { "state": { "const": "accepted" } }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "serviceCommitment": {
+            "type": "object",
+            "required": ["acceptedBy", "acceptedAt"],
+            "properties": {
+              "acceptedBy": { "$ref": "#/$defs/accountableHuman" },
+              "acceptedAt": { "type": "string", "format": "date-time" }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

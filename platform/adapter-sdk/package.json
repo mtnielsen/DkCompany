@@ -1,0 +1,13 @@
+{
+  "name": "@platform/adapter-sdk",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "DKC-023: fælles adapter-SDK — auth, tenant, PDP, audit, idempotens, health, privacy og versionsforhandling samt harness til fejl, rate limits, versionsskift, backup og negative adgangstest.",
+  "bin": {
+    "adapter-sdk": "./src/cli.mjs"
+  },
+  "scripts": {
+    "test": "node --test"
+  }
+}

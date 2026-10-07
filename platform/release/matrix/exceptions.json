@@ -1,0 +1,19 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "RiskExceptions",
+  "metadata": {
+    "name": "platform-risk-exceptions",
+    "version": "1.0.0",
+    "description": "Tidsbegrænsede, menneskeejede risikoundtagelser. Tomt register er standard; hver undtagelse skal udløbe og må ikke dække nonExcepted-krav.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen"
+      }
+    }
+  },
+  "exceptions": []
+}

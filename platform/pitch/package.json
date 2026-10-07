@@ -1,0 +1,13 @@
+{
+  "name": "@platform/pitch",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Pitch-deck og LinkedIn-udkast, hvor hvert bevis efterprøves mod Makefile og repoet.",
+  "bin": {
+    "pitch": "./src/cli.mjs"
+  },
+  "scripts": {
+    "test": "node --test"
+  }
+}

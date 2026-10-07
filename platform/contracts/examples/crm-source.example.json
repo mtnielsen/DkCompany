@@ -1,0 +1,40 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "CrmSource",
+  "metadata": {
+    "name": "example-crm-source",
+    "version": "1.0.0",
+    "description": "Eksempel på en EspoCRM-baseret CRM-kilde med ejerskab, roller og dedup-nøgler.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner"
+    },
+    "labels": { "tier": "adapter", "upstream": "espocrm" }
+  },
+  "sources": [
+    {
+      "id": "espocrm-example",
+      "type": "espocrm",
+      "tenantId": "example",
+      "baseUrl": "https://crm.example.org",
+      "secretRef": "vault:secret/platform/crm/espocrm-example#api-key",
+      "systemOfRecord": "upstream",
+      "writeMode": "adapter-mediated",
+      "ownerField": "assignedUser",
+      "defaultOwner": "oidc|ada.example",
+      "entityTypes": ["Account", "Contact", "Opportunity", "Activity"],
+      "roles": {
+        "sales": { "read": true, "write": true, "entityTypes": ["Account", "Contact", "Opportunity", "Activity"] },
+        "support": { "read": true, "write": false, "entityTypes": ["Account", "Contact", "Activity"] }
+      },
+      "dedupKeys": {
+        "Account": ["name", "vatId"],
+        "Contact": ["emailAddress"],
+        "Opportunity": ["name", "accountId"],
+        "Activity": ["type", "subject", "contactId"]
+      },
+      "retention": { "contactDays": 1095, "activityDays": 730, "copyDays": 90 }
+    }
+  ]
+}

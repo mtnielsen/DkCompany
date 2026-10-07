@@ -1,0 +1,19 @@
+{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "model-egress-default-deny",
+    "namespace": "platform",
+    "labels": {
+      "app.kubernetes.io/name": "model-egress",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "ai-gateway",
+      "platform.example.org/environment": "dev"
+    }
+  },
+  "spec": {
+    "podSelector": {},
+    "policyTypes": ["Egress"],
+    "egress": []
+  }
+}

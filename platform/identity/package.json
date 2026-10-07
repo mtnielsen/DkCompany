@@ -1,0 +1,14 @@
+{
+  "name": "@platform/identity",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Fælles, verificerbar identitet: OIDC/JWT med nøglerotation, workload-identitet via mTLS eller betroet proxy, sessioner/CSRF/rate limits og en sikker request-pipeline. Ingen klientleveret header beviser identitet.",
+  "bin": {
+    "platform-identity": "./src/server.mjs"
+  },
+  "scripts": {
+    "test": "node --test",
+    "start": "node src/server.mjs"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/support-bundle.schema.json",
+  "title": "Support Bundle",
+  "description": "DKC-061: en redigeret supportbundle med diagnostik. Bundlen er bygget ud fra en allowlist, er redigeret, har gennemgået en hemmeligheds- og HR-scanning, og erklærer eksplicit at der ikke findes skjult fjernadgang. Enhver remote supportadgang er slået fra som standard og kræver et navngivent menneskes samtykke og en TTL.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "policyRef", "redacted", "secretScan", "hrScan", "collected", "excluded", "remoteAccess", "diagnostics", "content", "digest"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "SupportBundle" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "generatedAt", "description", "installationId"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 3 },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "generatedAt": { "type": "string", "format": "date-time" },
+        "description": { "type": "string", "minLength": 10 },
+        "installationId": { "type": "string", "minLength": 2 }
+      }
+    },
+    "policyRef": { "type": "string", "minLength": 3 },
+    "redacted": { "type": "boolean" },
+    "secretScan": { "enum": ["pass", "fail"] },
+    "hrScan": { "enum": ["pass", "fail"] },
+    "collected": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "source", "dataClass", "digest"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "minLength": 2 },
+          "source": { "type": "string", "minLength": 3 },
+          "dataClass": { "type": "string", "minLength": 3 },
+          "digest": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+        }
+      }
+    },
+    "excluded": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "minLength": 2 },
+          "reason": { "type": "string", "minLength": 3 }
+        }
+      }
+    },
+    "remoteAccess": {
+      "type": "object",
+      "required": ["enabled", "hiddenAccess", "consentRef", "ttlMinutes"],
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "hiddenAccess": { "type": "boolean" },
+        "consentRef": { "type": ["string", "null"] },
+        "ttlMinutes": { "type": ["integer", "null"], "minimum": 1 }
+      }
+    },
+    "diagnostics": { "type": "object" },
+    "content": { "type": "object" },
+    "digest": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  }
+}

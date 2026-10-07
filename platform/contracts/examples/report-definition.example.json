@@ -1,0 +1,54 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ReportDefinition",
+  "metadata": {
+    "name": "monthly-payroll-reconciliation",
+    "version": "1.0.0",
+    "description": "Månedlig afstemning af løn mellem HR-kilden og finanssystemet til den eksterne revisor.",
+    "accountableHuman": {
+      "subject": "oidc|cecilia.christensen",
+      "name": "Cecilia Christensen",
+      "role": "Service Owner",
+      "substitute": { "subject": "oidc|david.dahl", "name": "David Dahl" }
+    }
+  },
+  "id": "monthly-payroll-reconciliation",
+  "version": 3,
+  "template": { "id": "payroll-reconciliation", "version": "2.1.0" },
+  "parameters": [
+    { "name": "period_start", "type": "date", "required": true, "sensitive": false, "description": "Afstemningsperiodens startdato." },
+    { "name": "period_end", "type": "date", "required": true, "sensitive": false, "description": "Afstemningsperiodens slutdato." },
+    { "name": "include_salary", "type": "boolean", "required": false, "sensitive": true, "default": false, "description": "Om lønfeltet medtages; kræver HR-lønbevilling." }
+  ],
+  "dataSource": {
+    "id": "external-hr-source",
+    "systemOfRecord": "External HR (HR-system)",
+    "classification": "personal",
+    "moduleRef": "reporting",
+    "connectorRef": "connectors/external-hr.json",
+    "fields": ["report_template", "report_parameter", "report_output"]
+  },
+  "authoritativeDefinition": {
+    "systemOfRecord": "External HR (HR-system)",
+    "definitionRef": "reports/payroll-reconciliation/v3",
+    "version": "3",
+    "owner": {
+      "subject": "oidc|cecilia.christensen",
+      "name": "Cecilia Christensen",
+      "role": "Service Owner",
+      "substitute": { "subject": "oidc|david.dahl", "name": "David Dahl" }
+    }
+  },
+  "schedule": { "cron": "0 6 1 * *", "timezone": "Europe/Copenhagen", "enabled": true },
+  "format": "pdf",
+  "recipients": [
+    {
+      "id": "external-auditor",
+      "kind": "external",
+      "subject": "oidc|external.auditor",
+      "dataSharingRef": "docs/compliance/data-sharing.md#external-auditor"
+    }
+  ],
+  "audit": { "required": true, "retentionDays": 365 },
+  "senderSubject": "oidc|cecilia.christensen"
+}

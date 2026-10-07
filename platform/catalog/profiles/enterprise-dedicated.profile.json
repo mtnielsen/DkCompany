@@ -1,0 +1,77 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "InstallationProfile",
+  "metadata": {
+    "name": "enterprise-dedicated",
+    "version": "1.0.0",
+    "description": "Dedikeret enterprise-installation: kundens egne app-instanser og databaser, HA og afgrænset host-styring som opt-in.",
+    "accountableHuman": {
+      "subject": "oidc|erik.eriksen",
+      "name": "Erik Eriksen",
+      "role": "Enterprise Delivery Owner",
+      "substitute": {
+        "subject": "oidc|freja.fischer",
+        "name": "Freja Fischer"
+      }
+    },
+    "labels": {
+      "segment": "enterprise",
+      "ha": "true"
+    }
+  },
+  "profileType": "dedicated-customer",
+  "deploymentProfileRef": "contracts/examples/deployment-profile.enterprise.example.json",
+  "highAvailability": {
+    "enabled": true,
+    "acceptedNonHaServiceClass": false,
+    "externalBackupRequired": true
+  },
+  "hostManagement": {
+    "optIn": true,
+    "component": "host-management",
+    "justification": "Host-styring er en separat opt-in også i enterprise; kundens out-of-band-adgang bevares uanset."
+  },
+  "securityCore": [
+    "platform-core",
+    "identity-broker",
+    "audit-service"
+  ],
+  "defaultApplications": [],
+  "optionalApplications": [
+    "hr",
+    "bi",
+    "reporting",
+    "finance",
+    "invoicing",
+    "time",
+    "webshop",
+    "payment"
+  ],
+  "supportedPlatforms": [
+    "linux-amd64-node22",
+    "linux-arm64-node22"
+  ],
+  "capacity": {
+    "cpuMillicores": 48000,
+    "memoryMiB": 98304,
+    "storageGiB": 8000,
+    "nodes": 6
+  },
+  "supportProfile": {
+    "tier": "supported",
+    "supportWindow": "36 måneder fra GA",
+    "escalation": "Enterprise Delivery Owner via enterprise@example.org"
+  },
+  "migration": {
+    "from": "small-vps",
+    "to": "enterprise-dedicated",
+    "pathRef": "docs/distribution/single-server-til-ha.md",
+    "expectedDowntimeMinutes": 120,
+    "steps": [
+      "Etablér kundens dedikerede fejldomæner og databaser, og underskriv ansvarsaftalerne for eksterne datatjenester.",
+      "Migrér data til kundens egne app-instanser og databaser via den dokumenterede HA-vej.",
+      "Aktivér HA, N+1 og særskilt recovery-lokation, og mål failover.",
+      "Overdrag den afgrænsede host-styringsboker og bekræft kundens out-of-band-adgang."
+    ]
+  }
+}

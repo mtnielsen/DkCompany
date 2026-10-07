@@ -1,0 +1,33 @@
+{
+  "decision": "allow-with-approval",
+  "pdp": {
+    "name": "platform-pdp",
+    "version": "1.0.0",
+    "bundleName": "platform",
+    "bundleVersion": "1.0.0",
+    "bundleSha256": "baeeeb11cb003454ccd12473856966c8769388870d74f30428dfc9bd20ba2d86"
+  },
+  "matchedRules": [
+    "ops.upgrade.requires-approval"
+  ],
+  "reasons": [
+    "Opgradering og migration er reversible, men kræver to godkendelser og bevist rollback."
+  ],
+  "evaluatedAt": "2026-09-16T21:05:41.033Z",
+  "inputSha256": "95f39c81c65970bf95bf8a6703ae778d583062944cb3d74067bee02b153c4c6b",
+  "requiredApprovals": 2,
+  "requiredEvidence": [
+    "policy-allow",
+    "tests-pass",
+    "dry-run-clean",
+    "rollback-tested"
+  ],
+  "obligations": [
+    {
+      "type": "audit-event"
+    },
+    {
+      "type": "auto-rollback"
+    }
+  ]
+}

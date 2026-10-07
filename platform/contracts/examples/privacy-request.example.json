@@ -1,0 +1,20 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "PrivacySubjectRequest",
+  "requestId": "018f3c2a-1b2c-7def-8a01-cccccccccccc",
+  "createdAt": "2025-09-01T10:00:00Z",
+  "deadline": "2025-10-01T10:00:00Z",
+  "tenantId": "acme",
+  "verb": "subject.erase",
+  "subject": {
+    "subjectId": "oidc|kunde@example.org",
+    "identifiers": [
+      { "type": "email", "value": "kunde@example.org" },
+      { "type": "customer-id", "value": "C-998877" }
+    ],
+    "jurisdiction": "DK"
+  },
+  "legalBasis": { "type": "gdpr-art-17", "reference": "DSAR-2025-0142" },
+  "requestedBy": { "kind": "human", "id": "oidc|dpo@example.org" },
+  "dryRun": false
+}

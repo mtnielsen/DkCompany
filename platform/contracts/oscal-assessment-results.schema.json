@@ -1,0 +1,185 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/oscal-assessment-results.schema.json",
+  "title": "OSCAL Assessment Results (platformsprofil)",
+  "description": "Maskinlæsbar evidenspakke for de kontroller, platformen påstår at opfylde. Dokumentet er en bevidst afgrænset profil af OSCAL 1.1 assessment-results: vi emitterer kun de felter, vi faktisk kan udfylde maskinelt, og feltnavnene følger OSCALs kebab-case, så en revisor kan læse pakken med standardværktøjer.",
+  "type": "object",
+  "required": ["assessment-results"],
+  "additionalProperties": false,
+  "properties": {
+    "assessment-results": {
+      "type": "object",
+      "required": ["uuid", "metadata", "import-ap", "results"],
+      "additionalProperties": false,
+      "properties": {
+        "uuid": { "type": "string", "format": "uuid" },
+        "metadata": { "$ref": "#/$defs/metadata" },
+        "import-ap": { "$ref": "#/$defs/importAp" },
+        "results": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/result" } }
+      }
+    }
+  },
+  "$defs": {
+    "metadata": {
+      "type": "object",
+      "required": ["title", "published", "last-modified", "version", "oscal-version"],
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string", "minLength": 1 },
+        "published": { "type": "string", "format": "date-time" },
+        "last-modified": { "type": "string", "format": "date-time" },
+        "version": { "type": "string", "minLength": 1 },
+        "oscal-version": { "type": "string", "minLength": 1 },
+        "roles": { "type": "array", "items": { "$ref": "#/$defs/role" } },
+        "parties": { "type": "array", "items": { "$ref": "#/$defs/party" } },
+        "responsible-parties": { "type": "array", "items": { "$ref": "#/$defs/responsibleParty" } },
+        "remarks": { "type": "string" }
+      }
+    },
+    "role": {
+      "type": "object",
+      "required": ["role-id", "title"],
+      "additionalProperties": false,
+      "properties": {
+        "role-id": { "type": "string" },
+        "title": { "type": "string" }
+      }
+    },
+    "party": {
+      "type": "object",
+      "required": ["uuid", "type", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "uuid": { "type": "string", "format": "uuid" },
+        "type": { "enum": ["organization", "person"] },
+        "name": { "type": "string" },
+        "email-addresses": { "type": "array", "items": { "type": "string", "format": "email" } }
+      }
+    },
+    "responsibleParty": {
+      "type": "object",
+      "required": ["role-id", "party-uuids"],
+      "additionalProperties": false,
+      "properties": {
+        "role-id": { "type": "string" },
+        "party-uuids": { "type": "array", "minItems": 1, "items": { "type": "string", "format": "uuid" } }
+      }
+    },
+    "importAp": {
+      "type": "object",
+      "required": ["href"],
+      "additionalProperties": false,
+      "properties": {
+        "href": { "type": "string", "format": "uri" },
+        "remarks": { "type": "string" }
+      }
+    },
+    "result": {
+      "type": "object",
+      "required": ["uuid", "title", "description", "start", "reviewed-controls", "findings"],
+      "additionalProperties": false,
+      "properties": {
+        "uuid": { "type": "string", "format": "uuid" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "start": { "type": "string", "format": "date-time" },
+        "end": { "type": "string", "format": "date-time" },
+        "reviewed-controls": { "$ref": "#/$defs/reviewedControls" },
+        "observations": { "type": "array", "items": { "$ref": "#/$defs/observation" } },
+        "findings": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/finding" } },
+        "remarks": { "type": "string" }
+      }
+    },
+    "reviewedControls": {
+      "type": "object",
+      "required": ["control-selections"],
+      "additionalProperties": false,
+      "properties": {
+        "control-selections": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "include-all": { "type": "object" },
+              "include-controls": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": ["control-id"],
+                  "additionalProperties": false,
+                  "properties": { "control-id": { "type": "string" } }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "observation": {
+      "type": "object",
+      "required": ["uuid", "title", "description", "methods", "collected"],
+      "additionalProperties": false,
+      "properties": {
+        "uuid": { "type": "string", "format": "uuid" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "methods": { "type": "array", "minItems": 1, "items": { "enum": ["TEST", "EXAMINE", "INTERVIEW", "ANALYZE"] } },
+        "relevant-evidence": { "type": "array", "items": { "$ref": "#/$defs/relevantEvidence" } },
+        "collected": { "type": "string", "format": "date-time" },
+        "remarks": { "type": "string" }
+      }
+    },
+    "relevantEvidence": {
+      "type": "object",
+      "required": ["href", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "href": { "type": "string", "format": "uri-reference" },
+        "description": { "type": "string" }
+      }
+    },
+    "finding": {
+      "type": "object",
+      "required": ["uuid", "title", "description", "target"],
+      "additionalProperties": false,
+      "properties": {
+        "uuid": { "type": "string", "format": "uuid" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "target": { "$ref": "#/$defs/findingTarget" },
+        "related-observations": { "type": "array", "items": { "$ref": "#/$defs/relatedObservation" } },
+        "remarks": { "type": "string" }
+      }
+    },
+    "findingTarget": {
+      "type": "object",
+      "required": ["type", "target-id", "title", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "enum": ["objective-id", "statement-id"] },
+        "target-id": { "type": "string" },
+        "title": { "type": "string" },
+        "status": {
+          "type": "object",
+          "required": ["state"],
+          "additionalProperties": false,
+          "properties": {
+            "state": { "enum": ["satisfied", "not-satisfied"] },
+            "reason": { "type": "string" }
+          }
+        }
+      }
+    },
+    "relatedObservation": {
+      "type": "object",
+      "required": ["observation-uuid"],
+      "additionalProperties": false,
+      "properties": {
+        "observation-uuid": { "type": "string", "format": "uuid" }
+      }
+    }
+  }
+}

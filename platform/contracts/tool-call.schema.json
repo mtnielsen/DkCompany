@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/tool-call.schema.json",
+  "title": "Tool Call",
+  "description": "DKC-011: et servervalideret, typet værktøjskald. Agenten har ingen fri shell; den kan kun kalde et værktøj på allowlisten, og runtimen validerer verbum, parametre, størrelsesgrænse og udgående netværk før en executor ser kaldet. Ubetroet indhold (logs, dokumenter, mails, tool-output, model-output) er data og kan ikke selv blive et værktøjskald.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "tool", "verb", "target", "environment", "tenantId", "parameters"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "ToolCall" },
+    "tool": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9.-]{1,63}$",
+      "description": "Navnet på det typede værktøj på allowlisten (fx 'upgrade.apply'). Ukendte navne afvises."
+    },
+    "verb": {
+      "type": "string",
+      "description": "Ops-verbet. Skal være bundet til netop dette værktøj og erklæret i agentens manifest."
+    },
+    "target": { "type": "string", "description": "Ressourcen handlingen rører. Skal ligge inden for capability-scope." },
+    "environment": { "enum": ["dev", "staging", "prod"] },
+    "tenantId": { "type": "string", "description": "Den aktive kunde. Cross-tenant datamovering afvises." },
+    "parameters": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Parametre der valideres mod værktøjets typeskema og størrelsesgrænse. Farlige navne (shell, command, token, password, …) afvises rekursivt."
+    },
+    "egress": {
+      "type": "object",
+      "description": "Værktøjets udgående netværksregler. Netværksløse værktøjer afviser et URL-parameter.",
+      "additionalProperties": false,
+      "properties": {
+        "network": { "type": "boolean" },
+        "allowedSchemes": { "type": "array", "items": { "enum": ["https", "http", "ftp", "ftps", "ws", "wss"] } },
+        "allowedHosts": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^(\\*\\.)?[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)+$" }
+        }
+      }
+    },
+    "untrustedContext": {
+      "type": "array",
+      "description": "Ubetroet indhold kaldet bygger på. Behandles som data — aldrig som et eksekverbart kald.",
+      "items": {
+        "type": "object",
+        "required": ["kind", "text"],
+        "additionalProperties": false,
+        "properties": {
+          "kind": { "enum": ["log", "document", "email", "issue", "changelog", "tool-output", "model-output", "web", "chat", "unknown"] },
+          "source": { "type": "string" },
+          "text": { "type": "string" },
+          "encoding": { "type": "string" }
+        }
+      }
+    }
+  }
+}

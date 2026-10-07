@@ -1,0 +1,152 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "HelpdeskSource",
+  "metadata": {
+    "name": "platform-helpdesk-sources",
+    "version": "1.0.0",
+    "description": "Support- og sagsbehandlingskilder. Zammad er den første kandidat og forbliver system-of-record for sager; platformen spejler sager, køer, rettigheder og historik og læser vedhæftninger som ubetroet data.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner"
+      }
+    },
+    "labels": {
+      "tier": "adapter",
+      "upstream": "zammad",
+      "wave": "4"
+    }
+  },
+  "sources": [
+    {
+      "id": "zammad-acme",
+      "type": "zammad",
+      "tenantId": "acme",
+      "baseUrl": "https://support.acme.example.org",
+      "secretRef": "vault:secret/platform/helpdesk/zammad-acme#api-token",
+      "systemOfRecord": "upstream",
+      "writeMode": "adapter-mediated",
+      "queues": [
+        {
+          "id": "support",
+          "name": "Support",
+          "classification": "internal",
+          "externalVisible": true,
+          "acl": {
+            "readGroups": ["support"],
+            "readSubjects": [],
+            "denyGroups": [],
+            "denySubjects": []
+          },
+          "sla": {
+            "firstResponseMinutes": 60,
+            "resolutionMinutes": 480
+          }
+        },
+        {
+          "id": "billing",
+          "name": "Fakturering",
+          "classification": "personal",
+          "externalVisible": true,
+          "acl": {
+            "readGroups": ["billing"],
+            "readSubjects": [],
+            "denyGroups": [],
+            "denySubjects": []
+          },
+          "sla": {
+            "firstResponseMinutes": 120,
+            "resolutionMinutes": 960
+          }
+        },
+        {
+          "id": "security",
+          "name": "Sikkerhed",
+          "classification": "confidential",
+          "externalVisible": false,
+          "acl": {
+            "readGroups": ["security"],
+            "readSubjects": [],
+            "denyGroups": [],
+            "denySubjects": []
+          },
+          "sla": {
+            "firstResponseMinutes": 30,
+            "resolutionMinutes": 240
+          }
+        }
+      ],
+      "attachmentPolicy": {
+        "maxBytes": 10485760,
+        "allowedTypes": ["text/plain", "application/pdf", "image/png", "image/jpeg"],
+        "scanUntrusted": true,
+        "quarantineSuspicious": true,
+        "executable": false
+      },
+      "retention": {
+        "mailDays": 365,
+        "attachmentDays": 180,
+        "indexDays": 90
+      }
+    },
+    {
+      "id": "zammad-globex",
+      "type": "zammad",
+      "tenantId": "globex",
+      "baseUrl": "https://support.globex.example.org",
+      "secretRef": "vault:secret/platform/helpdesk/zammad-globex#api-token",
+      "systemOfRecord": "upstream",
+      "writeMode": "adapter-mediated",
+      "queues": [
+        {
+          "id": "support",
+          "name": "Support",
+          "classification": "internal",
+          "externalVisible": true,
+          "acl": {
+            "readGroups": ["support"],
+            "readSubjects": [],
+            "denyGroups": [],
+            "denySubjects": []
+          },
+          "sla": {
+            "firstResponseMinutes": 60,
+            "resolutionMinutes": 480
+          }
+        },
+        {
+          "id": "security",
+          "name": "Sikkerhed",
+          "classification": "confidential",
+          "externalVisible": false,
+          "acl": {
+            "readGroups": ["security"],
+            "readSubjects": [],
+            "denyGroups": [],
+            "denySubjects": []
+          },
+          "sla": {
+            "firstResponseMinutes": 30,
+            "resolutionMinutes": 240
+          }
+        }
+      ],
+      "attachmentPolicy": {
+        "maxBytes": 10485760,
+        "allowedTypes": ["text/plain", "application/pdf", "image/png", "image/jpeg"],
+        "scanUntrusted": true,
+        "quarantineSuspicious": true,
+        "executable": false
+      },
+      "retention": {
+        "mailDays": 365,
+        "attachmentDays": 180,
+        "indexDays": 90
+      }
+    }
+  ]
+}

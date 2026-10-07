@@ -1,0 +1,112 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ComponentManifest",
+  "requires": [
+    {
+      "ref": "primary-database",
+      "range": "^1.0.0",
+      "reason": "Analyticslageret læser dimensioner og metadata fra primærdatabasen."
+    }
+  ],
+  "optionalRequires": [],
+  "conflicts": [],
+  "dataServices": [
+    {
+      "id": "sql",
+      "kind": "relational",
+      "required": true,
+      "reason": "Analytics ETL læser kilde-data fra den relationelle primærdatabase."
+    },
+    {
+      "id": "object-store",
+      "kind": "object",
+      "required": false,
+      "reason": "Store analytiske udtræk kan arkiveres i objektlageret."
+    }
+  ],
+  "migrations": [
+    {
+      "id": "analytics-schema",
+      "phase": "data",
+      "description": "Bygger kolonne-tabeller og materialiserede views.",
+      "reversible": true
+    }
+  ],
+  "download": [
+    {
+      "artifact": "analytics-store-1.2.0.tar.zst",
+      "sizeMiB": 410,
+      "source": "registry.example.org/data/analytics-store:1.2.0",
+      "verified": true,
+      "checksum": "sha256:6f1b5c05"
+    }
+  ],
+  "operations": [
+    "backup",
+    "restore",
+    "verify-restore",
+    "upgrade",
+    "migrate",
+    "health",
+    "slo"
+  ],
+  "implementation": {
+    "status": "external",
+    "notes": "Leveres som et eksternt produkt; installationsvejen beskrives i driftsdokumentationen."
+  },
+  "metadata": {
+    "name": "analytics-store",
+    "version": "1.2.0",
+    "description": "Kolonnebaseret analyticslager til BI og rapportering.",
+    "accountableHuman": {
+      "subject": "oidc|cecilia.christensen",
+      "name": "Cecilia Christensen",
+      "role": "Service Owner",
+      "substitute": {
+        "subject": "oidc|david.dahl",
+        "name": "David Dahl"
+      }
+    },
+    "labels": {
+      "tier": "data"
+    }
+  },
+  "componentType": "data-service",
+  "category": "data",
+  "securityCore": false,
+  "provides": {
+    "capabilities": [
+      "analytics"
+    ],
+    "dataServices": [
+      {
+        "id": "analytics",
+        "kind": "columnar"
+      }
+    ]
+  },
+  "supportProfile": {
+    "tier": "supported",
+    "supportWindow": "24 måneder fra GA",
+    "escalation": "Service Owner"
+  },
+  "platforms": {
+    "os": [
+      "linux"
+    ],
+    "arch": [
+      "x64",
+      "arm64"
+    ],
+    "runtime": [
+      "node>=22 <23",
+      "node>=24 <25"
+    ]
+  },
+  "resources": {
+    "cpuMillicores": 1500,
+    "memoryMiB": 4096,
+    "storageGiB": 200,
+    "nodes": 0
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ServiceCatalog",
+  "metadata": {
+    "name": "example-service-catalog",
+    "version": "1.0.0",
+    "description": "Eksempel på servicekatalog med én kundekritisk tjeneste, menneskelig ejer, on-call, kommunikationskanal, runbook, SLA/OLA og CI-relationer."
+  },
+  "services": [
+    {
+      "id": "checkout",
+      "name": "Checkout",
+      "tier": "customer-critical",
+      "owner": { "subject": "oidc|maja.mortensen", "name": "Maja Mortensen", "role": "Service Owner" },
+      "onCallRotation": "checkout-primary",
+      "severityDefault": "sev2",
+      "communicationChannel": "statuspage",
+      "runbook": "docs/runbooks/itsm-incident-response.md",
+      "sla": [
+        { "severity": "sev1", "responseMinutes": 5, "resolutionMinutes": 120 },
+        { "severity": "sev2", "responseMinutes": 15, "resolutionMinutes": 480 },
+        { "severity": "sev3", "responseMinutes": 60, "resolutionMinutes": 2880 },
+        { "severity": "sev4", "responseMinutes": 240, "resolutionMinutes": 7200 }
+      ],
+      "ola": [{ "team": "platform", "severity": "sev1", "responseMinutes": 5 }],
+      "dependsOn": ["identity", "database"],
+      "cis": [
+        { "id": "ci-checkout-api", "kind": "application", "relation": "provides" },
+        { "id": "ci-checkout-db", "kind": "database", "relation": "depends-on" }
+      ],
+      "knowledgeArticleIds": ["kb-restart-checkout"]
+    }
+  ]
+}

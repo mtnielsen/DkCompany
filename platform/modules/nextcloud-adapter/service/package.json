@@ -1,0 +1,13 @@
+{
+  "name": "@platform/nextcloud-adapter",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "DKC-026 arbejdspladsadapter: wrapper Nextcloud (filer, deling, kalender) og en valideret kontoredaktør bag den fælles adapter-SDK og erklærer ærligt partial/unsupported for backup, sletning og legal hold.",
+  "bin": {
+    "nextcloud-adapter": "./src/cli.mjs"
+  },
+  "scripts": {
+    "test": "node --test"
+  }
+}

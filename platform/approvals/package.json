@@ -1,0 +1,10 @@
+{
+  "name": "@platform/approvals",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Approval-service: håndhæver approver-grupper, udløb og træningskrav; renderer maskinevidens adskilt fra agentens prosa; A3 kan ikke merges uden menneske.",
+  "scripts": {
+    "test": "node --test"
+  }
+}

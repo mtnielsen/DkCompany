@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/support-ticket.schema.json",
+  "title": "Support Ticket",
+  "description": "DKC-029: platformens spejling af en Zammad-sag. Sagen bærer tenant, kø, klassifikation, ACL, rekvirent, SLA, beskeder og vedhæftninger. Vedhæftninger er ubetroet, ikke-eksekverbart indhold der aldrig må ændre rettigheder.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "id", "sourceId", "tenantId", "externalId", "queueId", "subject", "requester", "channel", "priority", "status", "classification", "acl", "sla", "createdAt", "updatedAt", "closedAt", "messages", "attachments", "history"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "SupportTicket" },
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]+:[A-Za-z0-9._-]+$" },
+    "sourceId": { "type": "string" },
+    "tenantId": { "type": "string" },
+    "externalId": { "type": "string" },
+    "number": { "type": "string" },
+    "queueId": { "type": "string" },
+    "queue": { "$ref": "#/$defs/queue" },
+    "subject": { "type": "string", "minLength": 1 },
+    "requester": { "$ref": "#/$defs/requester" },
+    "channel": { "enum": ["email", "web"] },
+    "priority": { "enum": ["low", "normal", "high", "urgent"] },
+    "status": { "enum": ["new", "open", "pending", "closed"] },
+    "classification": { "enum": ["public", "internal", "personal", "special-category", "confidential"] },
+    "acl": { "$ref": "#/$defs/acl" },
+    "sla": { "$ref": "#/$defs/sla" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "closedAt": { "type": ["string", "null"], "format": "date-time" },
+    "deletedAt": { "type": ["string", "null"], "format": "date-time" },
+    "messages": { "type": "array", "items": { "$ref": "#/$defs/message" } },
+    "attachments": { "type": "array", "items": { "$ref": "#/$defs/attachment" } },
+    "history": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+    "upstream": { "$ref": "#/$defs/upstream" }
+  },
+  "$defs": {
+    "acl": {
+      "type": "object",
+      "required": ["readGroups", "readSubjects", "denyGroups", "denySubjects"],
+      "additionalProperties": false,
+      "properties": {
+        "readGroups": { "type": "array", "items": { "type": "string" } },
+        "readSubjects": { "type": "array", "items": { "type": "string" } },
+        "denyGroups": { "type": "array", "items": { "type": "string" } },
+        "denySubjects": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "queue": {
+      "type": "object",
+      "required": ["id", "name", "classification", "externalVisible", "acl"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "classification": { "type": "string" },
+        "externalVisible": { "type": "boolean" },
+        "acl": { "$ref": "#/$defs/acl" }
+      }
+    },
+    "requester": {
+      "type": "object",
+      "required": ["subject", "name", "email", "tenantId"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string" },
+        "name": { "type": ["string", "null"] },
+        "email": { "type": ["string", "null"] },
+        "tenantId": { "type": "string" }
+      }
+    },
+    "sla": {
+      "type": "object",
+      "required": ["firstResponseDueAt", "resolutionDueAt"],
+      "additionalProperties": false,
+      "properties": {
+        "firstResponseDueAt": { "type": ["string", "null"] },
+        "resolutionDueAt": { "type": ["string", "null"] }
+      }
+    },
+    "message": {
+      "type": "object",
+      "required": ["id", "direction", "author", "body", "untrusted", "executable", "at"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "direction": { "enum": ["inbound", "outbound"] },
+        "author": { "type": "string" },
+        "body": { "type": "string" },
+        "untrusted": { "const": true },
+        "executable": { "const": false },
+        "at": { "type": "string" },
+        "messageId": { "type": ["string", "null"] },
+        "approvalId": { "type": ["string", "null"] }
+      }
+    },
+    "attachment": {
+      "type": "object",
+      "required": ["id", "filename", "contentType", "size", "sha256", "untrusted", "executable", "mayChangePermissions", "quarantined", "injectionFindings"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "filename": { "type": "string" },
+        "contentType": { "type": "string" },
+        "size": { "type": "integer", "minimum": 0 },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "untrusted": { "const": true },
+        "executable": { "const": false },
+        "mayChangePermissions": { "const": false },
+        "quarantined": { "type": "boolean" },
+        "injectionFindings": { "type": "array", "items": { "type": "string" } },
+        "capturedAt": { "type": ["string", "null"] }
+      }
+    },
+    "upstream": {
+      "type": "object",
+      "required": ["state", "group", "contentSha256"],
+      "additionalProperties": false,
+      "properties": {
+        "state": { "type": ["string", "null"] },
+        "group": { "type": ["string", "null"] },
+        "contentSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    }
+  }
+}

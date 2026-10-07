@@ -1,0 +1,14 @@
+{
+  "specversion": "1.0",
+  "id": "018f3c2a-1b2c-7def-8a01-aaaaaaaaaaaa",
+  "source": "urn:platform:module:example-module",
+  "type": "dk.platform.example-module.health.degraded",
+  "time": "2025-09-01T12:00:00Z",
+  "datacontenttype": "application/json",
+  "subject": "example-module",
+  "tenantid": "acme",
+  "traceid": "4bf92f3577b34da6a3ce929d0e0e4736",
+  "principal": { "kind": "service", "id": "spiffe://platform.example.org/modules/example-module", "spiffeId": "spiffe://platform.example.org/modules/example-module" },
+  "dataclassification": "operational",
+  "data": { "status": "degraded", "reason": "upstream timeout" }
+}

@@ -1,0 +1,20 @@
+{
+  "specversion": "1.0",
+  "id": "405be74d-8701-463c-a138-ef810a113aa7",
+  "source": "urn:platform:module:itsm-adapter",
+  "type": "dk.platform.itsm-adapter.subject-locate.completed",
+  "time": "2026-09-24T11:12:35.868Z",
+  "datacontenttype": "application/json",
+  "tenantid": "acme",
+  "traceid": "cf1961a4aaff98b66ee8a3b77aaca7fc",
+  "spanid": "5062070d1618ee79",
+  "principal": {
+    "kind": "human",
+    "id": "oidc|maja.mortensen"
+  },
+  "dataclassification": "personal",
+  "data": {
+    "verb": "subject.locate",
+    "decision": "allow"
+  }
+}

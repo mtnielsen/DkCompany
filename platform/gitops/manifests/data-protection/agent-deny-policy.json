@@ -1,0 +1,174 @@
+{
+  "apiVersion": "kyverno.io/v1",
+  "kind": "ClusterPolicy",
+  "metadata": {
+    "name": "deny-ai-immutable-admin",
+    "labels": {
+      "app.kubernetes.io/name": "agent-deny",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "agent-deny",
+      "platform.example.org/environment": "data-protection"
+    }
+  },
+  "spec": {
+    "validationFailureAction": "Enforce",
+    "background": false,
+    "rules": [
+      {
+        "name": "deny-ai-mutations",
+        "match": {
+          "any": [
+            {
+              "resources": {
+                "kinds": [
+                  "ObjectStoreObject",
+                  "BucketPolicy",
+                  "KMSKey",
+                  "ServiceAccount",
+                  "TrustConfig"
+                ]
+              }
+            }
+          ]
+        },
+        "preconditions": {
+          "any": [
+            {
+              "key": "{{ request.userInfo.groups }}",
+              "operator": "AnyIn",
+              "value": [
+                "platform:ai-agents"
+              ]
+            }
+          ]
+        },
+        "validate": {
+          "message": "AI-agenter må ikke mutere beskyttede data eller deres nøgler",
+          "deny": {
+            "conditions": {
+              "any": [
+                {
+                  "key": "{{ request.operation }}",
+                  "operator": "Equals",
+                  "value": "append"
+                },
+                {
+                  "key": "{{ request.operation }}",
+                  "operator": "Equals",
+                  "value": "write"
+                },
+                {
+                  "key": "{{ request.operation }}",
+                  "operator": "Equals",
+                  "value": "update"
+                },
+                {
+                  "key": "{{ request.operation }}",
+                  "operator": "Equals",
+                  "value": "delete"
+                },
+                {
+                  "key": "{{ request.operation }}",
+                  "operator": "Equals",
+                  "value": "retention-extend"
+                },
+                {
+                  "key": "{{ request.operation }}",
+                  "operator": "Equals",
+                  "value": "retention-shorten"
+                },
+                {
+                  "key": "{{ request.operation }}",
+                  "operator": "Equals",
+                  "value": "pointer-switch"
+                },
+                {
+                  "key": "{{ request.operation }}",
+                  "operator": "Equals",
+                  "value": "key-rotate"
+                },
+                {
+                  "key": "{{ request.operation }}",
+                  "operator": "Equals",
+                  "value": "key-delete"
+                },
+                {
+                  "key": "{{ request.operation }}",
+                  "operator": "Equals",
+                  "value": "lifecycle-change"
+                },
+                {
+                  "key": "{{ request.operation }}",
+                  "operator": "Equals",
+                  "value": "serviceaccount-write"
+                },
+                {
+                  "key": "{{ request.operation }}",
+                  "operator": "Equals",
+                  "value": "trust-config-write"
+                },
+                {
+                  "key": "{{ request.operation }}",
+                  "operator": "Equals",
+                  "value": "protection-policy"
+                },
+                {
+                  "key": "{{ request.operation }}",
+                  "operator": "Equals",
+                  "value": "recovery-access"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "deny-indirect-admin-paths",
+        "match": {
+          "any": [
+            {
+              "resources": {
+                "kinds": [
+                  "ClusterRoleBinding",
+                  "BucketPolicy",
+                  "KMSKeyPolicy",
+                  "TokenRequest"
+                ]
+              }
+            }
+          ]
+        },
+        "preconditions": {
+          "any": [
+            {
+              "key": "{{ request.userInfo.groups }}",
+              "operator": "AnyIn",
+              "value": [
+                "platform:ai-agents"
+              ]
+            }
+          ]
+        },
+        "validate": {
+          "message": "AI-agenter må ikke bruge indirekte adminveje",
+          "deny": {
+            "conditions": {
+              "any": [
+                {
+                  "key": "{{ request.operation }}",
+                  "operator": "In",
+                  "value": [
+                    "create",
+                    "update",
+                    "patch",
+                    "delete"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    ]
+  }
+}

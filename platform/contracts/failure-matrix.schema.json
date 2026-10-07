@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/failure-matrix.schema.json",
+  "title": "Failure Matrix",
+  "description": "Automatiseret fejl- og katastrofematrix: hvert scenarie angiver failure scope, forventet dataudfald, RPO/RTO, tilladt autonomi og en konkret probe. Matrixen er en deterministisk model i isoleret staging; en målt fejløvelse på en levende klynge er en ekstern integration.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "principle", "invariants", "scenarios", "measurement", "liveEvidenceRef"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "FailureMatrix" },
+    "metadata": { "$ref": "#/$defs/metadata" },
+    "principle": { "type": "string", "minLength": 20 },
+    "invariants": { "$ref": "#/$defs/invariants" },
+    "scenarios": {
+      "type": "array",
+      "minItems": 10,
+      "items": { "$ref": "#/$defs/scenario" }
+    },
+    "measurement": { "$ref": "#/$defs/measurement" },
+    "liveEvidenceRef": { "type": "string", "minLength": 1 }
+  },
+  "$defs": {
+    "human": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\|[a-z0-9][a-z0-9._-]{2,}$" },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": { "$ref": "#/$defs/human" }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman", "lastReviewed", "labels"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/human" },
+        "lastReviewed": { "type": "string", "minLength": 10 },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "invariants": {
+      "type": "object",
+      "required": ["noSplitBrain", "noLostAcknowledgedWrites", "immutableBypassDeniedAndLogged", "healingStormBounded", "repeatableFromCleanInstall"],
+      "additionalProperties": false,
+      "properties": {
+        "noSplitBrain": { "const": true },
+        "noLostAcknowledgedWrites": { "const": true },
+        "immutableBypassDeniedAndLogged": { "const": true },
+        "healingStormBounded": { "const": true },
+        "repeatableFromCleanInstall": { "const": true }
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "required": ["id", "title", "failureScope", "expectedDataOutcome", "rpoMinutes", "rtoMinutes", "allowedAutonomy", "probe", "humanEscalation", "sharedHealingBudget", "probesInvariants"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$" },
+        "title": { "type": "string", "minLength": 5 },
+        "failureScope": {
+          "enum": ["single-host", "quorum", "network-partition", "database", "storage", "queue", "control-plane", "site", "keys", "immutable", "deduplication"]
+        },
+        "expectedDataOutcome": { "enum": ["no-loss", "no-acknowledged-loss", "bounded-loss"] },
+        "rpoMinutes": { "type": "integer", "minimum": 0 },
+        "rtoMinutes": { "type": "integer", "minimum": 1 },
+        "allowedAutonomy": { "enum": ["none", "safe-fallback", "runbook-with-approval"] },
+        "probe": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,60}$" },
+        "humanEscalation": { "enum": ["always", "on-budget-exhaustion", "on-integrity-failure"] },
+        "sharedHealingBudget": { "type": "boolean" },
+        "probesInvariants": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["noSplitBrain", "noLostAcknowledgedWrites", "immutableBypassDeniedAndLogged", "healingStormBounded", "repeatableFromCleanInstall"] }
+        }
+      }
+    },
+    "measurement": {
+      "type": "object",
+      "required": ["mode", "measured", "reason", "requiresLiveStaging"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": { "const": "deterministic-simulation" },
+        "measured": { "const": false },
+        "reason": { "type": "string", "minLength": 20 },
+        "requiresLiveStaging": { "const": true }
+      }
+    }
+  }
+}

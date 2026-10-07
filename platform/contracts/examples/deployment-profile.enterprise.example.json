@@ -1,0 +1,75 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "DeploymentProfile",
+  "metadata": {
+    "name": "enterprise-dedicated",
+    "version": "1.0.0",
+    "description": "Enterprise-profil: kunden får en dedikeret installation med egne app-instanser og databaser, HA og afgrænset host-styring.",
+    "accountableHuman": {
+      "subject": "oidc|erik.eriksen",
+      "name": "Erik Eriksen",
+      "role": "Enterprise Delivery Owner",
+      "substitute": { "subject": "oidc|freja.fischer", "name": "Freja Fischer" }
+    },
+    "labels": { "segment": "enterprise" }
+  },
+  "profileType": "dedicated-customer",
+  "tenantModel": {
+    "mode": "dedicated-installation",
+    "applicationInstancesPerTenant": true,
+    "databasePerTenant": true,
+    "tenantBoundaryEnforcedAt": ["api", "database", "queue", "storage", "reporting"]
+  },
+  "highAvailability": {
+    "enabled": true,
+    "failureDomains": 2,
+    "fencing": "broker",
+    "redundantEntrypoints": true,
+    "measuredFailureTests": ["docs/evidence/failure-tests/2026-09-enterprise.md"]
+  },
+  "hostManagement": {
+    "enabled": true,
+    "broker": "bounded-broker 1.0",
+    "allowedOperations": ["diagnostics", "package-update", "certificate-renewal", "service-drain", "service-restart", "planned-reboot"],
+    "outOfBandRecovery": "Kundens egen konsoladgang og offline nøgle; platformen kan ikke fjerne den."
+  },
+  "dataServices": [
+    {
+      "id": "customer-db",
+      "kind": "external-application-database",
+      "provider": "Kundens PostgreSQL 16-cluster",
+      "responsibilityOwner": { "subject": "oidc|erik.eriksen", "name": "Erik Eriksen", "role": "Enterprise Delivery Owner" },
+      "responsibilityAgreement": "docs/compliance/external-db-responsibility.md",
+      "credentialsRef": "secrets/customer-db",
+      "tenantBound": true
+    },
+    {
+      "id": "customer-backup",
+      "kind": "backup-destination",
+      "provider": "Kundens WORM-objektlager",
+      "responsibilityOwner": { "subject": "oidc|freja.fischer", "name": "Freja Fischer", "role": "Continuity Owner" },
+      "responsibilityAgreement": "docs/compliance/backup-responsibility.md",
+      "credentialsRef": "secrets/backup",
+      "tenantBound": true
+    }
+  ],
+  "serviceTargets": {
+    "availability": "99.9% målt pr. måned",
+    "rpoMinutes": 5,
+    "rtoMinutes": 30,
+    "measurementWindowDays": 30
+  },
+  "cost": {
+    "model": "mixed",
+    "currency": "EUR",
+    "recurring": true,
+    "monthlyEstimateMinor": 480000,
+    "priceBasis": "pr. installation",
+    "notes": "Dedikeret installation, support og kundens egne data-tjenester. Prisen er aftalt pr. kontrakt og er ikke en listepris."
+  },
+  "limitations": [
+    "Dedikeret installation betyder højere enhedsomkostning end den delte pilotstandard.",
+    "Ansvarsdelingen for kundens database og backup skal underskrives før idriftsættelse."
+  ],
+  "supportedModules": ["APP-003", "APP-010", "APP-011", "APP-016", "APP-021", "APP-039", "APP-044"]
+}

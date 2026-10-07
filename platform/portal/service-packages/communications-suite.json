@@ -1,0 +1,62 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ServicePackage",
+  "metadata": {
+    "name": "communications-suite",
+    "version": "1.0.0",
+    "description": "Starter plus Communications: kanaler, samtaler og fælles kommunikationsflade med tenantadskilt data.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+    },
+    "labels": { "segment": "smv" }
+  },
+  "category": "communications",
+  "modules": [
+    { "id": "platform-core", "versionRange": ">=1.0.0 <2.0.0", "required": true, "reason": "Kontrolplan, policy og job-runner er obligatorisk." },
+    { "id": "identity-broker", "versionRange": ">=1.0.0 <2.0.0", "required": true, "reason": "Verificeret SSO for kundens brugere." },
+    { "id": "audit-service", "versionRange": ">=1.0.0 <2.0.0", "required": true, "reason": "Revisionsspor for kommunikationshændelser." },
+    { "id": "communications", "versionRange": ">=1.0.0 <2.0.0", "required": true, "reason": "Kanaler og samtaler er pakkens formål." }
+  ],
+  "price": {
+    "currency": "DKK",
+    "monthly": 3200,
+    "implementation": 9000,
+    "components": [
+      { "id": "platform-core", "moduleId": "platform-core", "monthly": 900, "unit": "md", "note": "Delt kontrolplan." },
+      { "id": "identity-broker", "moduleId": "identity-broker", "monthly": 300, "unit": "md", "note": "Identitetsbroker pr. kunde." },
+      { "id": "audit-service", "moduleId": "audit-service", "monthly": 300, "unit": "md", "note": "Holdbar audit." },
+      { "id": "communications", "moduleId": "communications", "monthly": 1700, "unit": "md", "note": "Kommunikationsapplikation." }
+    ]
+  },
+  "consequences": [
+    {
+      "id": "personal-data",
+      "severity": "material",
+      "description": "Kommunikationsdata kan indeholde persondata, som behandles efter databehandleraftalen og kundens instruks.",
+      "requiresAcknowledgment": true
+    },
+    {
+      "id": "external-model",
+      "severity": "notice",
+      "description": "Eventuelle assistentfunktioner kalder kun de godkendte EU-baserede modeludbydere gennem gatewayen."
+    },
+    {
+      "id": "shared-control-plane",
+      "severity": "notice",
+      "description": "Kontrolplanen er fælles driftet; kommunikationsdata er tenantadskilt."
+    }
+  ],
+  "dataProcessing": {
+    "personalData": true,
+    "subprocessorRefs": ["anthropic-eu", "openai-eu"]
+  },
+  "supportProfile": {
+    "tier": "supported",
+    "supportWindow": "12 måneder fra GA",
+    "escalation": "Platform Owner via platform@example.org"
+  },
+  "lifecycle": { "orderable": true }
+}

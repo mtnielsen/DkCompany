@@ -1,0 +1,8 @@
+{
+  "algorithm": "Ed25519",
+  "keyId": "platform-demo",
+  "publicKey": "MCowBQYDK2VwAyEAWsCj5CJAvx8gm8JFmB3l8sLqvwAexY/jVjjLGtnMUsM=",
+  "digestSha256": "baeeeb11cb003454ccd12473856966c8769388870d74f30428dfc9bd20ba2d86",
+  "signature": "1HHfc8wwlUjM70U2Pxxche2EaiCCaKRbTYBARpkXFcWchqcSSqq4usoPZU3RQ/o/u8KCyQ8R/3McXeixXUI7BA==",
+  "signedAt": "2026-09-16T21:05:31.817Z"
+}

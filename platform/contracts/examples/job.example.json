@@ -1,0 +1,35 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "Job",
+  "id": "irr-1",
+  "tenantId": "acme",
+  "jobKind": "task",
+  "classification": "irreversible-write",
+  "idempotencyKey": "irr-1",
+  "status": "running",
+  "attempts": 1,
+  "maxAttempts": 3,
+  "payload": {
+    "task": {
+      "apiVersion": "contracts.platform/v1alpha1",
+      "kind": "AgentTask",
+      "taskId": "irr-1",
+      "tenantId": "acme",
+      "agentRef": "dummy-ok-upgrader",
+      "objective": "gendan snapshot efter netværksfejl",
+      "actions": [
+        {
+          "verb": "restore",
+          "target": "dummy-ok",
+          "environment": "staging",
+          "evidence": ["policy-allow"]
+        }
+      ]
+    }
+  },
+  "lease": {
+    "workerId": "worker-1",
+    "token": 1,
+    "until": "2025-09-02T00:00:30Z"
+  }
+}

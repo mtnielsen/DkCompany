@@ -1,0 +1,42 @@
+{
+  "apiVersion": "storage.k8s.io/v1",
+  "kind": "StorageClass",
+  "metadata": {
+    "name": "longhorn-replicated",
+    "labels": {
+      "app.kubernetes.io/name": "platform-storage",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "platform-storage",
+      "platform.example.org/environment": "storage"
+    },
+    "annotations": {
+      "platform.example.org/failure-model": "replicated",
+      "platform.example.org/docs-ref": "docs/spec/storage.md#csi-og-objektlager",
+      "platform.example.org/replica-factor": "3"
+    }
+  },
+  "provisioner": "driver.longhorn.io",
+  "reclaimPolicy": "Retain",
+  "volumeBindingMode": "WaitForFirstConsumer",
+  "allowVolumeExpansion": true,
+  "parameters": {
+    "numberOfReplicas": "3",
+    "staleReplicaTimeout": "30",
+    "dataLocality": "best-effort",
+    "encrypted": "true"
+  },
+  "allowedTopologies": [
+    {
+      "matchLabelExpressions": [
+        {
+          "key": "topology.kubernetes.io/zone",
+          "values": [
+            "fsn1-dc14",
+            "fsn1-dc15",
+            "hel1-dc2"
+          ]
+        }
+      ]
+    }
+  ]
+}

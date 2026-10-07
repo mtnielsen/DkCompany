@@ -1,0 +1,251 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/data-register.schema.json",
+  "title": "Data Register",
+  "description": "Versioneret dataregister pr. app og modelroute. Registeret gør databeskyttelseskrav konkrete: datakategorier, formål, behandlingsgrundlag (som ejerbesluttet felt), placering, modtagere, subprocessorer, slettefrist og tredjelandsvurdering. Registeret er en påstand om mekanismer, ikke en juridisk vurdering; manglende ejerbeslutning eller aftale markeres eksplicit i stedet for at antages.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "subprocessors", "entries"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "DataRegister" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "lastReviewed"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{3,63}$" },
+        "version": { "type": "string", "description": "Registerversionens semantiske version." },
+        "description": { "type": "string", "minLength": 10 },
+        "lastReviewed": { "type": "string", "format": "date" }
+      }
+    },
+    "subprocessors": {
+      "type": "array",
+      "description": "Databehandlere/underleverandører der behandler data på platformens vegne. Hver peger på en indgået aftale; en subprocessor uden aftale er en blocker for persondata.",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "purpose", "hostingRegion", "countryCodes", "dpaRef", "contractRef", "approvedBy", "approvedAt", "thirdCountryTransfer"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$" },
+          "name": { "type": "string", "minLength": 2 },
+          "purpose": { "type": "string", "minLength": 3 },
+          "hostingRegion": { "enum": ["eu-eea", "us", "other", "unknown"] },
+          "countryCodes": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^[A-Z]{2}$" } },
+          "dpaRef": { "type": "string", "minLength": 3 },
+          "contractRef": { "type": "string", "minLength": 3 },
+          "approvedBy": { "$ref": "#/$defs/human" },
+          "approvedAt": { "type": "string", "format": "date" },
+          "thirdCountryTransfer": { "$ref": "#/$defs/thirdCountryTransfer" }
+        }
+      }
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Én registerpost pr. app eller modelroute. En route uden registerpost må ikke behandle persondata.",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "status", "owner", "dataCategories", "sources", "purposes", "legalBasis", "roles", "location", "recipients", "subprocessorRefs", "assets", "retention"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$" },
+          "title": { "type": "string", "minLength": 3 },
+          "status": {
+            "enum": ["approved", "pending-owner-decision", "blocked"],
+            "description": "Kun 'approved' regnes som godkendt registerpost. En post med persondata og en uafklaret beslutning eller aftale SKAL være 'pending-owner-decision' eller 'blocked'."
+          },
+          "owner": { "$ref": "#/$defs/human" },
+          "moduleRef": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$", "description": "Pilotmodulets metadata.name." },
+          "routeRef": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$", "description": "Gateway-routens id i gateway/routes.json." },
+          "dataCategories": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "enum": ["public", "internal", "confidential", "operational", "pseudonymised", "personal", "special-category"] }
+          },
+          "sources": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["name", "description"],
+              "additionalProperties": false,
+              "properties": {
+                "name": { "type": "string", "minLength": 2 },
+                "description": { "type": "string", "minLength": 3 },
+                "dataCategories": { "type": "array", "items": { "type": "string" } }
+              }
+            }
+          },
+          "purposes": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["id", "name"],
+              "additionalProperties": false,
+              "properties": {
+                "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$" },
+                "name": { "type": "string", "minLength": 3 },
+                "description": { "type": "string" }
+              }
+            }
+          },
+          "legalBasis": {
+            "type": "object",
+            "required": ["status", "ground", "decidedBy", "decidedAt"],
+            "additionalProperties": false,
+            "properties": {
+              "status": {
+                "enum": ["owner-decided", "pending-owner-decision"],
+                "description": "Behandlingsgrundlaget er et ejerbesluttet felt. Koden udleder det aldrig selv."
+              },
+              "ground": {
+                "type": ["string", "null"],
+                "enum": ["consent", "contract", "legal-obligation", "vital-interests", "public-task", "legitimate-interests", null]
+              },
+              "decidedBy": { "type": ["object", "null"], "properties": { "subject": { "type": "string" }, "name": { "type": "string" }, "role": { "type": "string" } }, "required": ["subject", "name", "role"], "additionalProperties": false },
+              "decidedAt": { "type": ["string", "null"], "format": "date" },
+              "decisionRef": { "type": "string", "description": "Reference til den dokumenterede ejerbeslutning." },
+              "note": { "type": "string" }
+            }
+          },
+          "roles": {
+            "type": "object",
+            "required": ["controller", "processor"],
+            "additionalProperties": false,
+            "properties": {
+              "controller": {
+                "type": ["object", "null"],
+                "required": ["organisation", "contractRef"],
+                "additionalProperties": false,
+                "properties": {
+                  "organisation": { "type": "string", "minLength": 2 },
+                  "contractRef": { "type": "string", "minLength": 3 }
+                }
+              },
+              "processor": {
+                "type": ["object", "null"],
+                "required": ["name", "contractRef"],
+                "additionalProperties": false,
+                "properties": {
+                  "name": { "type": "string", "minLength": 2 },
+                  "contractRef": { "type": "string", "minLength": 3 }
+                }
+              }
+            }
+          },
+          "location": {
+            "type": "object",
+            "required": ["hostingRegion", "countryCodes", "thirdCountryTransfer"],
+            "additionalProperties": false,
+            "properties": {
+              "hostingRegion": { "enum": ["eu-eea", "us", "other", "unknown"] },
+              "countryCodes": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^[A-Z]{2}$" } },
+              "supportAccess": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "remoteAccess": { "type": "boolean" },
+                  "fromCountries": { "type": "array", "items": { "type": "string" } },
+                  "note": { "type": "string" }
+                }
+              },
+              "thirdCountryTransfer": { "$ref": "#/$defs/thirdCountryTransfer" }
+            }
+          },
+          "recipients": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "role"],
+              "additionalProperties": false,
+              "properties": {
+                "name": { "type": "string", "minLength": 2 },
+                "role": { "enum": ["controller", "processor", "subprocessor", "joint-controller", "third-party"] },
+                "contractRef": { "type": "string" }
+              }
+            }
+          },
+          "subprocessorRefs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$" }
+          },
+          "assets": {
+            "type": "array",
+            "description": "De databærende artefakter posten dækker. Persondataposter skal dække prompts, embeddings, supportadgang, logs, backups og modelproviderens databrug.",
+            "items": {
+              "type": "object",
+              "required": ["kind", "description"],
+              "additionalProperties": false,
+              "properties": {
+                "kind": { "enum": ["prompts", "embeddings", "support-access", "logs", "backups", "model-provider-usage"] },
+                "description": { "type": "string", "minLength": 3 },
+                "dataCategories": { "type": "array", "items": { "type": "string" } }
+              }
+            }
+          },
+          "retention": {
+            "type": "object",
+            "required": ["policyId", "version", "purposeRef", "maxDays", "trigger", "basis", "legalHold", "approvedBy", "approvedAt", "deleteMechanism"],
+            "additionalProperties": false,
+            "properties": {
+              "policyId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$" },
+              "version": { "type": "string", "description": "Slettefristen er versioneret; en ændring kræver en ny version." },
+              "purposeRef": { "type": "string", "description": "Slettefristen er formålsbestemt og skal pege på et formål i samme post." },
+              "maxDays": { "type": "integer", "minimum": 1 },
+              "trigger": { "enum": ["account-deletion", "contract-end", "purpose-fulfilled", "legal-deadline", "event-age", "manual-review"] },
+              "basis": { "type": "string", "minLength": 3 },
+              "legalHold": {
+                "type": "object",
+                "required": ["supported"],
+                "additionalProperties": false,
+                "properties": {
+                  "supported": { "type": "boolean" },
+                  "mechanism": { "type": "string" },
+                  "note": { "type": "string" }
+                }
+              },
+              "approvedBy": { "$ref": "#/$defs/human" },
+              "approvedAt": { "type": "string", "format": "date" },
+              "deleteMechanism": { "type": "string", "minLength": 3, "description": "Hvordan sletning faktisk gennemføres (fx crypto-shredding, row-delete, dsar-fan-out)." }
+            }
+          },
+          "contractRefs": { "type": "array", "items": { "type": "string", "minLength": 3 } },
+          "evidence": { "type": "array", "items": { "type": "string" } },
+          "notes": { "type": "string" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "human": {
+      "type": "object",
+      "description": "Et navngivet menneske, ikke et team-alias eller en rolle uden person.",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string" },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 }
+      }
+    },
+    "thirdCountryTransfer": {
+      "type": "object",
+      "description": "Eksplicit vurdering af tredjelandsoverførsel. EU-hosting er ikke i sig selv fravær af overførsel; vurderingen skal være foretaget af et navngivet menneske.",
+      "required": ["assessed", "status", "mechanisms"],
+      "additionalProperties": false,
+      "properties": {
+        "assessed": { "type": "boolean" },
+        "status": { "enum": ["none", "present", "undetermined"] },
+        "mechanisms": { "type": "array", "items": { "enum": ["scc", "bcr", "adequacy-decision", "derogation", "none"] } },
+        "assessedBy": { "type": ["object", "null"], "properties": { "subject": { "type": "string" }, "name": { "type": "string" }, "role": { "type": "string" } }, "required": ["subject", "name", "role"], "additionalProperties": false },
+        "assessedAt": { "type": ["string", "null"], "format": "date" },
+        "note": { "type": "string" }
+      }
+    }
+  }
+}

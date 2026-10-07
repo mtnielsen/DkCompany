@@ -1,0 +1,103 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ComponentManifest",
+  "requires": [
+    {
+      "ref": "platform-core",
+      "range": "^1.0.0",
+      "reason": "Auditservicen spørger kontrolplanens policy-punkt før enhver privilegeret handling."
+    }
+  ],
+  "optionalRequires": [],
+  "conflicts": [],
+  "dataServices": [
+    {
+      "id": "sql",
+      "kind": "relational",
+      "required": true,
+      "reason": "Auditloggen er append-only og kræver transaktionel holdbarhed."
+    }
+  ],
+  "migrations": [
+    {
+      "id": "audit-init",
+      "phase": "schema",
+      "description": "Opretter auditjournal, checkpoint og hash-kæde.",
+      "reversible": false
+    }
+  ],
+  "download": [
+    {
+      "artifact": "audit-service-1.5.0.tar.zst",
+      "sizeMiB": 40,
+      "source": "registry.example.org/security/audit-service:1.5.0",
+      "verified": true,
+      "checksum": "sha256:4d9f3a03"
+    }
+  ],
+  "operations": [
+    "backup",
+    "restore",
+    "verify-restore",
+    "upgrade",
+    "migrate",
+    "rollback",
+    "health",
+    "slo"
+  ],
+  "implementation": {
+    "status": "implemented",
+    "moduleRef": "modules/audit-service/",
+    "notes": "Referencemodulet er implementeret og conformance-testet."
+  },
+  "metadata": {
+    "name": "audit-service",
+    "version": "1.5.0",
+    "description": "Hash-kædet append-only auditlog med intent-før-handling, checkpoint og verber for privacy og ops.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen"
+      }
+    },
+    "labels": {
+      "tier": "security-core"
+    }
+  },
+  "componentType": "security-core",
+  "category": "security",
+  "securityCore": true,
+  "provides": {
+    "capabilities": [
+      "audit-log"
+    ],
+    "dataServices": []
+  },
+  "supportProfile": {
+    "tier": "supported",
+    "supportWindow": "24 måneder fra GA",
+    "escalation": "Platform Owner"
+  },
+  "platforms": {
+    "os": [
+      "linux"
+    ],
+    "arch": [
+      "x64",
+      "arm64"
+    ],
+    "runtime": [
+      "node>=22 <23",
+      "node>=24 <25"
+    ]
+  },
+  "resources": {
+    "cpuMillicores": 300,
+    "memoryMiB": 512,
+    "storageGiB": 20,
+    "nodes": 0
+  }
+}

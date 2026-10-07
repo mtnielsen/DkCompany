@@ -1,0 +1,117 @@
+{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "observability-loki",
+    "namespace": "platform",
+    "labels": {
+      "app.kubernetes.io/name": "observability-loki",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "observability",
+      "platform.example.org/environment": "dev"
+    }
+  },
+  "spec": {
+    "replicas": 1,
+    "selector": {
+      "matchLabels": {
+        "app.kubernetes.io/name": "observability-loki"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app.kubernetes.io/name": "observability-loki",
+          "platform.example.org/module": "observability",
+          "platform.example.org/environment": "dev"
+        }
+      },
+      "spec": {
+        "serviceAccountName": "observability-loki",
+        "securityContext": {
+          "runAsNonRoot": true,
+          "seccompProfile": {
+            "type": "RuntimeDefault"
+          }
+        },
+        "containers": [
+          {
+            "name": "observability-loki",
+            "image": "docker.io/grafana/loki@sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "args": [
+              "-config.file=/etc/loki/loki.yml"
+            ],
+            "ports": [
+              {
+                "containerPort": 3100,
+                "name": "http"
+              }
+            ],
+            "securityContext": {
+              "readOnlyRootFilesystem": true,
+              "allowPrivilegeEscalation": false,
+              "capabilities": {
+                "drop": [
+                  "ALL"
+                ]
+              }
+            },
+            "volumeMounts": [
+              {
+                "name": "config",
+                "mountPath": "/etc/loki",
+                "readOnly": true
+              },
+              {
+                "name": "data",
+                "mountPath": "/loki"
+              },
+              {
+                "name": "tmp",
+                "mountPath": "/tmp"
+              }
+            ],
+            "readinessProbe": {
+              "httpGet": {
+                "path": "/ready",
+                "port": 3100
+              }
+            },
+            "livenessProbe": {
+              "httpGet": {
+                "path": "/ready",
+                "port": 3100
+              }
+            },
+            "resources": {
+              "requests": {
+                "cpu": "50m",
+                "memory": "128Mi"
+              },
+              "limits": {
+                "cpu": "500m",
+                "memory": "512Mi"
+              }
+            }
+          }
+        ],
+        "volumes": [
+          {
+            "name": "config",
+            "configMap": {
+              "name": "observability-loki-config"
+            }
+          },
+          {
+            "name": "data",
+            "emptyDir": {}
+          },
+          {
+            "name": "tmp",
+            "emptyDir": {}
+          }
+        ]
+      }
+    }
+  }
+}

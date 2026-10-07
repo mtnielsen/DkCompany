@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/provider-registry.schema.json",
+  "title": "Provider Registry",
+  "description": "DKC-059: et versionsstyret register over providere. Hver provider erklærer sin klasse, produkt, version/edition, forbindelsesform og hvilke capabilities den tilbyder med version og håndhævelsesniveau. Registret er grundlaget for versionsforhandling; en forbindelsesstreng alene er ikke et bevis på et skift.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "providers"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "ProviderRegistry" },
+    "metadata": { "$ref": "#/$defs/metadata" },
+    "providers": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/provider" }
+    }
+  },
+  "$defs": {
+    "human": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\|[a-z0-9][a-z0-9._-]{2,}$" },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": { "$ref": "#/$defs/human" }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman", "labels"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/human" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "capabilityEntry": {
+      "type": "object",
+      "required": ["version", "level"],
+      "additionalProperties": false,
+      "properties": {
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+" },
+        "level": { "enum": ["enforced", "advisory"] }
+      }
+    },
+    "provider": {
+      "type": "object",
+      "required": ["id", "class", "product", "vendor", "version", "edition", "connection", "status", "securitySemantics", "capabilities"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{2,62}$" },
+        "class": { "enum": ["iam", "modelprovider", "database", "storage", "backup", "queue", "apps"] },
+        "product": { "type": "string", "minLength": 2 },
+        "vendor": { "type": "string", "minLength": 2 },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+" },
+        "edition": { "type": "string", "minLength": 2 },
+        "connection": {
+          "type": "object",
+          "required": ["scheme", "endpoint"],
+          "additionalProperties": false,
+          "properties": {
+            "scheme": { "type": "string", "minLength": 2 },
+            "endpoint": { "type": "string", "minLength": 3 }
+          }
+        },
+        "status": { "enum": ["supported", "deprecated"] },
+        "securitySemantics": { "type": "object", "minProperties": 1, "additionalProperties": true },
+        "capabilities": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "$ref": "#/$defs/capabilityEntry" }
+        }
+      }
+    }
+  }
+}

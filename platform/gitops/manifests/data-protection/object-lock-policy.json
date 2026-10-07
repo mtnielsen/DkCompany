@@ -1,0 +1,28 @@
+{
+  "apiVersion": "objectstore.platform.example.org/v1alpha1",
+  "kind": "ObjectLockConfiguration",
+  "metadata": {
+    "name": "immutable-object-lock",
+    "namespace": "platform-data-protection",
+    "labels": {
+      "app.kubernetes.io/name": "object-lock",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "object-lock",
+      "platform.example.org/environment": "data-protection"
+    }
+  },
+  "spec": {
+    "product": "MinIO",
+    "version": "RELEASE.2024-12-18T13-15-44Z",
+    "versioning": true,
+    "objectLock": true,
+    "lockModes": [
+      "GOVERNANCE",
+      "COMPLIANCE"
+    ],
+    "defaultMode": "COMPLIANCE",
+    "governanceBypassRequiresHuman": true,
+    "complianceNonBypassable": true,
+    "verifyBeforeRelease": true
+  }
+}

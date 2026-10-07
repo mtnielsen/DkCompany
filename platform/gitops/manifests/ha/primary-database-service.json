@@ -1,0 +1,30 @@
+{
+  "apiVersion": "v1",
+  "kind": "Service",
+  "metadata": {
+    "name": "primary-database",
+    "namespace": "platform-ha",
+    "labels": {
+      "app.kubernetes.io/name": "primary-database",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "primary-database",
+      "platform.example.org/environment": "ha"
+    },
+    "annotations": {
+      "platform.example.org/service-discovery": "headless"
+    }
+  },
+  "spec": {
+    "clusterIP": "None",
+    "selector": {
+      "app.kubernetes.io/name": "primary-database"
+    },
+    "ports": [
+      {
+        "name": "http",
+        "port": 5432,
+        "targetPort": 5432
+      }
+    ]
+  }
+}

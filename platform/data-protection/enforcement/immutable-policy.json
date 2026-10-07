@@ -1,0 +1,219 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ImmutableEnforcement",
+  "metadata": {
+    "name": "platform-immutable-enforcement",
+    "version": "1.0.0",
+    "description": "Konkret håndhævelse af immutable data uden for agentens kontrol: et verificeret S3-kompatibelt storage-produkt med object-lock i GOVERNANCE og COMPLIANCE, en rolle-/rettighedsmatrix hvor AI og app-konti er nægtet alle muterende operationer og indirekte adminveje, append-only audit-ingest, beskyttede KMS-/backup-/serviceaccount-/trust-ressourcer og to-personers kontrol for beskyttelsespolitik, governance-bypass og recovery-adgang.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+    },
+    "lastReviewed": "2026-09-26",
+    "labels": { "segment": "security", "tier": "immutable" }
+  },
+  "storageProduct": {
+    "name": "MinIO",
+    "version": "RELEASE.2024-12-18T13-15-44Z",
+    "s3Compatible": true,
+    "objectLock": true,
+    "versioning": true,
+    "lockModes": ["GOVERNANCE", "COMPLIANCE"],
+    "verification": {
+      "method": "negative-enforcement-tests",
+      "verifiedByHuman": null,
+      "verifiedAt": "2026-09-26",
+      "evidenceRef": "data-protection/test/worm-store.test.mjs",
+      "governanceBypassRequiresHuman": true,
+      "complianceNonBypassable": true
+    }
+  },
+  "roles": [
+    {
+      "id": "agent",
+      "kind": "agent",
+      "ai": true,
+      "allowedOperations": ["read"],
+      "forbiddenOperations": [
+        "append",
+        "write",
+        "update",
+        "delete",
+        "retention-extend",
+        "retention-shorten",
+        "pointer-switch",
+        "key-rotate",
+        "key-delete",
+        "lifecycle-change",
+        "serviceaccount-write",
+        "trust-config-write",
+        "protection-policy",
+        "recovery-access"
+      ],
+      "bypassGovernance": false
+    },
+    {
+      "id": "audit-ingest",
+      "kind": "append-only",
+      "ai": false,
+      "allowedOperations": ["read", "append"],
+      "forbiddenOperations": [
+        "update",
+        "delete",
+        "retention-extend",
+        "retention-shorten",
+        "pointer-switch",
+        "key-rotate",
+        "key-delete",
+        "lifecycle-change",
+        "serviceaccount-write",
+        "trust-config-write",
+        "protection-policy",
+        "recovery-access"
+      ],
+      "bypassGovernance": false
+    },
+    {
+      "id": "storage-admin",
+      "kind": "human",
+      "ai": false,
+      "allowedOperations": ["read", "write", "append", "delete", "retention-extend", "pointer-switch", "lifecycle-change"],
+      "forbiddenOperations": ["retention-shorten", "key-delete", "protection-policy", "trust-config-write"],
+      "bypassGovernance": true,
+      "twoPersonRequired": true
+    },
+    {
+      "id": "security-admin",
+      "kind": "human",
+      "ai": false,
+      "allowedOperations": ["read", "retention-extend", "protection-policy", "recovery-access", "key-rotate", "key-delete"],
+      "forbiddenOperations": ["retention-shorten", "trust-config-write"],
+      "bypassGovernance": false,
+      "twoPersonRequired": true
+    },
+    {
+      "id": "workload",
+      "kind": "service",
+      "ai": false,
+      "allowedOperations": ["read", "write", "append"],
+      "forbiddenOperations": [
+        "update",
+        "delete",
+        "retention-extend",
+        "retention-shorten",
+        "pointer-switch",
+        "key-rotate",
+        "key-delete",
+        "lifecycle-change",
+        "serviceaccount-write",
+        "trust-config-write",
+        "protection-policy",
+        "recovery-access"
+      ],
+      "bypassGovernance": false
+    }
+  ],
+  "agentDenials": {
+    "forbiddenOperations": [
+      "append",
+      "write",
+      "update",
+      "delete",
+      "retention-extend",
+      "retention-shorten",
+      "pointer-switch",
+      "key-rotate",
+      "key-delete",
+      "lifecycle-change",
+      "serviceaccount-write",
+      "trust-config-write",
+      "protection-policy",
+      "recovery-access"
+    ],
+    "indirectAdminPaths": [
+      "storage-admin-api",
+      "kubernetes-rbac-mutation",
+      "bucket-policy-mutation",
+      "kms-key-policy-mutation",
+      "serviceaccount-token-mint",
+      "trust-config-mutation",
+      "lifecycle-rule-mutation"
+    ],
+    "protectedResourceKinds": ["kms-key", "backup", "service-account", "trust-config", "lifecycle-policy", "object-lock-policy"]
+  },
+  "protectedResources": [
+    {
+      "id": "policy-signing-key",
+      "kind": "kms-key",
+      "ref": "kms://platform-kms/policy-signing",
+      "deletionProtected": true,
+      "retentionLocked": true,
+      "keyDomain": "kms-root"
+    },
+    {
+      "id": "offsite-immutable-backups",
+      "kind": "backup",
+      "ref": "s3://platform-backup-immutable",
+      "deletionProtected": true,
+      "retentionLocked": true,
+      "keyDomain": "backup"
+    },
+    {
+      "id": "audit-service-account",
+      "kind": "service-account",
+      "ref": "spiffe://platform.example.org/modules/audit-service",
+      "deletionProtected": true,
+      "retentionLocked": false,
+      "keyDomain": "workload-identity"
+    },
+    {
+      "id": "platform-trust-config",
+      "kind": "trust-config",
+      "ref": "policy/keys/trusted.json",
+      "deletionProtected": true,
+      "retentionLocked": true,
+      "keyDomain": "policy-signing"
+    },
+    {
+      "id": "worm-lifecycle-policy",
+      "kind": "lifecycle-policy",
+      "ref": "gitops/manifests/data-protection/object-lock-policy.json",
+      "deletionProtected": true,
+      "retentionLocked": true,
+      "keyDomain": "storage-admin"
+    },
+    {
+      "id": "object-lock-policy",
+      "kind": "object-lock-policy",
+      "ref": "gitops/manifests/data-protection/object-lock-policy.json",
+      "deletionProtected": true,
+      "retentionLocked": true,
+      "keyDomain": "storage-admin"
+    }
+  ],
+  "auditIngest": {
+    "role": "audit-ingest",
+    "mode": "append-only",
+    "cannotDelete": true,
+    "cannotUpdate": true,
+    "separateFromAdmin": true
+  },
+  "twoPersonControl": {
+    "protectionPolicy": { "required": true, "requesterMayNotApprove": true },
+    "recoveryAccess": { "required": true, "requesterMayNotApprove": true },
+    "governanceBypass": { "required": true, "requesterMayNotApprove": true }
+  },
+  "storageSemantics": {
+    "negativeTests": [
+      { "id": "delete-compliance-locked", "operation": "delete", "expectation": "denied" },
+      { "id": "shorten-retention", "operation": "retention-shorten", "expectation": "denied" },
+      { "id": "ai-switch-pointer", "operation": "pointer-switch", "expectation": "denied" },
+      { "id": "ai-delete-key", "operation": "key-delete", "expectation": "denied" },
+      { "id": "new-version-preserves-authoritative", "operation": "write", "expectation": "preserved" },
+      { "id": "governance-bypass-two-person", "operation": "retention-shorten", "expectation": "audited" },
+      { "id": "indirect-admin-path-denied", "operation": "serviceaccount-write", "expectation": "denied" }
+    ]
+  }
+}

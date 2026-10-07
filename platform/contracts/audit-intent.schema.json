@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/audit-intent.schema.json",
+  "title": "Audit Action Intent",
+  "description": "DKC-009: den holdbare kvittering der skrives og committes FØR en ekstern ændring. Et intent uden outcome er 'pending' og må ikke genudføres ukritisk; det skal reconciliere.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "idempotencyId", "intentId", "verb", "target", "state", "requestDigest", "createdAt"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "AuditActionIntent" },
+    "tenantId": { "type": ["string", "null"] },
+    "idempotencyId": { "type": "string", "minLength": 1, "description": "Stabil nøgle på tværs af genkørsler; binder forsøget til ét intent." },
+    "intentId": { "type": "string", "format": "uuid" },
+    "verb": { "type": "string", "minLength": 1 },
+    "target": { "type": "string", "minLength": 1 },
+    "environment": { "type": ["string", "null"], "enum": ["dev", "staging", "prod", null] },
+    "actor": { "type": ["string", "null"] },
+    "state": { "enum": ["pending", "succeeded", "failed", "unknown"] },
+    "requestDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$", "description": "SHA-256 over det minimerede, redigerede request-payload." },
+    "retentionClass": { "enum": ["operational", "personal", "security"] },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "outcomeAt": { "type": ["string", "null"], "format": "date-time" },
+    "attempts": { "type": "integer", "minimum": 0 }
+  }
+}

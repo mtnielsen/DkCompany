@@ -1,0 +1,12 @@
+{
+  "requestId": "018f3c2a-1b2c-7def-8a01-cccccccccccc",
+  "verb": "subject.erase",
+  "completedAt": "2025-09-01T10:00:42Z",
+  "status": "partially-completed",
+  "results": [
+    { "module": "dummy-ok", "moduleVersion": "1.2.0", "verb": "subject.erase", "status": "full", "recordsAffected": 17, "artifactRef": "s3://evidence/dsar/cccccccc/erase-dummy-ok.json", "artifactSha256": "5555555555555555555555555555555555555555555555555555555555555555", "durationMs": 820 },
+    { "module": "legacy-crm", "moduleVersion": "4.2.0", "verb": "subject.erase", "status": "partial", "recordsAffected": 12, "reason": "Backups roteres først efter 35 dage; posten er markeret til sletning ved næste rotation.", "durationMs": 610 },
+    { "module": "records-archive", "moduleVersion": "2.0.0", "verb": "subject.erase", "status": "unsupported", "reason": "Arkivering er underlagt bogføringslovens opbevaringspligt og kan ikke slettes før fristen.", "durationMs": 90 }
+  ],
+  "summary": { "modulesQueried": 3, "full": 1, "found": 0, "partial": 1, "unsupported": 1, "failed": 0, "unknown": 0 }
+}

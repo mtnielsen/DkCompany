@@ -1,0 +1,57 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "BackupTarget",
+  "metadata": {
+    "name": "legacy-nas",
+    "version": "1.0.0",
+    "description": "Tidligere NAS-baseret backupmål på et separat site. Erstattet af det S3-kompatible offsite-mål, men bevares indtil den vedtagne retention er opfyldt.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+    },
+    "labels": { "tier": "backup", "protocol": "nas" }
+  },
+  "environment": "production",
+  "targetType": "nas",
+  "support": {
+    "status": "supported",
+    "validatedAt": "2025-06-01T08:00:00Z",
+    "validatedBy": { "subject": "oidc|cont.officer", "name": "Carla Officer", "role": "Continuity Officer" }
+  },
+  "endpoint": {
+    "url": "https://nas.legacy.example.org",
+    "region": "on-prem",
+    "bucket": "backup"
+  },
+  "credentialsRef": "vault:secret/data/backup/legacy-nas#access",
+  "tls": {
+    "verify": true,
+    "minVersion": "1.3",
+    "caRef": "vault:secret/data/backup/legacy-nas-ca#pem",
+    "certSha256": null
+  },
+  "encryption": {
+    "mode": "platform-managed",
+    "keyRef": null,
+    "keySeparated": true
+  },
+  "retention": {
+    "days": 365,
+    "immutability": {
+      "required": false,
+      "mode": "none",
+      "verified": false,
+      "evidenceRef": null,
+      "minRetentionDays": null
+    }
+  },
+  "schedule": { "cron": "0 2 * * *", "timezone": "Europe/Copenhagen" },
+  "bandwidth": { "maxMbps": 50, "window": null },
+  "failureDomain": { "id": "onprem-site", "accessDomain": "platform-prod-account", "region": "on-prem" },
+  "recoveryOwner": { "subject": "oidc|cont.officer", "name": "Carla Officer", "role": "Continuity Officer" },
+  "status": "approved",
+  "approvedBy": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+  "approvedAt": "2025-06-01T09:00:00Z"
+}

@@ -1,0 +1,53 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "PlatformMatrix",
+  "metadata": {
+    "name": "platforms",
+    "version": "1.0.0",
+    "description": "Navngivne og testbare OS-/arkitektur-/runtime-kombinationer som produktprofilerne understøtter.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+    }
+  },
+  "platforms": [
+    {
+      "id": "linux-amd64-node22",
+      "os": "linux",
+      "arch": "x64",
+      "runtime": "node>=22 <23",
+      "supportTier": "supported",
+      "testCommand": "make distribution-test",
+      "notes": "Primær kombination for VPS og lokale servere. Kører både single-server- og HA-profilerne."
+    },
+    {
+      "id": "linux-arm64-node22",
+      "os": "linux",
+      "arch": "arm64",
+      "runtime": "node>=22 <23",
+      "supportTier": "supported",
+      "testCommand": "make distribution-test",
+      "notes": "ARM64-servere og mindre edge-installationer."
+    },
+    {
+      "id": "linux-amd64-node24",
+      "os": "linux",
+      "arch": "x64",
+      "runtime": "node>=24 <25",
+      "supportTier": "best-effort",
+      "testCommand": "make distribution-test",
+      "notes": "Næste LTS-linje. Understøttes bedst-muligt indtil videre; ikke en del af den primære supportmatrix."
+    },
+    {
+      "id": "windows-wsl2-amd64-node22",
+      "os": "linux",
+      "arch": "x64",
+      "runtime": "node>=22 <23",
+      "supportTier": "best-effort",
+      "testCommand": "make distribution-test",
+      "notes": "Windows-host med WSL2. Linux-runtime i WSL2; Windows selv er ikke en understøttet produktionsplatform."
+    }
+  ]
+}

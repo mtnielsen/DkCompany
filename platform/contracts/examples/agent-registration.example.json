@@ -1,0 +1,16 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "AgentRegistration",
+  "spiffeId": "spiffe://platform.example.org/agents/dummy-ok-planner",
+  "agentRef": "dummy-ok-planner",
+  "role": "planner",
+  "status": "active",
+  "modelRef": "anthropic/claude-sonnet@2025-01",
+  "allowedVerbs": ["observe.read", "observe.correlate", "diagnose", "health", "slo", "retention.policy", "subject.locate", "propose"],
+  "allowedTools": ["read", "query", "metrics", "plan-write"],
+  "allowedArtifacts": ["plan"],
+  "createdBy": "oidc|anna.andersen",
+  "createdAt": "2025-09-01T08:00:00Z",
+  "manifestDigest": "1111111111111111111111111111111111111111111111111111111111111111",
+  "previousIdentity": null
+}

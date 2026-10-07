@@ -1,0 +1,32 @@
+name: DCO
+
+# DKC-014 — DCO-håndhævelse.
+#
+# Dette er en almindelig sign-off-linje ('Signed-off-by'), ikke kryptografisk
+# commitsignering. Workflowet er den deklarerede CI-sti; GitHub Actions er slået
+# fra på repo-niveau i dette miljø, så det kan køres lokalt med
+# `.github/scripts/check-dco.sh <range>`.
+
+on:
+  pull_request:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  dco:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify DCO sign-off
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            .github/scripts/check-dco.sh "${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
+          else
+            .github/scripts/check-dco.sh "${{ github.event.before }}..${{ github.sha }}"
+          fi

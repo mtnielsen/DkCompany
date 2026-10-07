@@ -1,0 +1,3327 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ShadowReport",
+  "generatedAt": "2025-09-01T08:00:00Z",
+  "grantVersion": "1.1.0",
+  "fingerprint": "726ebcded8f46ab046beed3d22115d27bf541553533aa3fe682a580b76e12491",
+  "measured": false,
+  "reason": "Deterministisk replay af historiske hændelser og en simuleret staging-effekt. Grundlaget er dækket af regressions- og konformanstests; måling mod en levende model og en levende stagingklynge er NOT RUN.",
+  "thresholds": {
+    "maxFalseAlarmRate": 0.1,
+    "maxErrorRate": 0.1,
+    "maxEscalationRate": 0.6,
+    "maxCostEur": 1,
+    "maxReviewerFindings": 10
+  },
+  "evaluationRuns": [
+    {
+      "runId": "eval-2025-09-01",
+      "fingerprint": "726ebcded8f46ab046beed3d22115d27bf541553533aa3fe682a580b76e12491",
+      "at": "2025-09-01T08:00:00Z",
+      "events": 48,
+      "falseAlarmRate": 0.041666666666666664,
+      "errorRate": 0.041666666666666664,
+      "escalationRate": 0.4166666666666667,
+      "costEur": 0.1221,
+      "reviewerFindings": 2,
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "runId": "eval-2025-09-08",
+      "fingerprint": "726ebcded8f46ab046beed3d22115d27bf541553533aa3fe682a580b76e12491",
+      "at": "2025-09-08T08:00:00Z",
+      "events": 48,
+      "falseAlarmRate": 0.041666666666666664,
+      "errorRate": 0.041666666666666664,
+      "escalationRate": 0.4166666666666667,
+      "costEur": 0.1221,
+      "reviewerFindings": 2,
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "runId": "eval-2025-09-15",
+      "fingerprint": "726ebcded8f46ab046beed3d22115d27bf541553533aa3fe682a580b76e12491",
+      "at": "2025-09-15T08:00:00Z",
+      "events": 48,
+      "falseAlarmRate": 0.041666666666666664,
+      "errorRate": 0.041666666666666664,
+      "escalationRate": 0.4166666666666667,
+      "costEur": 0.1221,
+      "reviewerFindings": 2,
+      "passed": true,
+      "reasons": []
+    }
+  ],
+  "shadow": {
+    "apiVersion": "contracts.platform/v1alpha1",
+    "kind": "ShadowRun",
+    "runId": "shadow-replay-2025-09-01",
+    "mode": "shadow",
+    "environment": "replay",
+    "model": {
+      "modelRef": "gateway.model/shadow-sim-2025-09",
+      "promptDigest": "a1066ca0496a58982e1c36147d9d2f4e0df21e093531774368a757daa9570df3",
+      "gatewayRef": "gateway/routes.json"
+    },
+    "fingerprint": "726ebcded8f46ab046beed3d22115d27bf541553533aa3fe682a580b76e12491",
+    "generatedAt": "2025-09-01T08:00:00Z",
+    "eventsReplayed": 48,
+    "mutationCount": 0,
+    "halted": false,
+    "haltReason": null,
+    "decisions": [
+      {
+        "eventId": "evt-001",
+        "at": "2024-11-01T00:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-0",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "anomali 'cpu-saturation' (0.72)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "scale",
+          "verb": "scale",
+          "target": "service/svc-0",
+          "runbookRef": "bounded-scale@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-01T00:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-002",
+        "at": "2024-11-01T06:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-1",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'memory-pressure' (0.85)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "restart",
+          "verb": "restart",
+          "target": "service/svc-1",
+          "runbookRef": "stateless-restart@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-01T06:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-003",
+        "at": "2024-11-01T12:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-2",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "anomali 'latency-spike' (0.78)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "scale",
+          "verb": "scale",
+          "target": "service/svc-2",
+          "runbookRef": "bounded-scale@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-004",
+        "at": "2024-11-01T18:00:00.000Z",
+        "severity": "info",
+        "target": "service/svc-3",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "normal 'dependency-timeout' (0.16)",
+        "incident": false,
+        "proposal": {
+          "actionKind": "none",
+          "verb": "diagnose",
+          "target": "service/svc-3",
+          "runbookRef": null,
+          "mutating": false,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-01T18:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-005",
+        "at": "2024-11-02T00:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-4",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'disk-pressure' (0.84)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "scale",
+          "verb": "scale",
+          "target": "service/svc-4",
+          "runbookRef": "bounded-scale@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-02T00:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-006",
+        "at": "2024-11-02T06:00:00.000Z",
+        "severity": "critical",
+        "target": "service/svc-5",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "anomali 'schema-drift' (0.77)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "migrate",
+          "verb": "migrate",
+          "target": "service/svc-5",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": false
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-007",
+        "at": "2024-11-02T12:00:00.000Z",
+        "severity": "critical",
+        "target": "service/svc-0",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "anomali 'data-corruption' (0.90)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "restore",
+          "verb": "restore",
+          "target": "service/svc-0",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": false
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-02T12:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-008",
+        "at": "2024-11-02T18:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-1",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'config-drift' (0.83)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "config.apply",
+          "verb": "config.apply",
+          "target": "service/svc-1",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-02T18:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-009",
+        "at": "2024-11-03T00:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-2",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "anomali 'certificate-expiry' (0.76)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "rotate-credential",
+          "verb": "rotate-credential",
+          "target": "service/svc-2",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-010",
+        "at": "2024-11-03T06:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-3",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "anomali 'ambiguous' (0.89)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "diagnose",
+          "verb": "diagnose",
+          "target": "service/svc-3",
+          "runbookRef": null,
+          "mutating": false,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-03T06:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-011",
+        "at": "2024-11-03T12:00:00.000Z",
+        "severity": "info",
+        "target": "service/svc-4",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'cpu-saturation' (0.78)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "scale",
+          "verb": "scale",
+          "target": "service/svc-4",
+          "runbookRef": "bounded-scale@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-03T12:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 1,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-012",
+        "at": "2024-11-03T18:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-5",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "anomali 'memory-pressure' (0.75)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "restart",
+          "verb": "restart",
+          "target": "service/svc-5",
+          "runbookRef": "stateless-restart@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-013",
+        "at": "2024-11-04T00:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-0",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "anomali 'latency-spike' (0.88)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "scale",
+          "verb": "scale",
+          "target": "service/svc-0",
+          "runbookRef": "bounded-scale@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-04T00:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-014",
+        "at": "2024-11-04T06:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-1",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'dependency-timeout' (0.81)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "restart",
+          "verb": "restart",
+          "target": "service/svc-1",
+          "runbookRef": "stateless-restart@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-04T06:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-015",
+        "at": "2024-11-04T12:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-2",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "anomali 'disk-pressure' (0.74)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "scale",
+          "verb": "scale",
+          "target": "service/svc-2",
+          "runbookRef": "bounded-scale@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-016",
+        "at": "2024-11-04T18:00:00.000Z",
+        "severity": "critical",
+        "target": "service/svc-3",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "anomali 'schema-drift' (0.87)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "migrate",
+          "verb": "migrate",
+          "target": "service/svc-3",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": false
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-04T18:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-017",
+        "at": "2024-11-05T00:00:00.000Z",
+        "severity": "critical",
+        "target": "service/svc-4",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'data-corruption' (0.80)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "restore",
+          "verb": "restore",
+          "target": "service/svc-4",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": false
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-05T00:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-018",
+        "at": "2024-11-05T06:00:00.000Z",
+        "severity": "info",
+        "target": "service/svc-5",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "normal 'config-drift' (0.34)",
+        "incident": false,
+        "proposal": {
+          "actionKind": "none",
+          "verb": "diagnose",
+          "target": "service/svc-5",
+          "runbookRef": null,
+          "mutating": false,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-019",
+        "at": "2024-11-05T12:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-0",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "anomali 'certificate-expiry' (0.86)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "scale",
+          "verb": "scale",
+          "target": "service/svc-0",
+          "runbookRef": "bounded-scale@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-05T12:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-020",
+        "at": "2024-11-05T18:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-1",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'ambiguous' (0.79)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "diagnose",
+          "verb": "diagnose",
+          "target": "service/svc-1",
+          "runbookRef": null,
+          "mutating": false,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-05T18:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-021",
+        "at": "2024-11-06T00:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-2",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "anomali 'cpu-saturation' (0.72)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "scale",
+          "verb": "scale",
+          "target": "service/svc-2",
+          "runbookRef": "bounded-scale@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-022",
+        "at": "2024-11-06T06:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-3",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "anomali 'memory-pressure' (0.85)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "restart",
+          "verb": "restart",
+          "target": "service/svc-3",
+          "runbookRef": "stateless-restart@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-06T06:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-023",
+        "at": "2024-11-06T12:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-4",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'latency-spike' (0.78)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "scale",
+          "verb": "scale",
+          "target": "service/svc-4",
+          "runbookRef": "bounded-scale@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-06T12:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-024",
+        "at": "2024-11-06T18:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-5",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "anomali 'dependency-timeout' (0.91)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "restart",
+          "verb": "restart",
+          "target": "service/svc-5",
+          "runbookRef": "stateless-restart@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-025",
+        "at": "2024-11-07T00:00:00.000Z",
+        "severity": "info",
+        "target": "service/svc-0",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "normal 'disk-pressure' (0.23)",
+        "incident": false,
+        "proposal": {
+          "actionKind": "none",
+          "verb": "diagnose",
+          "target": "service/svc-0",
+          "runbookRef": null,
+          "mutating": false,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-07T00:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-026",
+        "at": "2024-11-07T06:00:00.000Z",
+        "severity": "critical",
+        "target": "service/svc-1",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'schema-drift' (0.77)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "migrate",
+          "verb": "migrate",
+          "target": "service/svc-1",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": false
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-07T06:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-027",
+        "at": "2024-11-07T12:00:00.000Z",
+        "severity": "critical",
+        "target": "service/svc-2",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "anomali 'data-corruption' (0.90)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "restore",
+          "verb": "restore",
+          "target": "service/svc-2",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": false
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-028",
+        "at": "2024-11-07T18:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-3",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "anomali 'config-drift' (0.83)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "config.apply",
+          "verb": "config.apply",
+          "target": "service/svc-3",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-07T18:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-029",
+        "at": "2024-11-08T00:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-4",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'certificate-expiry' (0.76)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "rotate-credential",
+          "verb": "rotate-credential",
+          "target": "service/svc-4",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-08T00:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-030",
+        "at": "2024-11-08T06:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-5",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "anomali 'ambiguous' (0.89)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "diagnose",
+          "verb": "diagnose",
+          "target": "service/svc-5",
+          "runbookRef": null,
+          "mutating": false,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-031",
+        "at": "2024-11-08T12:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-0",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "anomali 'cpu-saturation' (0.82)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "scale",
+          "verb": "scale",
+          "target": "service/svc-0",
+          "runbookRef": "bounded-scale@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-08T12:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-032",
+        "at": "2024-11-08T18:00:00.000Z",
+        "severity": "info",
+        "target": "service/svc-1",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "normal 'memory-pressure' (0.32)",
+        "incident": false,
+        "proposal": {
+          "actionKind": "none",
+          "verb": "diagnose",
+          "target": "service/svc-1",
+          "runbookRef": null,
+          "mutating": false,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-08T18:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-033",
+        "at": "2024-11-09T00:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-2",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "anomali 'latency-spike' (0.88)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "scale",
+          "verb": "scale",
+          "target": "service/svc-2",
+          "runbookRef": "bounded-scale@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-034",
+        "at": "2024-11-09T06:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-3",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "anomali 'dependency-timeout' (0.81)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "restart",
+          "verb": "restart",
+          "target": "service/svc-3",
+          "runbookRef": "stateless-restart@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-09T06:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-035",
+        "at": "2024-11-09T12:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-4",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'disk-pressure' (0.74)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "scale",
+          "verb": "scale",
+          "target": "service/svc-4",
+          "runbookRef": "bounded-scale@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-09T12:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-036",
+        "at": "2024-11-09T18:00:00.000Z",
+        "severity": "critical",
+        "target": "service/svc-5",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "anomali 'schema-drift' (0.87)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "migrate",
+          "verb": "migrate",
+          "target": "service/svc-5",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": false
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-037",
+        "at": "2024-11-10T00:00:00.000Z",
+        "severity": "critical",
+        "target": "service/svc-0",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "anomali 'data-corruption' (0.80)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "restore",
+          "verb": "restore",
+          "target": "service/svc-0",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": false
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-10T00:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-038",
+        "at": "2024-11-10T06:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-1",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'config-drift' (0.73)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "config.apply",
+          "verb": "config.apply",
+          "target": "service/svc-1",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-10T06:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-039",
+        "at": "2024-11-10T12:00:00.000Z",
+        "severity": "info",
+        "target": "service/svc-2",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "normal 'certificate-expiry' (0.21)",
+        "incident": false,
+        "proposal": {
+          "actionKind": "none",
+          "verb": "diagnose",
+          "target": "service/svc-2",
+          "runbookRef": null,
+          "mutating": false,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-040",
+        "at": "2024-11-10T18:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-3",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "anomali 'ambiguous' (0.79)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "diagnose",
+          "verb": "diagnose",
+          "target": "service/svc-3",
+          "runbookRef": null,
+          "mutating": false,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-10T18:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-041",
+        "at": "2024-11-11T00:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-4",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'cpu-saturation' (0.72)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "scale",
+          "verb": "scale",
+          "target": "service/svc-4",
+          "runbookRef": "bounded-scale@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-11T00:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-042",
+        "at": "2024-11-11T06:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-5",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "anomali 'memory-pressure' (0.85)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "restart",
+          "verb": "restart",
+          "target": "service/svc-5",
+          "runbookRef": "stateless-restart@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-043",
+        "at": "2024-11-11T12:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-0",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "anomali 'latency-spike' (0.78)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "scale",
+          "verb": "scale",
+          "target": "service/svc-0",
+          "runbookRef": "bounded-scale@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-11T12:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-044",
+        "at": "2024-11-11T18:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-1",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'dependency-timeout' (0.91)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "restart",
+          "verb": "restart",
+          "target": "service/svc-1",
+          "runbookRef": "stateless-restart@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-11T18:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-045",
+        "at": "2024-11-12T00:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-2",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "anomali 'disk-pressure' (0.84)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "restart",
+          "verb": "restart",
+          "target": "service/svc-2",
+          "runbookRef": "stateless-restart@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-046",
+        "at": "2024-11-12T06:00:00.000Z",
+        "severity": "info",
+        "target": "service/svc-3",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "anomali 'schema-drift' (0.78)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "migrate",
+          "verb": "migrate",
+          "target": "service/svc-3",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": false
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-12T06:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 1,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-047",
+        "at": "2024-11-12T12:00:00.000Z",
+        "severity": "critical",
+        "target": "service/svc-4",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'data-corruption' (0.90)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "restore",
+          "verb": "restore",
+          "target": "service/svc-4",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": false
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-12T12:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      },
+      {
+        "eventId": "evt-048",
+        "at": "2024-11-12T18:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-5",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "anomali 'config-drift' (0.83)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "config.apply",
+          "verb": "config.apply",
+          "target": "service/svc-5",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "skyggetilstand: nul muterende handlinger"
+        }
+      }
+    ],
+    "metrics": {
+      "proposals": 43,
+      "approved": 16,
+      "rejected": 16,
+      "falseAlarms": 2,
+      "falseAlarmRate": 0.041666666666666664,
+      "errors": 2,
+      "errorRate": 0.041666666666666664,
+      "escalations": 4,
+      "escalationRate": 0.08333333333333333,
+      "costEur": 0.1221,
+      "reviewerFindings": 2,
+      "executedMutations": 0
+    },
+    "safety": {
+      "shadowMode": true,
+      "zeroMutationInvariant": true,
+      "killSwitchClear": true,
+      "governanceAvailable": true,
+      "evaluationFingerprintMatch": true,
+      "approvedRunbooksOnly": true
+    },
+    "verdict": "pass"
+  },
+  "limitedAutonomy": {
+    "apiVersion": "contracts.platform/v1alpha1",
+    "kind": "ShadowRun",
+    "runId": "limited-autonomy-staging-2025-09-01",
+    "mode": "limited-autonomy",
+    "environment": "staging",
+    "model": {
+      "modelRef": "gateway.model/shadow-sim-2025-09",
+      "promptDigest": "a1066ca0496a58982e1c36147d9d2f4e0df21e093531774368a757daa9570df3",
+      "gatewayRef": "gateway/routes.json"
+    },
+    "fingerprint": "726ebcded8f46ab046beed3d22115d27bf541553533aa3fe682a580b76e12491",
+    "generatedAt": "2025-09-01T08:00:00Z",
+    "eventsReplayed": 48,
+    "mutationCount": 23,
+    "halted": false,
+    "haltReason": null,
+    "decisions": [
+      {
+        "eventId": "evt-001",
+        "at": "2024-11-01T00:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-0",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "anomali 'cpu-saturation' (0.72)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "scale",
+          "verb": "scale",
+          "target": "service/svc-0",
+          "runbookRef": "bounded-scale@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-01T00:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": true,
+          "reason": "udført i staging via forhåndsgodkendt, reversibel runbook"
+        }
+      },
+      {
+        "eventId": "evt-002",
+        "at": "2024-11-01T06:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-1",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'memory-pressure' (0.85)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "restart",
+          "verb": "restart",
+          "target": "service/svc-1",
+          "runbookRef": "stateless-restart@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-01T06:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": true,
+          "reason": "udført i staging via forhåndsgodkendt, reversibel runbook"
+        }
+      },
+      {
+        "eventId": "evt-003",
+        "at": "2024-11-01T12:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-2",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "anomali 'latency-spike' (0.78)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "scale",
+          "verb": "scale",
+          "target": "service/svc-2",
+          "runbookRef": "bounded-scale@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": true,
+          "reason": "udført i staging via forhåndsgodkendt, reversibel runbook"
+        }
+      },
+      {
+        "eventId": "evt-004",
+        "at": "2024-11-01T18:00:00.000Z",
+        "severity": "info",
+        "target": "service/svc-3",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "normal 'dependency-timeout' (0.16)",
+        "incident": false,
+        "proposal": {
+          "actionKind": "none",
+          "verb": "diagnose",
+          "target": "service/svc-3",
+          "runbookRef": null,
+          "mutating": false,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-01T18:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "læsende forslag"
+        }
+      },
+      {
+        "eventId": "evt-005",
+        "at": "2024-11-02T00:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-4",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'disk-pressure' (0.84)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "scale",
+          "verb": "scale",
+          "target": "service/svc-4",
+          "runbookRef": "bounded-scale@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-02T00:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": true,
+          "reason": "udført i staging via forhåndsgodkendt, reversibel runbook"
+        }
+      },
+      {
+        "eventId": "evt-006",
+        "at": "2024-11-02T06:00:00.000Z",
+        "severity": "critical",
+        "target": "service/svc-5",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "anomali 'schema-drift' (0.77)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "migrate",
+          "verb": "migrate",
+          "target": "service/svc-5",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": false
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "'migrate' er irreversibel og kræver et menneske"
+        }
+      },
+      {
+        "eventId": "evt-007",
+        "at": "2024-11-02T12:00:00.000Z",
+        "severity": "critical",
+        "target": "service/svc-0",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "anomali 'data-corruption' (0.90)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "restore",
+          "verb": "restore",
+          "target": "service/svc-0",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": false
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-02T12:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "'restore' er irreversibel og kræver et menneske"
+        }
+      },
+      {
+        "eventId": "evt-008",
+        "at": "2024-11-02T18:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-1",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'config-drift' (0.83)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "config.apply",
+          "verb": "config.apply",
+          "target": "service/svc-1",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-02T18:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "forslaget peger ikke på en forhåndsgodkendt runbook"
+        }
+      },
+      {
+        "eventId": "evt-009",
+        "at": "2024-11-03T00:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-2",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "anomali 'certificate-expiry' (0.76)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "rotate-credential",
+          "verb": "rotate-credential",
+          "target": "service/svc-2",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "forslaget peger ikke på en forhåndsgodkendt runbook"
+        }
+      },
+      {
+        "eventId": "evt-010",
+        "at": "2024-11-03T06:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-3",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "anomali 'ambiguous' (0.89)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "diagnose",
+          "verb": "diagnose",
+          "target": "service/svc-3",
+          "runbookRef": null,
+          "mutating": false,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-03T06:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "læsende forslag"
+        }
+      },
+      {
+        "eventId": "evt-011",
+        "at": "2024-11-03T12:00:00.000Z",
+        "severity": "info",
+        "target": "service/svc-4",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'cpu-saturation' (0.78)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "scale",
+          "verb": "scale",
+          "target": "service/svc-4",
+          "runbookRef": "bounded-scale@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-03T12:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 1,
+        "execution": {
+          "executed": true,
+          "reason": "udført i staging via forhåndsgodkendt, reversibel runbook"
+        }
+      },
+      {
+        "eventId": "evt-012",
+        "at": "2024-11-03T18:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-5",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "anomali 'memory-pressure' (0.75)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "restart",
+          "verb": "restart",
+          "target": "service/svc-5",
+          "runbookRef": "stateless-restart@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": true,
+          "reason": "udført i staging via forhåndsgodkendt, reversibel runbook"
+        }
+      },
+      {
+        "eventId": "evt-013",
+        "at": "2024-11-04T00:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-0",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "anomali 'latency-spike' (0.88)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "scale",
+          "verb": "scale",
+          "target": "service/svc-0",
+          "runbookRef": "bounded-scale@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-04T00:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": true,
+          "reason": "udført i staging via forhåndsgodkendt, reversibel runbook"
+        }
+      },
+      {
+        "eventId": "evt-014",
+        "at": "2024-11-04T06:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-1",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'dependency-timeout' (0.81)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "restart",
+          "verb": "restart",
+          "target": "service/svc-1",
+          "runbookRef": "stateless-restart@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-04T06:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": true,
+          "reason": "udført i staging via forhåndsgodkendt, reversibel runbook"
+        }
+      },
+      {
+        "eventId": "evt-015",
+        "at": "2024-11-04T12:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-2",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "anomali 'disk-pressure' (0.74)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "scale",
+          "verb": "scale",
+          "target": "service/svc-2",
+          "runbookRef": "bounded-scale@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": true,
+          "reason": "udført i staging via forhåndsgodkendt, reversibel runbook"
+        }
+      },
+      {
+        "eventId": "evt-016",
+        "at": "2024-11-04T18:00:00.000Z",
+        "severity": "critical",
+        "target": "service/svc-3",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "anomali 'schema-drift' (0.87)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "migrate",
+          "verb": "migrate",
+          "target": "service/svc-3",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": false
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-04T18:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "'migrate' er irreversibel og kræver et menneske"
+        }
+      },
+      {
+        "eventId": "evt-017",
+        "at": "2024-11-05T00:00:00.000Z",
+        "severity": "critical",
+        "target": "service/svc-4",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'data-corruption' (0.80)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "restore",
+          "verb": "restore",
+          "target": "service/svc-4",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": false
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-05T00:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "'restore' er irreversibel og kræver et menneske"
+        }
+      },
+      {
+        "eventId": "evt-018",
+        "at": "2024-11-05T06:00:00.000Z",
+        "severity": "info",
+        "target": "service/svc-5",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "normal 'config-drift' (0.34)",
+        "incident": false,
+        "proposal": {
+          "actionKind": "none",
+          "verb": "diagnose",
+          "target": "service/svc-5",
+          "runbookRef": null,
+          "mutating": false,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "læsende forslag"
+        }
+      },
+      {
+        "eventId": "evt-019",
+        "at": "2024-11-05T12:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-0",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "anomali 'certificate-expiry' (0.86)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "scale",
+          "verb": "scale",
+          "target": "service/svc-0",
+          "runbookRef": "bounded-scale@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-05T12:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": true,
+          "reason": "udført i staging via forhåndsgodkendt, reversibel runbook"
+        }
+      },
+      {
+        "eventId": "evt-020",
+        "at": "2024-11-05T18:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-1",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'ambiguous' (0.79)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "diagnose",
+          "verb": "diagnose",
+          "target": "service/svc-1",
+          "runbookRef": null,
+          "mutating": false,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-05T18:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "læsende forslag"
+        }
+      },
+      {
+        "eventId": "evt-021",
+        "at": "2024-11-06T00:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-2",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "anomali 'cpu-saturation' (0.72)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "scale",
+          "verb": "scale",
+          "target": "service/svc-2",
+          "runbookRef": "bounded-scale@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": true,
+          "reason": "udført i staging via forhåndsgodkendt, reversibel runbook"
+        }
+      },
+      {
+        "eventId": "evt-022",
+        "at": "2024-11-06T06:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-3",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "anomali 'memory-pressure' (0.85)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "restart",
+          "verb": "restart",
+          "target": "service/svc-3",
+          "runbookRef": "stateless-restart@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-06T06:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": true,
+          "reason": "udført i staging via forhåndsgodkendt, reversibel runbook"
+        }
+      },
+      {
+        "eventId": "evt-023",
+        "at": "2024-11-06T12:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-4",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'latency-spike' (0.78)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "scale",
+          "verb": "scale",
+          "target": "service/svc-4",
+          "runbookRef": "bounded-scale@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-06T12:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": true,
+          "reason": "udført i staging via forhåndsgodkendt, reversibel runbook"
+        }
+      },
+      {
+        "eventId": "evt-024",
+        "at": "2024-11-06T18:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-5",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "anomali 'dependency-timeout' (0.91)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "restart",
+          "verb": "restart",
+          "target": "service/svc-5",
+          "runbookRef": "stateless-restart@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": true,
+          "reason": "udført i staging via forhåndsgodkendt, reversibel runbook"
+        }
+      },
+      {
+        "eventId": "evt-025",
+        "at": "2024-11-07T00:00:00.000Z",
+        "severity": "info",
+        "target": "service/svc-0",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "normal 'disk-pressure' (0.23)",
+        "incident": false,
+        "proposal": {
+          "actionKind": "none",
+          "verb": "diagnose",
+          "target": "service/svc-0",
+          "runbookRef": null,
+          "mutating": false,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-07T00:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "læsende forslag"
+        }
+      },
+      {
+        "eventId": "evt-026",
+        "at": "2024-11-07T06:00:00.000Z",
+        "severity": "critical",
+        "target": "service/svc-1",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'schema-drift' (0.77)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "migrate",
+          "verb": "migrate",
+          "target": "service/svc-1",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": false
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-07T06:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "'migrate' er irreversibel og kræver et menneske"
+        }
+      },
+      {
+        "eventId": "evt-027",
+        "at": "2024-11-07T12:00:00.000Z",
+        "severity": "critical",
+        "target": "service/svc-2",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "anomali 'data-corruption' (0.90)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "restore",
+          "verb": "restore",
+          "target": "service/svc-2",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": false
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "'restore' er irreversibel og kræver et menneske"
+        }
+      },
+      {
+        "eventId": "evt-028",
+        "at": "2024-11-07T18:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-3",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "anomali 'config-drift' (0.83)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "config.apply",
+          "verb": "config.apply",
+          "target": "service/svc-3",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-07T18:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "forslaget peger ikke på en forhåndsgodkendt runbook"
+        }
+      },
+      {
+        "eventId": "evt-029",
+        "at": "2024-11-08T00:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-4",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'certificate-expiry' (0.76)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "rotate-credential",
+          "verb": "rotate-credential",
+          "target": "service/svc-4",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-08T00:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "forslaget peger ikke på en forhåndsgodkendt runbook"
+        }
+      },
+      {
+        "eventId": "evt-030",
+        "at": "2024-11-08T06:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-5",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "anomali 'ambiguous' (0.89)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "diagnose",
+          "verb": "diagnose",
+          "target": "service/svc-5",
+          "runbookRef": null,
+          "mutating": false,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "læsende forslag"
+        }
+      },
+      {
+        "eventId": "evt-031",
+        "at": "2024-11-08T12:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-0",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "anomali 'cpu-saturation' (0.82)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "scale",
+          "verb": "scale",
+          "target": "service/svc-0",
+          "runbookRef": "bounded-scale@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-08T12:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": true,
+          "reason": "udført i staging via forhåndsgodkendt, reversibel runbook"
+        }
+      },
+      {
+        "eventId": "evt-032",
+        "at": "2024-11-08T18:00:00.000Z",
+        "severity": "info",
+        "target": "service/svc-1",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "normal 'memory-pressure' (0.32)",
+        "incident": false,
+        "proposal": {
+          "actionKind": "none",
+          "verb": "diagnose",
+          "target": "service/svc-1",
+          "runbookRef": null,
+          "mutating": false,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-08T18:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "læsende forslag"
+        }
+      },
+      {
+        "eventId": "evt-033",
+        "at": "2024-11-09T00:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-2",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "anomali 'latency-spike' (0.88)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "scale",
+          "verb": "scale",
+          "target": "service/svc-2",
+          "runbookRef": "bounded-scale@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": true,
+          "reason": "udført i staging via forhåndsgodkendt, reversibel runbook"
+        }
+      },
+      {
+        "eventId": "evt-034",
+        "at": "2024-11-09T06:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-3",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "anomali 'dependency-timeout' (0.81)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "restart",
+          "verb": "restart",
+          "target": "service/svc-3",
+          "runbookRef": "stateless-restart@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-09T06:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": true,
+          "reason": "udført i staging via forhåndsgodkendt, reversibel runbook"
+        }
+      },
+      {
+        "eventId": "evt-035",
+        "at": "2024-11-09T12:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-4",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'disk-pressure' (0.74)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "scale",
+          "verb": "scale",
+          "target": "service/svc-4",
+          "runbookRef": "bounded-scale@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-09T12:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": true,
+          "reason": "udført i staging via forhåndsgodkendt, reversibel runbook"
+        }
+      },
+      {
+        "eventId": "evt-036",
+        "at": "2024-11-09T18:00:00.000Z",
+        "severity": "critical",
+        "target": "service/svc-5",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "anomali 'schema-drift' (0.87)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "migrate",
+          "verb": "migrate",
+          "target": "service/svc-5",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": false
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "'migrate' er irreversibel og kræver et menneske"
+        }
+      },
+      {
+        "eventId": "evt-037",
+        "at": "2024-11-10T00:00:00.000Z",
+        "severity": "critical",
+        "target": "service/svc-0",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "anomali 'data-corruption' (0.80)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "restore",
+          "verb": "restore",
+          "target": "service/svc-0",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": false
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-10T00:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "'restore' er irreversibel og kræver et menneske"
+        }
+      },
+      {
+        "eventId": "evt-038",
+        "at": "2024-11-10T06:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-1",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'config-drift' (0.73)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "config.apply",
+          "verb": "config.apply",
+          "target": "service/svc-1",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-10T06:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "forslaget peger ikke på en forhåndsgodkendt runbook"
+        }
+      },
+      {
+        "eventId": "evt-039",
+        "at": "2024-11-10T12:00:00.000Z",
+        "severity": "info",
+        "target": "service/svc-2",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "normal 'certificate-expiry' (0.21)",
+        "incident": false,
+        "proposal": {
+          "actionKind": "none",
+          "verb": "diagnose",
+          "target": "service/svc-2",
+          "runbookRef": null,
+          "mutating": false,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "læsende forslag"
+        }
+      },
+      {
+        "eventId": "evt-040",
+        "at": "2024-11-10T18:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-3",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "anomali 'ambiguous' (0.79)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "diagnose",
+          "verb": "diagnose",
+          "target": "service/svc-3",
+          "runbookRef": null,
+          "mutating": false,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-10T18:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "læsende forslag"
+        }
+      },
+      {
+        "eventId": "evt-041",
+        "at": "2024-11-11T00:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-4",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'cpu-saturation' (0.72)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "scale",
+          "verb": "scale",
+          "target": "service/svc-4",
+          "runbookRef": "bounded-scale@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-11T00:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": true,
+          "reason": "udført i staging via forhåndsgodkendt, reversibel runbook"
+        }
+      },
+      {
+        "eventId": "evt-042",
+        "at": "2024-11-11T06:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-5",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "anomali 'memory-pressure' (0.85)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "restart",
+          "verb": "restart",
+          "target": "service/svc-5",
+          "runbookRef": "stateless-restart@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": true,
+          "reason": "udført i staging via forhåndsgodkendt, reversibel runbook"
+        }
+      },
+      {
+        "eventId": "evt-043",
+        "at": "2024-11-11T12:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-0",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "anomali 'latency-spike' (0.78)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "scale",
+          "verb": "scale",
+          "target": "service/svc-0",
+          "runbookRef": "bounded-scale@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-11T12:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": true,
+          "reason": "udført i staging via forhåndsgodkendt, reversibel runbook"
+        }
+      },
+      {
+        "eventId": "evt-044",
+        "at": "2024-11-11T18:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-1",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'dependency-timeout' (0.91)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "restart",
+          "verb": "restart",
+          "target": "service/svc-1",
+          "runbookRef": "stateless-restart@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-11T18:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": true,
+          "reason": "udført i staging via forhåndsgodkendt, reversibel runbook"
+        }
+      },
+      {
+        "eventId": "evt-045",
+        "at": "2024-11-12T00:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-2",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "anomali 'disk-pressure' (0.84)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "restart",
+          "verb": "restart",
+          "target": "service/svc-2",
+          "runbookRef": "stateless-restart@1.0.0",
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": true,
+          "reason": "udført i staging via forhåndsgodkendt, reversibel runbook"
+        }
+      },
+      {
+        "eventId": "evt-046",
+        "at": "2024-11-12T06:00:00.000Z",
+        "severity": "info",
+        "target": "service/svc-3",
+        "tenantId": "tenant-1",
+        "read": true,
+        "diagnosis": "anomali 'schema-drift' (0.78)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "migrate",
+          "verb": "migrate",
+          "target": "service/svc-3",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": false
+        },
+        "humanDecision": {
+          "verdict": "approve",
+          "by": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-12T06:30:00.000Z",
+          "rationale": "Forslaget matcher evidensen."
+        },
+        "reviewerFindings": 1,
+        "execution": {
+          "executed": false,
+          "reason": "'migrate' er irreversibel og kræver et menneske"
+        }
+      },
+      {
+        "eventId": "evt-047",
+        "at": "2024-11-12T12:00:00.000Z",
+        "severity": "critical",
+        "target": "service/svc-4",
+        "tenantId": "tenant-2",
+        "read": true,
+        "diagnosis": "anomali 'data-corruption' (0.90)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "restore",
+          "verb": "restore",
+          "target": "service/svc-4",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": false
+        },
+        "humanDecision": {
+          "verdict": "reject",
+          "by": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Platform Owner"
+          },
+          "at": "2024-11-12T12:30:00.000Z",
+          "rationale": "Utilstrækkelig evidens."
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "'restore' er irreversibel og kræver et menneske"
+        }
+      },
+      {
+        "eventId": "evt-048",
+        "at": "2024-11-12T18:00:00.000Z",
+        "severity": "warning",
+        "target": "service/svc-5",
+        "tenantId": "tenant-3",
+        "read": true,
+        "diagnosis": "anomali 'config-drift' (0.83)",
+        "incident": true,
+        "proposal": {
+          "actionKind": "config.apply",
+          "verb": "config.apply",
+          "target": "service/svc-5",
+          "runbookRef": null,
+          "mutating": true,
+          "reversible": true
+        },
+        "humanDecision": {
+          "verdict": "none",
+          "by": null,
+          "at": null,
+          "rationale": null
+        },
+        "reviewerFindings": 0,
+        "execution": {
+          "executed": false,
+          "reason": "forslaget peger ikke på en forhåndsgodkendt runbook"
+        }
+      }
+    ],
+    "metrics": {
+      "proposals": 43,
+      "approved": 16,
+      "rejected": 16,
+      "falseAlarms": 2,
+      "falseAlarmRate": 0.041666666666666664,
+      "errors": 2,
+      "errorRate": 0.041666666666666664,
+      "escalations": 20,
+      "escalationRate": 0.4166666666666667,
+      "costEur": 0.1221,
+      "reviewerFindings": 2,
+      "executedMutations": 23
+    },
+    "safety": {
+      "shadowMode": false,
+      "zeroMutationInvariant": true,
+      "killSwitchClear": true,
+      "governanceAvailable": true,
+      "evaluationFingerprintMatch": true,
+      "approvedRunbooksOnly": true
+    },
+    "verdict": "pass"
+  },
+  "executorAudit": [
+    {
+      "eventId": "evt-001",
+      "runbookRef": "bounded-scale@1.0.0",
+      "ok": true,
+      "simulated": true
+    },
+    {
+      "eventId": "evt-002",
+      "runbookRef": "stateless-restart@1.0.0",
+      "ok": true,
+      "simulated": true
+    },
+    {
+      "eventId": "evt-003",
+      "runbookRef": "bounded-scale@1.0.0",
+      "ok": true,
+      "simulated": true
+    },
+    {
+      "eventId": "evt-005",
+      "runbookRef": "bounded-scale@1.0.0",
+      "ok": true,
+      "simulated": true
+    },
+    {
+      "eventId": "evt-011",
+      "runbookRef": "bounded-scale@1.0.0",
+      "ok": true,
+      "simulated": true
+    },
+    {
+      "eventId": "evt-012",
+      "runbookRef": "stateless-restart@1.0.0",
+      "ok": true,
+      "simulated": true
+    },
+    {
+      "eventId": "evt-013",
+      "runbookRef": "bounded-scale@1.0.0",
+      "ok": true,
+      "simulated": true
+    },
+    {
+      "eventId": "evt-014",
+      "runbookRef": "stateless-restart@1.0.0",
+      "ok": true,
+      "simulated": true
+    },
+    {
+      "eventId": "evt-015",
+      "runbookRef": "bounded-scale@1.0.0",
+      "ok": true,
+      "simulated": true
+    },
+    {
+      "eventId": "evt-019",
+      "runbookRef": "bounded-scale@1.0.0",
+      "ok": true,
+      "simulated": true
+    },
+    {
+      "eventId": "evt-021",
+      "runbookRef": "bounded-scale@1.0.0",
+      "ok": true,
+      "simulated": true
+    },
+    {
+      "eventId": "evt-022",
+      "runbookRef": "stateless-restart@1.0.0",
+      "ok": true,
+      "simulated": true
+    },
+    {
+      "eventId": "evt-023",
+      "runbookRef": "bounded-scale@1.0.0",
+      "ok": true,
+      "simulated": true
+    },
+    {
+      "eventId": "evt-024",
+      "runbookRef": "stateless-restart@1.0.0",
+      "ok": true,
+      "simulated": true
+    },
+    {
+      "eventId": "evt-031",
+      "runbookRef": "bounded-scale@1.0.0",
+      "ok": true,
+      "simulated": true
+    },
+    {
+      "eventId": "evt-033",
+      "runbookRef": "bounded-scale@1.0.0",
+      "ok": true,
+      "simulated": true
+    },
+    {
+      "eventId": "evt-034",
+      "runbookRef": "stateless-restart@1.0.0",
+      "ok": true,
+      "simulated": true
+    },
+    {
+      "eventId": "evt-035",
+      "runbookRef": "bounded-scale@1.0.0",
+      "ok": true,
+      "simulated": true
+    },
+    {
+      "eventId": "evt-041",
+      "runbookRef": "bounded-scale@1.0.0",
+      "ok": true,
+      "simulated": true
+    },
+    {
+      "eventId": "evt-042",
+      "runbookRef": "stateless-restart@1.0.0",
+      "ok": true,
+      "simulated": true
+    },
+    {
+      "eventId": "evt-043",
+      "runbookRef": "bounded-scale@1.0.0",
+      "ok": true,
+      "simulated": true
+    },
+    {
+      "eventId": "evt-044",
+      "runbookRef": "stateless-restart@1.0.0",
+      "ok": true,
+      "simulated": true
+    },
+    {
+      "eventId": "evt-045",
+      "runbookRef": "stateless-restart@1.0.0",
+      "ok": true,
+      "simulated": true
+    }
+  ],
+  "gate": {
+    "status": "pass",
+    "reasons": []
+  }
+}

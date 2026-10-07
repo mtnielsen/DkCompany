@@ -1,0 +1,24 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "RecoveryEnvironmentManifest",
+  "metadata": {
+    "name": "isolated-recovery-environment",
+    "version": "1.0.0",
+    "description": "DKC-042: det isolerede recovery-miljø. Netværket har ingen peering til den primære klynge, IAM/DNS/secret-store genoprettes fra backup, og kun recovery-identiteten med to-personers godkendelse kan arbejde her."
+  },
+  "isolation": {
+    "network": "dedicated-vpc-no-peering-no-shared-dns",
+    "ingress": "none-except-recovery-operator-bastion",
+    "egress": "allowlisted-backup-endpoints-only",
+    "trustAnchorSource": "offline-recovery-ca"
+  },
+  "recoveredDependencies": ["iam", "dns", "secret-store", "database", "object-storage"],
+  "activation": {
+    "requiresTwoPerson": true,
+    "requesterMayNotApprove": true,
+    "maxDurationMinutes": 120,
+    "standingAccess": false
+  },
+  "storeClass": "object-lock-compliance",
+  "imagesPinnedByDigest": true
+}

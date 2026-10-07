@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/helpdesk-source.schema.json",
+  "title": "Helpdesk Source",
+  "description": "DKC-029: en support- og sagsbehandlingskilde (Zammad som første kandidat) med tenantbinding, secretreference, køer med klassifikation og ACL samt en sikker vedhæftnings- og retentionpolitik. Zammad forbliver system-of-record, og alt sags- og bilagsindhold læses som ubetroet data.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "sources"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "HelpdeskSource" },
+    "metadata": { "$ref": "#/$defs/metadata" },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/source" }
+    }
+  },
+  "$defs": {
+    "human": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\|[a-z0-9][a-z0-9._-]{2,}$" },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": { "$ref": "#/$defs/human" }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman", "labels"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/human" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "acl": {
+      "type": "object",
+      "required": ["readGroups", "readSubjects", "denyGroups", "denySubjects"],
+      "additionalProperties": false,
+      "properties": {
+        "readGroups": { "type": "array", "items": { "type": "string" } },
+        "readSubjects": { "type": "array", "items": { "type": "string" } },
+        "denyGroups": { "type": "array", "items": { "type": "string" } },
+        "denySubjects": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "queue": {
+      "type": "object",
+      "required": ["id", "name", "classification", "externalVisible", "acl", "sla"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$" },
+        "name": { "type": "string", "minLength": 2 },
+        "classification": { "enum": ["public", "internal", "personal", "special-category", "confidential"] },
+        "externalVisible": { "type": "boolean" },
+        "acl": { "$ref": "#/$defs/acl" },
+        "sla": {
+          "type": "object",
+          "required": ["firstResponseMinutes", "resolutionMinutes"],
+          "additionalProperties": false,
+          "properties": {
+            "firstResponseMinutes": { "type": "integer", "minimum": 1 },
+            "resolutionMinutes": { "type": "integer", "minimum": 1 }
+          }
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["id", "type", "tenantId", "baseUrl", "secretRef", "systemOfRecord", "writeMode", "queues", "attachmentPolicy", "retention"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$" },
+        "type": { "const": "zammad" },
+        "tenantId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+        "baseUrl": { "type": "string", "format": "uri" },
+        "secretRef": { "type": "string", "pattern": "^(vault|k8s|env|file|kms):[A-Za-z0-9_./#:-]{3,200}$" },
+        "systemOfRecord": { "const": "upstream" },
+        "writeMode": { "const": "adapter-mediated" },
+        "queues": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/queue" } },
+        "attachmentPolicy": {
+          "type": "object",
+          "required": ["maxBytes", "allowedTypes", "scanUntrusted", "quarantineSuspicious", "executable"],
+          "additionalProperties": false,
+          "properties": {
+            "maxBytes": { "type": "integer", "minimum": 1 },
+            "allowedTypes": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+            "scanUntrusted": { "const": true },
+            "quarantineSuspicious": { "type": "boolean" },
+            "executable": { "const": false }
+          }
+        },
+        "retention": {
+          "type": "object",
+          "required": ["mailDays", "attachmentDays", "indexDays"],
+          "additionalProperties": false,
+          "properties": {
+            "mailDays": { "type": "integer", "minimum": 1 },
+            "attachmentDays": { "type": "integer", "minimum": 1 },
+            "indexDays": { "type": "integer", "minimum": 1 }
+          }
+        }
+      }
+    }
+  }
+}

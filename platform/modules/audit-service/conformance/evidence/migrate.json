@@ -1,0 +1,21 @@
+{
+  "verb": "migrate",
+  "module": "audit-service",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-16T21:11:53.886Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 3
+  },
+  "artifact": {
+    "uri": "s3://evidence/audit-service/migrate.json",
+    "sha256": "82f448718a71f6adfb722eccc4cbf9c90aaaaf75571c09dbcef15bfcb064be32"
+  }
+}

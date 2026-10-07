@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/verb-evidence.schema.json",
+  "title": "Verb Evidence",
+  "description": "Deterministisk bevis for at ét ops-verbum er kørt mod et modul. Bruges som fixture i conformance-suiten. Beviset er maskinproduceret — det må ikke skrives af en LLM.",
+  "type": "object",
+  "required": ["verb", "module", "capturedAt", "result"],
+  "additionalProperties": false,
+  "properties": {
+    "verb": { "type": "string" },
+    "module": { "type": "string" },
+    "moduleVersion": { "type": "string" },
+    "capturedAt": { "type": "string", "format": "date-time" },
+    "result": { "enum": ["pass", "fail", "partial"] },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "status"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "status": { "enum": ["pass", "fail", "skip"] },
+          "detail": { "type": "string" }
+        }
+      }
+    },
+    "measurements": {
+      "type": "object",
+      "additionalProperties": { "type": ["number", "string", "boolean"] }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "uri": { "type": "string" },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    }
+  }
+}

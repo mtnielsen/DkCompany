@@ -1,0 +1,102 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "LocaleRequirementCatalog",
+  "metadata": {
+    "name": "platform-danish-locale-requirements",
+    "version": "1.0.0",
+    "description": "De danske lokaliseringskrav for forretningsmodulfamilierne. Hvert krav er en særskilt gate med en eksplicit review-status og et navngivet menneske. I dette miljø er ingen fagperson tilgængelig, så alle krav står 'unreviewed' og blokerer 'Danmarksklar'.",
+    "accountableHuman": {
+      "subject": "oidc|cecilia.christensen",
+      "name": "Cecilia Christensen",
+      "role": "Service Owner",
+      "substitute": {
+        "subject": "oidc|david.dahl",
+        "name": "David Dahl",
+        "role": "Service Owner"
+      }
+    },
+    "labels": {
+      "tier": "business-modules",
+      "wave": "6"
+    }
+  },
+  "requirements": [
+    {
+      "id": "accounting",
+      "title": "Dansk bogføring",
+      "description": "Kontoplan, bilagsførsel, momsafregning, periodeafgrænsning og årsafslutning skal følge dansk bogføringslov og være bekræftet af en registreret revisor eller bogholder.",
+      "appliesToFamilies": ["finance", "invoicing"],
+      "status": "unreviewed",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "evidence": [],
+      "gate": { "required": true, "blocksDanishReady": true }
+    },
+    {
+      "id": "vat",
+      "title": "Moms",
+      "description": "Momsgrundlag, momssatser, EU-varekøb, omvendt betalingspligt og momsangivelse skal være afklaret med en dansk momsfagperson og ikke udledes af upstream-standardsatser alene.",
+      "appliesToFamilies": ["finance", "invoicing", "commerce"],
+      "status": "unreviewed",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "evidence": [],
+      "gate": { "required": true, "blocksDanishReady": true }
+    },
+    {
+      "id": "e-invoicing",
+      "title": "E-faktura (OIOUBL/NemHandel)",
+      "description": "Udsendelse og modtagelse af e-fakturaer skal gå gennem et godkendt access point med OIOUBL-format og NemHandel-adressering; platformen må ikke selv udsende e-fakturaer uverificeret.",
+      "appliesToFamilies": ["invoicing"],
+      "status": "unreviewed",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "evidence": [],
+      "gate": { "required": true, "blocksDanishReady": true }
+    },
+    {
+      "id": "payroll",
+      "title": "Løn",
+      "description": "Lønberegning, skattetræk, ATP, pension, feriepenge og indberetning til eIndkomst er juridisk reguleret og må kun aktiveres efter en navngivet lønansvarligs afgørelse.",
+      "appliesToFamilies": ["hr"],
+      "status": "unreviewed",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "evidence": [],
+      "gate": { "required": true, "blocksDanishReady": true }
+    },
+    {
+      "id": "payment",
+      "title": "Betaling og bankadgang",
+      "description": "Betaling og bankadgang skal gå gennem en godkendt ekstern betalingstjeneste med begrænsede scopes. Fuld bankadgang og direkte kortdatahåndtering er forbudt; tjenesten og dens scopes skal være godkendt af et navngivet menneske.",
+      "appliesToFamilies": ["finance", "invoicing", "commerce"],
+      "status": "unreviewed",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "evidence": [],
+      "gate": { "required": true, "blocksDanishReady": true }
+    },
+    {
+      "id": "agreements",
+      "title": "Aftaler og ansvarsfordeling",
+      "description": "Databehandleraftaler, ansvarsaftaler for eksterne tjenester og aftaler om integrationsgrænser skal foreligge, før en ekstern integration aktiveres.",
+      "appliesToFamilies": ["finance", "invoicing", "hr", "time", "commerce"],
+      "status": "unreviewed",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "evidence": [],
+      "gate": { "required": true, "blocksDanishReady": false }
+    },
+    {
+      "id": "authoritative-registers",
+      "title": "Autoritative registre (CVR m.fl.)",
+      "description": "Opslag i CVR, Erhvervsstyrelsen og øvrige autoritative registre skal bruge en verificeret kilde og respektere vilkårene for genbrug; et registeropslag må ikke gætte et organisationsnummer.",
+      "appliesToFamilies": ["finance", "invoicing", "hr", "time", "commerce"],
+      "status": "unreviewed",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "evidence": [],
+      "gate": { "required": true, "blocksDanishReady": false }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "verb": "subject.export",
+  "module": "audit-service",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-16T21:11:53.920Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 2
+  },
+  "artifact": {
+    "uri": "s3://evidence/audit-service/subject.export.json",
+    "sha256": "82ecaf0ba103da1b8ef533bf23b4684fc77f45209021d5e0d5b755416f343761"
+  }
+}

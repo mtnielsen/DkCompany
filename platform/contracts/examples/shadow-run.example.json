@@ -1,0 +1,109 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ShadowRun",
+  "runId": "shadow-example",
+  "mode": "shadow",
+  "environment": "replay",
+  "model": {
+    "modelRef": "gateway.model/shadow-sim-2025-09",
+    "promptDigest": "a1066ca0496a58982e1c36147d9d2f4e0df21e093531774368a757daa9570df3",
+    "gatewayRef": "gateway/routes.json"
+  },
+  "fingerprint": "726ebcded8f46ab046beed3d22115d27bf541553533aa3fe682a580b76e12491",
+  "generatedAt": "2025-09-02T09:30:00Z",
+  "eventsReplayed": 2,
+  "mutationCount": 0,
+  "halted": false,
+  "haltReason": null,
+  "decisions": [
+    {
+      "eventId": "evt-example-001",
+      "at": "2025-09-02T09:00:00Z",
+      "severity": "warning",
+      "target": "service/svc-1",
+      "tenantId": "tenant-1",
+      "read": true,
+      "diagnosis": "anomali 'cpu-saturation' (0.84)",
+      "incident": true,
+      "proposal": {
+        "actionKind": "scale",
+        "verb": "scale",
+        "target": "service/svc-1",
+        "runbookRef": "bounded-scale@1.0.0",
+        "mutating": true,
+        "reversible": true
+      },
+      "humanDecision": {
+        "verdict": "approve",
+        "by": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "at": "2025-09-02T09:05:00Z",
+        "rationale": "Evidensen matcher."
+      },
+      "reviewerFindings": 0,
+      "execution": {
+        "executed": false,
+        "reason": "skyggetilstand: nul muterende handlinger"
+      }
+    },
+    {
+      "eventId": "evt-example-002",
+      "at": "2025-09-02T09:20:00Z",
+      "severity": "info",
+      "target": "service/svc-2",
+      "tenantId": "tenant-2",
+      "read": true,
+      "diagnosis": "normal 'memory-pressure' (0.22)",
+      "incident": false,
+      "proposal": {
+        "actionKind": "none",
+        "verb": "diagnose",
+        "target": "service/svc-2",
+        "runbookRef": null,
+        "mutating": false,
+        "reversible": true
+      },
+      "humanDecision": {
+        "verdict": "reject",
+        "by": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen",
+          "role": "Platform Owner"
+        },
+        "at": "2025-09-02T09:22:00Z",
+        "rationale": "Ingen hændelse."
+      },
+      "reviewerFindings": 0,
+      "execution": {
+        "executed": false,
+        "reason": "skyggetilstand: nul muterende handlinger"
+      }
+    }
+  ],
+  "metrics": {
+    "proposals": 1,
+    "approved": 1,
+    "rejected": 1,
+    "falseAlarms": 0,
+    "falseAlarmRate": 0,
+    "errors": 0,
+    "errorRate": 0,
+    "escalations": 0,
+    "escalationRate": 0,
+    "costEur": 0.0036,
+    "reviewerFindings": 0,
+    "executedMutations": 0
+  },
+  "safety": {
+    "shadowMode": true,
+    "zeroMutationInvariant": true,
+    "killSwitchClear": true,
+    "governanceAvailable": false,
+    "evaluationFingerprintMatch": true,
+    "approvedRunbooksOnly": true
+  },
+  "verdict": "pass"
+}

@@ -1,0 +1,74 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "AgentManifest",
+  "role": "executor",
+  "metadata": {
+    "name": "dummy-ok-upgrader",
+    "version": "1.0.0",
+    "description": "Foreslår og (efter godkendelse) udfører patch-upgrades af dummy-ok. Rører aldrig policy, audit-log eller egne rettigheder.",
+    "accountableHuman": { "subject": "oidc|anna.andersen", "role": "Platform Owner" },
+    "labels": { "tier": "reference" }
+  },
+  "identity": {
+    "spiffeId": "spiffe://platform.example.org/agents/dummy-ok-upgrader",
+    "credentialMode": "just-in-time",
+    "maxCredentialTtlSeconds": 900
+  },
+  "scope": {
+    "ownedComponents": ["dummy-ok"],
+    "environments": ["staging"],
+    "dataCategories": ["operational"]
+  },
+  "capabilities": [
+    {
+      "verb": "observe.read",
+      "target": "dummy-ok",
+      "autonomyClass": "A0",
+      "requiredEvidence": ["policy-allow"]
+    },
+    {
+      "verb": "upgrade.dry-run",
+      "target": "dummy-ok",
+      "autonomyClass": "A1",
+      "requiredEvidence": ["policy-allow", "tests-pass"]
+    },
+    {
+      "verb": "upgrade.patch",
+      "target": "dummy-ok",
+      "autonomyClass": "A3",
+      "maxBlastRadius": { "tenants": 1, "services": 1, "personalDataRecords": 0 },
+      "requiredEvidence": ["policy-allow", "tests-pass", "dry-run-clean", "rollback-tested"]
+    }
+  ],
+  "escalation": {
+    "confidenceThreshold": 0.85,
+    "repeatFailureLimit": 3,
+    "onGovernanceUnreachable": "halt",
+    "budget": { "maxTokens": 200000, "maxCostEur": 25, "maxWallClockSeconds": 3600 },
+    "escalateTo": ["oidc-group:platform-approvers"]
+  },
+  "model": {
+    "provider": "anthropic",
+    "model": "claude-sonnet",
+    "modelVersion": "2025-01",
+    "promptRef": "prompts/dummy-ok-upgrader.md",
+    "promptSha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "gatewayRef": "ai-gateway.platform.example.org"
+  },
+  "review": {
+    "reviewerAgentRef": "dummy-ok-reviewer",
+    "requireDifferentVendor": true,
+    "withholdAuthorRationale": true,
+    "reviewerMayApprove": false
+  },
+  "oversight": {
+    "killSwitch": { "perAgent": true, "global": true },
+    "approverGroups": ["platform-approvers"],
+    "requiredTrainingModules": ["evidence-over-prose", "when-to-reject"],
+    "dualControlRequired": false
+  },
+  "compliance": {
+    "controlRefs": ["ac-2", "au-2"],
+    "modelCardRef": "docs/model-cards/dummy-ok-upgrader.md"
+  }
+}

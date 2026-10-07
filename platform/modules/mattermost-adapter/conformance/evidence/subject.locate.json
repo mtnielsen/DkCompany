@@ -1,0 +1,21 @@
+{
+  "verb": "subject.locate",
+  "module": "mattermost-adapter",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-16T21:14:18.950Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 19
+  },
+  "artifact": {
+    "uri": "s3://evidence/mattermost-adapter/subject.locate.json",
+    "sha256": "67277bb1c7aa0b6712527c4649a2c08e9194a775aca7422df2996dcb2a9700ca"
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ComponentManifest",
+  "requires": [
+    {
+      "ref": "platform-core",
+      "range": "^1.0.0",
+      "reason": "HR bruger kontrolplanens policy til adgangsstyring på personaledata."
+    },
+    {
+      "ref": "identity-broker",
+      "range": "^1.0.0",
+      "reason": "Medarbejderidentiteter skal komme fra den fælles identitetsbroker."
+    },
+    {
+      "ref": "primary-database",
+      "range": "^1.0.0",
+      "reason": "Personaledata kræver en tenantadskilt relationel database."
+    }
+  ],
+  "optionalRequires": [],
+  "conflicts": [],
+  "dataServices": [
+    {
+      "id": "sql",
+      "kind": "relational",
+      "required": true,
+      "reason": "HR-data er personoplysninger og skal ligge i en adgangskontrolleret relationel database."
+    }
+  ],
+  "migrations": [
+    {
+      "id": "hr-init",
+      "phase": "schema",
+      "description": "Opretter tabeller for medarbejdere, stillinger og fravær.",
+      "reversible": true
+    }
+  ],
+  "download": [
+    {
+      "artifact": "hr-1.4.0.tar.zst",
+      "sizeMiB": 150,
+      "source": "registry.example.org/apps/hr:1.4.0",
+      "verified": true,
+      "checksum": "sha256:8b3d7e07"
+    }
+  ],
+  "operations": [
+    "backup",
+    "restore",
+    "upgrade",
+    "health",
+    "slo"
+  ],
+  "implementation": {
+    "status": "catalog-only",
+    "notes": "Katalogpost; det implementerende modul er endnu ikke bygget."
+  },
+  "localization": {
+    "family": "hr",
+    "status": "pending-legal-review",
+    "dataClasses": ["personal", "special-category", "financial"],
+    "localeRequirements": ["payroll", "agreements", "authoritative-registers"],
+    "adapterInterface": "payroll",
+    "candidateRef": "integration-candidate.frappe-hr.example.json",
+    "reason": "Personaledata kan registreres, men løn er juridisk reguleret og må ikke erklæres danskklar uden en navngivet lønansvarligs afgørelse."
+  },
+  "metadata": {
+    "name": "hr",
+    "version": "1.4.0",
+    "description": "HR og personaledata. Valgfri applikation i HR-kategorien med skærpede privacy-krav.",
+    "accountableHuman": {
+      "subject": "oidc|cecilia.christensen",
+      "name": "Cecilia Christensen",
+      "role": "Service Owner",
+      "substitute": {
+        "subject": "oidc|david.dahl",
+        "name": "David Dahl"
+      }
+    },
+    "labels": {
+      "tier": "app",
+      "category": "hr"
+    }
+  },
+  "componentType": "application",
+  "category": "hr",
+  "securityCore": false,
+  "provides": {
+    "capabilities": [
+      "hr"
+    ],
+    "dataServices": []
+  },
+  "supportProfile": {
+    "tier": "supported",
+    "supportWindow": "18 måneder fra GA",
+    "escalation": "Service Owner"
+  },
+  "platforms": {
+    "os": [
+      "linux"
+    ],
+    "arch": [
+      "x64",
+      "arm64"
+    ],
+    "runtime": [
+      "node>=22 <23",
+      "node>=24 <25"
+    ]
+  },
+  "resources": {
+    "cpuMillicores": 400,
+    "memoryMiB": 1024,
+    "storageGiB": 30,
+    "nodes": 0
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "mattermost-adapter",
+    "namespace": "platform",
+    "labels": {
+      "app.kubernetes.io/name": "mattermost-adapter",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "mattermost-adapter",
+      "platform.example.org/environment": "dev"
+    }
+  },
+  "spec": {
+    "replicas": 2,
+    "selector": { "matchLabels": { "app.kubernetes.io/name": "mattermost-adapter" } },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app.kubernetes.io/name": "mattermost-adapter",
+          "platform.example.org/module": "mattermost-adapter",
+          "platform.example.org/environment": "dev"
+        }
+      },
+      "spec": {
+        "serviceAccountName": "mattermost-adapter",
+        "securityContext": { "runAsNonRoot": true, "seccompProfile": { "type": "RuntimeDefault" } },
+        "containers": [
+          {
+            "name": "mattermost-adapter",
+            "image": "ghcr.io/example/mattermost-adapter@sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "args": ["--port", "8090", "--environment", "dev"],
+            "ports": [{ "containerPort": 8090, "name": "http" }],
+            "env": [
+              { "name": "PDP_ENDPOINT", "value": "https://pdp.platform.svc.cluster.local/v1/data/platform/ops/decision" },
+              { "name": "PDP_FAIL_MODE", "value": "closed" },
+              { "name": "MATTERMOST_URL", "value": "http://mattermost.platform.svc.cluster.local:8065" }
+            ],
+            "securityContext": {
+              "readOnlyRootFilesystem": true,
+              "allowPrivilegeEscalation": false,
+              "capabilities": { "drop": ["ALL"] }
+            },
+            "readinessProbe": { "httpGet": { "path": "/healthz", "port": 8090 } },
+            "livenessProbe": { "httpGet": { "path": "/healthz", "port": 8090 } },
+            "resources": {
+              "requests": { "cpu": "100m", "memory": "128Mi" },
+              "limits": { "cpu": "500m", "memory": "256Mi" }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

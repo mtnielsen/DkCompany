@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/audit-outcome.schema.json",
+  "title": "Audit Action Outcome",
+  "description": "DKC-009: resultatet af en handling bundet til samme idempotency-ID som intentet. Et manglende outcome efter en udført ændring må ikke rapporteres som success.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "idempotencyId", "intentId", "outcome", "recordedAt", "payloadDigest"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "AuditActionOutcome" },
+    "tenantId": { "type": ["string", "null"] },
+    "idempotencyId": { "type": "string", "minLength": 1 },
+    "intentId": { "type": "string", "format": "uuid" },
+    "verb": { "type": "string" },
+    "outcome": { "enum": ["succeeded", "failed", "unknown"] },
+    "result": { "type": ["object", "array", "null"] },
+    "error": { "type": ["string", "null"] },
+    "payloadDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "personalDataDigest": { "type": ["string", "null"], "pattern": "^[a-f0-9]{64}$" },
+    "retentionClass": { "enum": ["operational", "personal", "security"] },
+    "recordedAt": { "type": "string", "format": "date-time" }
+  }
+}

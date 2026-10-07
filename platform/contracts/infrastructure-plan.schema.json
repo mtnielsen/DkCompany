@@ -1,0 +1,218 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/infrastructure-plan.schema.json",
+  "title": "Infrastructure Plan",
+  "description": "DKC-015: den konkrete infrastrukturplan for én valgt hostingprofil med adskilte dev/staging/prod-miljøer. Planen bærer TLS, DNS, persistent storage, secret-injektion og netværksisolering, samt bootstrap, nøgleforvaltning og autoriseret break-glass. Den er den maskinlæsbare kilde, som GitOps-manifesterne og omkostningsregistreringen genereres fra.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "hostingProfileRef", "provider", "environments", "bootstrap", "cost"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "InfrastructurePlan" },
+    "metadata": { "$ref": "#/$defs/metadata" },
+    "hostingProfileRef": { "type": "string", "minLength": 3 },
+    "provider": {
+      "type": "object",
+      "required": ["name", "region"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 2 },
+        "region": { "type": "string", "minLength": 2 },
+        "zone": { "type": "string", "minLength": 1 }
+      }
+    },
+    "environments": {
+      "type": "array",
+      "minItems": 3,
+      "items": { "$ref": "#/$defs/environment" }
+    },
+    "bootstrap": { "$ref": "#/$defs/bootstrap" },
+    "cost": { "$ref": "#/$defs/cost" }
+  },
+  "$defs": {
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{3,63}$" },
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/namedHuman" }
+      }
+    },
+    "namedHuman": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "required": ["id", "namespace", "isolation", "replicas", "hostname", "tls", "dns", "storage", "secrets", "network", "services"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "enum": ["dev", "staging", "prod"] },
+        "namespace": { "type": "string", "pattern": "^[a-z0-9-]{3,63}$" },
+        "isolation": { "enum": ["namespace", "cluster"] },
+        "replicas": { "type": "integer", "minimum": 1 },
+        "hostname": { "type": "string", "pattern": "^[a-z0-9.-]+$" },
+        "tls": {
+          "type": "object",
+          "required": ["issuer", "secretName"],
+          "additionalProperties": false,
+          "properties": {
+            "issuer": { "enum": ["letsencrypt-staging", "letsencrypt-prod", "internal-ca"] },
+            "secretName": { "type": "string", "minLength": 3 }
+          }
+        },
+        "dns": {
+          "type": "object",
+          "required": ["zone", "records"],
+          "additionalProperties": false,
+          "properties": {
+            "zone": { "type": "string", "minLength": 3 },
+            "records": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/dnsRecord" } }
+          }
+        },
+        "storage": {
+          "type": "object",
+          "required": ["className", "sizeGiB", "encrypted"],
+          "additionalProperties": false,
+          "properties": {
+            "className": { "type": "string", "minLength": 2 },
+            "sizeGiB": { "type": "integer", "minimum": 1 },
+            "encrypted": { "const": true }
+          }
+        },
+        "secrets": {
+          "type": "object",
+          "required": ["backend", "references"],
+          "additionalProperties": false,
+          "properties": {
+            "backend": { "enum": ["external-secrets", "sealed-secrets", "vault", "sops"] },
+            "references": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/secretReference" } }
+          }
+        },
+        "network": {
+          "type": "object",
+          "required": ["defaultDeny", "crossTenantDeny", "egressAllow"],
+          "additionalProperties": false,
+          "properties": {
+            "defaultDeny": { "const": true },
+            "crossTenantDeny": { "const": true },
+            "egressAllow": { "type": "array", "items": { "type": "string", "minLength": 3 } }
+          }
+        },
+        "services": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/service" } }
+      }
+    },
+    "dnsRecord": {
+      "type": "object",
+      "required": ["name", "type", "target"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "type": { "enum": ["A", "AAAA", "CNAME"] },
+        "target": { "type": "string", "minLength": 3 }
+      }
+    },
+    "secretReference": {
+      "type": "object",
+      "required": ["name", "keys"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 3 },
+        "keys": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "purpose": { "type": "string", "minLength": 3 }
+      }
+    },
+    "service": {
+      "type": "object",
+      "required": ["name", "module", "image", "workload"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 2 },
+        "module": { "type": "string", "minLength": 2 },
+        "image": { "type": "string", "minLength": 3 },
+        "port": { "type": "integer", "minimum": 1, "maximum": 65535 },
+        "workload": { "enum": ["deployment", "cronjob"] }
+      }
+    },
+    "bootstrap": {
+      "type": "object",
+      "required": ["steps", "keyManagement", "breakGlass"],
+      "additionalProperties": false,
+      "properties": {
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "description"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string", "minLength": 2 },
+              "description": { "type": "string", "minLength": 10 },
+              "command": { "type": "string", "minLength": 3 }
+            }
+          }
+        },
+        "keyManagement": {
+          "type": "object",
+          "required": ["backend", "rotationDays", "references"],
+          "additionalProperties": false,
+          "properties": {
+            "backend": { "enum": ["external-secrets", "sealed-secrets", "vault", "sops"] },
+            "rotationDays": { "type": "integer", "minimum": 1, "maximum": 365 },
+            "references": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/secretReference" } }
+          }
+        },
+        "breakGlass": {
+          "type": "object",
+          "required": ["owner", "requiresApproval", "maxDurationMinutes", "scope", "contact"],
+          "additionalProperties": false,
+          "properties": {
+            "owner": { "$ref": "#/$defs/namedHuman" },
+            "requiresApproval": { "const": true },
+            "maxDurationMinutes": { "type": "integer", "minimum": 1, "maximum": 240 },
+            "scope": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": { "enum": ["read-audit", "restart-workload", "rotate-credential", "restore-backup", "drain-node"] }
+            },
+            "contact": { "type": "string", "minLength": 5 }
+          }
+        }
+      }
+    },
+    "cost": {
+      "type": "object",
+      "required": ["currency", "monthlyEstimate", "items"],
+      "additionalProperties": false,
+      "properties": {
+        "currency": { "enum": ["EUR", "DKK", "USD"] },
+        "monthlyEstimate": { "type": "number", "minimum": 0 },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "description", "monthly"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string", "minLength": 2 },
+              "description": { "type": "string", "minLength": 5 },
+              "monthly": { "type": "number", "minimum": 0 }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "IntegrationCandidate",
+  "metadata": {
+    "name": "nextcloud-adapter-30-0-0",
+    "version": "1.0.0",
+    "description": "Kandidatvurdering af Nextcloud Hub 30.0.0 Enterprise som arbejdspladskerne (filer, deling, kalender) med en valideret kontorredaktør bag den fælles adapter-SDK. Gratis/betalt-skellet er dokumenteret med kilde.",
+    "accountableHuman": {
+      "subject": "oidc|hans.hansen",
+      "name": "Hans Hansen",
+      "role": "Solution Architect"
+    },
+    "labels": { "application": "APP-045", "adapter": "nextcloud-adapter" }
+  },
+  "applicationId": "APP-045",
+  "name": "Nextcloud Hub",
+  "upstream": {
+    "vendor": "Nextcloud GmbH",
+    "projectUrl": "https://nextcloud.com/",
+    "documentationUrl": "https://docs.nextcloud.com/",
+    "sourceUrl": "https://github.com/nextcloud/server"
+  },
+  "exactVersion": "30.0.0",
+  "edition": { "name": "Enterprise", "tier": "enterprise", "notes": "Enterprise-udgaven kræves for SAML/SSO, support og avanceret deling; kernen er AGPL." },
+  "license": {
+    "spdx": "AGPL-3.0-or-later",
+    "type": "mixed",
+    "paidFeaturesRequired": true,
+    "redistributionAllowed": true,
+    "notes": "Serverkernen er AGPL-3.0-or-later; Enterprise-abonnementet dækker support, SSO-apps og skalering. Platformen videredistribuerer ikke binæren."
+  },
+  "hosting": {
+    "mode": "customer-self-hosted",
+    "commercialRedistribution": false,
+    "commercialHostingAllowed": true,
+    "notes": "Hostes for kunden i kundens eget miljø; én instans pr. kunde."
+  },
+  "sso": { "capability": "full", "supported": true, "protocols": ["oidc", "saml2"], "notes": "OIDC/SAML via Enterprise-app; SCIM-lignende provisionering kræver en separat app." },
+  "scim": { "capability": "partial", "supported": true, "version": "2.0", "provisioningAlternative": "Provisionering kan ske via OCS-bruger-API'et og en SCIM-bro-app; ikke i kernen.", "notes": "Ingen SCIM i kernen; adapteren bruger OCS-bruger-API'et." },
+  "api": {
+    "capability": "full",
+    "documented": true,
+    "protocols": ["rest", "webhook", "other"],
+    "authentication": ["oauth2", "oidc", "api-key"],
+    "notes": "WebDAV/CalDAV, OCS delings-API og WOPI til kontorredaktøren."
+  },
+  "isolation": {
+    "capability": "full",
+    "tenantModel": "dedicated-installation",
+    "databasePerTenant": true,
+    "notes": "Én installation og én database pr. kunde; platformens tenantgrænse håndhæves i adapter og netværkspolitik."
+  },
+  "export": {
+    "capability": "partial",
+    "formats": ["json", "files"],
+    "aclPreserved": true,
+    "apiAccessible": true,
+    "notes": "Filer og metadata kan eksporteres gennem API'et; versions-/papirkurvshistorik følger ikke med."
+  },
+  "backup": {
+    "capability": "partial",
+    "supported": true,
+    "pointInTime": false,
+    "restoreTested": false,
+    "notes": "Produktet understøtter volume-/databasebackup, men adapteren kan ikke garantere et konsistent filsnapshot gennem API'et; restore er ikke testet i dette miljø."
+  },
+  "price": {
+    "model": "mixed",
+    "currency": "EUR",
+    "recurring": true,
+    "priceBasis": "Pr. bruger pr. år for Enterprise; kernen er gratis.",
+    "notes": "Kontorredaktøren har en separat licens."
+  },
+  "maintenance": {
+    "vendorSupport": "commercial",
+    "releaseCadence": "Månedlige patch- og kvartalsvise feature-udgivelser.",
+    "securityResponse": "Offentlig sikkerhedsproces og advisories med koordineret offentliggørelse.",
+    "upgradePath": "Trinvis opgradering inden for en major-serie via dokumenterede migrations."
+  },
+  "freeVsPaid": {
+    "documented": true,
+    "freeTierLimitations": [
+      "SAML/OIDC-SSO og avanceret deling kræver Enterprise-abonnement eller apps.",
+      "Der er ingen kommerciel support på den gratis kerne."
+    ],
+    "requiredPaidFeatures": ["SAML 2.0 SSO", "Enterprise-support", "Skaleringsværktøjer"],
+    "sourceUrl": "https://nextcloud.com/pricing/"
+  },
+  "verification": {
+    "status": "candidate_not_approved",
+    "verifiedBy": { "subject": "oidc|hans.hansen", "name": "Hans Hansen", "role": "Solution Architect" },
+    "verifiedAt": "2025-01-10",
+    "evidence": ["https://nextcloud.com/pricing/", "https://docs.nextcloud.com/server/latest/developer_manual/"],
+    "notes": "Licens, SSO, API og isolation er vurderet, men kandidaten godkendes ikke endnu: en testet gendannelse af Nextcloud (DKC-016) mangler i dette miljø, og kontorredaktøren frigives kun gennem en valideret editionkombination."
+  }
+}

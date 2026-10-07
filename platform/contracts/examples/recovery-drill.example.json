@@ -1,0 +1,370 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "RecoveryDrill",
+  "drillId": "drill-single-server-2026-09-29T08:00:00.000Z",
+  "scenarioId": "single-server",
+  "scenarioKind": "single-server",
+  "environment": "isolated-recovery",
+  "status": "awaiting-human",
+  "startedAt": "2026-09-29T08:00:00.000Z",
+  "finishedAt": "2026-09-29T08:00:00.000Z",
+  "planRef": "platform-takeover-plan",
+  "planVersion": "1.0.0",
+  "operators": [
+    {
+      "role": "serviceOwner",
+      "human": {
+        "subject": "oidc|maja.mortensen",
+        "name": "Maja Mortensen",
+        "role": "Service Owner"
+      }
+    },
+    {
+      "role": "substitute",
+      "human": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner"
+      }
+    },
+    {
+      "role": "onCall",
+      "human": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner"
+      }
+    },
+    {
+      "role": "incidentLead",
+      "human": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Incident Lead"
+      }
+    },
+    {
+      "role": "changeAuthority",
+      "human": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Incident Lead"
+      }
+    },
+    {
+      "role": "dataProtection",
+      "human": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner"
+      }
+    }
+  ],
+  "artifactBindings": [
+    {
+      "kind": "runbook",
+      "ref": "docs/runbooks/disaster-recovery.md",
+      "digest": "sha256:ba6e68fec15941bb37d34fe72be147d5b695cf92e9f58fa71ee6da7637913389",
+      "present": true
+    },
+    {
+      "kind": "restorePlan",
+      "ref": "docs/continuity/dr-plan.md",
+      "digest": "sha256:1ea47a390e50cfb118edd8901a3f966dafc44d1704b44b7be2537939c5f30486",
+      "present": true
+    },
+    {
+      "kind": "deploymentProfile",
+      "ref": "contracts/examples/deployment-profile.service.example.json",
+      "digest": "sha256:bf94e5caaf169585149016224c3cd3d1d85500dcb9c0dd2c234d4554c69b1e13",
+      "present": true
+    },
+    {
+      "kind": "haProfile",
+      "ref": "infrastructure/ha-plan.json",
+      "digest": "sha256:32202b20891d77e917af7c8081c3bcc7f171702e4d1e07759f7d3f31b07afd5c",
+      "present": true
+    }
+  ],
+  "steps": [
+    {
+      "id": "declare-incident",
+      "phase": "takeover",
+      "kind": "human",
+      "status": "pending",
+      "ownerRole": "incidentLead",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Incident Lead"
+      },
+      "at": null,
+      "artifactRef": null,
+      "artifactDigest": null,
+      "evidenceKind": "incident-declaration",
+      "probe": null,
+      "result": "afventer menneskelig handling",
+      "escalation": [
+        {
+          "afterMinutes": 15,
+          "to": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Incident Lead"
+          }
+        },
+        {
+          "afterMinutes": 30,
+          "to": {
+            "subject": "oidc|cecilia.christensen",
+            "name": "Cecilia Christensen",
+            "role": "Security Owner"
+          }
+        }
+      ],
+      "notes": null
+    },
+    {
+      "id": "notify-test-recipients",
+      "phase": "takeover",
+      "kind": "human",
+      "status": "pending",
+      "ownerRole": "incidentLead",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Incident Lead"
+      },
+      "at": null,
+      "artifactRef": null,
+      "artifactDigest": null,
+      "evidenceKind": "escalation-receipt",
+      "probe": null,
+      "result": "afventer menneskelig handling",
+      "escalation": [
+        {
+          "afterMinutes": 15,
+          "to": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Incident Lead"
+          }
+        },
+        {
+          "afterMinutes": 30,
+          "to": {
+            "subject": "oidc|cecilia.christensen",
+            "name": "Cecilia Christensen",
+            "role": "Security Owner"
+          }
+        }
+      ],
+      "notes": null
+    },
+    {
+      "id": "verify-artifacts",
+      "phase": "takeover",
+      "kind": "machine",
+      "status": "pass",
+      "ownerRole": null,
+      "owner": null,
+      "at": "2026-09-29T08:00:00.000Z",
+      "artifactRef": "docs/runbooks/disaster-recovery.md",
+      "artifactDigest": "sha256:ba6e68fec15941bb37d34fe72be147d5b695cf92e9f58fa71ee6da7637913389",
+      "evidenceKind": "probe",
+      "probe": "verify-artifacts",
+      "result": "alle 4 artefakter er bundet og har digest",
+      "escalation": [],
+      "notes": null
+    },
+    {
+      "id": "retrieve-break-glass",
+      "phase": "restore",
+      "kind": "human",
+      "status": "pending",
+      "ownerRole": "dataProtection",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner"
+      },
+      "at": null,
+      "artifactRef": null,
+      "artifactDigest": null,
+      "evidenceKind": "credential-possession",
+      "probe": null,
+      "result": "afventer menneskelig handling",
+      "escalation": [
+        {
+          "afterMinutes": 30,
+          "to": {
+            "subject": "oidc|cecilia.christensen",
+            "name": "Cecilia Christensen",
+            "role": "Security Owner"
+          }
+        }
+      ],
+      "notes": null
+    },
+    {
+      "id": "restore-integrity",
+      "phase": "restore",
+      "kind": "machine",
+      "status": "pass",
+      "ownerRole": null,
+      "owner": null,
+      "at": "2026-09-29T08:00:00.000Z",
+      "artifactRef": "storage/storage-plan.json",
+      "artifactDigest": "sha256:7ef1889bbac8b4e11a6d89e29c52b615988251933039a25466dbf3c64028d89f",
+      "evidenceKind": "probe",
+      "probe": "restore-integrity",
+      "result": "lagerets quorum, scrub/repair og tenantisolering er intakt (7 checks)",
+      "escalation": [],
+      "notes": null
+    },
+    {
+      "id": "owner-restore-decision",
+      "phase": "restore",
+      "kind": "human",
+      "status": "pending",
+      "ownerRole": "serviceOwner",
+      "owner": {
+        "subject": "oidc|maja.mortensen",
+        "name": "Maja Mortensen",
+        "role": "Service Owner"
+      },
+      "at": null,
+      "artifactRef": null,
+      "artifactDigest": null,
+      "evidenceKind": "owner-decision",
+      "probe": null,
+      "result": "afventer menneskelig handling",
+      "escalation": [
+        {
+          "afterMinutes": 15,
+          "to": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Incident Lead"
+          }
+        },
+        {
+          "afterMinutes": 30,
+          "to": {
+            "subject": "oidc|cecilia.christensen",
+            "name": "Cecilia Christensen",
+            "role": "Security Owner"
+          }
+        }
+      ],
+      "notes": null
+    },
+    {
+      "id": "failback-decision",
+      "phase": "failback",
+      "kind": "human",
+      "status": "pending",
+      "ownerRole": "changeAuthority",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Incident Lead"
+      },
+      "at": null,
+      "artifactRef": null,
+      "artifactDigest": null,
+      "evidenceKind": "owner-decision",
+      "probe": null,
+      "result": "afventer menneskelig handling",
+      "escalation": [
+        {
+          "afterMinutes": 30,
+          "to": {
+            "subject": "oidc|cecilia.christensen",
+            "name": "Cecilia Christensen",
+            "role": "Security Owner"
+          }
+        }
+      ],
+      "notes": null
+    },
+    {
+      "id": "service-validation",
+      "phase": "validation",
+      "kind": "machine",
+      "status": "pass",
+      "ownerRole": null,
+      "owner": null,
+      "at": "2026-09-29T08:00:00.000Z",
+      "artifactRef": "continuity/service-classes/audit-service.service-class.json",
+      "artifactDigest": "sha256:ca9d83033411f8bc1ae4f4f84604ce8006acac5d118e312915f65c260fd44de0",
+      "evidenceKind": "probe",
+      "probe": "service-validation",
+      "result": "2 vedtagne serviceklasser er produktionsklare og har testet gendannelse",
+      "escalation": [],
+      "notes": null
+    },
+    {
+      "id": "human-acceptance",
+      "phase": "validation",
+      "kind": "human",
+      "status": "pending",
+      "ownerRole": "serviceOwner",
+      "owner": {
+        "subject": "oidc|maja.mortensen",
+        "name": "Maja Mortensen",
+        "role": "Service Owner"
+      },
+      "at": null,
+      "artifactRef": null,
+      "artifactDigest": null,
+      "evidenceKind": "incident-acceptance",
+      "probe": null,
+      "result": "afventer menneskelig handling",
+      "escalation": [
+        {
+          "afterMinutes": 15,
+          "to": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Incident Lead"
+          }
+        },
+        {
+          "afterMinutes": 30,
+          "to": {
+            "subject": "oidc|cecilia.christensen",
+            "name": "Cecilia Christensen",
+            "role": "Security Owner"
+          }
+        }
+      ],
+      "notes": null
+    }
+  ],
+  "measurements": {
+    "dataIntegrityOk": true,
+    "restoreVerified": true,
+    "failbackVerified": null,
+    "rpoMinutes": 0,
+    "rtoMinutes": 0,
+    "rpoTargetMinutes": null,
+    "rtoTargetMinutes": null
+  },
+  "decisions": [],
+  "gate": {
+    "status": "awaiting-human",
+    "reasons": [
+      "trinnet 'declare-incident' afventer incidentLead",
+      "trinnet 'notify-test-recipients' afventer incidentLead",
+      "trinnet 'retrieve-break-glass' afventer dataProtection",
+      "trinnet 'owner-restore-decision' afventer serviceOwner",
+      "trinnet 'failback-decision' afventer changeAuthority",
+      "trinnet 'human-acceptance' afventer serviceOwner",
+      "kritisk incident er ikke accepteret af et menneske"
+    ]
+  },
+  "agentCanApprove": false,
+  "requiresHumanAcceptance": true,
+  "measured": false
+}

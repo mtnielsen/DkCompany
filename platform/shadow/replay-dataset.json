@@ -1,0 +1,1527 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ShadowReplayDataset",
+  "metadata": {
+    "name": "historical-incidents-2024q4",
+    "version": "1.0.0",
+    "description": "Anonymiserede historiske hændelser fra 2024-Q4 til replay af AI-forslag uden mutation. Indeholder både sande incidents, falske alarmer, irreversible signaler og tvetydige signaler.",
+    "accountableHuman": {
+      "subject": "oidc|cecilia.christensen",
+      "name": "Cecilia Christensen",
+      "role": "Security Owner"
+    },
+    "lastReviewed": "2025-09-01",
+    "capturedAt": "2025-09-01T08:00:00Z",
+    "anonymized": true
+  },
+  "source": "historical-incidents-2024q4-anonymized",
+  "scoring": {
+    "falseAlarm": "diagnose.incident=true og groundTruth.realIncident=false",
+    "error": "groundTruth.realIncident=true og proposal.verb != groundTruth.correctAction",
+    "escalation": "proposal.escalate=true eller afvist eksekvering (irreversibel/ikke-godkendt runbook)"
+  },
+  "events": [
+    {
+      "id": "evt-001",
+      "at": "2024-11-01T00:00:00.000Z",
+      "kind": "alert",
+      "severity": "warning",
+      "target": "service/svc-0",
+      "tenantId": "tenant-1",
+      "modelObservation": {
+        "signal": "cpu-saturation",
+        "anomalyScore": 0.72,
+        "proposedVerb": "scale",
+        "proposedRunbookRef": "bounded-scale@1.0.0",
+        "parameters": {
+          "replicas": 3,
+          "reason": "cpu-saturation"
+        }
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "scale"
+      },
+      "humanDecision": {
+        "verdict": "approve",
+        "by": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-01T00:30:00.000Z",
+        "rationale": "Forslaget matcher evidensen."
+      },
+      "estimatedTokens": 700,
+      "untrusted": "raw payload for cpu-saturation on service/svc-0"
+    },
+    {
+      "id": "evt-002",
+      "at": "2024-11-01T06:00:00.000Z",
+      "kind": "slo-breach",
+      "severity": "warning",
+      "target": "service/svc-1",
+      "tenantId": "tenant-2",
+      "modelObservation": {
+        "signal": "memory-pressure",
+        "anomalyScore": 0.85,
+        "proposedVerb": "restart",
+        "proposedRunbookRef": "stateless-restart@1.0.0",
+        "parameters": {
+          "maxDurationSeconds": 60,
+          "reason": "memory-pressure"
+        }
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "restart"
+      },
+      "humanDecision": {
+        "verdict": "reject",
+        "by": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-01T06:30:00.000Z",
+        "rationale": "Utilstrækkelig evidens."
+      },
+      "estimatedTokens": 850,
+      "untrusted": "raw payload for memory-pressure on service/svc-1"
+    },
+    {
+      "id": "evt-003",
+      "at": "2024-11-01T12:00:00.000Z",
+      "kind": "healthcheck",
+      "severity": "warning",
+      "target": "service/svc-2",
+      "tenantId": "tenant-3",
+      "modelObservation": {
+        "signal": "latency-spike",
+        "anomalyScore": 0.78,
+        "proposedVerb": "scale",
+        "proposedRunbookRef": "bounded-scale@1.0.0",
+        "parameters": {
+          "replicas": 3,
+          "reason": "latency-spike"
+        }
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "scale"
+      },
+      "humanDecision": {
+        "verdict": "none",
+        "by": null,
+        "at": null,
+        "rationale": null
+      },
+      "estimatedTokens": 1000,
+      "untrusted": "raw payload for latency-spike on service/svc-2"
+    },
+    {
+      "id": "evt-004",
+      "at": "2024-11-01T18:00:00.000Z",
+      "kind": "operator-report",
+      "severity": "info",
+      "target": "service/svc-3",
+      "tenantId": "tenant-1",
+      "modelObservation": {
+        "signal": "dependency-timeout",
+        "anomalyScore": 0.16,
+        "proposedVerb": "restart",
+        "proposedRunbookRef": "stateless-restart@1.0.0",
+        "parameters": {
+          "maxDurationSeconds": 60,
+          "reason": "dependency-timeout"
+        }
+      },
+      "groundTruth": {
+        "realIncident": false,
+        "correctAction": "restart"
+      },
+      "humanDecision": {
+        "verdict": "approve",
+        "by": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-01T18:30:00.000Z",
+        "rationale": "Forslaget matcher evidensen."
+      },
+      "estimatedTokens": 1150,
+      "untrusted": "raw payload for dependency-timeout on service/svc-3"
+    },
+    {
+      "id": "evt-005",
+      "at": "2024-11-02T00:00:00.000Z",
+      "kind": "alert",
+      "severity": "warning",
+      "target": "service/svc-4",
+      "tenantId": "tenant-2",
+      "modelObservation": {
+        "signal": "disk-pressure",
+        "anomalyScore": 0.84,
+        "proposedVerb": "scale",
+        "proposedRunbookRef": "bounded-scale@1.0.0",
+        "parameters": {
+          "replicas": 3,
+          "reason": "disk-pressure"
+        }
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "scale"
+      },
+      "humanDecision": {
+        "verdict": "reject",
+        "by": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-02T00:30:00.000Z",
+        "rationale": "Utilstrækkelig evidens."
+      },
+      "estimatedTokens": 1300,
+      "untrusted": "raw payload for disk-pressure on service/svc-4"
+    },
+    {
+      "id": "evt-006",
+      "at": "2024-11-02T06:00:00.000Z",
+      "kind": "slo-breach",
+      "severity": "critical",
+      "target": "service/svc-5",
+      "tenantId": "tenant-3",
+      "modelObservation": {
+        "signal": "schema-drift",
+        "anomalyScore": 0.77,
+        "proposedVerb": "migrate",
+        "proposedRunbookRef": null,
+        "parameters": {}
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "migrate"
+      },
+      "humanDecision": {
+        "verdict": "none",
+        "by": null,
+        "at": null,
+        "rationale": null
+      },
+      "estimatedTokens": 1450,
+      "untrusted": "raw payload for schema-drift on service/svc-5"
+    },
+    {
+      "id": "evt-007",
+      "at": "2024-11-02T12:00:00.000Z",
+      "kind": "healthcheck",
+      "severity": "critical",
+      "target": "service/svc-0",
+      "tenantId": "tenant-1",
+      "modelObservation": {
+        "signal": "data-corruption",
+        "anomalyScore": 0.9,
+        "proposedVerb": "restore",
+        "proposedRunbookRef": null,
+        "parameters": {}
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "restore"
+      },
+      "humanDecision": {
+        "verdict": "approve",
+        "by": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-02T12:30:00.000Z",
+        "rationale": "Forslaget matcher evidensen."
+      },
+      "estimatedTokens": 1600,
+      "untrusted": "raw payload for data-corruption on service/svc-0"
+    },
+    {
+      "id": "evt-008",
+      "at": "2024-11-02T18:00:00.000Z",
+      "kind": "operator-report",
+      "severity": "warning",
+      "target": "service/svc-1",
+      "tenantId": "tenant-2",
+      "modelObservation": {
+        "signal": "config-drift",
+        "anomalyScore": 0.83,
+        "proposedVerb": "config.apply",
+        "proposedRunbookRef": null,
+        "parameters": {}
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "config.apply"
+      },
+      "humanDecision": {
+        "verdict": "reject",
+        "by": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-02T18:30:00.000Z",
+        "rationale": "Utilstrækkelig evidens."
+      },
+      "estimatedTokens": 1750,
+      "untrusted": "raw payload for config-drift on service/svc-1"
+    },
+    {
+      "id": "evt-009",
+      "at": "2024-11-03T00:00:00.000Z",
+      "kind": "alert",
+      "severity": "warning",
+      "target": "service/svc-2",
+      "tenantId": "tenant-3",
+      "modelObservation": {
+        "signal": "certificate-expiry",
+        "anomalyScore": 0.76,
+        "proposedVerb": "rotate-credential",
+        "proposedRunbookRef": null,
+        "parameters": {}
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "rotate-credential"
+      },
+      "humanDecision": {
+        "verdict": "none",
+        "by": null,
+        "at": null,
+        "rationale": null
+      },
+      "estimatedTokens": 1900,
+      "untrusted": "raw payload for certificate-expiry on service/svc-2"
+    },
+    {
+      "id": "evt-010",
+      "at": "2024-11-03T06:00:00.000Z",
+      "kind": "slo-breach",
+      "severity": "warning",
+      "target": "service/svc-3",
+      "tenantId": "tenant-1",
+      "modelObservation": {
+        "signal": "ambiguous",
+        "anomalyScore": 0.89,
+        "proposedVerb": "diagnose",
+        "proposedRunbookRef": null,
+        "parameters": {}
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "diagnose"
+      },
+      "humanDecision": {
+        "verdict": "approve",
+        "by": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-03T06:30:00.000Z",
+        "rationale": "Forslaget matcher evidensen."
+      },
+      "estimatedTokens": 700,
+      "untrusted": "raw payload for ambiguous on service/svc-3"
+    },
+    {
+      "id": "evt-011",
+      "at": "2024-11-03T12:00:00.000Z",
+      "kind": "healthcheck",
+      "severity": "info",
+      "target": "service/svc-4",
+      "tenantId": "tenant-2",
+      "modelObservation": {
+        "signal": "cpu-saturation",
+        "anomalyScore": 0.78,
+        "proposedVerb": "scale",
+        "proposedRunbookRef": "bounded-scale@1.0.0",
+        "parameters": {
+          "replicas": 3,
+          "reason": "cpu-saturation"
+        }
+      },
+      "groundTruth": {
+        "realIncident": false,
+        "correctAction": "scale"
+      },
+      "humanDecision": {
+        "verdict": "reject",
+        "by": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-03T12:30:00.000Z",
+        "rationale": "Utilstrækkelig evidens."
+      },
+      "estimatedTokens": 850,
+      "untrusted": "raw payload for cpu-saturation on service/svc-4"
+    },
+    {
+      "id": "evt-012",
+      "at": "2024-11-03T18:00:00.000Z",
+      "kind": "operator-report",
+      "severity": "warning",
+      "target": "service/svc-5",
+      "tenantId": "tenant-3",
+      "modelObservation": {
+        "signal": "memory-pressure",
+        "anomalyScore": 0.75,
+        "proposedVerb": "restart",
+        "proposedRunbookRef": "stateless-restart@1.0.0",
+        "parameters": {
+          "maxDurationSeconds": 60,
+          "reason": "memory-pressure"
+        }
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "restart"
+      },
+      "humanDecision": {
+        "verdict": "none",
+        "by": null,
+        "at": null,
+        "rationale": null
+      },
+      "estimatedTokens": 1000,
+      "untrusted": "raw payload for memory-pressure on service/svc-5"
+    },
+    {
+      "id": "evt-013",
+      "at": "2024-11-04T00:00:00.000Z",
+      "kind": "alert",
+      "severity": "warning",
+      "target": "service/svc-0",
+      "tenantId": "tenant-1",
+      "modelObservation": {
+        "signal": "latency-spike",
+        "anomalyScore": 0.88,
+        "proposedVerb": "scale",
+        "proposedRunbookRef": "bounded-scale@1.0.0",
+        "parameters": {
+          "replicas": 3,
+          "reason": "latency-spike"
+        }
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "scale"
+      },
+      "humanDecision": {
+        "verdict": "approve",
+        "by": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-04T00:30:00.000Z",
+        "rationale": "Forslaget matcher evidensen."
+      },
+      "estimatedTokens": 1150,
+      "untrusted": "raw payload for latency-spike on service/svc-0"
+    },
+    {
+      "id": "evt-014",
+      "at": "2024-11-04T06:00:00.000Z",
+      "kind": "slo-breach",
+      "severity": "warning",
+      "target": "service/svc-1",
+      "tenantId": "tenant-2",
+      "modelObservation": {
+        "signal": "dependency-timeout",
+        "anomalyScore": 0.81,
+        "proposedVerb": "restart",
+        "proposedRunbookRef": "stateless-restart@1.0.0",
+        "parameters": {
+          "maxDurationSeconds": 60,
+          "reason": "dependency-timeout"
+        }
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "restart"
+      },
+      "humanDecision": {
+        "verdict": "reject",
+        "by": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-04T06:30:00.000Z",
+        "rationale": "Utilstrækkelig evidens."
+      },
+      "estimatedTokens": 1300,
+      "untrusted": "raw payload for dependency-timeout on service/svc-1"
+    },
+    {
+      "id": "evt-015",
+      "at": "2024-11-04T12:00:00.000Z",
+      "kind": "healthcheck",
+      "severity": "warning",
+      "target": "service/svc-2",
+      "tenantId": "tenant-3",
+      "modelObservation": {
+        "signal": "disk-pressure",
+        "anomalyScore": 0.74,
+        "proposedVerb": "scale",
+        "proposedRunbookRef": "bounded-scale@1.0.0",
+        "parameters": {
+          "replicas": 3,
+          "reason": "disk-pressure"
+        }
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "scale"
+      },
+      "humanDecision": {
+        "verdict": "none",
+        "by": null,
+        "at": null,
+        "rationale": null
+      },
+      "estimatedTokens": 1450,
+      "untrusted": "raw payload for disk-pressure on service/svc-2"
+    },
+    {
+      "id": "evt-016",
+      "at": "2024-11-04T18:00:00.000Z",
+      "kind": "operator-report",
+      "severity": "critical",
+      "target": "service/svc-3",
+      "tenantId": "tenant-1",
+      "modelObservation": {
+        "signal": "schema-drift",
+        "anomalyScore": 0.87,
+        "proposedVerb": "migrate",
+        "proposedRunbookRef": null,
+        "parameters": {}
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "migrate"
+      },
+      "humanDecision": {
+        "verdict": "approve",
+        "by": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-04T18:30:00.000Z",
+        "rationale": "Forslaget matcher evidensen."
+      },
+      "estimatedTokens": 1600,
+      "untrusted": "raw payload for schema-drift on service/svc-3"
+    },
+    {
+      "id": "evt-017",
+      "at": "2024-11-05T00:00:00.000Z",
+      "kind": "alert",
+      "severity": "critical",
+      "target": "service/svc-4",
+      "tenantId": "tenant-2",
+      "modelObservation": {
+        "signal": "data-corruption",
+        "anomalyScore": 0.8,
+        "proposedVerb": "restore",
+        "proposedRunbookRef": null,
+        "parameters": {}
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "restore"
+      },
+      "humanDecision": {
+        "verdict": "reject",
+        "by": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-05T00:30:00.000Z",
+        "rationale": "Utilstrækkelig evidens."
+      },
+      "estimatedTokens": 1750,
+      "untrusted": "raw payload for data-corruption on service/svc-4"
+    },
+    {
+      "id": "evt-018",
+      "at": "2024-11-05T06:00:00.000Z",
+      "kind": "slo-breach",
+      "severity": "info",
+      "target": "service/svc-5",
+      "tenantId": "tenant-3",
+      "modelObservation": {
+        "signal": "config-drift",
+        "anomalyScore": 0.34,
+        "proposedVerb": "config.apply",
+        "proposedRunbookRef": null,
+        "parameters": {}
+      },
+      "groundTruth": {
+        "realIncident": false,
+        "correctAction": "config.apply"
+      },
+      "humanDecision": {
+        "verdict": "none",
+        "by": null,
+        "at": null,
+        "rationale": null
+      },
+      "estimatedTokens": 1900,
+      "untrusted": "raw payload for config-drift on service/svc-5"
+    },
+    {
+      "id": "evt-019",
+      "at": "2024-11-05T12:00:00.000Z",
+      "kind": "healthcheck",
+      "severity": "warning",
+      "target": "service/svc-0",
+      "tenantId": "tenant-1",
+      "modelObservation": {
+        "signal": "certificate-expiry",
+        "anomalyScore": 0.86,
+        "proposedVerb": "scale",
+        "proposedRunbookRef": "bounded-scale@1.0.0",
+        "parameters": {
+          "replicas": 3,
+          "reason": "certificate-expiry"
+        }
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "rotate-credential"
+      },
+      "humanDecision": {
+        "verdict": "approve",
+        "by": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-05T12:30:00.000Z",
+        "rationale": "Forslaget matcher evidensen."
+      },
+      "estimatedTokens": 700,
+      "untrusted": "raw payload for certificate-expiry on service/svc-0"
+    },
+    {
+      "id": "evt-020",
+      "at": "2024-11-05T18:00:00.000Z",
+      "kind": "operator-report",
+      "severity": "warning",
+      "target": "service/svc-1",
+      "tenantId": "tenant-2",
+      "modelObservation": {
+        "signal": "ambiguous",
+        "anomalyScore": 0.79,
+        "proposedVerb": "diagnose",
+        "proposedRunbookRef": null,
+        "parameters": {}
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "diagnose"
+      },
+      "humanDecision": {
+        "verdict": "reject",
+        "by": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-05T18:30:00.000Z",
+        "rationale": "Utilstrækkelig evidens."
+      },
+      "estimatedTokens": 850,
+      "untrusted": "raw payload for ambiguous on service/svc-1"
+    },
+    {
+      "id": "evt-021",
+      "at": "2024-11-06T00:00:00.000Z",
+      "kind": "alert",
+      "severity": "warning",
+      "target": "service/svc-2",
+      "tenantId": "tenant-3",
+      "modelObservation": {
+        "signal": "cpu-saturation",
+        "anomalyScore": 0.72,
+        "proposedVerb": "scale",
+        "proposedRunbookRef": "bounded-scale@1.0.0",
+        "parameters": {
+          "replicas": 3,
+          "reason": "cpu-saturation"
+        }
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "scale"
+      },
+      "humanDecision": {
+        "verdict": "none",
+        "by": null,
+        "at": null,
+        "rationale": null
+      },
+      "estimatedTokens": 1000,
+      "untrusted": "raw payload for cpu-saturation on service/svc-2"
+    },
+    {
+      "id": "evt-022",
+      "at": "2024-11-06T06:00:00.000Z",
+      "kind": "slo-breach",
+      "severity": "warning",
+      "target": "service/svc-3",
+      "tenantId": "tenant-1",
+      "modelObservation": {
+        "signal": "memory-pressure",
+        "anomalyScore": 0.85,
+        "proposedVerb": "restart",
+        "proposedRunbookRef": "stateless-restart@1.0.0",
+        "parameters": {
+          "maxDurationSeconds": 60,
+          "reason": "memory-pressure"
+        }
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "restart"
+      },
+      "humanDecision": {
+        "verdict": "approve",
+        "by": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-06T06:30:00.000Z",
+        "rationale": "Forslaget matcher evidensen."
+      },
+      "estimatedTokens": 1150,
+      "untrusted": "raw payload for memory-pressure on service/svc-3"
+    },
+    {
+      "id": "evt-023",
+      "at": "2024-11-06T12:00:00.000Z",
+      "kind": "healthcheck",
+      "severity": "warning",
+      "target": "service/svc-4",
+      "tenantId": "tenant-2",
+      "modelObservation": {
+        "signal": "latency-spike",
+        "anomalyScore": 0.78,
+        "proposedVerb": "scale",
+        "proposedRunbookRef": "bounded-scale@1.0.0",
+        "parameters": {
+          "replicas": 3,
+          "reason": "latency-spike"
+        }
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "scale"
+      },
+      "humanDecision": {
+        "verdict": "reject",
+        "by": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-06T12:30:00.000Z",
+        "rationale": "Utilstrækkelig evidens."
+      },
+      "estimatedTokens": 1300,
+      "untrusted": "raw payload for latency-spike on service/svc-4"
+    },
+    {
+      "id": "evt-024",
+      "at": "2024-11-06T18:00:00.000Z",
+      "kind": "operator-report",
+      "severity": "warning",
+      "target": "service/svc-5",
+      "tenantId": "tenant-3",
+      "modelObservation": {
+        "signal": "dependency-timeout",
+        "anomalyScore": 0.91,
+        "proposedVerb": "restart",
+        "proposedRunbookRef": "stateless-restart@1.0.0",
+        "parameters": {
+          "maxDurationSeconds": 60,
+          "reason": "dependency-timeout"
+        }
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "restart"
+      },
+      "humanDecision": {
+        "verdict": "none",
+        "by": null,
+        "at": null,
+        "rationale": null
+      },
+      "estimatedTokens": 1450,
+      "untrusted": "raw payload for dependency-timeout on service/svc-5"
+    },
+    {
+      "id": "evt-025",
+      "at": "2024-11-07T00:00:00.000Z",
+      "kind": "alert",
+      "severity": "info",
+      "target": "service/svc-0",
+      "tenantId": "tenant-1",
+      "modelObservation": {
+        "signal": "disk-pressure",
+        "anomalyScore": 0.23,
+        "proposedVerb": "scale",
+        "proposedRunbookRef": "bounded-scale@1.0.0",
+        "parameters": {
+          "replicas": 3,
+          "reason": "disk-pressure"
+        }
+      },
+      "groundTruth": {
+        "realIncident": false,
+        "correctAction": "scale"
+      },
+      "humanDecision": {
+        "verdict": "approve",
+        "by": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-07T00:30:00.000Z",
+        "rationale": "Forslaget matcher evidensen."
+      },
+      "estimatedTokens": 1600,
+      "untrusted": "raw payload for disk-pressure on service/svc-0"
+    },
+    {
+      "id": "evt-026",
+      "at": "2024-11-07T06:00:00.000Z",
+      "kind": "slo-breach",
+      "severity": "critical",
+      "target": "service/svc-1",
+      "tenantId": "tenant-2",
+      "modelObservation": {
+        "signal": "schema-drift",
+        "anomalyScore": 0.77,
+        "proposedVerb": "migrate",
+        "proposedRunbookRef": null,
+        "parameters": {}
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "migrate"
+      },
+      "humanDecision": {
+        "verdict": "reject",
+        "by": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-07T06:30:00.000Z",
+        "rationale": "Utilstrækkelig evidens."
+      },
+      "estimatedTokens": 1750,
+      "untrusted": "raw payload for schema-drift on service/svc-1"
+    },
+    {
+      "id": "evt-027",
+      "at": "2024-11-07T12:00:00.000Z",
+      "kind": "healthcheck",
+      "severity": "critical",
+      "target": "service/svc-2",
+      "tenantId": "tenant-3",
+      "modelObservation": {
+        "signal": "data-corruption",
+        "anomalyScore": 0.9,
+        "proposedVerb": "restore",
+        "proposedRunbookRef": null,
+        "parameters": {}
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "restore"
+      },
+      "humanDecision": {
+        "verdict": "none",
+        "by": null,
+        "at": null,
+        "rationale": null
+      },
+      "estimatedTokens": 1900,
+      "untrusted": "raw payload for data-corruption on service/svc-2"
+    },
+    {
+      "id": "evt-028",
+      "at": "2024-11-07T18:00:00.000Z",
+      "kind": "operator-report",
+      "severity": "warning",
+      "target": "service/svc-3",
+      "tenantId": "tenant-1",
+      "modelObservation": {
+        "signal": "config-drift",
+        "anomalyScore": 0.83,
+        "proposedVerb": "config.apply",
+        "proposedRunbookRef": null,
+        "parameters": {}
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "config.apply"
+      },
+      "humanDecision": {
+        "verdict": "approve",
+        "by": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-07T18:30:00.000Z",
+        "rationale": "Forslaget matcher evidensen."
+      },
+      "estimatedTokens": 700,
+      "untrusted": "raw payload for config-drift on service/svc-3"
+    },
+    {
+      "id": "evt-029",
+      "at": "2024-11-08T00:00:00.000Z",
+      "kind": "alert",
+      "severity": "warning",
+      "target": "service/svc-4",
+      "tenantId": "tenant-2",
+      "modelObservation": {
+        "signal": "certificate-expiry",
+        "anomalyScore": 0.76,
+        "proposedVerb": "rotate-credential",
+        "proposedRunbookRef": null,
+        "parameters": {}
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "rotate-credential"
+      },
+      "humanDecision": {
+        "verdict": "reject",
+        "by": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-08T00:30:00.000Z",
+        "rationale": "Utilstrækkelig evidens."
+      },
+      "estimatedTokens": 850,
+      "untrusted": "raw payload for certificate-expiry on service/svc-4"
+    },
+    {
+      "id": "evt-030",
+      "at": "2024-11-08T06:00:00.000Z",
+      "kind": "slo-breach",
+      "severity": "warning",
+      "target": "service/svc-5",
+      "tenantId": "tenant-3",
+      "modelObservation": {
+        "signal": "ambiguous",
+        "anomalyScore": 0.89,
+        "proposedVerb": "diagnose",
+        "proposedRunbookRef": null,
+        "parameters": {}
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "diagnose"
+      },
+      "humanDecision": {
+        "verdict": "none",
+        "by": null,
+        "at": null,
+        "rationale": null
+      },
+      "estimatedTokens": 1000,
+      "untrusted": "raw payload for ambiguous on service/svc-5"
+    },
+    {
+      "id": "evt-031",
+      "at": "2024-11-08T12:00:00.000Z",
+      "kind": "healthcheck",
+      "severity": "warning",
+      "target": "service/svc-0",
+      "tenantId": "tenant-1",
+      "modelObservation": {
+        "signal": "cpu-saturation",
+        "anomalyScore": 0.82,
+        "proposedVerb": "scale",
+        "proposedRunbookRef": "bounded-scale@1.0.0",
+        "parameters": {
+          "replicas": 3,
+          "reason": "cpu-saturation"
+        }
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "scale"
+      },
+      "humanDecision": {
+        "verdict": "approve",
+        "by": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-08T12:30:00.000Z",
+        "rationale": "Forslaget matcher evidensen."
+      },
+      "estimatedTokens": 1150,
+      "untrusted": "raw payload for cpu-saturation on service/svc-0"
+    },
+    {
+      "id": "evt-032",
+      "at": "2024-11-08T18:00:00.000Z",
+      "kind": "operator-report",
+      "severity": "info",
+      "target": "service/svc-1",
+      "tenantId": "tenant-2",
+      "modelObservation": {
+        "signal": "memory-pressure",
+        "anomalyScore": 0.32,
+        "proposedVerb": "restart",
+        "proposedRunbookRef": "stateless-restart@1.0.0",
+        "parameters": {
+          "maxDurationSeconds": 60,
+          "reason": "memory-pressure"
+        }
+      },
+      "groundTruth": {
+        "realIncident": false,
+        "correctAction": "restart"
+      },
+      "humanDecision": {
+        "verdict": "reject",
+        "by": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-08T18:30:00.000Z",
+        "rationale": "Utilstrækkelig evidens."
+      },
+      "estimatedTokens": 1300,
+      "untrusted": "raw payload for memory-pressure on service/svc-1"
+    },
+    {
+      "id": "evt-033",
+      "at": "2024-11-09T00:00:00.000Z",
+      "kind": "alert",
+      "severity": "warning",
+      "target": "service/svc-2",
+      "tenantId": "tenant-3",
+      "modelObservation": {
+        "signal": "latency-spike",
+        "anomalyScore": 0.88,
+        "proposedVerb": "scale",
+        "proposedRunbookRef": "bounded-scale@1.0.0",
+        "parameters": {
+          "replicas": 3,
+          "reason": "latency-spike"
+        }
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "scale"
+      },
+      "humanDecision": {
+        "verdict": "none",
+        "by": null,
+        "at": null,
+        "rationale": null
+      },
+      "estimatedTokens": 1450,
+      "untrusted": "raw payload for latency-spike on service/svc-2"
+    },
+    {
+      "id": "evt-034",
+      "at": "2024-11-09T06:00:00.000Z",
+      "kind": "slo-breach",
+      "severity": "warning",
+      "target": "service/svc-3",
+      "tenantId": "tenant-1",
+      "modelObservation": {
+        "signal": "dependency-timeout",
+        "anomalyScore": 0.81,
+        "proposedVerb": "restart",
+        "proposedRunbookRef": "stateless-restart@1.0.0",
+        "parameters": {
+          "maxDurationSeconds": 60,
+          "reason": "dependency-timeout"
+        }
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "restart"
+      },
+      "humanDecision": {
+        "verdict": "approve",
+        "by": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-09T06:30:00.000Z",
+        "rationale": "Forslaget matcher evidensen."
+      },
+      "estimatedTokens": 1600,
+      "untrusted": "raw payload for dependency-timeout on service/svc-3"
+    },
+    {
+      "id": "evt-035",
+      "at": "2024-11-09T12:00:00.000Z",
+      "kind": "healthcheck",
+      "severity": "warning",
+      "target": "service/svc-4",
+      "tenantId": "tenant-2",
+      "modelObservation": {
+        "signal": "disk-pressure",
+        "anomalyScore": 0.74,
+        "proposedVerb": "scale",
+        "proposedRunbookRef": "bounded-scale@1.0.0",
+        "parameters": {
+          "replicas": 3,
+          "reason": "disk-pressure"
+        }
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "scale"
+      },
+      "humanDecision": {
+        "verdict": "reject",
+        "by": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-09T12:30:00.000Z",
+        "rationale": "Utilstrækkelig evidens."
+      },
+      "estimatedTokens": 1750,
+      "untrusted": "raw payload for disk-pressure on service/svc-4"
+    },
+    {
+      "id": "evt-036",
+      "at": "2024-11-09T18:00:00.000Z",
+      "kind": "operator-report",
+      "severity": "critical",
+      "target": "service/svc-5",
+      "tenantId": "tenant-3",
+      "modelObservation": {
+        "signal": "schema-drift",
+        "anomalyScore": 0.87,
+        "proposedVerb": "migrate",
+        "proposedRunbookRef": null,
+        "parameters": {}
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "migrate"
+      },
+      "humanDecision": {
+        "verdict": "none",
+        "by": null,
+        "at": null,
+        "rationale": null
+      },
+      "estimatedTokens": 1900,
+      "untrusted": "raw payload for schema-drift on service/svc-5"
+    },
+    {
+      "id": "evt-037",
+      "at": "2024-11-10T00:00:00.000Z",
+      "kind": "alert",
+      "severity": "critical",
+      "target": "service/svc-0",
+      "tenantId": "tenant-1",
+      "modelObservation": {
+        "signal": "data-corruption",
+        "anomalyScore": 0.8,
+        "proposedVerb": "restore",
+        "proposedRunbookRef": null,
+        "parameters": {}
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "restore"
+      },
+      "humanDecision": {
+        "verdict": "approve",
+        "by": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-10T00:30:00.000Z",
+        "rationale": "Forslaget matcher evidensen."
+      },
+      "estimatedTokens": 700,
+      "untrusted": "raw payload for data-corruption on service/svc-0"
+    },
+    {
+      "id": "evt-038",
+      "at": "2024-11-10T06:00:00.000Z",
+      "kind": "slo-breach",
+      "severity": "warning",
+      "target": "service/svc-1",
+      "tenantId": "tenant-2",
+      "modelObservation": {
+        "signal": "config-drift",
+        "anomalyScore": 0.73,
+        "proposedVerb": "config.apply",
+        "proposedRunbookRef": null,
+        "parameters": {}
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "config.apply"
+      },
+      "humanDecision": {
+        "verdict": "reject",
+        "by": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-10T06:30:00.000Z",
+        "rationale": "Utilstrækkelig evidens."
+      },
+      "estimatedTokens": 850,
+      "untrusted": "raw payload for config-drift on service/svc-1"
+    },
+    {
+      "id": "evt-039",
+      "at": "2024-11-10T12:00:00.000Z",
+      "kind": "healthcheck",
+      "severity": "info",
+      "target": "service/svc-2",
+      "tenantId": "tenant-3",
+      "modelObservation": {
+        "signal": "certificate-expiry",
+        "anomalyScore": 0.21,
+        "proposedVerb": "rotate-credential",
+        "proposedRunbookRef": null,
+        "parameters": {}
+      },
+      "groundTruth": {
+        "realIncident": false,
+        "correctAction": "rotate-credential"
+      },
+      "humanDecision": {
+        "verdict": "none",
+        "by": null,
+        "at": null,
+        "rationale": null
+      },
+      "estimatedTokens": 1000,
+      "untrusted": "raw payload for certificate-expiry on service/svc-2"
+    },
+    {
+      "id": "evt-040",
+      "at": "2024-11-10T18:00:00.000Z",
+      "kind": "operator-report",
+      "severity": "warning",
+      "target": "service/svc-3",
+      "tenantId": "tenant-1",
+      "modelObservation": {
+        "signal": "ambiguous",
+        "anomalyScore": 0.79,
+        "proposedVerb": "diagnose",
+        "proposedRunbookRef": null,
+        "parameters": {}
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "diagnose"
+      },
+      "humanDecision": {
+        "verdict": "approve",
+        "by": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-10T18:30:00.000Z",
+        "rationale": "Forslaget matcher evidensen."
+      },
+      "estimatedTokens": 1150,
+      "untrusted": "raw payload for ambiguous on service/svc-3"
+    },
+    {
+      "id": "evt-041",
+      "at": "2024-11-11T00:00:00.000Z",
+      "kind": "alert",
+      "severity": "warning",
+      "target": "service/svc-4",
+      "tenantId": "tenant-2",
+      "modelObservation": {
+        "signal": "cpu-saturation",
+        "anomalyScore": 0.72,
+        "proposedVerb": "scale",
+        "proposedRunbookRef": "bounded-scale@1.0.0",
+        "parameters": {
+          "replicas": 3,
+          "reason": "cpu-saturation"
+        }
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "scale"
+      },
+      "humanDecision": {
+        "verdict": "reject",
+        "by": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-11T00:30:00.000Z",
+        "rationale": "Utilstrækkelig evidens."
+      },
+      "estimatedTokens": 1300,
+      "untrusted": "raw payload for cpu-saturation on service/svc-4"
+    },
+    {
+      "id": "evt-042",
+      "at": "2024-11-11T06:00:00.000Z",
+      "kind": "slo-breach",
+      "severity": "warning",
+      "target": "service/svc-5",
+      "tenantId": "tenant-3",
+      "modelObservation": {
+        "signal": "memory-pressure",
+        "anomalyScore": 0.85,
+        "proposedVerb": "restart",
+        "proposedRunbookRef": "stateless-restart@1.0.0",
+        "parameters": {
+          "maxDurationSeconds": 60,
+          "reason": "memory-pressure"
+        }
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "restart"
+      },
+      "humanDecision": {
+        "verdict": "none",
+        "by": null,
+        "at": null,
+        "rationale": null
+      },
+      "estimatedTokens": 1450,
+      "untrusted": "raw payload for memory-pressure on service/svc-5"
+    },
+    {
+      "id": "evt-043",
+      "at": "2024-11-11T12:00:00.000Z",
+      "kind": "healthcheck",
+      "severity": "warning",
+      "target": "service/svc-0",
+      "tenantId": "tenant-1",
+      "modelObservation": {
+        "signal": "latency-spike",
+        "anomalyScore": 0.78,
+        "proposedVerb": "scale",
+        "proposedRunbookRef": "bounded-scale@1.0.0",
+        "parameters": {
+          "replicas": 3,
+          "reason": "latency-spike"
+        }
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "scale"
+      },
+      "humanDecision": {
+        "verdict": "approve",
+        "by": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-11T12:30:00.000Z",
+        "rationale": "Forslaget matcher evidensen."
+      },
+      "estimatedTokens": 1600,
+      "untrusted": "raw payload for latency-spike on service/svc-0"
+    },
+    {
+      "id": "evt-044",
+      "at": "2024-11-11T18:00:00.000Z",
+      "kind": "operator-report",
+      "severity": "warning",
+      "target": "service/svc-1",
+      "tenantId": "tenant-2",
+      "modelObservation": {
+        "signal": "dependency-timeout",
+        "anomalyScore": 0.91,
+        "proposedVerb": "restart",
+        "proposedRunbookRef": "stateless-restart@1.0.0",
+        "parameters": {
+          "maxDurationSeconds": 60,
+          "reason": "dependency-timeout"
+        }
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "restart"
+      },
+      "humanDecision": {
+        "verdict": "reject",
+        "by": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-11T18:30:00.000Z",
+        "rationale": "Utilstrækkelig evidens."
+      },
+      "estimatedTokens": 1750,
+      "untrusted": "raw payload for dependency-timeout on service/svc-1"
+    },
+    {
+      "id": "evt-045",
+      "at": "2024-11-12T00:00:00.000Z",
+      "kind": "alert",
+      "severity": "warning",
+      "target": "service/svc-2",
+      "tenantId": "tenant-3",
+      "modelObservation": {
+        "signal": "disk-pressure",
+        "anomalyScore": 0.84,
+        "proposedVerb": "restart",
+        "proposedRunbookRef": "stateless-restart@1.0.0",
+        "parameters": {
+          "maxDurationSeconds": 60,
+          "reason": "disk-pressure"
+        }
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "scale"
+      },
+      "humanDecision": {
+        "verdict": "none",
+        "by": null,
+        "at": null,
+        "rationale": null
+      },
+      "estimatedTokens": 1900,
+      "untrusted": "raw payload for disk-pressure on service/svc-2"
+    },
+    {
+      "id": "evt-046",
+      "at": "2024-11-12T06:00:00.000Z",
+      "kind": "slo-breach",
+      "severity": "info",
+      "target": "service/svc-3",
+      "tenantId": "tenant-1",
+      "modelObservation": {
+        "signal": "schema-drift",
+        "anomalyScore": 0.78,
+        "proposedVerb": "migrate",
+        "proposedRunbookRef": null,
+        "parameters": {}
+      },
+      "groundTruth": {
+        "realIncident": false,
+        "correctAction": "migrate"
+      },
+      "humanDecision": {
+        "verdict": "approve",
+        "by": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-12T06:30:00.000Z",
+        "rationale": "Forslaget matcher evidensen."
+      },
+      "estimatedTokens": 700,
+      "untrusted": "raw payload for schema-drift on service/svc-3"
+    },
+    {
+      "id": "evt-047",
+      "at": "2024-11-12T12:00:00.000Z",
+      "kind": "healthcheck",
+      "severity": "critical",
+      "target": "service/svc-4",
+      "tenantId": "tenant-2",
+      "modelObservation": {
+        "signal": "data-corruption",
+        "anomalyScore": 0.9,
+        "proposedVerb": "restore",
+        "proposedRunbookRef": null,
+        "parameters": {}
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "restore"
+      },
+      "humanDecision": {
+        "verdict": "reject",
+        "by": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen",
+          "role": "Platform Owner"
+        },
+        "at": "2024-11-12T12:30:00.000Z",
+        "rationale": "Utilstrækkelig evidens."
+      },
+      "estimatedTokens": 850,
+      "untrusted": "raw payload for data-corruption on service/svc-4"
+    },
+    {
+      "id": "evt-048",
+      "at": "2024-11-12T18:00:00.000Z",
+      "kind": "operator-report",
+      "severity": "warning",
+      "target": "service/svc-5",
+      "tenantId": "tenant-3",
+      "modelObservation": {
+        "signal": "config-drift",
+        "anomalyScore": 0.83,
+        "proposedVerb": "config.apply",
+        "proposedRunbookRef": null,
+        "parameters": {}
+      },
+      "groundTruth": {
+        "realIncident": true,
+        "correctAction": "config.apply"
+      },
+      "humanDecision": {
+        "verdict": "none",
+        "by": null,
+        "at": null,
+        "rationale": null
+      },
+      "estimatedTokens": 1000,
+      "untrusted": "raw payload for config-drift on service/svc-5"
+    }
+  ]
+}

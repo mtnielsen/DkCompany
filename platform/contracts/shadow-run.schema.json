@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/shadow-run.schema.json",
+  "title": "ShadowRun",
+  "description": "Resultatet af en deterministisk replay af historiske hændelser gennem AI-forslag. I skyggetilstand udføres nul muterende handlinger; i begrænset autonomi udføres KUN forhåndsgodkendte, reversible runbooks i staging. Rapporten bærer ground truth-scoring, menneskelige beslutninger, reviewerens ekstra fund og omkostning.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "runId", "mode", "environment", "model", "fingerprint", "generatedAt", "eventsReplayed", "mutationCount", "halted", "haltReason", "decisions", "metrics", "safety", "verdict"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "ShadowRun" },
+    "runId": { "type": "string", "minLength": 1 },
+    "mode": { "enum": ["observe", "propose", "shadow", "limited-autonomy"] },
+    "environment": { "enum": ["replay", "staging"] },
+    "model": { "$ref": "#/$defs/model" },
+    "fingerprint": { "type": "string", "minLength": 8 },
+    "generatedAt": { "type": "string", "minLength": 10 },
+    "eventsReplayed": { "type": "integer", "minimum": 0 },
+    "mutationCount": { "type": "integer", "minimum": 0 },
+    "halted": { "type": "boolean" },
+    "haltReason": { "type": ["string", "null"] },
+    "decisions": { "type": "array", "items": { "$ref": "#/$defs/decision" } },
+    "metrics": { "$ref": "#/$defs/metrics" },
+    "safety": { "$ref": "#/$defs/safety" },
+    "verdict": { "enum": ["pass", "fail"] }
+  },
+  "$defs": {
+    "human": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\|[a-z0-9][a-z0-9._-]{2,}$" },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 }
+      }
+    },
+    "model": {
+      "type": "object",
+      "required": ["modelRef", "promptDigest", "gatewayRef"],
+      "additionalProperties": false,
+      "properties": {
+        "modelRef": { "type": ["string", "null"] },
+        "promptDigest": { "type": ["string", "null"] },
+        "gatewayRef": { "type": ["string", "null"] }
+      }
+    },
+    "proposal": {
+      "type": "object",
+      "required": ["actionKind", "verb", "target", "runbookRef", "mutating", "reversible"],
+      "additionalProperties": false,
+      "properties": {
+        "actionKind": { "type": "string", "minLength": 1 },
+        "verb": { "type": "string", "minLength": 1 },
+        "target": { "type": "string", "minLength": 1 },
+        "runbookRef": { "type": ["string", "null"] },
+        "mutating": { "type": "boolean" },
+        "reversible": { "type": "boolean" }
+      }
+    },
+    "humanDecision": {
+      "type": "object",
+      "required": ["verdict", "by", "at", "rationale"],
+      "additionalProperties": false,
+      "properties": {
+        "verdict": { "enum": ["approve", "reject", "none"] },
+        "by": { "oneOf": [{ "$ref": "#/$defs/human" }, { "type": "null" }] },
+        "at": { "type": ["string", "null"] },
+        "rationale": { "type": ["string", "null"] }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "required": ["executed", "reason"],
+      "additionalProperties": false,
+      "properties": {
+        "executed": { "type": "boolean" },
+        "reason": { "type": ["string", "null"] }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "required": ["eventId", "at", "severity", "target", "tenantId", "read", "diagnosis", "incident", "proposal", "humanDecision", "reviewerFindings", "execution"],
+      "additionalProperties": false,
+      "properties": {
+        "eventId": { "type": "string", "minLength": 1 },
+        "at": { "type": "string", "minLength": 10 },
+        "severity": { "type": "string", "minLength": 1 },
+        "target": { "type": "string", "minLength": 1 },
+        "tenantId": { "type": ["string", "null"] },
+        "read": { "const": true },
+        "diagnosis": { "type": "string", "minLength": 1 },
+        "incident": { "type": "boolean" },
+        "proposal": { "$ref": "#/$defs/proposal" },
+        "humanDecision": { "$ref": "#/$defs/humanDecision" },
+        "reviewerFindings": { "type": "integer", "minimum": 0 },
+        "execution": { "$ref": "#/$defs/execution" }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "required": ["proposals", "approved", "rejected", "falseAlarms", "falseAlarmRate", "errors", "errorRate", "escalations", "escalationRate", "costEur", "reviewerFindings", "executedMutations"],
+      "additionalProperties": false,
+      "properties": {
+        "proposals": { "type": "integer", "minimum": 0 },
+        "approved": { "type": "integer", "minimum": 0 },
+        "rejected": { "type": "integer", "minimum": 0 },
+        "falseAlarms": { "type": "integer", "minimum": 0 },
+        "falseAlarmRate": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+        "errors": { "type": "integer", "minimum": 0 },
+        "errorRate": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+        "escalations": { "type": "integer", "minimum": 0 },
+        "escalationRate": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+        "costEur": { "type": "number", "minimum": 0 },
+        "reviewerFindings": { "type": "integer", "minimum": 0 },
+        "executedMutations": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "required": ["shadowMode", "zeroMutationInvariant", "killSwitchClear", "governanceAvailable", "evaluationFingerprintMatch", "approvedRunbooksOnly"],
+      "additionalProperties": false,
+      "properties": {
+        "shadowMode": { "type": "boolean" },
+        "zeroMutationInvariant": { "type": "boolean" },
+        "killSwitchClear": { "type": "boolean" },
+        "governanceAvailable": { "type": "boolean" },
+        "evaluationFingerprintMatch": { "type": "boolean" },
+        "approvedRunbooksOnly": { "type": "boolean" }
+      }
+    }
+  }
+}

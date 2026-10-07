@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/rules-of-engagement.schema.json",
+  "title": "Rules of Engagement",
+  "description": "DKC-065: regler for engagementet for en sikkerhedsvurdering. Dokumentet er ejet af et navngivet menneske og beskriver autoriserede mål, identiteter, teknikker, tidsvindue, udelukkelser, rate limits, stopbetingelser, nødkontakter og håndtering af bevis. At forberede dokumentet autoriserer ikke levende penetrationstest: et eksternt mål må kun være autoriseret når en navngivet ejer har godkendt scope, og et lokalt/loopback-mål må kun autoriseres som syntetisk regression.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "classification", "preparationOnly", "authorization", "targets", "identities", "techniques", "window", "exclusions", "rateLimits", "stopConditions", "emergencyContacts", "evidenceHandling"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "RulesOfEngagement" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$" },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/person" }
+      }
+    },
+    "classification": { "enum": ["internal", "confidential", "restricted"] },
+    "preparationOnly": { "type": "boolean", "description": "Sand når dokumentet kun forbereder en vurdering og ikke selv autoriserer levende test." },
+    "authorization": {
+      "type": "object",
+      "required": ["approved", "approvedBy", "approvedAt", "reference", "statement"],
+      "additionalProperties": false,
+      "properties": {
+        "approved": { "type": "boolean" },
+        "approvedBy": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/person" }] },
+        "approvedAt": { "oneOf": [{ "type": "null" }, { "type": "string", "format": "date-time" }] },
+        "reference": { "oneOf": [{ "type": "null" }, { "type": "string", "minLength": 3 }] },
+        "statement": { "type": "string", "minLength": 10 }
+      }
+    },
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "scope", "environment", "tenantRef", "authorized", "authorizationRef", "syntheticOnly", "dataClassification", "artifactRefs"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+          "kind": { "enum": ["loopback", "staging", "external"] },
+          "scope": { "type": "string", "pattern": "^(https?://127\\.0\\.0\\.1:[0-9]{1,5}|https://[a-z0-9.-]+)(/[A-Za-z0-9._~:/?#\\[\\]@!$&'()*+,;=%-]*)?$" },
+          "environment": { "enum": ["local", "staging", "production"] },
+          "tenantRef": { "oneOf": [{ "type": "null" }, { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" }] },
+          "authorized": { "type": "boolean" },
+          "authorizationRef": { "oneOf": [{ "type": "null" }, { "type": "string", "minLength": 3 }] },
+          "syntheticOnly": { "type": "boolean" },
+          "dataClassification": { "enum": ["synthetic", "operational", "personal", "protected"] },
+          "artifactRefs": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 3 } }
+        }
+      }
+    },
+    "identities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "subject", "name", "role", "kind", "authorized"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+          "subject": { "type": "string", "minLength": 3 },
+          "name": { "type": "string", "minLength": 2 },
+          "role": { "type": "string", "minLength": 2 },
+          "kind": { "enum": ["assessor", "implementer", "observer"] },
+          "authorized": { "type": "boolean" }
+        }
+      }
+    },
+    "techniques": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "category", "description", "destructive", "allowed"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+          "category": { "enum": ["authentication", "authorization", "injection", "cross-tenant", "agent-abuse", "host-escape", "integration", "configuration", "telemetry"] },
+          "description": { "type": "string", "minLength": 5, "maxLength": 400 },
+          "destructive": { "type": "boolean" },
+          "allowed": { "type": "boolean" }
+        }
+      }
+    },
+    "window": {
+      "type": "object",
+      "required": ["from", "to", "timezone", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "from": { "type": "string", "format": "date-time" },
+        "to": { "type": "string", "format": "date-time" },
+        "timezone": { "type": "string", "minLength": 2 },
+        "status": { "enum": ["planned", "open", "closed"] }
+      }
+    },
+    "exclusions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "description", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+          "description": { "type": "string", "minLength": 5 },
+          "reason": { "type": "string", "minLength": 5 }
+        }
+      }
+    },
+    "rateLimits": {
+      "type": "object",
+      "required": ["requestsPerSecond", "concurrency", "maxPayloadBytes", "notes"],
+      "additionalProperties": false,
+      "properties": {
+        "requestsPerSecond": { "type": "number", "exclusiveMinimum": 0 },
+        "concurrency": { "type": "integer", "minimum": 1 },
+        "maxPayloadBytes": { "type": "integer", "minimum": 1024 },
+        "notes": { "type": "string", "minLength": 5 }
+      }
+    },
+    "stopConditions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "condition", "action"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+          "condition": { "type": "string", "minLength": 5 },
+          "action": { "type": "string", "minLength": 5 }
+        }
+      }
+    },
+    "emergencyContacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["role", "name", "subject", "channel"],
+        "additionalProperties": false,
+        "properties": {
+          "role": { "type": "string", "minLength": 2 },
+          "name": { "type": "string", "minLength": 2 },
+          "subject": { "type": "string", "minLength": 3 },
+          "channel": { "type": "string", "minLength": 3 }
+        }
+      }
+    },
+    "evidenceHandling": {
+      "type": "object",
+      "required": ["classification", "accessControl", "redactionRequired", "secretHandling", "provenance", "retentionDays", "storageRef"],
+      "additionalProperties": false,
+      "properties": {
+        "classification": { "enum": ["internal", "confidential", "restricted"] },
+        "accessControl": { "type": "string", "minLength": 5, "description": "Hvilke roller/identiteter der må læse rå evidens." },
+        "redactionRequired": { "const": true },
+        "secretHandling": { "type": "string", "minLength": 5, "description": "Hvordan secrets, tokens og persondata holdes ude af rapporter." },
+        "provenance": { "type": "string", "minLength": 5, "description": "Hvordan evidensens oprindelse, tid og aktør bevares." },
+        "retentionDays": { "type": "integer", "minimum": 1 },
+        "storageRef": { "type": "string", "minLength": 3 }
+      }
+    }
+  },
+  "$defs": {
+    "person": {
+      "type": "object",
+      "required": ["subject", "role", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": {
+          "type": "object",
+          "required": ["subject", "name"],
+          "additionalProperties": false,
+          "properties": { "subject": { "type": "string", "minLength": 3 }, "name": { "type": "string", "minLength": 2 } }
+        }
+      }
+    }
+  }
+}

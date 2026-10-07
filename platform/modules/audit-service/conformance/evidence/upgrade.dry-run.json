@@ -1,0 +1,21 @@
+{
+  "verb": "upgrade.dry-run",
+  "module": "audit-service",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-16T21:11:53.872Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 4
+  },
+  "artifact": {
+    "uri": "s3://evidence/audit-service/upgrade.dry-run.json",
+    "sha256": "d8a97225db7e967e0ad400586c62cbae979a496ca66275d1a1c7d6d2b9fe65b2"
+  }
+}

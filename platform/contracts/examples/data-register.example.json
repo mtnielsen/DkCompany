@@ -1,0 +1,156 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "DataRegister",
+  "metadata": {
+    "name": "example-data-register",
+    "version": "1.0.0",
+    "description": "Eksempel på et versioneret dataregister med ejerbesluttet behandlingsgrundlag, formålsbestemt retention og eksplicit tredjelandsvurdering.",
+    "lastReviewed": "2025-09-01"
+  },
+  "subprocessors": [
+    {
+      "id": "anthropic-eu",
+      "name": "Anthropic EU",
+      "purpose": "model-inference",
+      "hostingRegion": "eu-eea",
+      "countryCodes": ["DE"],
+      "dpaRef": "dpa://example/anthropic-eu/2025",
+      "contractRef": "contract://example/anthropic-eu/2025",
+      "approvedBy": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "approvedAt": "2025-09-01",
+      "thirdCountryTransfer": {
+        "assessed": true,
+        "status": "present",
+        "mechanisms": ["scc"],
+        "assessedBy": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+        "assessedAt": "2025-09-01",
+        "note": "Data hostes i EU/EEA, men moderselskabets support kan tilgå dem fra USA; SCC dækker overførslen. EU-hosting er ikke i sig selv fravær af overførsel."
+      }
+    }
+  ],
+  "entries": [
+    {
+      "id": "example-assistant",
+      "title": "Eksempelassistent",
+      "status": "approved",
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "moduleRef": "example-module",
+      "routeRef": "example-route",
+      "dataCategories": ["internal", "personal"],
+      "sources": [
+        { "name": "Vejledningsportal", "description": "Brugerindsendte spørgsmål og vedhæftede filer", "dataCategories": ["personal"] }
+      ],
+      "purposes": [
+        { "id": "support-answer", "name": "Besvare supporthenvendelser", "description": "Behandle og besvare kundens henvendelser." }
+      ],
+      "legalBasis": {
+        "status": "owner-decided",
+        "ground": "legitimate-interests",
+        "decidedBy": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+        "decidedAt": "2025-09-01",
+        "decisionRef": "decision://example/2025-01",
+        "note": "Ejerbesluttet grundlag for supportbehandling."
+      },
+      "roles": {
+        "controller": { "organisation": "Eksempel A/S", "contractRef": "contract://example/controller/2025" },
+        "processor": { "name": "Platformen", "contractRef": "contract://example/processor/2025" }
+      },
+      "location": {
+        "hostingRegion": "eu-eea",
+        "countryCodes": ["DK"],
+        "supportAccess": { "remoteAccess": true, "fromCountries": ["DK", "US"], "note": "Support fra Danmark og USA." },
+        "thirdCountryTransfer": {
+          "assessed": true,
+          "status": "present",
+          "mechanisms": ["scc"],
+          "assessedBy": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+          "assessedAt": "2025-09-01",
+          "note": "Tredjelandsvurdering foretaget eksplicit trods EU-hosting, fordi support- og modeladgang kan ske fra USA."
+        }
+      },
+      "recipients": [
+        { "name": "Anthropic EU", "role": "subprocessor", "contractRef": "contract://example/anthropic-eu/2025" }
+      ],
+      "subprocessorRefs": ["anthropic-eu"],
+      "assets": [
+        { "kind": "prompts", "description": "Indsendte prompts gemmes i 30 dage til fejlfinding.", "dataCategories": ["personal"] },
+        { "kind": "embeddings", "description": "Embeddings bruges til søgning og pseudonymiseres.", "dataCategories": ["pseudonymised"] },
+        { "kind": "support-access", "description": "Supportadgang logges og kræver godkendelse.", "dataCategories": ["personal"] },
+        { "kind": "logs", "description": "Driftslogs med tenant-id og principal.", "dataCategories": ["operational"] },
+        { "kind": "backups", "description": "Krypterede backups med formålsbestemt slettefrist.", "dataCategories": ["personal"] },
+        { "kind": "model-provider-usage", "description": "Modelproviderens databrug er begrænset af aftale og slået fra til træning.", "dataCategories": ["personal"] }
+      ],
+      "retention": {
+        "policyId": "support-answer-retention",
+        "version": "1.0.0",
+        "purposeRef": "support-answer",
+        "maxDays": 365,
+        "trigger": "purpose-fulfilled",
+        "basis": "Slettes når sagen er afsluttet og den lovpligtige bogføringsfrist er udløbet.",
+        "legalHold": { "supported": true, "mechanism": "hold-flag", "note": "Sletning blokeres ved aktivt hold." },
+        "approvedBy": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+        "approvedAt": "2025-09-01",
+        "deleteMechanism": "Fan-out subject.erase til moduler og crypto-shredding af backups."
+      },
+      "contractRefs": ["contract://example/processor/2025", "contract://example/anthropic-eu/2025"],
+      "evidence": ["docs/compliance/data-register.md"]
+    },
+    {
+      "id": "example-observer",
+      "title": "Eksempelobservatør",
+      "status": "approved",
+      "owner": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Operations Lead" },
+      "routeRef": "example-observer-route",
+      "dataCategories": ["internal"],
+      "sources": [
+        { "name": "Driftsmetrik", "description": "Aggregerede driftsmetrikker uden personhenførbare data" }
+      ],
+      "purposes": [
+        { "id": "observe", "name": "Driftsobservation", "description": "Overvåge tjenestens helbred." }
+      ],
+      "legalBasis": {
+        "status": "owner-decided",
+        "ground": "legitimate-interests",
+        "decidedBy": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Operations Lead" },
+        "decidedAt": "2025-09-01",
+        "decisionRef": "decision://example/2025-02"
+      },
+      "roles": {
+        "controller": null,
+        "processor": { "name": "Platformen", "contractRef": "contract://example/processor/2025" }
+      },
+      "location": {
+        "hostingRegion": "eu-eea",
+        "countryCodes": ["DK"],
+        "supportAccess": { "remoteAccess": false, "fromCountries": [], "note": "Ingen ekstern supportadgang." },
+        "thirdCountryTransfer": {
+          "assessed": true,
+          "status": "none",
+          "mechanisms": ["none"],
+          "assessedBy": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Operations Lead" },
+          "assessedAt": "2025-09-01",
+          "note": "Vurderet: ingen overførsel, ingen ekstern support, ingen underleverandør uden for EEA."
+        }
+      },
+      "recipients": [],
+      "subprocessorRefs": [],
+      "assets": [
+        { "kind": "logs", "description": "Aggregerede driftslogs uden personhenførbare data.", "dataCategories": ["operational"] },
+        { "kind": "backups", "description": "Metrikbackup uden personhenførbare data.", "dataCategories": ["operational"] }
+      ],
+      "retention": {
+        "policyId": "observe-retention",
+        "version": "1.0.0",
+        "purposeRef": "observe",
+        "maxDays": 30,
+        "trigger": "event-age",
+        "basis": "Metrikker er kun nødvendige for den korte driftshorisont.",
+        "legalHold": { "supported": false },
+        "approvedBy": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "role": "Operations Lead" },
+        "approvedAt": "2025-09-01",
+        "deleteMechanism": "Automatisk rulning af tidsserier."
+      },
+      "contractRefs": ["contract://example/processor/2025"]
+    }
+  ]
+}

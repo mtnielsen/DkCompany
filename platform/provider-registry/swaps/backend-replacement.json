@@ -1,0 +1,45 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ProviderSwapFixture",
+  "id": "storage-filesystem-to-object-store",
+  "title": "Verificeret backendudskiftning: lokalt filsystem til objektlager",
+  "class": "storage",
+  "from": "filesystem-local",
+  "to": "object-store-s3",
+  "mode": "planned-migration",
+  "tenantId": "acme",
+  "appId": "platform",
+  "migrationProof": "docs/spec/provider-contracts.md#backendudskiftning",
+  "records": [
+    {
+      "sourceId": "obj-1001",
+      "entityType": "Object",
+      "owner": { "subject": "oidc|ada.acme", "tenantId": "acme" },
+      "classification": "confidential",
+      "acl": { "readSubjects": ["oidc|ada.acme"], "readGroups": ["files-admins"] },
+      "links": [],
+      "references": ["mig:acme:storage:Object:obj-1001"],
+      "data": { "name": "contract.pdf", "sha256": "aa11", "size": 1024 }
+    },
+    {
+      "sourceId": "obj-1002",
+      "entityType": "Object",
+      "owner": { "subject": "oidc|ben.acme", "tenantId": "acme" },
+      "classification": "internal",
+      "acl": { "readSubjects": ["oidc|ben.acme"], "readGroups": ["files-users"] },
+      "links": [{ "rel": "derived-from", "reference": "mig:acme:storage:Object:obj-1001" }],
+      "references": ["mig:acme:storage:Object:obj-1002"],
+      "data": { "name": "contract-draft.pdf", "sha256": "bb22", "size": 2048 }
+    },
+    {
+      "sourceId": "obj-1003",
+      "entityType": "Object",
+      "owner": { "subject": "oidc|ada.acme", "tenantId": "acme" },
+      "classification": "personal",
+      "acl": { "readSubjects": ["oidc|ada.acme"], "readGroups": [] },
+      "links": [{ "rel": "attachment-of", "reference": "mig:acme:storage:Object:obj-1001" }],
+      "references": ["mig:acme:storage:Object:obj-1003"],
+      "data": { "name": "signature.png", "sha256": "cc33", "size": 512 }
+    }
+  ]
+}

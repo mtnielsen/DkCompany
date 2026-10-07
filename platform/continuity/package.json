@@ -1,0 +1,12 @@
+{
+  "name": "@platform/continuity",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Serviceklasser, fejldomæner og recoverymål (DKC-037): validering, kompatibilitet med deployment-profiler og health-/recovery-rapportering.",
+  "scripts": {
+    "test": "node --test",
+    "check": "node src/check.mjs",
+    "report": "node src/report.mjs"
+  }
+}

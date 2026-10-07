@@ -1,0 +1,37 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "BackupTargetSet",
+  "metadata": {
+    "name": "acme-backup-targets",
+    "version": "1.0.0",
+    "description": "Konfigureret backupmålsæt for tenanten acme med det lokalt monterede mål som aktivt og eksplicit håndtering af tenantens eksterne HR- og analytics-kilder.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen" }
+    }
+  },
+  "tenantId": "acme",
+  "serviceClassRef": "continuity/service-classes/audit-service.service-class.json",
+  "activeTargetRef": "local-filesystem",
+  "previousTargets": [],
+  "primaryFailureDomain": { "id": "staging-primary", "accessDomain": "platform-staging-account", "region": "on-prem" },
+  "externalSources": [
+    {
+      "sourceRef": "hr-source",
+      "handling": "owner-backup",
+      "owner": { "subject": "oidc|ingrid.iversen", "name": "Ingrid Iversen", "role": "HR Data Owner" },
+      "agreementRef": "scope://customer/hr-source/read-only-2026",
+      "verifiedRestore": false
+    },
+    {
+      "sourceRef": "analytics-source",
+      "handling": "no-backup",
+      "owner": null,
+      "agreementRef": null,
+      "verifiedRestore": false
+    }
+  ],
+  "recoveryOwner": { "subject": "oidc|cont.officer", "name": "Carla Officer", "role": "Continuity Officer" }
+}

@@ -1,0 +1,228 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ModuleManifest",
+  "metadata": {
+    "name": "nextcloud-adapter",
+    "version": "1.0.0",
+    "description": "Arbejdspladsadapter A. Wrapper Nextcloud uændret (filer, deling, kalender) og en valideret kontoredaktør bag den fælles adapter-SDK. Erkender ærligt partial/unsupported for backup, restore, legal hold og sletning, fordi versions-/papirkurvshistorik, backups og søgeindeks ligger uden for API'et.",
+    "owner": {
+      "team": "platform",
+      "contact": "platform@example.org"
+    },
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "role": "Platform Owner"
+    },
+    "labels": {
+      "tier": "adapter",
+      "wave": "4",
+      "upstream": "nextcloud"
+    }
+  },
+  "identity": {
+    "userStore": "none",
+    "oidc": {
+      "issuer": "https://id.example.org/realms/platform",
+      "clientId": "nextcloud-adapter",
+      "scopes": ["openid", "profile", "email", "groups"],
+      "claimMapping": {
+        "subject": "sub",
+        "email": "email",
+        "groups": "groups",
+        "tenant": "tenant_id"
+      },
+      "pkceRequired": true,
+      "tokenAudience": "nextcloud-adapter"
+    },
+    "scim": {
+      "version": "2.0",
+      "endpoint": "https://id.example.org/scim/v2",
+      "mode": "consumer",
+      "supportsPatch": true,
+      "supportsBulk": false
+    },
+    "spiffe": {
+      "spiffeId": "spiffe://platform.example.org/modules/nextcloud-adapter",
+      "trustDomain": "platform.example.org",
+      "credentialMode": "just-in-time",
+      "maxCredentialTtlSeconds": 900
+    },
+    "audit": {
+      "authenticationEventsTo": "dk.platform.identity.authn.",
+      "retainDays": 365
+    }
+  },
+  "telemetry": {
+    "serviceName": "nextcloud-adapter",
+    "otel": {
+      "exporter": "otlp-grpc",
+      "endpoint": "https://otel-collector.platform.example.org:4317",
+      "signals": ["traces", "metrics", "logs"],
+      "resourceAttributes": {
+        "service.name": "nextcloud-adapter",
+        "service.version": "1.0.0",
+        "deployment.environment": "dev"
+      },
+      "sampling": {
+        "strategy": "parentbased-traceidratio",
+        "ratio": 0.2
+      }
+    },
+    "cloudEvents": {
+      "source": "urn:platform:module:nextcloud-adapter",
+      "typePrefix": "dk.platform.nextcloud-adapter.",
+      "sink": "https://events.platform.example.org/events",
+      "requiredAttributes": ["tenantid", "traceid", "principal"],
+      "dataClassificationRequired": true
+    },
+    "retention": {
+      "logsDays": 90,
+      "tracesDays": 30,
+      "metricsDays": 400,
+      "eventsDays": 400
+    }
+  },
+  "policy": {
+    "pdp": {
+      "endpoint": "https://pdp.platform.example.org/v1/data/platform/ops/decision",
+      "protocol": "http-json",
+      "decisionTtlSeconds": 60
+    },
+    "bundle": {
+      "name": "platform",
+      "version": "1.0.0",
+      "sha256": "baeeeb11cb003454ccd12473856966c8769388870d74f30428dfc9bd20ba2d86"
+    },
+    "failMode": "closed",
+    "gatedVerbs": [
+      "restore",
+      "upgrade",
+      "migrate",
+      "rollback",
+      "drain",
+      "subject.erase",
+      "subject.export",
+      "subject.legal_hold",
+      "workspace.file.edit",
+      "workspace.share.create",
+      "workspace.share.revoke",
+      "workspace.link.create",
+      "workspace.guest.invite",
+      "workspace.guest.suspend",
+      "workspace.guest.remove",
+      "workspace.user.offboard",
+      "workspace.calendar.event.create"
+    ],
+    "decisionCacheSeconds": 30,
+    "evidence": {
+      "kind": "fixture",
+      "ref": "conformance/evidence/policy-decision.json",
+      "capturedAt": "2025-09-01T07:55:00Z"
+    }
+  },
+  "verbs": {
+    "backup": {
+      "conformance": "partial",
+      "reason": "Nextclouds data- og versionslag kræver volume-snapshot. Adapteren kan eksportere app-konfiguration og databasedump, men ikke garantere et konsistent filsnapshot gennem API'et."
+    },
+    "restore": {
+      "conformance": "unsupported",
+      "reason": "Gendannelse sker på volume-/database-niveau og kan ikke udføres gennem Nextclouds API."
+    },
+    "verify-restore": {
+      "conformance": "unsupported",
+      "reason": "Verifikation af en gendannelse kræver adgang til backup-lagret og det gendannede volume."
+    },
+    "drain": {
+      "conformance": "partial",
+      "reason": "Adapteren kan sætte Nextcloud i vedligeholdelsestilstand og lukke sessioner, men kan ikke dræne aktive WebDAV-/websocket-forbindelser."
+    },
+    "upgrade.dry-run": {
+      "conformance": "partial",
+      "reason": "Adapteren kan rapportere nuværende og ønsket version samt manglende migrationer, men Nextcloud tilbyder ikke en egentlig dry-run af opgraderingen."
+    },
+    "upgrade": {
+      "conformance": "unsupported",
+      "reason": "Nextcloud opgraderes ved at udskifte containeren/appen; det ligger uden for adapterens verbkontrakt."
+    },
+    "migrate": {
+      "conformance": "unsupported",
+      "reason": "Nextcloud kører sine egne database- og app-migrationer ved opstart; adapteren kan ikke styre dem."
+    },
+    "rollback": {
+      "conformance": "unsupported",
+      "reason": "Rollback kræver gendannelse fra backup og er derfor ikke mulig gennem adapteren."
+    },
+    "health": {
+      "conformance": "full",
+      "endpoint": "https://nextcloud-adapter.example.org/healthz",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/health.json"
+      }
+    },
+    "slo": {
+      "conformance": "partial",
+      "reason": "Adapteren måler sin egen svartid, men Nextclouds SLO og fejlbudget ligger hos upstream-drift."
+    }
+  },
+  "privacy": {
+    "subject.locate": {
+      "conformance": "full",
+      "endpoint": "https://nextcloud-adapter.example.org/v1/privacy/locate",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/subject.locate.json"
+      }
+    },
+    "subject.export": {
+      "conformance": "full",
+      "endpoint": "https://nextcloud-adapter.example.org/v1/privacy/export",
+      "evidence": {
+        "kind": "fixture",
+        "ref": "conformance/evidence/subject.export.json"
+      }
+    },
+    "subject.erase": {
+      "conformance": "partial",
+      "reason": "Adapteren kan slette brugerens filer, delinger og sessioner gennem API'et, men ikke kopier i backups, versions-/papirkurvshistorik og søgeindeks; de kræver en upstream-oprydning (DKC-021).",
+      "endpoint": "https://nextcloud-adapter.example.org/v1/privacy/erase",
+      "evidence": {
+        "kind": "declared",
+        "ref": "docs/spec/nextcloud-adapter.md",
+        "notes": "Begrænsningen er dokumenteret og afspejlet i API-svaret."
+      }
+    },
+    "subject.legal_hold": {
+      "conformance": "unsupported",
+      "reason": "Nextcloud har ingen API til legal hold; et hold håndteres af retention-modulet (DKC-021) og en manuel upstream-indgriben."
+    },
+    "retention.policy": {
+      "conformance": "partial",
+      "reason": "Nextcloud har globale opbevaringsindstillinger, men de kan ikke sættes eller rapporteres pr. subjekt gennem adapteren."
+    },
+    "dataCategories": ["operational", "pseudonymised", "personal"],
+    "dsarEndpoint": "https://nextcloud-adapter.example.org/v1/privacy"
+  },
+  "slo": {
+    "availability": 99.9,
+    "latencyP95Ms": 400,
+    "errorBudgetRef": "docs/slo/nextcloud-adapter.md"
+  },
+  "serviceClassRef": "continuity/service-classes/nextcloud-adapter.service-class.json",
+  "dataProtection": {
+    "supportedClasses": ["ordinary", "ai-read-only", "append-only", "retention-locked"],
+    "noAiAccessSupported": true,
+    "reclassificationRequiresHuman": true,
+    "storageEnforcement": {
+      "status": "full",
+      "reason": "Fuld lager-/nøglehåndhævelse leveres af DKC-048 (object-lock, rollematrix, beskyttet nøglebutik og to-personers kontrol). Modulet håndhæver fortsat adgangs- og transitionsregler.",
+      "deliveredBy": "DKC-048"
+    }
+  },
+  "compliance": {
+    "controlRefs": ["ac-2", "au-2", "si-12"],
+    "dpiaRef": "docs/dpia/nextcloud-adapter.md",
+    "dataProcessingRole": "processor"
+  }
+}

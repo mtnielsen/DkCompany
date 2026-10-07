@@ -1,0 +1,245 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "CostReport",
+  "metadata": {
+    "name": "platform-cost-report",
+    "version": "1.0.0",
+    "description": "Forbrugs- og driftsomkostningsrapport pr. tenant med prognose, stopgrænser og afstemning. Rapporten er en deterministisk aggregering, ikke en faktura.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner"
+      }
+    },
+    "labels": {
+      "wave": "3",
+      "task": "DKC-034"
+    }
+  },
+  "generatedAt": "2026-03-01T00:00:00Z",
+  "currency": "EUR",
+  "priceBookRef": "metering/price-book.json",
+  "usageLedgerRef": "metering/usage-ledger.json",
+  "measurement": {
+    "mode": "deterministic-aggregation",
+    "measured": false,
+    "requiresLiveInvoice": true,
+    "reason": "Forbruget aggregeres deterministisk fra forbrugsjournalen og prisbogen. En målt afstemning kræver en levende faktura og et faktisk driftsregnskab."
+  },
+  "tenants": [
+    {
+      "tenantId": "acme",
+      "packageId": "scale",
+      "currency": "EUR",
+      "actualTotal": 631.3,
+      "estimatedTotal": 130,
+      "total": 761.3,
+      "breakdown": {
+        "compute": 67.2,
+        "storage": 32.4,
+        "backup": 9.9,
+        "model-calls": 50,
+        "integrations": 39,
+        "runtime": 28.8,
+        "support": 390,
+        "upstream-features": 144,
+        "migration": 0
+      },
+      "unmeasured": [
+        {
+          "meter": "support",
+          "reason": "On-call-vagtbelastning er ikke udmålt i denne model; den skal indtastes manuelt pr. tenant og kan først afstemmes mod en faktisk løn-/vagtudgift.",
+          "owner": {
+            "subject": "oidc|carina.christensen",
+            "name": "Carina Christensen",
+            "role": "Support Lead"
+          },
+          "monthlyValue": null
+        },
+        {
+          "meter": "upstream-features",
+          "reason": "Betalte upstreamfeatures (fx SSO/SCIM i en community-udgave) er en manuel leverandøromkostning uden en automatisk måler i denne model.",
+          "owner": {
+            "subject": "oidc|david.dahl",
+            "name": "David Dahl",
+            "role": "Vendor Manager"
+          },
+          "monthlyValue": null
+        }
+      ],
+      "deduplicatedEvents": 9,
+      "duplicateEvents": 1,
+      "stopLimit": {
+        "currency": "EUR",
+        "monthlyLimit": 900,
+        "warningPercent": 80,
+        "onExceed": "block",
+        "forecastMethod": "straight-line"
+      },
+      "forecast": {
+        "method": "straight-line",
+        "projectedMonthly": 761.3,
+        "percentOfLimit": 84.59,
+        "withinLimit": true,
+        "atOrAboveWarning": true
+      },
+      "budgetStatus": "warning",
+      "reconciliation": {
+        "status": "within-tolerance",
+        "operatingCostRef": "invoice://acme/2026-02",
+        "actualTotal": 631.3,
+        "operatingExpenseTotal": 640,
+        "variancePercent": -1.36,
+        "tolerancePercent": 10,
+        "unmeasuredNote": "Afstemt mod 'invoice://acme/2026-02' for perioden; uudmålte support-/on-call-omkostninger indgår ikke i det faktiske forbrug."
+      }
+    },
+    {
+      "tenantId": "globex",
+      "packageId": "starter",
+      "currency": "EUR",
+      "actualTotal": 106.1,
+      "estimatedTotal": 0,
+      "total": 106.1,
+      "breakdown": {
+        "compute": 14.7,
+        "storage": 5.4,
+        "backup": 0,
+        "model-calls": 8,
+        "integrations": 13,
+        "runtime": 0,
+        "support": 65,
+        "upstream-features": 0,
+        "migration": 0
+      },
+      "unmeasured": [
+        {
+          "meter": "support",
+          "reason": "On-call-vagtbelastning er ikke udmålt i denne model; den skal indtastes manuelt pr. tenant og kan først afstemmes mod en faktisk løn-/vagtudgift.",
+          "owner": {
+            "subject": "oidc|carina.christensen",
+            "name": "Carina Christensen",
+            "role": "Support Lead"
+          },
+          "monthlyValue": null
+        },
+        {
+          "meter": "upstream-features",
+          "reason": "Betalte upstreamfeatures (fx SSO/SCIM i en community-udgave) er en manuel leverandøromkostning uden en automatisk måler i denne model.",
+          "owner": {
+            "subject": "oidc|david.dahl",
+            "name": "David Dahl",
+            "role": "Vendor Manager"
+          },
+          "monthlyValue": null
+        }
+      ],
+      "deduplicatedEvents": 5,
+      "duplicateEvents": 0,
+      "stopLimit": {
+        "currency": "EUR",
+        "monthlyLimit": 250,
+        "warningPercent": 75,
+        "onExceed": "warn",
+        "forecastMethod": "trailing-30d"
+      },
+      "forecast": {
+        "method": "trailing-30d",
+        "projectedMonthly": 106.1,
+        "percentOfLimit": 42.44,
+        "withinLimit": true,
+        "atOrAboveWarning": false
+      },
+      "budgetStatus": "within-limit",
+      "reconciliation": {
+        "status": "within-tolerance",
+        "operatingCostRef": "invoice://globex/2026-02",
+        "actualTotal": 106.1,
+        "operatingExpenseTotal": 110,
+        "variancePercent": -3.55,
+        "tolerancePercent": 10,
+        "unmeasuredNote": "Afstemt mod 'invoice://globex/2026-02' for perioden; uudmålte support-/on-call-omkostninger indgår ikke i det faktiske forbrug."
+      }
+    },
+    {
+      "tenantId": "initech",
+      "packageId": "enterprise",
+      "currency": "EUR",
+      "actualTotal": 1843.6,
+      "estimatedTotal": 400,
+      "total": 2243.6,
+      "breakdown": {
+        "compute": 205.8,
+        "storage": 115.2,
+        "backup": 35.2,
+        "model-calls": 180,
+        "integrations": 91,
+        "runtime": 86.4,
+        "support": 650,
+        "upstream-features": 480,
+        "migration": 400
+      },
+      "unmeasured": [
+        {
+          "meter": "support",
+          "reason": "On-call-vagtbelastning er ikke udmålt i denne model; den skal indtastes manuelt pr. tenant og kan først afstemmes mod en faktisk løn-/vagtudgift.",
+          "owner": {
+            "subject": "oidc|carina.christensen",
+            "name": "Carina Christensen",
+            "role": "Support Lead"
+          },
+          "monthlyValue": null
+        },
+        {
+          "meter": "upstream-features",
+          "reason": "Betalte upstreamfeatures (fx SSO/SCIM i en community-udgave) er en manuel leverandøromkostning uden en automatisk måler i denne model.",
+          "owner": {
+            "subject": "oidc|david.dahl",
+            "name": "David Dahl",
+            "role": "Vendor Manager"
+          },
+          "monthlyValue": null
+        }
+      ],
+      "deduplicatedEvents": 9,
+      "duplicateEvents": 0,
+      "stopLimit": {
+        "currency": "EUR",
+        "monthlyLimit": 2500,
+        "warningPercent": 85,
+        "onExceed": "block",
+        "forecastMethod": "straight-line"
+      },
+      "forecast": {
+        "method": "straight-line",
+        "projectedMonthly": 2243.6,
+        "percentOfLimit": 89.74,
+        "withinLimit": true,
+        "atOrAboveWarning": true
+      },
+      "budgetStatus": "warning",
+      "reconciliation": {
+        "status": "reconciled",
+        "operatingCostRef": "invoice://initech/2026-02",
+        "actualTotal": 1843.6,
+        "operatingExpenseTotal": 1850,
+        "variancePercent": -0.35,
+        "tolerancePercent": 10,
+        "unmeasuredNote": "Afstemt mod 'invoice://initech/2026-02' for perioden; uudmålte support-/on-call-omkostninger indgår ikke i det faktiske forbrug."
+      }
+    }
+  ],
+  "reconciliation": {
+    "status": "within-tolerance",
+    "operatingCostRef": "docs/costs/staging.json",
+    "actualTotal": 2581,
+    "operatingExpenseTotal": 2600,
+    "variancePercent": -0.73,
+    "tolerancePercent": 10,
+    "unmeasuredNote": "Uudmålte support-/on-call- og leverandøromkostninger indgår ikke i det faktiske forbrug; de er rapporteret pr. tenant og skal indtastes manuelt."
+  }
+}

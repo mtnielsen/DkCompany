@@ -1,0 +1,218 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "EvidencePackage",
+  "packageId": "assurance-package-1d6b3b975e5f",
+  "generatedAt": "2026-09-24T10:05:00Z",
+  "registerVersion": "1.0.0",
+  "registerCommit": "83ad91a963d8055f77c29fb4361455689df95acb",
+  "notACertification": true,
+  "complianceStatus": "not-certified",
+  "productionReady": false,
+  "badge": "fixture-only",
+  "acceptedBy": null,
+  "acceptedAt": null,
+  "requirements": [
+    {
+      "requirementId": "REQ-NIS2-001",
+      "title": "Hændelseshåndtering og indberetning",
+      "status": "verified",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner"
+      },
+      "controlRef": "si-4",
+      "coverage": [
+        {
+          "ref": "assurance-incident-drill",
+          "status": "eligible",
+          "mode": "fixture",
+          "reason": null
+        }
+      ],
+      "humanDecision": null,
+      "blockers": []
+    },
+    {
+      "requirementId": "REQ-GDPR-001",
+      "title": "Behandlingsfortegnelse og DPIA-screening",
+      "status": "implemented",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      },
+      "controlRef": "si-12",
+      "coverage": [
+        {
+          "ref": "assurance-data-register",
+          "status": "eligible",
+          "mode": "contract",
+          "reason": null
+        }
+      ],
+      "humanDecision": null,
+      "blockers": []
+    },
+    {
+      "requirementId": "REQ-GDPR-002",
+      "title": "Tredjelandsoverførsel for underdatabehandlere",
+      "status": "implemented",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      },
+      "controlRef": "si-12",
+      "coverage": [
+        {
+          "ref": "assurance-transfer-vurdering",
+          "status": "eligible",
+          "mode": "contract",
+          "reason": null
+        }
+      ],
+      "humanDecision": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner",
+        "date": "2026-09-24",
+        "decisionRef": "docs/compliance/dpia-and-transfers.md#dec-002"
+      },
+      "blockers": []
+    },
+    {
+      "requirementId": "REQ-AIACT-001",
+      "title": "Menneskeligt tilsyn og logning",
+      "status": "open",
+      "owner": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Operations Lead"
+      },
+      "controlRef": "au-2",
+      "coverage": [
+        {
+          "ref": "assurance-ai-oversight",
+          "status": "eligible",
+          "mode": "fixture",
+          "reason": null
+        }
+      ],
+      "humanDecision": null,
+      "blockers": []
+    },
+    {
+      "requirementId": "REQ-NIS2-002",
+      "title": "Adgangsrevision",
+      "status": "verified",
+      "owner": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner"
+      },
+      "controlRef": "ac-2",
+      "coverage": [
+        {
+          "ref": "assurance-access-review",
+          "status": "eligible",
+          "mode": "fixture",
+          "reason": null
+        }
+      ],
+      "humanDecision": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner",
+        "date": "2026-07-01",
+        "decisionRef": "docs/compliance/incident-access-exit.md#dec-003"
+      },
+      "blockers": []
+    }
+  ],
+  "humanDecisions": [
+    {
+      "id": "DEC-001",
+      "title": "DPIA for AI-assisteret behandling af persondata",
+      "kind": "legal",
+      "status": "open",
+      "decidedBy": null,
+      "date": null,
+      "decisionRef": null
+    },
+    {
+      "id": "DEC-002",
+      "title": "Overførselsmekanisme for modelunderleverandører",
+      "kind": "legal",
+      "status": "decided",
+      "decidedBy": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      },
+      "date": "2026-09-24",
+      "decisionRef": "docs/compliance/dpia-and-transfers.md#dec-002"
+    },
+    {
+      "id": "DEC-003",
+      "title": "Kadence og ejerskab for adgangsrevision",
+      "kind": "organisational",
+      "status": "accepted",
+      "decidedBy": {
+        "subject": "oidc|cecilia.christensen",
+        "name": "Cecilia Christensen",
+        "role": "Security Owner"
+      },
+      "date": "2026-07-01",
+      "decisionRef": "docs/compliance/incident-access-exit.md#dec-003"
+    }
+  ],
+  "missingAssessments": [
+    {
+      "kind": "decision",
+      "id": "DEC-001",
+      "reason": "DPO og Platform Owner skal vurdere behandlingen, før en pilot med persondata kan frigives. Beslutningen er ikke truffet."
+    },
+    {
+      "kind": "dpia",
+      "id": "dpia-audit-service",
+      "reason": "DPO-vurdering udestår. Behandlingen omfatter persondata og AI-genereret logning, så en fuld DPIA kan være påkrævet."
+    },
+    {
+      "kind": "transfer",
+      "id": "openai-eu-transfer",
+      "reason": "Den endelige overførselsvurdering for supportadgang udestår og er en blokerende uafklaret beslutning."
+    }
+  ],
+  "rejectedEvidence": [],
+  "pilotBlockers": [
+    {
+      "kind": "dpia",
+      "id": "dpia-audit-service",
+      "reason": "DPO-vurdering udestår. Behandlingen omfatter persondata og AI-genereret logning, så en fuld DPIA kan være påkrævet."
+    },
+    {
+      "kind": "transfer",
+      "id": "openai-eu-transfer",
+      "reason": "Den endelige overførselsvurdering for supportadgang udestår og er en blokerende uafklaret beslutning."
+    },
+    {
+      "kind": "decision",
+      "id": "DEC-001",
+      "reason": "DPO og Platform Owner skal vurdere behandlingen, før en pilot med persondata kan frigives. Beslutningen er ikke truffet."
+    },
+    {
+      "kind": "risk",
+      "id": "RISK-ASSURANCE-001",
+      "reason": "Pilot med persondata er spærret, indtil DPIA og overførselsvurdering er gennemført og godkendt af et navngivet menneske."
+    }
+  ],
+  "summary": {
+    "requirements": 5,
+    "verified": 5,
+    "missing": 0,
+    "humanDecisions": 3,
+    "rejectedEvidence": 0,
+    "pilotBlockers": 4
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ItsmRecord",
+  "id": "INC-000001",
+  "recordKind": "major_incident",
+  "title": "Checkout utilgængelig for alle kunder",
+  "description": "Correlatede alarmer på checkout-API'et. Ejer og berørte tjenester er udpeget; kvittering og lukning kræver et menneske.",
+  "severity": "sev1",
+  "state": "resolved",
+  "tenantId": "acme",
+  "serviceId": "checkout",
+  "owner": { "subject": "oidc|maja.mortensen", "name": "Maja Mortensen", "role": "Service Owner" },
+  "affectedServices": ["checkout", "identity", "database"],
+  "correlatedAlerts": [
+    { "alertId": "alert-1", "ruleId": "checkout-availability", "signal": "http_requests_total", "correlationKey": "checkout:availability", "emittedAt": "2026-09-01T08:00:00Z" }
+  ],
+  "ciRelations": [{ "ciId": "ci-checkout-api", "kind": "application", "relation": "provides" }],
+  "links": {
+    "serviceId": "checkout",
+    "incidentIds": ["INC-000001"],
+    "changeIds": ["CHG-000001"],
+    "problemId": "PRB-000001",
+    "knownErrorId": "KNE-000001",
+    "runbook": "docs/runbooks/itsm-incident-response.md",
+    "approvalIds": ["APR-000001"],
+    "auditIds": ["audit-000001"]
+  },
+  "customerVisible": true,
+  "humanAck": { "subject": "oidc|bo.bertelsen", "name": "Bo Bertelsen", "at": "2026-09-01T08:04:00Z" },
+  "aiActions": [
+    { "agentId": "spiffe://platform.example.org/agents/itsm-observer", "role": "observer", "verb": "observe.correlate", "at": "2026-09-01T08:00:05Z" },
+    { "agentId": "spiffe://platform.example.org/agents/itsm-executor", "role": "executor", "verb": "restart", "at": "2026-09-01T08:06:00Z" }
+  ],
+  "validatedBy": { "subject": "oidc|maja.mortensen", "name": "Maja Mortensen", "role": "Service Owner" },
+  "validatedAt": "2026-09-01T09:00:00Z",
+  "approvals": [{ "subject": "oidc|anna.andersen", "name": "Anna Andersen", "verdict": "approve", "at": "2026-09-01T08:05:00Z", "kind": "human" }],
+  "closedBy": { "subject": "oidc|maja.mortensen", "name": "Maja Mortensen", "kind": "human" },
+  "rollbackPlan": null,
+  "createdAt": "2026-09-01T08:00:01Z",
+  "updatedAt": "2026-09-01T09:00:00Z",
+  "resolvedAt": "2026-09-01T08:30:00Z"
+}

@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/immutable-enforcement.schema.json",
+  "title": "Immutable Enforcement",
+  "description": "DKC-048: den konkrete håndhævelse af immutable data uden for agentens kontrol. Planen erklærer et verificeret storage-produkt med object-lock (GOVERNANCE og COMPLIANCE), en roller/matrix hvor AI og app-konti hverken kan skrive, slette, forkorte retention, skifte pointer, slette nøgler eller bruge en indirekte adminvej, en append-only audit-ingest-rolle, beskyttede KMS-/backup-/serviceaccount-/trust-ressourcer og to-personers kontrol for beskyttelsespolitik og recovery-adgang. Skemaet håndhæver formen; data-protection/src/enforcement.mjs håndhæver beslutningerne og kan ikke erstatte en målt verifikation på et levende storage-produkt.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "storageProduct", "roles", "agentDenials", "protectedResources", "auditIngest", "twoPersonControl", "storageSemantics"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "ImmutableEnforcement" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman", "lastReviewed"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$" },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "description": { "type": "string", "minLength": 20 },
+        "accountableHuman": { "$ref": "#/$defs/human" },
+        "lastReviewed": { "type": "string", "format": "date" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "storageProduct": {
+      "type": "object",
+      "required": ["name", "version", "s3Compatible", "objectLock", "versioning", "lockModes", "verification"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 2 },
+        "version": { "type": "string", "minLength": 1 },
+        "s3Compatible": { "const": true },
+        "objectLock": { "const": true },
+        "versioning": { "const": true },
+        "lockModes": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": { "enum": ["GOVERNANCE", "COMPLIANCE"] }
+        },
+        "verification": {
+          "type": "object",
+          "required": ["method", "verifiedAt", "evidenceRef", "governanceBypassRequiresHuman", "complianceNonBypassable"],
+          "additionalProperties": false,
+          "properties": {
+            "method": { "enum": ["negative-enforcement-tests", "provider-attestation", "live-probe"] },
+            "verifiedByHuman": { "oneOf": [{ "$ref": "#/$defs/human" }, { "type": "null" }] },
+            "verifiedAt": { "type": "string", "format": "date" },
+            "evidenceRef": { "type": "string", "minLength": 3 },
+            "governanceBypassRequiresHuman": { "const": true },
+            "complianceNonBypassable": { "const": true }
+          }
+        }
+      }
+    },
+    "roles": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "ai", "allowedOperations", "forbiddenOperations", "bypassGovernance"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,63}$" },
+          "kind": { "enum": ["human", "service", "agent", "append-only"] },
+          "ai": { "type": "boolean" },
+          "allowedOperations": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/operation" } },
+          "forbiddenOperations": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/operation" } },
+          "bypassGovernance": { "type": "boolean" },
+          "twoPersonRequired": { "type": "boolean" }
+        }
+      }
+    },
+    "agentDenials": {
+      "type": "object",
+      "required": ["forbiddenOperations", "indirectAdminPaths", "protectedResourceKinds"],
+      "additionalProperties": false,
+      "properties": {
+        "forbiddenOperations": { "type": "array", "minItems": 5, "uniqueItems": true, "items": { "$ref": "#/$defs/operation" } },
+        "indirectAdminPaths": { "type": "array", "minItems": 3, "uniqueItems": true, "items": { "type": "string", "minLength": 3 } },
+        "protectedResourceKinds": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": { "enum": ["kms-key", "backup", "service-account", "trust-config", "lifecycle-policy", "object-lock-policy"] }
+        }
+      }
+    },
+    "protectedResources": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "ref", "deletionProtected", "retentionLocked", "keyDomain"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,63}$" },
+          "kind": { "enum": ["kms-key", "backup", "service-account", "trust-config", "lifecycle-policy", "object-lock-policy"] },
+          "ref": { "type": "string", "minLength": 3 },
+          "deletionProtected": { "const": true },
+          "retentionLocked": { "type": "boolean" },
+          "keyDomain": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "auditIngest": {
+      "type": "object",
+      "required": ["role", "mode", "cannotDelete", "cannotUpdate", "separateFromAdmin"],
+      "additionalProperties": false,
+      "properties": {
+        "role": { "type": "string", "minLength": 2 },
+        "mode": { "const": "append-only" },
+        "cannotDelete": { "const": true },
+        "cannotUpdate": { "const": true },
+        "separateFromAdmin": { "const": true }
+      }
+    },
+    "twoPersonControl": {
+      "type": "object",
+      "required": ["protectionPolicy", "recoveryAccess", "governanceBypass"],
+      "additionalProperties": false,
+      "properties": {
+        "protectionPolicy": { "$ref": "#/$defs/twoPerson" },
+        "recoveryAccess": { "$ref": "#/$defs/twoPerson" },
+        "governanceBypass": { "$ref": "#/$defs/twoPerson" }
+      }
+    },
+    "storageSemantics": {
+      "type": "object",
+      "required": ["negativeTests"],
+      "additionalProperties": false,
+      "properties": {
+        "negativeTests": {
+          "type": "array",
+          "minItems": 5,
+          "items": {
+            "type": "object",
+            "required": ["id", "operation", "expectation"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{2,63}$" },
+              "operation": { "$ref": "#/$defs/operation" },
+              "expectation": { "enum": ["denied", "preserved", "audited"] }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "operation": {
+      "enum": [
+        "read",
+        "append",
+        "write",
+        "update",
+        "delete",
+        "retention-extend",
+        "retention-shorten",
+        "pointer-switch",
+        "key-rotate",
+        "key-delete",
+        "lifecycle-change",
+        "serviceaccount-write",
+        "trust-config-write",
+        "protection-policy",
+        "recovery-access"
+      ]
+    },
+    "human": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": {
+          "type": "object",
+          "required": ["subject", "name"],
+          "additionalProperties": false,
+          "properties": {
+            "subject": { "type": "string", "minLength": 3 },
+            "name": { "type": "string", "minLength": 2 }
+          }
+        }
+      }
+    },
+    "twoPerson": {
+      "type": "object",
+      "required": ["required", "requesterMayNotApprove"],
+      "additionalProperties": false,
+      "properties": {
+        "required": { "const": true },
+        "requesterMayNotApprove": { "const": true }
+      }
+    }
+  }
+}

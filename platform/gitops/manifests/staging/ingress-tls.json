@@ -1,0 +1,49 @@
+{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "Ingress",
+  "metadata": {
+    "name": "staging-ingress",
+    "namespace": "platform-staging",
+    "labels": {
+      "app.kubernetes.io/name": "platform",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "platform",
+      "platform.example.org/environment": "staging"
+    },
+    "annotations": {
+      "cert-manager.io/cluster-issuer": "letsencrypt-staging"
+    }
+  },
+  "spec": {
+    "ingressClassName": "nginx",
+    "tls": [
+      {
+        "hosts": [
+          "staging.platform.example.org"
+        ],
+        "secretName": "staging-platform-tls"
+      }
+    ],
+    "rules": [
+      {
+        "host": "staging.platform.example.org",
+        "http": {
+          "paths": [
+            {
+              "path": "/",
+              "pathType": "Prefix",
+              "backend": {
+                "service": {
+                  "name": "pdp",
+                  "port": {
+                    "number": 443
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "environment": "dev",
+  "description": "Simulerede ændringer foretaget uden om git. Reconcile skal opdage dem og føre klyngen tilbage til git-tilstanden.",
+  "changes": [
+    {
+      "op": "set",
+      "resource": { "apiVersion": "apps/v1", "kind": "Deployment", "namespace": "platform", "name": "pdp" },
+      "path": "spec.replicas",
+      "value": 99
+    },
+    {
+      "op": "set",
+      "resource": { "apiVersion": "apps/v1", "kind": "Deployment", "namespace": "platform", "name": "pdp" },
+      "path": "spec.template.spec.containers.0.image",
+      "value": "ghcr.io/example/platform-pdp:latest"
+    },
+    {
+      "op": "add",
+      "resource": {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": { "name": "hotfix-temporary", "namespace": "platform" },
+        "data": { "changedBy": "kubectl-edit" }
+      }
+    },
+    {
+      "op": "delete",
+      "resource": { "apiVersion": "v1", "kind": "Service", "namespace": "platform", "name": "dummy-ok" }
+    }
+  ]
+}

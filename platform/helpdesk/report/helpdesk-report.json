@@ -1,0 +1,356 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "HelpdeskReport",
+  "metadata": {
+    "name": "platform-helpdesk-report",
+    "version": "1.0.0",
+    "description": "Deterministisk rapport for support og sagsbehandling: indgående mail/webformular, kø-routing, default-deny adgang, sikker vedhæftning, AI-klassifikation/udkast, godkendt afsendelse, lukning, eksport/sletning/retention og backup/gendannelse.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner"
+      }
+    },
+    "labels": {
+      "tier": "adapter",
+      "upstream": "zammad",
+      "wave": "4"
+    }
+  },
+  "generatedAt": "2026-03-01T00:00:00Z",
+  "measured": false,
+  "persistedStoreReloaded": true,
+  "historyDigest": "291ed26b1744c6db22bc0f622f11f272c232aaa7d8f354d0495d3a73a213e95a",
+  "totals": {
+    "tickets": 4,
+    "tenants": 2,
+    "queues": 5,
+    "messages": 6,
+    "attachments": 2,
+    "quarantinedAttachments": 1
+  },
+  "scenarios": [
+    {
+      "id": "intake-mirrored",
+      "problems": [],
+      "principal": "oidc|ada.acme",
+      "tenant": "acme",
+      "visible": [
+        "zammad-acme:1001",
+        "zammad-acme:1002",
+        "zammad-acme:1003",
+        "zammad-globex:1001"
+      ],
+      "hidden": []
+    },
+    {
+      "id": "intake-to-closure",
+      "problems": [],
+      "principal": "oidc|sara.support",
+      "tenant": "acme",
+      "visible": [
+        "zammad-acme:1001"
+      ],
+      "hidden": [],
+      "history": [
+        "ticket.received",
+        "ticket.classified",
+        "ticket.queued",
+        "ticket.reply_approval_recorded",
+        "ticket.reply_sent",
+        "ticket.close_approval_recorded",
+        "ticket.closed"
+      ]
+    },
+    {
+      "id": "approval-required",
+      "problems": [],
+      "principal": "oidc|bea.billing",
+      "tenant": "acme",
+      "visible": [
+        "zammad-acme:1002"
+      ],
+      "hidden": [],
+      "deniedWithoutApproval": true,
+      "deniedAfterTamper": true
+    },
+    {
+      "id": "attachment-injection-neutralized",
+      "problems": [],
+      "principal": "oidc|ada.acme",
+      "tenant": "acme",
+      "visible": [
+        "zammad-acme:1003"
+      ],
+      "hidden": [],
+      "injectionFindings": [
+        "ignore-previous-en"
+      ]
+    },
+    {
+      "id": "external-customer-isolation",
+      "problems": [],
+      "principal": "oidc|ada.acme + oidc|gus.globex",
+      "tenant": "acme/globex",
+      "visible": [
+        "zammad-acme:1001",
+        "zammad-globex:1001"
+      ],
+      "hidden": [
+        "zammad-acme:1002",
+        "zammad-acme:1003"
+      ]
+    },
+    {
+      "id": "retention-and-recovery",
+      "problems": [],
+      "principal": "platform:retention",
+      "tenant": "acme",
+      "visible": [],
+      "hidden": [
+        "zammad-acme:1001",
+        "zammad-acme:1003"
+      ],
+      "deletion": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "HelpdeskDeletionReceipt",
+        "tenantId": "acme",
+        "subjectDigest": "a22b2d7ee3a686d884394418713c36ee8f0af8794e7a13382f1f32821f32cb14",
+        "reason": "anmodning",
+        "status": "full",
+        "surfaces": {
+          "mail": {
+            "status": "full",
+            "recordsAffected": 3
+          },
+          "attachments": {
+            "status": "full",
+            "recordsAffected": 2
+          },
+          "index": {
+            "status": "full",
+            "recordsAffected": 2
+          }
+        },
+        "remainingCopies": [],
+        "createdAt": "2026-03-01T00:00:00Z"
+      },
+      "backup": {
+        "ok": true,
+        "ticketsBefore": 4,
+        "ticketsAfter": 4,
+        "historyBefore": "ca56ccfbfcaef26cf3696f9e04438c0afa9ca88ef464de0550b79ba9938e2634",
+        "historyAfter": "ca56ccfbfcaef26cf3696f9e04438c0afa9ca88ef464de0550b79ba9938e2634"
+      }
+    }
+  ],
+  "draftSample": {
+    "apiVersion": "contracts.platform/v1alpha1",
+    "kind": "ReplyDraft",
+    "id": "draft:7b05b0aa89d641e8",
+    "tenantId": "acme",
+    "ticketId": "zammad-acme:1002",
+    "body": "Hej Ben Acme,\n\nTak for din henvendelse om \"Faktura 2026-0042 mangler moms\". Vi har modtaget sagen og vender tilbage med en løsning hurtigst muligt.\n\nMed venlig hilsen\nSupport",
+    "draftDigest": "7b05b0aa89d641e8422ab97e31af6e4c595bb14f5bb679336dac781ef1a8e245",
+    "model": {
+      "provider": "deterministic-helpdesk-model",
+      "version": "1.0.0"
+    },
+    "untrusted": true,
+    "executable": false,
+    "toolProposals": [],
+    "toolActivationDenied": true,
+    "injectionFindings": [],
+    "requiresApproval": true,
+    "approvalId": null,
+    "createdAt": "2026-03-01T00:00:00Z",
+    "sentAt": null
+  },
+  "exportSample": {
+    "apiVersion": "contracts.platform/v1alpha1",
+    "kind": "HelpdeskSubjectExport",
+    "tenantId": "acme",
+    "subjectDigest": "a22b2d7ee3a686d884394418713c36ee8f0af8794e7a13382f1f32821f32cb14",
+    "generatedAt": "2026-03-01T00:00:00Z",
+    "ticketCount": 2,
+    "tickets": [
+      {
+        "id": "zammad-acme:1001",
+        "externalId": "1001",
+        "queueId": "support",
+        "status": "closed",
+        "subject": "Kan ikke logge ind efter password-skift",
+        "classification": "internal",
+        "deletedAt": null
+      },
+      {
+        "id": "zammad-acme:1003",
+        "externalId": "1003",
+        "queueId": "security",
+        "status": "new",
+        "subject": "Mistænkelig mail med vedhæftning",
+        "classification": "confidential",
+        "deletedAt": null
+      }
+    ],
+    "messageCount": 3,
+    "messages": [
+      {
+        "ticketId": "zammad-acme:1001",
+        "id": "1",
+        "direction": "inbound",
+        "author": "system",
+        "body": "Hej support. Jeg har skiftet password i går og kan ikke længere logge ind. Kan I hjælpe? Mvh Ada",
+        "untrusted": true,
+        "executable": false,
+        "at": "2026-03-01T00:00:00Z",
+        "messageId": null
+      },
+      {
+        "ticketId": "zammad-acme:1001",
+        "id": "outbound:1948ba8116f52245",
+        "direction": "outbound",
+        "author": "oidc|sara.support",
+        "body": "Hej Ada Acme,\n\nTak for din henvendelse om \"Kan ikke logge ind efter password-skift\". Vi har modtaget sagen og vender tilbage med en løsning hurtigst muligt.\n\nMed venlig hilsen\nSupport",
+        "untrusted": true,
+        "executable": false,
+        "at": "2026-03-01T00:00:00Z",
+        "approvalId": "appr:1948ba8116f52245"
+      },
+      {
+        "ticketId": "zammad-acme:1003",
+        "id": "3",
+        "direction": "inbound",
+        "author": "system",
+        "body": "Jeg har modtaget en mistænkelig mail. Vedhæftningen er videresendt.",
+        "untrusted": true,
+        "executable": false,
+        "at": "2026-03-01T00:00:00Z",
+        "messageId": null
+      }
+    ],
+    "attachmentCount": 2,
+    "attachments": [
+      {
+        "ticketId": "zammad-acme:1003",
+        "id": "att:1003:0",
+        "filename": "invoice.txt",
+        "contentType": "text/plain",
+        "size": 190,
+        "sha256": "7a14126a55066118ea26eb60f284349c83a5104663b15e43f54d34de0bed53ae",
+        "untrusted": true,
+        "executable": false,
+        "mayChangePermissions": false,
+        "quarantined": true,
+        "injectionFindings": [
+          "ignore-previous-en"
+        ],
+        "capturedAt": "2026-03-01T00:00:00Z"
+      },
+      {
+        "ticketId": "zammad-acme:1003",
+        "id": "att:1003:1",
+        "filename": "screenshot-description.txt",
+        "contentType": "text/plain",
+        "size": 91,
+        "sha256": "743431552fe3ecc3d58276e13b1f6bd5468021c6459e6da17ad581f81481ae5a",
+        "untrusted": true,
+        "executable": false,
+        "mayChangePermissions": false,
+        "quarantined": false,
+        "injectionFindings": [],
+        "capturedAt": "2026-03-01T00:00:00Z"
+      }
+    ],
+    "indexEntryCount": 2,
+    "indexEntries": [
+      {
+        "ticketId": "zammad-acme:1001",
+        "tenantId": "acme",
+        "terms": [
+          "ada",
+          "efter",
+          "går",
+          "har",
+          "hej",
+          "hjælpe",
+          "ikke",
+          "ind",
+          "jeg",
+          "kan",
+          "logge",
+          "længere",
+          "mvh",
+          "og",
+          "password",
+          "skift",
+          "skiftet",
+          "support"
+        ]
+      },
+      {
+        "ticketId": "zammad-acme:1003",
+        "tenantId": "acme",
+        "terms": [
+          "en",
+          "er",
+          "har",
+          "jeg",
+          "mail",
+          "med",
+          "mistænkelig",
+          "modtaget",
+          "vedhæftning",
+          "vedhæftningen",
+          "videresendt"
+        ]
+      }
+    ]
+  },
+  "deletionSample": {
+    "apiVersion": "contracts.platform/v1alpha1",
+    "kind": "HelpdeskDeletionReceipt",
+    "tenantId": "acme",
+    "subjectDigest": "a22b2d7ee3a686d884394418713c36ee8f0af8794e7a13382f1f32821f32cb14",
+    "reason": "anmodning",
+    "status": "full",
+    "surfaces": {
+      "mail": {
+        "status": "full",
+        "recordsAffected": 3
+      },
+      "attachments": {
+        "status": "full",
+        "recordsAffected": 2
+      },
+      "index": {
+        "status": "full",
+        "recordsAffected": 2
+      }
+    },
+    "remainingCopies": [],
+    "createdAt": "2026-03-01T00:00:00Z"
+  },
+  "retention": {
+    "mailExpired": 0,
+    "attachmentsExpired": 0,
+    "indexExpired": 0,
+    "thresholds": {
+      "mailDays": 365,
+      "attachmentDays": 180,
+      "indexDays": 90
+    }
+  },
+  "backup": {
+    "ok": true,
+    "ticketsBefore": 4,
+    "ticketsAfter": 4,
+    "historyBefore": "ca56ccfbfcaef26cf3696f9e04438c0afa9ca88ef464de0550b79ba9938e2634",
+    "historyAfter": "ca56ccfbfcaef26cf3696f9e04438c0afa9ca88ef464de0550b79ba9938e2634"
+  },
+  "policyRef": "helpdesk/policy.json"
+}

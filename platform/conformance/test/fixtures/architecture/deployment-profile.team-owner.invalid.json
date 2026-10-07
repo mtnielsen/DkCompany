@@ -1,0 +1,31 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "DeploymentProfile",
+  "metadata": {
+    "name": "bad-owner",
+    "version": "1.0.0",
+    "description": "Ugyldig: beslutningen ejes af et team-alias i stedet for et navngivet menneske.",
+    "accountableHuman": { "subject": "team|platform", "name": "Platform Team", "role": "Owner" }
+  },
+  "profileType": "single-server",
+  "tenantModel": {
+    "mode": "shared-control-plane",
+    "applicationInstancesPerTenant": true,
+    "databasePerTenant": true,
+    "tenantBoundaryEnforcedAt": ["api", "database"]
+  },
+  "highAvailability": { "enabled": false },
+  "hostManagement": { "enabled": false },
+  "dataServices": [
+    {
+      "id": "primary-db",
+      "kind": "built-in-database",
+      "provider": "PostgreSQL 16",
+      "responsibilityOwner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+      "tenantBound": true
+    }
+  ],
+  "serviceTargets": { "availability": "99.0%", "rpoMinutes": 60, "rtoMinutes": 240 },
+  "cost": { "model": "infrastructure", "currency": "DKK", "recurring": true, "notes": "Drift koster penge." },
+  "limitations": ["Single-server giver nedetid ved vedligeholdelse."]
+}

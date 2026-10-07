@@ -1,0 +1,10 @@
+{
+  "name": "dkcompany-storage",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "DKC-041: holdbart fil- og objektlager med replikering, versionsstyrede checksums, scrub/repair, kundeafgrænsede nøgler og quorum-skrivning.",
+  "scripts": {
+    "test": "node --test"
+  }
+}

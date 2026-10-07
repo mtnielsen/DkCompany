@@ -1,0 +1,157 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "PolicyBundle",
+  "metadata": {
+    "name": "platform",
+    "version": "1.0.0",
+    "createdAt": "2025-09-01T00:00:00Z",
+    "description": "Platformens grundpolicy. Fail-closed: alt er forbudt, medmindre en regel eksplicit tillader det. Guardrails har højere prioritet end allow-regler og kan ikke overrules."
+  },
+  "default": "deny",
+  "policies": [
+    {
+      "id": "guardrails.policy-integrity",
+      "priority": 1000,
+      "effect": "deny",
+      "reason": "Handlinger der ændrer policy-bundles, audit-loggen eller egne rettigheder er A4 og må ingen principal udføre — heller ikke en agent med menneskelig godkendelse.",
+      "when": {
+        "all": [
+          {
+            "field": "action.verb",
+            "in": [
+              "config.apply",
+              "upgrade",
+              "upgrade.patch",
+              "upgrade.minor",
+              "upgrade.major",
+              "migrate",
+              "rollback",
+              "rotate-credential",
+              "restore"
+            ]
+          },
+          { "field": "action.target", "matches": "(^|/)(policy|policy-bundles|audit|audit-log|governance|rights|permissions)(/|$)" }
+        ]
+      }
+    },
+    {
+      "id": "guardrails.prod-requires-a2-or-human",
+      "priority": 900,
+      "effect": "deny",
+      "reason": "I produktion kræves enten et menneske eller en agent med autonomiklasse A2/A3. A0/A1 må kun handle i dev/staging.",
+      "when": {
+        "all": [
+          { "field": "action.environment", "eq": "prod" },
+          { "field": "principal.kind", "eq": "agent" },
+          { "field": "principal.autonomyClass", "in": ["A0", "A1"] }
+        ]
+      }
+    },
+    {
+      "id": "guardrails.untrusted-input-needs-manual-review",
+      "priority": 850,
+      "effect": "allow-with-approval",
+      "requiredApprovals": 2,
+      "reason": "Beslutningen bygger på data principalen ikke kontrollerer (logs, issues, changelogs). Prompt-injection-risiko: to mennesker skal se rådata, ikke agentens prosa.",
+      "requiredEvidence": ["policy-allow", "tests-pass"],
+      "obligations": ["manual-review", "audit-event"],
+      "when": {
+        "all": [
+          { "field": "context.untrustedInput", "eq": true },
+          { "field": "principal.kind", "eq": "agent" },
+          { "field": "context.changeUri", "exists": true }
+        ]
+      }
+    },
+    {
+      "id": "ops.upgrade.requires-approval",
+      "priority": 600,
+      "effect": "allow-with-approval",
+      "requiredApprovals": 2,
+      "reason": "Opgradering og migration er reversible, men kræver to godkendelser og bevist rollback.",
+      "requiredEvidence": ["policy-allow", "tests-pass", "dry-run-clean", "rollback-tested"],
+      "obligations": ["audit-event", "auto-rollback"],
+      "when": { "field": "action.verb", "in": ["upgrade", "upgrade.minor", "upgrade.major", "migrate"] }
+    },
+    {
+      "id": "ops.patch.requires-approval",
+      "priority": 600,
+      "effect": "allow-with-approval",
+      "requiredApprovals": 2,
+      "reason": "Patch, restart og credential-rotation kræver to godkendelser i staging og produktion.",
+      "requiredEvidence": ["policy-allow", "tests-pass", "dry-run-clean", "rollback-tested"],
+      "obligations": ["audit-event"],
+      "when": { "field": "action.verb", "in": ["upgrade.patch", "restart", "rotate-credential", "config.apply"] }
+    },
+    {
+      "id": "ops.restore.requires-approval",
+      "priority": 600,
+      "effect": "allow-with-approval",
+      "requiredApprovals": 2,
+      "reason": "Gendannelse overskriver tilstand. Uden et verificeret restore-bevis afvises den.",
+      "requiredEvidence": ["policy-allow", "restore-verified", "rollback-tested"],
+      "obligations": ["audit-event", "manual-review"],
+      "when": { "field": "action.verb", "in": ["restore", "rollback"] }
+    },
+    {
+      "id": "ops.drain.requires-approval",
+      "priority": 550,
+      "effect": "allow-with-approval",
+      "requiredApprovals": 1,
+      "reason": "Drain afbryder trafik og kræver én godkendelse.",
+      "requiredEvidence": ["policy-allow"],
+      "obligations": ["audit-event"],
+      "when": { "field": "action.verb", "eq": "drain" }
+    },
+    {
+      "id": "ops.scale.requires-approval",
+      "priority": 550,
+      "effect": "allow-with-approval",
+      "requiredApprovals": 1,
+      "reason": "Skalering ændrer kapacitet og kræver én godkendelse.",
+      "requiredEvidence": ["policy-allow"],
+      "obligations": ["audit-event"],
+      "when": { "field": "action.verb", "eq": "scale" }
+    },
+    {
+      "id": "privacy.erase.requires-approval",
+      "priority": 600,
+      "effect": "allow-with-approval",
+      "requiredApprovals": 1,
+      "reason": "Sletning af persondata er irreversibel og skal kunne føres tilbage til en DPO-godkendelse.",
+      "requiredEvidence": ["policy-allow"],
+      "obligations": ["audit-event", "dual-control"],
+      "when": { "field": "action.verb", "in": ["subject.erase", "subject.legal_hold"] }
+    },
+    {
+      "id": "privacy.export.allow",
+      "priority": 300,
+      "effect": "allow",
+      "reason": "Eksport til subjektet er en rettighed og kræver kun audit-spor.",
+      "requiredEvidence": ["policy-allow"],
+      "obligations": ["audit-event"],
+      "when": { "field": "action.verb", "in": ["subject.export", "subject.locate", "retention.policy"] }
+    },
+    {
+      "id": "ops.low-risk.allow",
+      "priority": 200,
+      "effect": "allow",
+      "reason": "Læsende og forberedende verber er uden mutation og må udføres med et policy-allow-bevis.",
+      "requiredEvidence": ["policy-allow"],
+      "when": {
+        "field": "action.verb",
+        "in": [
+          "observe.read",
+          "observe.correlate",
+          "diagnose",
+          "propose",
+          "backup",
+          "verify-restore",
+          "health",
+          "slo",
+          "upgrade.dry-run"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "verb": "health",
+  "module": "openproject-adapter",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-24T12:51:03.321Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 35
+  },
+  "artifact": {
+    "uri": "s3://evidence/openproject-adapter/health.json",
+    "sha256": "a5535c5cec682b4bed93ec787ba3e5f07c18bc46e73a564c3ccac832129bdb7f"
+  }
+}

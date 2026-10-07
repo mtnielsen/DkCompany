@@ -1,0 +1,137 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "InstallerPlan",
+  "metadata": {
+    "name": "install-plan-acme-prod",
+    "version": "1.0.0",
+    "createdAt": "2026-09-24T08:05:00Z",
+    "description": "Signeret, deterministisk installationsplan med resumable trin og preflight."
+  },
+  "installationId": "acme-prod",
+  "profileRef": "small-vps",
+  "platformId": "linux-amd64-node22",
+  "hostScopeRef": "acme-prod-host",
+  "configDigest": "bbab039a5f33e2af6b4d32e3ef45c03ab0cbfeea7d4506703a06135b2b4a9cec",
+  "preflight": {
+    "ok": true,
+    "checks": [
+      {
+        "id": "supported-os",
+        "title": "Understøttet Linux-LTS-matrix",
+        "status": "pass",
+        "detail": "matcher linux-amd64-node22 (supported)"
+      },
+      {
+        "id": "disk-safety",
+        "title": "Ingen diskformatering, eksisterende data bevares",
+        "status": "pass",
+        "detail": "1 disk kontrolleret"
+      },
+      {
+        "id": "database-safety",
+        "title": "Eksisterende databaseskema overtages ikke",
+        "status": "pass",
+        "detail": "ingen eksisterende skema"
+      },
+      {
+        "id": "privilege-separation",
+        "title": "Ingen fri root; kun scoped operationsticket",
+        "status": "pass",
+        "detail": "broker og executor er adskilte"
+      },
+      {
+        "id": "recovery-path",
+        "title": "Recoveryvej uden for platformen",
+        "status": "pass",
+        "detail": "console://provider/out-of-band/acme-prod"
+      }
+    ],
+    "blockingProblems": []
+  },
+  "steps": [
+    {
+      "id": "preflight",
+      "order": 1,
+      "kind": "preflight",
+      "description": "Kør preflight på værts-OS, disk, database og scope",
+      "idempotencyKey": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "mutating": false,
+      "requiresApproval": false,
+      "dependsOn": [],
+      "state": "pending"
+    },
+    {
+      "id": "provision-platform-core",
+      "order": 2,
+      "kind": "provision",
+      "description": "Klargør komponenten 'platform-core'",
+      "idempotencyKey": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "mutating": true,
+      "requiresApproval": true,
+      "dependsOn": [
+        "preflight"
+      ],
+      "state": "pending"
+    },
+    {
+      "id": "migrate-schema",
+      "order": 3,
+      "kind": "migrate",
+      "description": "Anvend versionerede databaseskema-migrationer (uden overtagelse)",
+      "idempotencyKey": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "mutating": true,
+      "requiresApproval": true,
+      "dependsOn": [
+        "provision-platform-core"
+      ],
+      "state": "pending"
+    },
+    {
+      "id": "configure",
+      "order": 4,
+      "kind": "configure",
+      "description": "Anvend den ene ønskede konfiguration pr. installation/tenant/modul",
+      "idempotencyKey": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "mutating": true,
+      "requiresApproval": true,
+      "dependsOn": [
+        "migrate-schema"
+      ],
+      "state": "pending"
+    },
+    {
+      "id": "verify",
+      "order": 5,
+      "kind": "verify",
+      "description": "Verificér faktisk tilstand mod ønsket tilstand",
+      "idempotencyKey": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "mutating": false,
+      "requiresApproval": false,
+      "dependsOn": [
+        "configure"
+      ],
+      "state": "pending"
+    }
+  ],
+  "resume": {
+    "stateRef": "configuration/installer-state-acme-prod.json",
+    "lastCompletedStep": null,
+    "resumable": true
+  },
+  "diagnostics": {
+    "redacted": true,
+    "secretScan": "pass",
+    "artifactRef": "diagnostics://installer/acme-prod/bbab039a5f33e2af6b4d32e3ef45c03ab0cbfeea7d4506703a06135b2b4a9cec"
+  },
+  "restrictions": {
+    "formatDisks": false,
+    "adoptExistingSchema": false,
+    "changeHostOs": false
+  },
+  "signature": {
+    "algorithm": "hmac-sha256",
+    "keyId": "installer-example-key",
+    "value": "4d93798676ba4b380ae31efb69c32e3bac34810a255962189e2cbfa0e6870aa8",
+    "signedAt": "2026-09-24T08:05:00Z"
+  }
+}

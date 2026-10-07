@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/reply-draft.schema.json",
+  "title": "Reply Draft",
+  "description": "DKC-029: et AI-genereret svarudkast. Udkastet er ubetroet og ikke-eksekverbart, kan ikke aktivere et værktøj, og kræver en gyldig, ændringsbundet menneskelig godkendelse før den separate afsendelseshandling.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "id", "tenantId", "ticketId", "body", "draftDigest", "model", "untrusted", "executable", "toolProposals", "toolActivationDenied", "injectionFindings", "requiresApproval", "approvalId", "createdAt", "sentAt"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "ReplyDraft" },
+    "id": { "type": "string", "pattern": "^draft:" },
+    "tenantId": { "type": "string" },
+    "ticketId": { "type": "string" },
+    "body": { "type": "string" },
+    "draftDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "model": {
+      "type": "object",
+      "required": ["provider", "version"],
+      "additionalProperties": false,
+      "properties": {
+        "provider": { "type": "string" },
+        "version": { "type": ["string", "null"] }
+      }
+    },
+    "untrusted": { "const": true },
+    "executable": { "const": false },
+    "toolProposals": { "type": "array", "maxItems": 0 },
+    "toolActivationDenied": { "const": true },
+    "injectionFindings": { "type": "array", "items": { "type": "string" } },
+    "requiresApproval": { "const": true },
+    "approvalId": { "type": ["string", "null"] },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "sentAt": { "type": ["string", "null"], "format": "date-time" }
+  }
+}

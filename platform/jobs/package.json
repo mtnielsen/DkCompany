@@ -1,0 +1,10 @@
+{
+  "name": "@platform/jobs",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "DKC-013 — holdbar, genoptagelig og idempotent jobeksekvering",
+  "exports": {
+    ".": "./src/index.mjs"
+  }
+}

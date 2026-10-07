@@ -1,0 +1,565 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "MigrationSource",
+  "metadata": {
+    "name": "platform-migration-sources",
+    "version": "1.0.0",
+    "description": "Migrationskilder: ét valgt, dokumenteret kildeformat pr. pilotapp. Hver kilde erklærer hvilke entitetstyper den kan importere, hvordan ejerskab, timestamps, kommentarer, bilag, ACL og links mappes, hvilke dedup-nøgler der gælder, og hvilke roller der må læse/eksportere. Formatet er valgt fordi det er maskinlæsbart, dokumenteret og kan læses uden en aktiv DkCompany-installation.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner"
+      }
+    },
+    "labels": {
+      "tier": "migration",
+      "wave": "4"
+    }
+  },
+  "sources": [
+    {
+      "id": "files-acme",
+      "appId": "files",
+      "product": "nextcloud",
+      "tenantId": "acme",
+      "format": {
+        "id": "nextcloud-export-bundle",
+        "version": "1",
+        "mediaType": "application/zip+json",
+        "documented": true,
+        "docsRef": "docs/migration/exit-export.md#nextcloud",
+        "readableWithoutPlatform": true
+      },
+      "systemOfRecord": "upstream",
+      "ownerField": "owner",
+      "defaultOwner": "oidc|ada.acme",
+      "entityTypes": [
+        "File",
+        "Folder"
+      ],
+      "dedupKeys": {
+        "File": [
+          "path",
+          "contentHash"
+        ],
+        "Folder": [
+          "path"
+        ]
+      },
+      "facets": {
+        "File": {
+          "ownership": {
+            "status": "full",
+            "source": "owner",
+            "target": "owner.subject"
+          },
+          "timestamps": {
+            "status": "full",
+            "source": "createdAt/updatedAt",
+            "target": "createdAt/updatedAt"
+          },
+          "comments": {
+            "status": "partial",
+            "source": "comments",
+            "note": "Nextcloud-kommentarer overføres uden @-mention-metadata; selve teksten bevares."
+          },
+          "attachments": {
+            "status": "full",
+            "source": "attachments",
+            "target": "attachments"
+          },
+          "acl": {
+            "status": "full",
+            "source": "acl",
+            "target": "acl.readSubjects/readGroups"
+          },
+          "links": {
+            "status": "full",
+            "source": "links",
+            "target": "links"
+          }
+        },
+        "Folder": {
+          "ownership": {
+            "status": "full",
+            "source": "owner",
+            "target": "owner.subject"
+          },
+          "timestamps": {
+            "status": "full",
+            "source": "createdAt/updatedAt",
+            "target": "createdAt/updatedAt"
+          },
+          "comments": {
+            "status": "unsupported",
+            "note": "Mapper i Nextcloud har ingen kommentarfunktion; feltet er tomt og vises som tabt funktionalitet før cutover."
+          },
+          "attachments": {
+            "status": "full",
+            "source": "attachments",
+            "target": "attachments"
+          },
+          "acl": {
+            "status": "full",
+            "source": "acl",
+            "target": "acl.readSubjects/readGroups"
+          },
+          "links": {
+            "status": "full",
+            "source": "links",
+            "target": "links"
+          }
+        }
+      },
+      "roles": {
+        "content-admin": {
+          "read": true,
+          "write": true,
+          "appIds": [
+            "files"
+          ]
+        },
+        "content-auditor": {
+          "read": true,
+          "write": false,
+          "appIds": [
+            "files"
+          ]
+        }
+      },
+      "retention": {
+        "recordDays": 1095,
+        "exportDays": 90
+      }
+    },
+    {
+      "id": "projects-acme",
+      "appId": "projects",
+      "product": "openproject",
+      "tenantId": "acme",
+      "format": {
+        "id": "openproject-api-v3-json",
+        "version": "1",
+        "mediaType": "application/json",
+        "documented": true,
+        "docsRef": "docs/migration/exit-export.md#openproject",
+        "readableWithoutPlatform": true
+      },
+      "systemOfRecord": "upstream",
+      "ownerField": "responsible",
+      "defaultOwner": "oidc|ada.acme",
+      "entityTypes": [
+        "Project",
+        "WorkPackage"
+      ],
+      "dedupKeys": {
+        "Project": [
+          "identifier"
+        ],
+        "WorkPackage": [
+          "projectIdentifier",
+          "subject"
+        ]
+      },
+      "facets": {
+        "Project": {
+          "ownership": {
+            "status": "full",
+            "source": "responsible",
+            "target": "owner.subject"
+          },
+          "timestamps": {
+            "status": "full",
+            "source": "createdAt/updatedAt",
+            "target": "createdAt/updatedAt"
+          },
+          "comments": {
+            "status": "full",
+            "source": "comments",
+            "target": "comments"
+          },
+          "attachments": {
+            "status": "partial",
+            "source": "attachments",
+            "note": "Vedhæftninger overføres som referencer til fil-appen; selve filen migreres separat og kan mangle i dry-run."
+          },
+          "acl": {
+            "status": "full",
+            "source": "acl",
+            "target": "acl.readSubjects/readGroups"
+          },
+          "links": {
+            "status": "full",
+            "source": "links",
+            "target": "links"
+          }
+        },
+        "WorkPackage": {
+          "ownership": {
+            "status": "full",
+            "source": "assignee",
+            "target": "owner.subject"
+          },
+          "timestamps": {
+            "status": "full",
+            "source": "createdAt/updatedAt",
+            "target": "createdAt/updatedAt"
+          },
+          "comments": {
+            "status": "full",
+            "source": "comments",
+            "target": "comments"
+          },
+          "attachments": {
+            "status": "partial",
+            "source": "attachments",
+            "note": "Vedhæftninger overføres som referencer til fil-appen og er ikke indlejret i pakken."
+          },
+          "acl": {
+            "status": "full",
+            "source": "acl",
+            "target": "acl.readSubjects/readGroups"
+          },
+          "links": {
+            "status": "full",
+            "source": "links",
+            "target": "links"
+          }
+        }
+      },
+      "roles": {
+        "project-admin": {
+          "read": true,
+          "write": true,
+          "appIds": [
+            "projects"
+          ]
+        },
+        "project-auditor": {
+          "read": true,
+          "write": false,
+          "appIds": [
+            "projects"
+          ]
+        }
+      },
+      "retention": {
+        "recordDays": 1095,
+        "exportDays": 90
+      }
+    },
+    {
+      "id": "knowledge-acme",
+      "appId": "knowledge",
+      "product": "bookstack",
+      "tenantId": "acme",
+      "format": {
+        "id": "bookstack-content-export",
+        "version": "1",
+        "mediaType": "application/json",
+        "documented": true,
+        "docsRef": "docs/migration/exit-export.md#bookstack",
+        "readableWithoutPlatform": true
+      },
+      "systemOfRecord": "upstream",
+      "ownerField": "ownedBy",
+      "defaultOwner": "oidc|ada.acme",
+      "entityTypes": [
+        "Page"
+      ],
+      "dedupKeys": {
+        "Page": [
+          "book",
+          "slug"
+        ]
+      },
+      "facets": {
+        "Page": {
+          "ownership": {
+            "status": "full",
+            "source": "ownedBy",
+            "target": "owner.subject"
+          },
+          "timestamps": {
+            "status": "full",
+            "source": "createdAt/updatedAt",
+            "target": "createdAt/updatedAt"
+          },
+          "comments": {
+            "status": "partial",
+            "source": "comments",
+            "note": "BookStack-kommentarer overføres uden redigeringshistorik for den enkelte kommentar."
+          },
+          "attachments": {
+            "status": "full",
+            "source": "attachments",
+            "target": "attachments"
+          },
+          "acl": {
+            "status": "full",
+            "source": "acl",
+            "target": "acl.readSubjects/readGroups"
+          },
+          "links": {
+            "status": "full",
+            "source": "links",
+            "target": "links"
+          }
+        }
+      },
+      "roles": {
+        "knowledge-admin": {
+          "read": true,
+          "write": true,
+          "appIds": [
+            "knowledge"
+          ]
+        },
+        "knowledge-auditor": {
+          "read": true,
+          "write": false,
+          "appIds": [
+            "knowledge"
+          ]
+        }
+      },
+      "retention": {
+        "recordDays": 1095,
+        "exportDays": 90
+      }
+    },
+    {
+      "id": "support-acme",
+      "appId": "support",
+      "product": "zammad",
+      "tenantId": "acme",
+      "format": {
+        "id": "zammad-ticket-archive",
+        "version": "1",
+        "mediaType": "application/json",
+        "documented": true,
+        "docsRef": "docs/migration/exit-export.md#zammad",
+        "readableWithoutPlatform": true
+      },
+      "systemOfRecord": "upstream",
+      "ownerField": "owner",
+      "defaultOwner": "oidc|ada.acme",
+      "entityTypes": [
+        "Ticket"
+      ],
+      "dedupKeys": {
+        "Ticket": [
+          "number"
+        ]
+      },
+      "facets": {
+        "Ticket": {
+          "ownership": {
+            "status": "full",
+            "source": "owner",
+            "target": "owner.subject"
+          },
+          "timestamps": {
+            "status": "full",
+            "source": "createdAt/updatedAt",
+            "target": "createdAt/updatedAt"
+          },
+          "comments": {
+            "status": "full",
+            "source": "articles",
+            "target": "comments"
+          },
+          "attachments": {
+            "status": "full",
+            "source": "attachments",
+            "target": "attachments"
+          },
+          "acl": {
+            "status": "partial",
+            "source": "groupAccess",
+            "note": "Zammad-gruppe-ACL overføres; artikel-niveau-hemmeligholdelse bevares ikke som separat regel."
+          },
+          "links": {
+            "status": "unsupported",
+            "note": "Zammad-links mellem tickets overføres ikke; de vises som tabt funktionalitet før cutover."
+          }
+        }
+      },
+      "roles": {
+        "support-admin": {
+          "read": true,
+          "write": true,
+          "appIds": [
+            "support"
+          ]
+        },
+        "support-auditor": {
+          "read": true,
+          "write": false,
+          "appIds": [
+            "support"
+          ]
+        }
+      },
+      "retention": {
+        "recordDays": 730,
+        "exportDays": 90
+      }
+    },
+    {
+      "id": "crm-acme",
+      "appId": "crm",
+      "product": "espocrm",
+      "tenantId": "acme",
+      "format": {
+        "id": "espocrm-rest-json",
+        "version": "1",
+        "mediaType": "application/json",
+        "documented": true,
+        "docsRef": "docs/migration/exit-export.md#espocrm",
+        "readableWithoutPlatform": true
+      },
+      "systemOfRecord": "upstream",
+      "ownerField": "assignedUser",
+      "defaultOwner": "oidc|ada.acme",
+      "entityTypes": [
+        "Contact"
+      ],
+      "dedupKeys": {
+        "Contact": [
+          "emailAddress"
+        ]
+      },
+      "facets": {
+        "Contact": {
+          "ownership": {
+            "status": "full",
+            "source": "assignedUser",
+            "target": "owner.subject"
+          },
+          "timestamps": {
+            "status": "full",
+            "source": "createdAt/updatedAt",
+            "target": "createdAt/updatedAt"
+          },
+          "comments": {
+            "status": "full",
+            "source": "activities",
+            "target": "comments"
+          },
+          "attachments": {
+            "status": "full",
+            "source": "attachments",
+            "target": "attachments"
+          },
+          "acl": {
+            "status": "full",
+            "source": "teams",
+            "target": "acl.readSubjects/readGroups"
+          },
+          "links": {
+            "status": "partial",
+            "source": "links",
+            "note": "CRM-links til salgsforløb overføres som referencer; forretningslogikken i linket bevares ikke."
+          }
+        }
+      },
+      "roles": {
+        "crm-admin": {
+          "read": true,
+          "write": true,
+          "appIds": [
+            "crm"
+          ]
+        },
+        "crm-auditor": {
+          "read": true,
+          "write": false,
+          "appIds": [
+            "crm"
+          ]
+        }
+      },
+      "retention": {
+        "recordDays": 1095,
+        "exportDays": 90
+      }
+    },
+    {
+      "id": "crm-globex",
+      "appId": "crm",
+      "product": "espocrm",
+      "tenantId": "globex",
+      "format": {
+        "id": "espocrm-rest-json",
+        "version": "1",
+        "mediaType": "application/json",
+        "documented": true,
+        "docsRef": "docs/migration/exit-export.md#espocrm",
+        "readableWithoutPlatform": true
+      },
+      "systemOfRecord": "upstream",
+      "ownerField": "assignedUser",
+      "defaultOwner": "oidc|gus.globex",
+      "entityTypes": [
+        "Contact"
+      ],
+      "dedupKeys": {
+        "Contact": [
+          "emailAddress"
+        ]
+      },
+      "facets": {
+        "Contact": {
+          "ownership": {
+            "status": "full",
+            "source": "assignedUser",
+            "target": "owner.subject"
+          },
+          "timestamps": {
+            "status": "full",
+            "source": "createdAt/updatedAt",
+            "target": "createdAt/updatedAt"
+          },
+          "comments": {
+            "status": "full",
+            "source": "activities",
+            "target": "comments"
+          },
+          "attachments": {
+            "status": "full",
+            "source": "attachments",
+            "target": "attachments"
+          },
+          "acl": {
+            "status": "full",
+            "source": "teams",
+            "target": "acl.readSubjects/readGroups"
+          },
+          "links": {
+            "status": "partial",
+            "source": "links",
+            "note": "CRM-links til salgsforløb overføres som referencer; forretningslogikken i linket bevares ikke."
+          }
+        }
+      },
+      "roles": {
+        "crm-admin": {
+          "read": true,
+          "write": true,
+          "appIds": [
+            "crm"
+          ]
+        }
+      },
+      "retention": {
+        "recordDays": 1095,
+        "exportDays": 90
+      }
+    }
+  ]
+}

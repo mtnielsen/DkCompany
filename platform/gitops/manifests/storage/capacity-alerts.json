@@ -1,0 +1,45 @@
+{
+  "apiVersion": "monitoring.coreos.com/v1",
+  "kind": "PrometheusRule",
+  "metadata": {
+    "name": "storage-capacity-alerts",
+    "namespace": "platform-storage",
+    "labels": {
+      "app.kubernetes.io/name": "storage-alerts",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "storage-alerts",
+      "platform.example.org/environment": "storage"
+    }
+  },
+  "spec": {
+    "groups": [
+      {
+        "name": "storage.capacity",
+        "rules": [
+          {
+            "alert": "storage-capacity-warning",
+            "expr": "(storage_host_free_bytes / storage_host_capacity_bytes) * 100 < 20",
+            "for": "10m",
+            "labels": {
+              "severity": "warning"
+            },
+            "annotations": {
+              "summary": "Lagerkapacitet under 20 % fri"
+            }
+          },
+          {
+            "alert": "storage-capacity-critical",
+            "expr": "(storage_host_free_bytes / storage_host_capacity_bytes) * 100 < 10",
+            "for": "10m",
+            "labels": {
+              "severity": "critical"
+            },
+            "annotations": {
+              "summary": "Lagerkapacitet under 10 % fri"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

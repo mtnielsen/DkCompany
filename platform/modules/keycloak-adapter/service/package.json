@@ -1,0 +1,13 @@
+{
+  "name": "@platform/keycloak-adapter",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "IAM-adapter: wrapper Keycloak/Authentik uændret, opfylder privacy-verberne og erklærer ærligt partial conformance på subject.erase.",
+  "bin": {
+    "keycloak-adapter": "./src/cli.mjs"
+  },
+  "scripts": {
+    "test": "node --test"
+  }
+}

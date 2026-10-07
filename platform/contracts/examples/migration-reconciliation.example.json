@@ -1,0 +1,46 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "MigrationReconciliation",
+  "sourceId": "files-acme",
+  "appId": "files",
+  "tenantId": "acme",
+  "mode": "dry-run",
+  "generatedAt": "2026-03-01T00:00:00Z",
+  "counts": {
+    "source": 2,
+    "created": 2,
+    "updated": 0,
+    "conflicts": 0,
+    "skipped": 0,
+    "failed": 0
+  },
+  "checksums": {
+    "algorithm": "sha256",
+    "source": "46b068d8c791b9220630f63672300d02283d4048218fc850c694a9eb8ea92010",
+    "target": "46b068d8c791b9220630f63672300d02283d4048218fc850c694a9eb8ea92010",
+    "match": true
+  },
+  "errors": [],
+  "conflicts": [],
+  "coverageLosses": [
+    {
+      "appId": "files",
+      "tenantId": "acme",
+      "entityType": "File",
+      "facet": "comments",
+      "status": "partial",
+      "note": "Nextcloud-kommentarer overføres uden @-mention-metadata; selve teksten bevares."
+    },
+    {
+      "appId": "files",
+      "tenantId": "acme",
+      "entityType": "Folder",
+      "facet": "comments",
+      "status": "unsupported",
+      "note": "Mapper i Nextcloud har ingen kommentarfunktion; feltet er tomt og vises som tabt funktionalitet før cutover."
+    }
+  ],
+  "checkpoint": null,
+  "persisted": false,
+  "problems": []
+}

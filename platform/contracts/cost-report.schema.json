@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/cost-report.schema.json",
+  "title": "Cost Report",
+  "description": "Autoriseret forbrugs- og driftsomkostningsrapport pr. tenant (DKC-034): faktisk og estimeret forbrug pr. måler, eksplicit uudmålt/manuel supportomkostning, prognose og stopgrænse samt afstemning mod driftsudgifter. Rapporten erklærer altid measured=false og kræver en levende faktura for at kunne kaldes en målt afstemning.",
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "generatedAt",
+    "currency",
+    "priceBookRef",
+    "usageLedgerRef",
+    "measurement",
+    "tenants",
+    "reconciliation"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "CostReport" },
+    "metadata": { "$ref": "#/$defs/metadata" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "currency": { "type": "string", "minLength": 3 },
+    "priceBookRef": { "type": "string", "minLength": 1 },
+    "usageLedgerRef": { "type": "string", "minLength": 1 },
+    "measurement": { "$ref": "#/$defs/measurement" },
+    "tenants": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/tenantReport" }
+    },
+    "reconciliation": { "$ref": "#/$defs/reconciliation" }
+  },
+  "$defs": {
+    "human": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\|[a-z0-9][a-z0-9._-]{2,}$" },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": { "$ref": "#/$defs/human" }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman", "labels"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/human" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "measurement": {
+      "type": "object",
+      "required": ["mode", "measured", "requiresLiveInvoice", "reason"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": { "const": "deterministic-aggregation" },
+        "measured": { "const": false },
+        "requiresLiveInvoice": { "const": true },
+        "reason": { "type": "string", "minLength": 20 }
+      }
+    },
+    "unmeasured": {
+      "type": "object",
+      "required": ["meter", "reason", "owner"],
+      "additionalProperties": false,
+      "properties": {
+        "meter": { "$ref": "#/$defs/meter" },
+        "reason": { "type": "string", "minLength": 10 },
+        "owner": { "$ref": "#/$defs/human" },
+        "monthlyValue": { "type": ["number", "null"], "minimum": 0 }
+      }
+    },
+    "stopLimit": {
+      "type": "object",
+      "required": ["currency", "monthlyLimit", "warningPercent", "onExceed", "forecastMethod"],
+      "additionalProperties": false,
+      "properties": {
+        "currency": { "type": "string", "minLength": 3 },
+        "monthlyLimit": { "type": "number", "exclusiveMinimum": 0 },
+        "warningPercent": { "type": "integer", "minimum": 1, "maximum": 99 },
+        "onExceed": { "enum": ["block", "warn"] },
+        "forecastMethod": { "enum": ["straight-line", "trailing-30d"] }
+      }
+    },
+    "forecast": {
+      "type": "object",
+      "required": ["method", "projectedMonthly", "percentOfLimit", "withinLimit", "atOrAboveWarning"],
+      "additionalProperties": false,
+      "properties": {
+        "method": { "enum": ["straight-line", "trailing-30d"] },
+        "projectedMonthly": { "type": "number", "minimum": 0 },
+        "percentOfLimit": { "type": "number", "minimum": 0 },
+        "withinLimit": { "type": "boolean" },
+        "atOrAboveWarning": { "type": "boolean" }
+      }
+    },
+    "tenantReport": {
+      "type": "object",
+      "required": [
+        "tenantId",
+        "packageId",
+        "currency",
+        "actualTotal",
+        "estimatedTotal",
+        "total",
+        "breakdown",
+        "unmeasured",
+        "deduplicatedEvents",
+        "duplicateEvents",
+        "stopLimit",
+        "forecast",
+        "budgetStatus",
+        "reconciliation"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "tenantId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+        "packageId": { "type": "string", "minLength": 1 },
+        "currency": { "type": "string", "minLength": 3 },
+        "actualTotal": { "type": "number", "minimum": 0 },
+        "estimatedTotal": { "type": "number", "minimum": 0 },
+        "total": { "type": "number", "minimum": 0 },
+        "breakdown": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "type": "number", "minimum": 0 }
+        },
+        "unmeasured": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/unmeasured" }
+        },
+        "deduplicatedEvents": { "type": "integer", "minimum": 0 },
+        "duplicateEvents": { "type": "integer", "minimum": 0 },
+        "stopLimit": { "$ref": "#/$defs/stopLimit" },
+        "forecast": { "$ref": "#/$defs/forecast" },
+        "budgetStatus": { "enum": ["within-limit", "warning", "blocked"] },
+        "reconciliation": { "$ref": "#/$defs/reconciliation" }
+      }
+    },
+    "reconciliation": {
+      "type": "object",
+      "required": ["status", "operatingCostRef", "actualTotal", "operatingExpenseTotal", "variancePercent", "tolerancePercent", "unmeasuredNote"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "enum": ["reconciled", "within-tolerance", "unreconciled", "no-operating-expense-data"] },
+        "operatingCostRef": { "type": ["string", "null"] },
+        "actualTotal": { "type": "number", "minimum": 0 },
+        "operatingExpenseTotal": { "type": ["number", "null"], "minimum": 0 },
+        "variancePercent": { "type": ["number", "null"] },
+        "tolerancePercent": { "type": "number", "minimum": 0 },
+        "unmeasuredNote": { "type": "string", "minLength": 10 }
+      }
+    },
+    "meter": {
+      "enum": [
+        "compute",
+        "storage",
+        "backup",
+        "model-calls",
+        "integrations",
+        "runtime",
+        "support",
+        "upstream-features",
+        "migration"
+      ]
+    }
+  }
+}

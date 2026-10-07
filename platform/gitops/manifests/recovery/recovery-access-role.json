@@ -1,0 +1,23 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "RecoveryAccessRole",
+  "metadata": {
+    "name": "recovery-access-role",
+    "version": "1.0.0",
+    "description": "DKC-042: rollegrænsen for recovery. Primærklyngens driftsrolle nægtes sletning og retention-afkortning på beskyttede backups; recovery-rollen er tidsbegrænset og kræver to navngivne godkendere."
+  },
+  "primaryRole": {
+    "id": "platform-primary-ops",
+    "allowed": ["read", "write", "backup", "failover"],
+    "forbidden": ["delete", "retention-shorten", "pointer-switch", "key-delete", "recovery-access"]
+  },
+  "recoveryRole": {
+    "id": "continuity-officer",
+    "allowed": ["read", "restore", "activate-recovery"],
+    "timeBoxed": true,
+    "twoPersonRequired": true,
+    "standingAccess": false
+  },
+  "protectedResources": ["s3://platform-backup-immutable", "s3://platform-offline-vault"],
+  "audit": { "everyDecisionLogged": true, "denyIsAudited": true }
+}

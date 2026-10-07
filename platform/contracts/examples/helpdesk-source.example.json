@@ -1,0 +1,59 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "HelpdeskSource",
+  "metadata": {
+    "name": "example-helpdesk-source",
+    "version": "1.0.0",
+    "description": "Eksempel på en Zammad-baseret helpdeskkilde med kø-ACL og sikker vedhæftningspolitik.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner"
+    },
+    "labels": {
+      "tier": "adapter",
+      "upstream": "zammad"
+    }
+  },
+  "sources": [
+    {
+      "id": "zammad-example",
+      "type": "zammad",
+      "tenantId": "example",
+      "baseUrl": "https://support.example.org",
+      "secretRef": "vault:secret/platform/helpdesk/zammad-example#api-token",
+      "systemOfRecord": "upstream",
+      "writeMode": "adapter-mediated",
+      "queues": [
+        {
+          "id": "support",
+          "name": "Support",
+          "classification": "internal",
+          "externalVisible": true,
+          "acl": {
+            "readGroups": ["support"],
+            "readSubjects": [],
+            "denyGroups": [],
+            "denySubjects": []
+          },
+          "sla": {
+            "firstResponseMinutes": 60,
+            "resolutionMinutes": 480
+          }
+        }
+      ],
+      "attachmentPolicy": {
+        "maxBytes": 10485760,
+        "allowedTypes": ["text/plain", "application/pdf"],
+        "scanUntrusted": true,
+        "quarantineSuspicious": true,
+        "executable": false
+      },
+      "retention": {
+        "mailDays": 365,
+        "attachmentDays": 180,
+        "indexDays": 90
+      }
+    }
+  ]
+}

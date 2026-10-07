@@ -1,0 +1,89 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "IntegrationCandidate",
+  "metadata": {
+    "name": "mattermost-adapter-10-0-0",
+    "version": "1.0.0",
+    "description": "Kandidatvurdering af Mattermost 10.0.0 Enterprise som kommunikationsmodul bag den fælles adapter-SDK. Gratis/betalt-skellet er dokumenteret med kilde.",
+    "accountableHuman": {
+      "subject": "oidc|hans.hansen",
+      "name": "Hans Hansen",
+      "role": "Solution Architect"
+    },
+    "labels": { "application": "APP-014", "adapter": "mattermost-adapter" }
+  },
+  "applicationId": "APP-014",
+  "name": "Mattermost",
+  "upstream": {
+    "vendor": "Mattermost, Inc.",
+    "projectUrl": "https://mattermost.com/",
+    "documentationUrl": "https://developers.mattermost.com/",
+    "sourceUrl": "https://github.com/mattermost/mattermost"
+  },
+  "exactVersion": "10.0.0",
+  "edition": { "name": "Enterprise", "tier": "enterprise", "notes": "Enterprise-udgaven kræves for SAML/SCIM og compliance-eksport." },
+  "license": {
+    "spdx": "MIT",
+    "type": "mixed",
+    "paidFeaturesRequired": true,
+    "redistributionAllowed": true,
+    "notes": "Kernen er MIT; Enterprise-funktioner kræver et betalt abonnement."
+  },
+  "hosting": {
+    "mode": "customer-self-hosted",
+    "commercialRedistribution": false,
+    "commercialHostingAllowed": true,
+    "notes": "Hostes for kunden i kundens eget miljø; platformen videredistribuerer ikke binæren."
+  },
+  "sso": { "capability": "full", "supported": true, "protocols": ["oidc", "saml2"] },
+  "scim": { "capability": "full", "supported": true, "version": "2.0" },
+  "api": {
+    "capability": "full",
+    "documented": true,
+    "protocols": ["rest", "webhook"],
+    "authentication": ["oauth2", "api-key"]
+  },
+  "isolation": {
+    "capability": "partial",
+    "tenantModel": "shared-control-plane",
+    "databasePerTenant": true,
+    "notes": "Én instans og én database pr. kunde; platformens tenantgrænse håndhæves i adapter og netværkspolitik."
+  },
+  "export": {
+    "capability": "partial",
+    "formats": ["json", "csv"],
+    "aclPreserved": false,
+    "apiAccessible": true,
+    "notes": "Indhold kan eksporteres via API; rettigheder genskabes fra IAM."
+  },
+  "backup": { "capability": "full", "supported": true, "pointInTime": true, "restoreTested": true },
+  "price": {
+    "model": "mixed",
+    "currency": "USD",
+    "recurring": true,
+    "priceBasis": "Pr. bruger pr. måned for Enterprise; kernen er gratis.",
+    "notes": "Drift, backup og support er en separat udgift."
+  },
+  "maintenance": {
+    "vendorSupport": "commercial",
+    "releaseCadence": "Månedlige patch- og kvartalsvise feature-udgivelser.",
+    "securityResponse": "Offentlig sikkerhedsproces og advisories med koordineret offentliggørelse.",
+    "upgradePath": "Trinvis opgradering inden for en major-serie via dokumenterede migrations."
+  },
+  "freeVsPaid": {
+    "documented": true,
+    "freeTierLimitations": [
+      "SAML/SCIM og compliance-eksport kræver Enterprise-abonnement.",
+      "Avanceret roller/team-sync er ikke i den gratis kerne."
+    ],
+    "requiredPaidFeatures": ["SAML 2.0 SSO", "SCIM 2.0 provisionering", "Compliance-eksport"],
+    "sourceUrl": "https://mattermost.com/pricing/"
+  },
+  "verification": {
+    "status": "approved",
+    "verifiedBy": { "subject": "oidc|hans.hansen", "name": "Hans Hansen", "role": "Solution Architect" },
+    "verifiedAt": "2025-01-10",
+    "evidence": ["https://mattermost.com/pricing/", "https://developers.mattermost.com/integrate/reference/"],
+    "notes": "Godkendt på den eksakte Enterprise-version. Kernen uden Enterprise er ikke godkendt til obligatorisk SSO."
+  }
+}

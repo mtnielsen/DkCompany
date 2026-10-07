@@ -1,0 +1,1378 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "MigrationReport",
+  "metadata": {
+    "name": "platform-migration-report",
+    "version": "1.0.0",
+    "description": "Deterministisk rapport for migrations- og exitværktøjer: ét valgt kildeformat pr. pilotapp, dækningsmatrix med tabt funktionalitet, dry-run med afstemning, resumabel og idempotent import, dublethåndtering uden automatisk fletning, selvbeskrivende exit-eksport, pilotgodkendelse, cutover og rollback samt tenantisolation.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner"
+      }
+    },
+    "labels": {
+      "tier": "migration",
+      "wave": "4"
+    }
+  },
+  "generatedAt": "2026-03-01T00:00:00Z",
+  "measured": false,
+  "policyRef": "migration/policy.json",
+  "totals": {
+    "pilotApps": 5,
+    "sources": 6,
+    "tenants": 2,
+    "records": 3,
+    "lostFacets": 9
+  },
+  "coverage": {
+    "apiVersion": "contracts.platform/v1alpha1",
+    "kind": "MigrationCoverage",
+    "generatedAt": "2026-03-01T00:00:00Z",
+    "matrix": [
+      {
+        "appId": "crm",
+        "tenantId": "acme",
+        "entityType": "Contact",
+        "facet": "acl",
+        "status": "full",
+        "source": "teams",
+        "target": "acl.readSubjects/readGroups",
+        "note": null
+      },
+      {
+        "appId": "crm",
+        "tenantId": "globex",
+        "entityType": "Contact",
+        "facet": "acl",
+        "status": "full",
+        "source": "teams",
+        "target": "acl.readSubjects/readGroups",
+        "note": null
+      },
+      {
+        "appId": "crm",
+        "tenantId": "acme",
+        "entityType": "Contact",
+        "facet": "attachments",
+        "status": "full",
+        "source": "attachments",
+        "target": "attachments",
+        "note": null
+      },
+      {
+        "appId": "crm",
+        "tenantId": "globex",
+        "entityType": "Contact",
+        "facet": "attachments",
+        "status": "full",
+        "source": "attachments",
+        "target": "attachments",
+        "note": null
+      },
+      {
+        "appId": "crm",
+        "tenantId": "acme",
+        "entityType": "Contact",
+        "facet": "comments",
+        "status": "full",
+        "source": "activities",
+        "target": "comments",
+        "note": null
+      },
+      {
+        "appId": "crm",
+        "tenantId": "globex",
+        "entityType": "Contact",
+        "facet": "comments",
+        "status": "full",
+        "source": "activities",
+        "target": "comments",
+        "note": null
+      },
+      {
+        "appId": "crm",
+        "tenantId": "acme",
+        "entityType": "Contact",
+        "facet": "links",
+        "status": "partial",
+        "source": "links",
+        "target": null,
+        "note": "CRM-links til salgsforløb overføres som referencer; forretningslogikken i linket bevares ikke."
+      },
+      {
+        "appId": "crm",
+        "tenantId": "globex",
+        "entityType": "Contact",
+        "facet": "links",
+        "status": "partial",
+        "source": "links",
+        "target": null,
+        "note": "CRM-links til salgsforløb overføres som referencer; forretningslogikken i linket bevares ikke."
+      },
+      {
+        "appId": "crm",
+        "tenantId": "acme",
+        "entityType": "Contact",
+        "facet": "ownership",
+        "status": "full",
+        "source": "assignedUser",
+        "target": "owner.subject",
+        "note": null
+      },
+      {
+        "appId": "crm",
+        "tenantId": "globex",
+        "entityType": "Contact",
+        "facet": "ownership",
+        "status": "full",
+        "source": "assignedUser",
+        "target": "owner.subject",
+        "note": null
+      },
+      {
+        "appId": "crm",
+        "tenantId": "acme",
+        "entityType": "Contact",
+        "facet": "timestamps",
+        "status": "full",
+        "source": "createdAt/updatedAt",
+        "target": "createdAt/updatedAt",
+        "note": null
+      },
+      {
+        "appId": "crm",
+        "tenantId": "globex",
+        "entityType": "Contact",
+        "facet": "timestamps",
+        "status": "full",
+        "source": "createdAt/updatedAt",
+        "target": "createdAt/updatedAt",
+        "note": null
+      },
+      {
+        "appId": "files",
+        "tenantId": "acme",
+        "entityType": "File",
+        "facet": "acl",
+        "status": "full",
+        "source": "acl",
+        "target": "acl.readSubjects/readGroups",
+        "note": null
+      },
+      {
+        "appId": "files",
+        "tenantId": "acme",
+        "entityType": "File",
+        "facet": "attachments",
+        "status": "full",
+        "source": "attachments",
+        "target": "attachments",
+        "note": null
+      },
+      {
+        "appId": "files",
+        "tenantId": "acme",
+        "entityType": "File",
+        "facet": "comments",
+        "status": "partial",
+        "source": "comments",
+        "target": null,
+        "note": "Nextcloud-kommentarer overføres uden @-mention-metadata; selve teksten bevares."
+      },
+      {
+        "appId": "files",
+        "tenantId": "acme",
+        "entityType": "File",
+        "facet": "links",
+        "status": "full",
+        "source": "links",
+        "target": "links",
+        "note": null
+      },
+      {
+        "appId": "files",
+        "tenantId": "acme",
+        "entityType": "File",
+        "facet": "ownership",
+        "status": "full",
+        "source": "owner",
+        "target": "owner.subject",
+        "note": null
+      },
+      {
+        "appId": "files",
+        "tenantId": "acme",
+        "entityType": "File",
+        "facet": "timestamps",
+        "status": "full",
+        "source": "createdAt/updatedAt",
+        "target": "createdAt/updatedAt",
+        "note": null
+      },
+      {
+        "appId": "files",
+        "tenantId": "acme",
+        "entityType": "Folder",
+        "facet": "acl",
+        "status": "full",
+        "source": "acl",
+        "target": "acl.readSubjects/readGroups",
+        "note": null
+      },
+      {
+        "appId": "files",
+        "tenantId": "acme",
+        "entityType": "Folder",
+        "facet": "attachments",
+        "status": "full",
+        "source": "attachments",
+        "target": "attachments",
+        "note": null
+      },
+      {
+        "appId": "files",
+        "tenantId": "acme",
+        "entityType": "Folder",
+        "facet": "comments",
+        "status": "unsupported",
+        "source": null,
+        "target": null,
+        "note": "Mapper i Nextcloud har ingen kommentarfunktion; feltet er tomt og vises som tabt funktionalitet før cutover."
+      },
+      {
+        "appId": "files",
+        "tenantId": "acme",
+        "entityType": "Folder",
+        "facet": "links",
+        "status": "full",
+        "source": "links",
+        "target": "links",
+        "note": null
+      },
+      {
+        "appId": "files",
+        "tenantId": "acme",
+        "entityType": "Folder",
+        "facet": "ownership",
+        "status": "full",
+        "source": "owner",
+        "target": "owner.subject",
+        "note": null
+      },
+      {
+        "appId": "files",
+        "tenantId": "acme",
+        "entityType": "Folder",
+        "facet": "timestamps",
+        "status": "full",
+        "source": "createdAt/updatedAt",
+        "target": "createdAt/updatedAt",
+        "note": null
+      },
+      {
+        "appId": "knowledge",
+        "tenantId": "acme",
+        "entityType": "Page",
+        "facet": "acl",
+        "status": "full",
+        "source": "acl",
+        "target": "acl.readSubjects/readGroups",
+        "note": null
+      },
+      {
+        "appId": "knowledge",
+        "tenantId": "acme",
+        "entityType": "Page",
+        "facet": "attachments",
+        "status": "full",
+        "source": "attachments",
+        "target": "attachments",
+        "note": null
+      },
+      {
+        "appId": "knowledge",
+        "tenantId": "acme",
+        "entityType": "Page",
+        "facet": "comments",
+        "status": "partial",
+        "source": "comments",
+        "target": null,
+        "note": "BookStack-kommentarer overføres uden redigeringshistorik for den enkelte kommentar."
+      },
+      {
+        "appId": "knowledge",
+        "tenantId": "acme",
+        "entityType": "Page",
+        "facet": "links",
+        "status": "full",
+        "source": "links",
+        "target": "links",
+        "note": null
+      },
+      {
+        "appId": "knowledge",
+        "tenantId": "acme",
+        "entityType": "Page",
+        "facet": "ownership",
+        "status": "full",
+        "source": "ownedBy",
+        "target": "owner.subject",
+        "note": null
+      },
+      {
+        "appId": "knowledge",
+        "tenantId": "acme",
+        "entityType": "Page",
+        "facet": "timestamps",
+        "status": "full",
+        "source": "createdAt/updatedAt",
+        "target": "createdAt/updatedAt",
+        "note": null
+      },
+      {
+        "appId": "projects",
+        "tenantId": "acme",
+        "entityType": "Project",
+        "facet": "acl",
+        "status": "full",
+        "source": "acl",
+        "target": "acl.readSubjects/readGroups",
+        "note": null
+      },
+      {
+        "appId": "projects",
+        "tenantId": "acme",
+        "entityType": "Project",
+        "facet": "attachments",
+        "status": "partial",
+        "source": "attachments",
+        "target": null,
+        "note": "Vedhæftninger overføres som referencer til fil-appen; selve filen migreres separat og kan mangle i dry-run."
+      },
+      {
+        "appId": "projects",
+        "tenantId": "acme",
+        "entityType": "Project",
+        "facet": "comments",
+        "status": "full",
+        "source": "comments",
+        "target": "comments",
+        "note": null
+      },
+      {
+        "appId": "projects",
+        "tenantId": "acme",
+        "entityType": "Project",
+        "facet": "links",
+        "status": "full",
+        "source": "links",
+        "target": "links",
+        "note": null
+      },
+      {
+        "appId": "projects",
+        "tenantId": "acme",
+        "entityType": "Project",
+        "facet": "ownership",
+        "status": "full",
+        "source": "responsible",
+        "target": "owner.subject",
+        "note": null
+      },
+      {
+        "appId": "projects",
+        "tenantId": "acme",
+        "entityType": "Project",
+        "facet": "timestamps",
+        "status": "full",
+        "source": "createdAt/updatedAt",
+        "target": "createdAt/updatedAt",
+        "note": null
+      },
+      {
+        "appId": "projects",
+        "tenantId": "acme",
+        "entityType": "WorkPackage",
+        "facet": "acl",
+        "status": "full",
+        "source": "acl",
+        "target": "acl.readSubjects/readGroups",
+        "note": null
+      },
+      {
+        "appId": "projects",
+        "tenantId": "acme",
+        "entityType": "WorkPackage",
+        "facet": "attachments",
+        "status": "partial",
+        "source": "attachments",
+        "target": null,
+        "note": "Vedhæftninger overføres som referencer til fil-appen og er ikke indlejret i pakken."
+      },
+      {
+        "appId": "projects",
+        "tenantId": "acme",
+        "entityType": "WorkPackage",
+        "facet": "comments",
+        "status": "full",
+        "source": "comments",
+        "target": "comments",
+        "note": null
+      },
+      {
+        "appId": "projects",
+        "tenantId": "acme",
+        "entityType": "WorkPackage",
+        "facet": "links",
+        "status": "full",
+        "source": "links",
+        "target": "links",
+        "note": null
+      },
+      {
+        "appId": "projects",
+        "tenantId": "acme",
+        "entityType": "WorkPackage",
+        "facet": "ownership",
+        "status": "full",
+        "source": "assignee",
+        "target": "owner.subject",
+        "note": null
+      },
+      {
+        "appId": "projects",
+        "tenantId": "acme",
+        "entityType": "WorkPackage",
+        "facet": "timestamps",
+        "status": "full",
+        "source": "createdAt/updatedAt",
+        "target": "createdAt/updatedAt",
+        "note": null
+      },
+      {
+        "appId": "support",
+        "tenantId": "acme",
+        "entityType": "Ticket",
+        "facet": "acl",
+        "status": "partial",
+        "source": "groupAccess",
+        "target": null,
+        "note": "Zammad-gruppe-ACL overføres; artikel-niveau-hemmeligholdelse bevares ikke som separat regel."
+      },
+      {
+        "appId": "support",
+        "tenantId": "acme",
+        "entityType": "Ticket",
+        "facet": "attachments",
+        "status": "full",
+        "source": "attachments",
+        "target": "attachments",
+        "note": null
+      },
+      {
+        "appId": "support",
+        "tenantId": "acme",
+        "entityType": "Ticket",
+        "facet": "comments",
+        "status": "full",
+        "source": "articles",
+        "target": "comments",
+        "note": null
+      },
+      {
+        "appId": "support",
+        "tenantId": "acme",
+        "entityType": "Ticket",
+        "facet": "links",
+        "status": "unsupported",
+        "source": null,
+        "target": null,
+        "note": "Zammad-links mellem tickets overføres ikke; de vises som tabt funktionalitet før cutover."
+      },
+      {
+        "appId": "support",
+        "tenantId": "acme",
+        "entityType": "Ticket",
+        "facet": "ownership",
+        "status": "full",
+        "source": "owner",
+        "target": "owner.subject",
+        "note": null
+      },
+      {
+        "appId": "support",
+        "tenantId": "acme",
+        "entityType": "Ticket",
+        "facet": "timestamps",
+        "status": "full",
+        "source": "createdAt/updatedAt",
+        "target": "createdAt/updatedAt",
+        "note": null
+      }
+    ],
+    "lostFunctionality": [
+      {
+        "appId": "crm",
+        "tenantId": "acme",
+        "entityType": "Contact",
+        "facet": "links",
+        "status": "partial",
+        "note": "CRM-links til salgsforløb overføres som referencer; forretningslogikken i linket bevares ikke."
+      },
+      {
+        "appId": "crm",
+        "tenantId": "globex",
+        "entityType": "Contact",
+        "facet": "links",
+        "status": "partial",
+        "note": "CRM-links til salgsforløb overføres som referencer; forretningslogikken i linket bevares ikke."
+      },
+      {
+        "appId": "files",
+        "tenantId": "acme",
+        "entityType": "File",
+        "facet": "comments",
+        "status": "partial",
+        "note": "Nextcloud-kommentarer overføres uden @-mention-metadata; selve teksten bevares."
+      },
+      {
+        "appId": "files",
+        "tenantId": "acme",
+        "entityType": "Folder",
+        "facet": "comments",
+        "status": "unsupported",
+        "note": "Mapper i Nextcloud har ingen kommentarfunktion; feltet er tomt og vises som tabt funktionalitet før cutover."
+      },
+      {
+        "appId": "knowledge",
+        "tenantId": "acme",
+        "entityType": "Page",
+        "facet": "comments",
+        "status": "partial",
+        "note": "BookStack-kommentarer overføres uden redigeringshistorik for den enkelte kommentar."
+      },
+      {
+        "appId": "projects",
+        "tenantId": "acme",
+        "entityType": "Project",
+        "facet": "attachments",
+        "status": "partial",
+        "note": "Vedhæftninger overføres som referencer til fil-appen; selve filen migreres separat og kan mangle i dry-run."
+      },
+      {
+        "appId": "projects",
+        "tenantId": "acme",
+        "entityType": "WorkPackage",
+        "facet": "attachments",
+        "status": "partial",
+        "note": "Vedhæftninger overføres som referencer til fil-appen og er ikke indlejret i pakken."
+      },
+      {
+        "appId": "support",
+        "tenantId": "acme",
+        "entityType": "Ticket",
+        "facet": "acl",
+        "status": "partial",
+        "note": "Zammad-gruppe-ACL overføres; artikel-niveau-hemmeligholdelse bevares ikke som separat regel."
+      },
+      {
+        "appId": "support",
+        "tenantId": "acme",
+        "entityType": "Ticket",
+        "facet": "links",
+        "status": "unsupported",
+        "note": "Zammad-links mellem tickets overføres ikke; de vises som tabt funktionalitet før cutover."
+      }
+    ],
+    "summary": {
+      "full": 39,
+      "partial": 7,
+      "unsupported": 2
+    }
+  },
+  "sourceSummaries": [
+    {
+      "sourceId": "files-acme",
+      "appId": "files",
+      "tenantId": "acme",
+      "format": "nextcloud-export-bundle@1",
+      "objects": 2,
+      "reconciliation": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "MigrationReconciliation",
+        "sourceId": "files-acme",
+        "appId": "files",
+        "tenantId": "acme",
+        "mode": "dry-run",
+        "generatedAt": "2026-03-01T00:00:00Z",
+        "counts": {
+          "source": 2,
+          "created": 2,
+          "updated": 0,
+          "conflicts": 0,
+          "skipped": 0,
+          "failed": 0
+        },
+        "checksums": {
+          "algorithm": "sha256",
+          "source": "46b068d8c791b9220630f63672300d02283d4048218fc850c694a9eb8ea92010",
+          "target": "46b068d8c791b9220630f63672300d02283d4048218fc850c694a9eb8ea92010",
+          "match": true
+        },
+        "errors": [],
+        "conflicts": [],
+        "coverageLosses": [
+          {
+            "appId": "files",
+            "tenantId": "acme",
+            "entityType": "File",
+            "facet": "comments",
+            "status": "partial",
+            "note": "Nextcloud-kommentarer overføres uden @-mention-metadata; selve teksten bevares."
+          },
+          {
+            "appId": "files",
+            "tenantId": "acme",
+            "entityType": "Folder",
+            "facet": "comments",
+            "status": "unsupported",
+            "note": "Mapper i Nextcloud har ingen kommentarfunktion; feltet er tomt og vises som tabt funktionalitet før cutover."
+          }
+        ],
+        "checkpoint": null,
+        "persisted": false,
+        "problems": []
+      }
+    },
+    {
+      "sourceId": "projects-acme",
+      "appId": "projects",
+      "tenantId": "acme",
+      "format": "openproject-api-v3-json@1",
+      "objects": 3,
+      "reconciliation": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "MigrationReconciliation",
+        "sourceId": "projects-acme",
+        "appId": "projects",
+        "tenantId": "acme",
+        "mode": "dry-run",
+        "generatedAt": "2026-03-01T00:00:00Z",
+        "counts": {
+          "source": 3,
+          "created": 3,
+          "updated": 0,
+          "conflicts": 0,
+          "skipped": 0,
+          "failed": 0
+        },
+        "checksums": {
+          "algorithm": "sha256",
+          "source": "6ee9172ae17becfdfc9696e54b8ca4708e4a7a99cb08dd8c04aeac1c7b6ed8e2",
+          "target": "6ee9172ae17becfdfc9696e54b8ca4708e4a7a99cb08dd8c04aeac1c7b6ed8e2",
+          "match": true
+        },
+        "errors": [],
+        "conflicts": [],
+        "coverageLosses": [
+          {
+            "appId": "projects",
+            "tenantId": "acme",
+            "entityType": "Project",
+            "facet": "attachments",
+            "status": "partial",
+            "note": "Vedhæftninger overføres som referencer til fil-appen; selve filen migreres separat og kan mangle i dry-run."
+          },
+          {
+            "appId": "projects",
+            "tenantId": "acme",
+            "entityType": "WorkPackage",
+            "facet": "attachments",
+            "status": "partial",
+            "note": "Vedhæftninger overføres som referencer til fil-appen og er ikke indlejret i pakken."
+          }
+        ],
+        "checkpoint": null,
+        "persisted": false,
+        "problems": []
+      }
+    },
+    {
+      "sourceId": "knowledge-acme",
+      "appId": "knowledge",
+      "tenantId": "acme",
+      "format": "bookstack-content-export@1",
+      "objects": 1,
+      "reconciliation": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "MigrationReconciliation",
+        "sourceId": "knowledge-acme",
+        "appId": "knowledge",
+        "tenantId": "acme",
+        "mode": "dry-run",
+        "generatedAt": "2026-03-01T00:00:00Z",
+        "counts": {
+          "source": 1,
+          "created": 1,
+          "updated": 0,
+          "conflicts": 0,
+          "skipped": 0,
+          "failed": 0
+        },
+        "checksums": {
+          "algorithm": "sha256",
+          "source": "ea549f9633ac0e50146dbd95732da5270518100e07b7cd32f20c4c12f5216660",
+          "target": "ea549f9633ac0e50146dbd95732da5270518100e07b7cd32f20c4c12f5216660",
+          "match": true
+        },
+        "errors": [],
+        "conflicts": [],
+        "coverageLosses": [
+          {
+            "appId": "knowledge",
+            "tenantId": "acme",
+            "entityType": "Page",
+            "facet": "comments",
+            "status": "partial",
+            "note": "BookStack-kommentarer overføres uden redigeringshistorik for den enkelte kommentar."
+          }
+        ],
+        "checkpoint": null,
+        "persisted": false,
+        "problems": []
+      }
+    },
+    {
+      "sourceId": "support-acme",
+      "appId": "support",
+      "tenantId": "acme",
+      "format": "zammad-ticket-archive@1",
+      "objects": 1,
+      "reconciliation": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "MigrationReconciliation",
+        "sourceId": "support-acme",
+        "appId": "support",
+        "tenantId": "acme",
+        "mode": "dry-run",
+        "generatedAt": "2026-03-01T00:00:00Z",
+        "counts": {
+          "source": 1,
+          "created": 1,
+          "updated": 0,
+          "conflicts": 0,
+          "skipped": 0,
+          "failed": 0
+        },
+        "checksums": {
+          "algorithm": "sha256",
+          "source": "8d21251bead375cceb4914ea25cb05cb6ed84573742c55f3138ddd5c1a6d33c0",
+          "target": "8d21251bead375cceb4914ea25cb05cb6ed84573742c55f3138ddd5c1a6d33c0",
+          "match": true
+        },
+        "errors": [],
+        "conflicts": [],
+        "coverageLosses": [
+          {
+            "appId": "support",
+            "tenantId": "acme",
+            "entityType": "Ticket",
+            "facet": "acl",
+            "status": "partial",
+            "note": "Zammad-gruppe-ACL overføres; artikel-niveau-hemmeligholdelse bevares ikke som separat regel."
+          },
+          {
+            "appId": "support",
+            "tenantId": "acme",
+            "entityType": "Ticket",
+            "facet": "links",
+            "status": "unsupported",
+            "note": "Zammad-links mellem tickets overføres ikke; de vises som tabt funktionalitet før cutover."
+          }
+        ],
+        "checkpoint": null,
+        "persisted": false,
+        "problems": []
+      }
+    },
+    {
+      "sourceId": "crm-acme",
+      "appId": "crm",
+      "tenantId": "acme",
+      "format": "espocrm-rest-json@1",
+      "objects": 2,
+      "reconciliation": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "MigrationReconciliation",
+        "sourceId": "crm-acme",
+        "appId": "crm",
+        "tenantId": "acme",
+        "mode": "dry-run",
+        "generatedAt": "2026-03-01T00:00:00Z",
+        "counts": {
+          "source": 2,
+          "created": 1,
+          "updated": 0,
+          "conflicts": 1,
+          "skipped": 0,
+          "failed": 0
+        },
+        "checksums": {
+          "algorithm": "sha256",
+          "source": "a64db3547892253e10c99542c20a8d33b617d1aedecb5e8c3b3da84264b738e4",
+          "target": "a64db3547892253e10c99542c20a8d33b617d1aedecb5e8c3b3da84264b738e4",
+          "match": true
+        },
+        "errors": [
+          {
+            "sourceObjectId": "esp-6002",
+            "entityType": "Contact",
+            "code": "dedup_conflict",
+            "message": "kildeobjektet 'esp-6002' har samme forretningsidentitet som 'mig:acme:crm:Contact:esp-6001' og flettes ikke automatisk",
+            "dedupKey": "9ef8dbd53c6124e926411542a6f6ff06ac2aa4201691e82f726ac0e6beed7ad5",
+            "existingReference": "mig:acme:crm:Contact:esp-6001"
+          }
+        ],
+        "conflicts": [
+          {
+            "sourceObjectId": "esp-6002",
+            "entityType": "Contact",
+            "code": "dedup_conflict",
+            "message": "kildeobjektet 'esp-6002' har samme forretningsidentitet som 'mig:acme:crm:Contact:esp-6001' og flettes ikke automatisk",
+            "dedupKey": "9ef8dbd53c6124e926411542a6f6ff06ac2aa4201691e82f726ac0e6beed7ad5",
+            "existingReference": "mig:acme:crm:Contact:esp-6001"
+          }
+        ],
+        "coverageLosses": [
+          {
+            "appId": "crm",
+            "tenantId": "acme",
+            "entityType": "Contact",
+            "facet": "links",
+            "status": "partial",
+            "note": "CRM-links til salgsforløb overføres som referencer; forretningslogikken i linket bevares ikke."
+          },
+          {
+            "appId": "crm",
+            "tenantId": "globex",
+            "entityType": "Contact",
+            "facet": "links",
+            "status": "partial",
+            "note": "CRM-links til salgsforløb overføres som referencer; forretningslogikken i linket bevares ikke."
+          }
+        ],
+        "checkpoint": null,
+        "persisted": false,
+        "problems": []
+      }
+    },
+    {
+      "sourceId": "crm-globex",
+      "appId": "crm",
+      "tenantId": "globex",
+      "format": "espocrm-rest-json@1",
+      "objects": 1,
+      "reconciliation": {
+        "apiVersion": "contracts.platform/v1alpha1",
+        "kind": "MigrationReconciliation",
+        "sourceId": "crm-globex",
+        "appId": "crm",
+        "tenantId": "globex",
+        "mode": "dry-run",
+        "generatedAt": "2026-03-01T00:00:00Z",
+        "counts": {
+          "source": 1,
+          "created": 1,
+          "updated": 0,
+          "conflicts": 0,
+          "skipped": 0,
+          "failed": 0
+        },
+        "checksums": {
+          "algorithm": "sha256",
+          "source": "7f3785fcb877cf52f8c0e51eb3f0d3ef7b00d951a02a1214a011aa5cb8944f76",
+          "target": "7f3785fcb877cf52f8c0e51eb3f0d3ef7b00d951a02a1214a011aa5cb8944f76",
+          "match": true
+        },
+        "errors": [],
+        "conflicts": [],
+        "coverageLosses": [
+          {
+            "appId": "crm",
+            "tenantId": "acme",
+            "entityType": "Contact",
+            "facet": "links",
+            "status": "partial",
+            "note": "CRM-links til salgsforløb overføres som referencer; forretningslogikken i linket bevares ikke."
+          },
+          {
+            "appId": "crm",
+            "tenantId": "globex",
+            "entityType": "Contact",
+            "facet": "links",
+            "status": "partial",
+            "note": "CRM-links til salgsforløb overføres som referencer; forretningslogikken i linket bevares ikke."
+          }
+        ],
+        "checkpoint": null,
+        "persisted": false,
+        "problems": []
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "chosen-source-format-per-pilot-app",
+      "problems": [],
+      "principal": "platform:migration",
+      "tenant": "acme",
+      "visible": [
+        "files:nextcloud-export-bundle@1",
+        "projects:openproject-api-v3-json@1",
+        "knowledge:bookstack-content-export@1",
+        "support:zammad-ticket-archive@1",
+        "crm:espocrm-rest-json@1",
+        "crm:espocrm-rest-json@1"
+      ],
+      "hidden": []
+    },
+    {
+      "id": "coverage-matrix-shows-lost-functionality",
+      "problems": [],
+      "principal": "platform:migration",
+      "tenant": "acme",
+      "visible": [
+        "crm:Contact:links",
+        "crm:Contact:links",
+        "files:File:comments",
+        "files:Folder:comments",
+        "knowledge:Page:comments",
+        "projects:Project:attachments",
+        "projects:WorkPackage:attachments",
+        "support:Ticket:acl",
+        "support:Ticket:links"
+      ],
+      "hidden": [],
+      "summary": {
+        "full": 39,
+        "partial": 7,
+        "unsupported": 2
+      }
+    },
+    {
+      "id": "dry-run-reconciles",
+      "problems": [],
+      "principal": "platform:migration",
+      "tenant": "acme",
+      "visible": [
+        "files-acme:2",
+        "projects-acme:3",
+        "knowledge-acme:1",
+        "support-acme:1",
+        "crm-acme:2",
+        "crm-globex:1"
+      ],
+      "hidden": []
+    },
+    {
+      "id": "resumable-idempotent-import",
+      "problems": [],
+      "principal": "oidc|ada.acme",
+      "tenant": "acme",
+      "visible": [
+        "mig:acme:files:File:nc-1001",
+        "mig:acme:files:Folder:nc-2000"
+      ],
+      "hidden": []
+    },
+    {
+      "id": "dedup-conflict-not-merged",
+      "problems": [],
+      "principal": "platform:import",
+      "tenant": "acme",
+      "visible": [
+        "mig:acme:crm:Contact:esp-6001"
+      ],
+      "hidden": [
+        "mig:acme:crm:Contact:esp-6001"
+      ]
+    },
+    {
+      "id": "exit-export-readable-without-platform",
+      "problems": [],
+      "principal": "oidc|ada.acme",
+      "tenant": "acme",
+      "visible": [
+        "records.jsonl",
+        "records.csv",
+        "read-export.mjs",
+        "README.md"
+      ],
+      "hidden": []
+    },
+    {
+      "id": "pilot-approves-content-and-acl",
+      "problems": [],
+      "principal": "oidc|ada.acme",
+      "tenant": "acme",
+      "visible": [
+        "evidence://pilot/files"
+      ],
+      "hidden": []
+    },
+    {
+      "id": "cutover-requires-approval-and-rollback",
+      "problems": [],
+      "principal": "oidc|ada.acme",
+      "tenant": "acme",
+      "visible": [
+        "cutover",
+        "rolled-back"
+      ],
+      "hidden": [],
+      "lostFunctionality": [
+        "File/comments: Nextcloud-kommentarer overføres uden @-mention-metadata; selve teksten bevares.",
+        "Folder/comments: Mapper i Nextcloud har ingen kommentarfunktion; feltet er tomt og vises som tabt funktionalitet før cutover."
+      ]
+    },
+    {
+      "id": "tenant-isolation-default-deny",
+      "problems": [],
+      "principal": "oidc|gus.globex",
+      "tenant": "globex",
+      "visible": [
+        "crm-globex"
+      ],
+      "hidden": [
+        "files-acme"
+      ]
+    }
+  ],
+  "recordSample": {
+    "apiVersion": "contracts.platform/v1alpha1",
+    "kind": "MigrationRecord",
+    "id": "mig:acme:files:File:nc-1001",
+    "reference": "mig:acme:files:File:nc-1001",
+    "appId": "files",
+    "sourceId": "files-acme",
+    "tenantId": "acme",
+    "entityType": "File",
+    "sourceObjectId": "nc-1001",
+    "owner": {
+      "subject": "oidc|ada.acme",
+      "tenantId": "acme",
+      "role": "content-admin"
+    },
+    "name": "kontrakt.pdf",
+    "classification": "internal",
+    "acl": {
+      "readSubjects": [
+        "oidc|ada.acme"
+      ],
+      "readGroups": [
+        "group:sales"
+      ],
+      "denySubjects": [],
+      "denyGroups": []
+    },
+    "comments": [
+      {
+        "id": "c-1001",
+        "author": "oidc|ben.acme",
+        "text": "Klar til underskrift",
+        "kind": null,
+        "internal": false,
+        "createdAt": "2025-01-05T10:00:00Z"
+      }
+    ],
+    "attachments": [
+      {
+        "id": "att-1001",
+        "name": "bilag-a.pdf",
+        "contentHash": "bbbb000000000000000000000000000000000000000000000000000000000002",
+        "ref": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "folder",
+        "target": "nc-2000"
+      }
+    ],
+    "createdAt": "2025-01-02T08:00:00Z",
+    "updatedAt": "2025-02-03T09:30:00Z",
+    "version": 1,
+    "dedupKey": "d2998e8a2eec11b2a98fd0928c1d37f70e958041908d89461aacbab587de4ee5",
+    "mappedFacets": {
+      "ownership": true,
+      "timestamps": true,
+      "comments": false,
+      "attachments": true,
+      "acl": true,
+      "links": true
+    },
+    "data": {
+      "name": "kontrakt.pdf",
+      "path": "/Aftaler/2025/kontrakt.pdf",
+      "contentHash": "aaaa000000000000000000000000000000000000000000000000000000000001",
+      "owner": "oidc|ada.acme",
+      "createdAt": "2025-01-02T08:00:00Z",
+      "updatedAt": "2025-02-03T09:30:00Z",
+      "comments": [
+        {
+          "id": "c-1001",
+          "author": "oidc|ben.acme",
+          "text": "Klar til underskrift",
+          "createdAt": "2025-01-05T10:00:00Z"
+        }
+      ],
+      "attachments": [
+        {
+          "id": "att-1001",
+          "name": "bilag-a.pdf",
+          "contentHash": "bbbb000000000000000000000000000000000000000000000000000000000002"
+        }
+      ],
+      "acl": {
+        "readSubjects": [
+          "oidc|ada.acme"
+        ],
+        "readGroups": [
+          "group:sales"
+        ],
+        "denySubjects": [],
+        "denyGroups": []
+      },
+      "links": [
+        {
+          "rel": "folder",
+          "target": "nc-2000"
+        }
+      ]
+    }
+  },
+  "exportSample": {
+    "apiVersion": "contracts.platform/v1alpha1",
+    "kind": "MigrationExport",
+    "tenantId": "acme",
+    "appId": "files",
+    "format": "migration-export-bundle",
+    "version": "1",
+    "generatedAt": "2026-03-01T00:00:00Z",
+    "recordCount": 2,
+    "checksum": "46b068d8c791b9220630f63672300d02283d4048218fc850c694a9eb8ea92010",
+    "readableWithoutPlatform": true,
+    "includes": {
+      "ownership": true,
+      "timestamps": true,
+      "comments": true,
+      "attachments": true,
+      "acl": true,
+      "links": true
+    },
+    "files": [
+      {
+        "path": "records.jsonl",
+        "mediaType": "application/x-ndjson",
+        "records": 2,
+        "sha256": "dc40f114e99a667ee8c699f739c57628b451dbb8afd18b59cb8e7349474aca3a"
+      },
+      {
+        "path": "records.csv",
+        "mediaType": "text/csv",
+        "records": 2,
+        "sha256": "e0e6c047dfe1a5e2970f2eba588df294ac7954fd81869c8ec154687caa6ec37e"
+      },
+      {
+        "path": "read-export.mjs",
+        "mediaType": "text/javascript",
+        "records": 0,
+        "sha256": "26f365181f4a57afdfa0c5db1dd23bd100a12fc2b8b3e152fde2071a38e7464a"
+      },
+      {
+        "path": "README.md",
+        "mediaType": "text/markdown",
+        "records": 0,
+        "sha256": "a4e493c89799ec46d41d1ffd4a322828a10e26ebf3bcbd93969d473715411107"
+      }
+    ],
+    "coverage": {
+      "matrix": [
+        {
+          "appId": "files",
+          "tenantId": "acme",
+          "entityType": "File",
+          "facet": "acl",
+          "status": "full",
+          "source": "acl",
+          "target": "acl.readSubjects/readGroups",
+          "note": null
+        },
+        {
+          "appId": "files",
+          "tenantId": "acme",
+          "entityType": "File",
+          "facet": "attachments",
+          "status": "full",
+          "source": "attachments",
+          "target": "attachments",
+          "note": null
+        },
+        {
+          "appId": "files",
+          "tenantId": "acme",
+          "entityType": "File",
+          "facet": "comments",
+          "status": "partial",
+          "source": "comments",
+          "target": null,
+          "note": "Nextcloud-kommentarer overføres uden @-mention-metadata; selve teksten bevares."
+        },
+        {
+          "appId": "files",
+          "tenantId": "acme",
+          "entityType": "File",
+          "facet": "links",
+          "status": "full",
+          "source": "links",
+          "target": "links",
+          "note": null
+        },
+        {
+          "appId": "files",
+          "tenantId": "acme",
+          "entityType": "File",
+          "facet": "ownership",
+          "status": "full",
+          "source": "owner",
+          "target": "owner.subject",
+          "note": null
+        },
+        {
+          "appId": "files",
+          "tenantId": "acme",
+          "entityType": "File",
+          "facet": "timestamps",
+          "status": "full",
+          "source": "createdAt/updatedAt",
+          "target": "createdAt/updatedAt",
+          "note": null
+        },
+        {
+          "appId": "files",
+          "tenantId": "acme",
+          "entityType": "Folder",
+          "facet": "acl",
+          "status": "full",
+          "source": "acl",
+          "target": "acl.readSubjects/readGroups",
+          "note": null
+        },
+        {
+          "appId": "files",
+          "tenantId": "acme",
+          "entityType": "Folder",
+          "facet": "attachments",
+          "status": "full",
+          "source": "attachments",
+          "target": "attachments",
+          "note": null
+        },
+        {
+          "appId": "files",
+          "tenantId": "acme",
+          "entityType": "Folder",
+          "facet": "comments",
+          "status": "unsupported",
+          "source": null,
+          "target": null,
+          "note": "Mapper i Nextcloud har ingen kommentarfunktion; feltet er tomt og vises som tabt funktionalitet før cutover."
+        },
+        {
+          "appId": "files",
+          "tenantId": "acme",
+          "entityType": "Folder",
+          "facet": "links",
+          "status": "full",
+          "source": "links",
+          "target": "links",
+          "note": null
+        },
+        {
+          "appId": "files",
+          "tenantId": "acme",
+          "entityType": "Folder",
+          "facet": "ownership",
+          "status": "full",
+          "source": "owner",
+          "target": "owner.subject",
+          "note": null
+        },
+        {
+          "appId": "files",
+          "tenantId": "acme",
+          "entityType": "Folder",
+          "facet": "timestamps",
+          "status": "full",
+          "source": "createdAt/updatedAt",
+          "target": "createdAt/updatedAt",
+          "note": null
+        }
+      ],
+      "lostFunctionality": [
+        {
+          "appId": "files",
+          "tenantId": "acme",
+          "entityType": "File",
+          "facet": "comments",
+          "status": "partial",
+          "note": "Nextcloud-kommentarer overføres uden @-mention-metadata; selve teksten bevares."
+        },
+        {
+          "appId": "files",
+          "tenantId": "acme",
+          "entityType": "Folder",
+          "facet": "comments",
+          "status": "unsupported",
+          "note": "Mapper i Nextcloud har ingen kommentarfunktion; feltet er tomt og vises som tabt funktionalitet før cutover."
+        }
+      ]
+    },
+    "schema": {
+      "records": "Én JSON-post pr. linje med reference, ejerskab, klassifikation, ACL, kommentarer, bilag, links og timestamps.",
+      "csv": "Flad CSV med de samme felter; lister er JSON-kodede strenge."
+    }
+  },
+  "approvalSample": {
+    "apiVersion": "contracts.platform/v1alpha1",
+    "kind": "MigrationApproval",
+    "tenantId": "acme",
+    "appId": "files",
+    "approvedBy": {
+      "subject": "oidc|ada.acme",
+      "name": "Ada Acme",
+      "role": "content-admin"
+    },
+    "contentApproved": true,
+    "aclApproved": true,
+    "method": "pilot-user-sign-off",
+    "evidenceRef": "evidence://pilot/files",
+    "approvedAt": "2026-03-01T00:00:00Z",
+    "operatorSubject": null
+  },
+  "cutoverSample": {
+    "status": "cutover",
+    "rollback": "rolled-back",
+    "coverageLosses": 2,
+    "lostFunctionality": [
+      "File/comments: Nextcloud-kommentarer overføres uden @-mention-metadata; selve teksten bevares.",
+      "Folder/comments: Mapper i Nextcloud har ingen kommentarfunktion; feltet er tomt og vises som tabt funktionalitet før cutover."
+    ]
+  }
+}

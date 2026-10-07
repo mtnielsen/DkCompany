@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/sensor-registry.schema.json",
+  "title": "Sensor Registry",
+  "description": "Katalog over de sensorer der må drive dashboards og sikkerhedsstatus. Hver sensor har en navngivet ejer, et forventet interval, en maksimal alder og en runbook. En sensor der ikke har leveret data inden for sin maksimale alder er forældet — ikke grøn.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "sensors"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "SensorRegistry" },
+    "sensors": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/sensor" }
+    }
+  },
+  "$defs": {
+    "owner": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\|[a-z0-9][a-z0-9._-]{2,}$" },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 }
+      }
+    },
+    "sensor": {
+      "type": "object",
+      "required": ["id", "kind", "source", "owner", "scope", "tenantScoped", "required", "expectedIntervalSeconds", "maxAgeSeconds", "runbook"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+        "kind": { "enum": ["scanner", "runtime", "metrics", "log", "backup", "credentials"] },
+        "source": { "type": "string", "minLength": 1 },
+        "owner": { "$ref": "#/$defs/owner" },
+        "scope": { "enum": ["platform", "tenant"] },
+        "tenantScoped": { "type": "boolean" },
+        "required": { "type": "boolean" },
+        "expectedIntervalSeconds": { "type": "integer", "minimum": 1 },
+        "maxAgeSeconds": { "type": "integer", "minimum": 1 },
+        "runbook": { "type": "string", "minLength": 1 },
+        "description": { "type": "string" }
+      }
+    }
+  }
+}

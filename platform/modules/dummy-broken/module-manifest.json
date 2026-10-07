@@ -1,0 +1,55 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ModuleManifest",
+  "metadata": {
+    "name": "dummy-broken",
+    "version": "0.0.1",
+    "description": "Bevidst brudt modul. Bruges til at bevise at conformance-suiten faktisk fejler — ikke bare kan sige grønt. Må aldrig deployes.",
+    "owner": { "team": "platform" }
+  },
+  "identity": {
+    "userStore": "local",
+    "oidc": { "issuer": "http://id.example.org", "clientId": "dummy-broken" },
+    "scim": { "version": "1.1", "endpoint": "https://id.example.org/scim", "mode": "consumer" },
+    "spiffe": { "spiffeId": "spiffe://other.example.org/x", "trustDomain": "platform.example.org" }
+  },
+  "telemetry": {
+    "serviceName": "dummy-broken",
+    "otel": {
+      "exporter": "otlp-grpc",
+      "signals": ["metrics", "logs"],
+      "resourceAttributes": { "service.name": "dummy-broken" }
+    },
+    "cloudEvents": {
+      "source": "urn:platform:module:dummy-broken",
+      "typePrefix": "dk.platform.dummy-broken.",
+      "requiredAttributes": ["tenantid"],
+      "sink": "https://events.platform.example.org/events"
+    }
+  },
+  "verbs": {
+    "backup": {
+      "conformance": "full",
+      "endpoint": "https://dummy-broken.example.org/ops/backup",
+      "evidence": { "kind": "declared", "ref": "trust me" }
+    },
+    "restore": {
+      "conformance": "partial",
+      "reason": "TODO"
+    },
+    "drain": { "conformance": "unsupported", "reason": "N/A" },
+    "upgrade.dry-run": { "conformance": "unsupported", "reason": "vi har ingen upgrade-proces endnu" },
+    "upgrade": { "conformance": "unsupported", "reason": "vi har ingen upgrade-proces endnu" },
+    "migrate": { "conformance": "unsupported", "reason": "vi har ingen migrationsproces endnu" },
+    "health": { "conformance": "full", "endpoint": "https://dummy-broken.example.org/health", "evidence": { "kind": "declared", "ref": "det virker" } },
+    "slo": { "conformance": "unsupported", "reason": "vi har ikke defineret SLO'er endnu" }
+  },
+  "privacy": {
+    "subject.locate": { "conformance": "unsupported", "reason": "vi ved ikke hvor data ligger" },
+    "subject.export": { "conformance": "unsupported", "reason": "vi kan ikke eksportere" },
+    "subject.erase": { "conformance": "partial", "reason": "nej" },
+    "subject.legal_hold": { "conformance": "unsupported", "reason": "ikke implementeret" },
+    "retention.policy": { "conformance": "unsupported", "reason": "ikke implementeret" },
+    "dataCategories": ["personal"]
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "BackupManifest",
+  "backupId": "0f7d2a44-2b1c-4e5d-9a3f-6c8b1d2e4f50",
+  "tenantId": "acme",
+  "createdAt": "2026-09-23T08:00:00Z",
+  "source": {
+    "moduleRef": "platform",
+    "serviceClassRef": "continuity/service-classes/audit-service.service-class.json",
+    "engine": "sqlite",
+    "schemaVersion": "10",
+    "snapshotMethod": "sqlite-online-backup"
+  },
+  "encryption": {
+    "algorithm": "aes-256-gcm",
+    "keyId": "backup-2026-09",
+    "keySeparated": true,
+    "storeContainsKey": false
+  },
+  "components": [
+    {
+      "kind": "database",
+      "name": "database",
+      "uri": "components/database-database.enc",
+      "sha256": "1a2b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f809",
+      "bytes": 262144,
+      "ciphertextSha256": "2b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f8091a",
+      "bytesEncrypted": 262172,
+      "encryption": {
+        "algorithm": "aes-256-gcm",
+        "keyId": "backup-2026-09",
+        "iv": "0f1e2d3c4b5a69788796a5b4",
+        "authTag": "3c4d5e6f708192a3b4c5d6e7f8091a2b"
+      }
+    },
+    {
+      "kind": "config",
+      "name": "config",
+      "uri": "components/config-config.enc",
+      "sha256": "4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f8091a2b3c",
+      "bytes": 1024,
+      "ciphertextSha256": "5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d",
+      "bytesEncrypted": 1052,
+      "encryption": {
+        "algorithm": "aes-256-gcm",
+        "keyId": "backup-2026-09",
+        "iv": "1a2b3c4d5e6f708192a3b4c5",
+        "authTag": "6f708192a3b4c5d6e7f8091a2b3c4d5e"
+      }
+    }
+  ],
+  "checksums": {
+    "algorithm": "sha256",
+    "manifestDigest": "7a8192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f"
+  },
+  "suppression": {
+    "ledgerRef": "var/backup/suppression.ndjson",
+    "ledgerDigest": "8b192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f7"
+  },
+  "objectives": {
+    "rpoTargetMinutes": 15,
+    "rtoTargetMinutes": 60,
+    "restoreOrder": ["database", "config", "objects"]
+  },
+  "retentionDays": 365,
+  "auditRef": "audit:backup.create.0f7d2a44-2b1c-4e5d-9a3f-6c8b1d2e4f50"
+}

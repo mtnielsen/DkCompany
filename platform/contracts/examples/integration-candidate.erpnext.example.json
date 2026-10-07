@@ -1,0 +1,96 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "IntegrationCandidate",
+  "metadata": {
+    "name": "erpnext-15-42-0",
+    "version": "1.0.0",
+    "description": "Kandidatvurdering af ERPNext 15.42.0 (Community) som CRM-kerne. ERPNext er et fuldt ERP-system; CRM-delen dækker kontakter, virksomheder og salgsforløb, men med en bredere og tungere driftsflade end en dedikeret CRM.",
+    "accountableHuman": {
+      "subject": "oidc|hans.hansen",
+      "name": "Hans Hansen",
+      "role": "Solution Architect"
+    },
+    "labels": { "application": "APP-048", "adapter": "crm-adapter", "product": "erpnext" }
+  },
+  "applicationId": "APP-048",
+  "name": "ERPNext",
+  "upstream": {
+    "vendor": "Frappe Technologies",
+    "projectUrl": "https://erpnext.com/",
+    "documentationUrl": "https://docs.frappe.io/erpnext",
+    "sourceUrl": "https://github.com/frappe/erpnext"
+  },
+  "exactVersion": "15.42.0",
+  "edition": { "name": "Community", "tier": "community", "notes": "Kernen er GPLv3 og gratis; Frappe Cloud og support er betalte tjenester." },
+  "license": {
+    "spdx": "GPL-3.0-or-later",
+    "type": "mixed",
+    "paidFeaturesRequired": true,
+    "redistributionAllowed": true,
+    "notes": "Kernen er GPL-3.0-or-later; hosted drift/support er betalte tjenester. Platformen videredistribuerer ikke binæren."
+  },
+  "hosting": {
+    "mode": "customer-self-hosted",
+    "commercialRedistribution": false,
+    "commercialHostingAllowed": true,
+    "notes": "Hostes for kunden; Frappe bruger flere sites i én fælles installation."
+  },
+  "sso": { "capability": "full", "supported": true, "protocols": ["oidc", "saml2"], "notes": "OIDC/SAML understøttes gennem Frappe's social login/OAuth-lag." },
+  "scim": { "capability": "partial", "supported": false, "provisioningAlternative": "Brugere og roller provisioneres gennem Frappe REST API og en SCIM-bro; SCIM er ikke i kernen.", "notes": "Ingen SCIM i kernen." },
+  "api": {
+    "capability": "full",
+    "documented": true,
+    "protocols": ["rest"],
+    "authentication": ["api-key", "oauth2"],
+    "notes": "Frappe REST API dækker CRM-dokumenttyperne Lead, Customer, Contact og Opportunity."
+  },
+  "isolation": {
+    "capability": "partial",
+    "tenantModel": "shared-control-plane",
+    "databasePerTenant": false,
+    "notes": "Flere sites deler én installation og ofte én database; tenantadskillelsen er applikationslogisk og kræver ekstra netværks-/adapterhåndhævelse."
+  },
+  "export": {
+    "capability": "partial",
+    "formats": ["json", "csv"],
+    "aclPreserved": true,
+    "apiAccessible": true,
+    "notes": "CRM-dokumenttyper kan eksporteres gennem API'et; ACL og ejerskab følger delvist med."
+  },
+  "backup": {
+    "capability": "partial",
+    "supported": true,
+    "pointInTime": false,
+    "restoreTested": false,
+    "notes": "Frappe understøtter site-backup og -restore, men adapteren kan ikke garantere et konsistent snapshot af alle apps; restore er ikke testet i dette miljø."
+  },
+  "price": {
+    "model": "mixed",
+    "currency": "EUR",
+    "recurring": true,
+    "priceBasis": "Kernen er gratis; Frappe Cloud/support er abonnement.",
+    "notes": "CRM er en del af et fuldt ERP-system; driftsomkostningen er højere end en dedikeret CRM."
+  },
+  "maintenance": {
+    "vendorSupport": "commercial",
+    "releaseCadence": "Månedlige patch- og kvartalsvise feature-udgivelser.",
+    "securityResponse": "Offentlig sikkerhedsproces og advisories.",
+    "upgradePath": "Trinvis opgradering inden for en major-serie via bench-migrationer."
+  },
+  "freeVsPaid": {
+    "documented": true,
+    "freeTierLimitations": [
+      "Hosted drift og support er betalte tjenester.",
+      "CRM-delen leveres sammen med hele ERP-suiten."
+    ],
+    "requiredPaidFeatures": ["Hosted drift", "Kommerciel support"],
+    "sourceUrl": "https://frappe.io/pricing"
+  },
+  "verification": {
+    "status": "candidate_not_approved",
+    "verifiedBy": { "subject": "oidc|hans.hansen", "name": "Hans Hansen", "role": "Solution Architect" },
+    "verifiedAt": "2025-01-15",
+    "evidence": ["https://docs.frappe.io/erpnext/user/manual/en/crm", "https://docs.frappe.io/framework/user/en/api/rest"],
+    "notes": "Licens, SSO, API og eksport er vurderet. Kandidaten godkendes ikke endnu: isolationen er delt (flere sites pr. installation), og en testet gendannelse mangler."
+  }
+}

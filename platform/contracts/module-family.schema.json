@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/module-family.schema.json",
+  "title": "Module Family Registration",
+  "description": "Versioneret registrering af en forretningsmodulfamilie (økonomi/ERP, HR, tid, fakturering eller handel). Registreringen binder familien til dens katalogkomponenter, de danske lokaliseringskrav, adaptergrænsefladen, kandidatprodukterne og de eksplicitte fravalg. En registrering er en katalogpost — ikke en fungerende forretningsapplikation. Den rækkefølge og de fravalg, der ikke kan udtrykkes i et skema, håndhæves af `localization/src/model.mjs`.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "families"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "ModuleFamily" },
+    "metadata": { "$ref": "#/$defs/metadata" },
+    "families": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/family" }
+    }
+  },
+  "$defs": {
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$" },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/accountableHuman" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "accountableHuman": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": {
+          "type": "object",
+          "required": ["subject", "name"],
+          "additionalProperties": false,
+          "properties": {
+            "subject": { "type": "string", "minLength": 3 },
+            "name": { "type": "string", "minLength": 2 },
+            "role": { "type": "string" }
+          }
+        }
+      }
+    },
+    "family": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "order",
+        "selectionRationale",
+        "pilotNeed",
+        "familyStatus",
+        "components",
+        "localeRequirements",
+        "adapterInterface",
+        "candidateProducts",
+        "exclusions"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "enum": ["finance", "hr", "time", "invoicing", "commerce"] },
+        "title": { "type": "string", "minLength": 3 },
+        "order": { "type": "integer", "minimum": 1, "description": "Valgt rækkefølge efter faktisk pilotbehov. Unik på tværs af familier." },
+        "selectionRationale": { "type": "string", "minLength": 20 },
+        "pilotNeed": { "type": "string", "minLength": 10 },
+        "familyStatus": { "enum": ["registered", "candidate", "pending-legal-review", "unavailable"] },
+        "components": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" }
+        },
+        "localeRequirements": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" }
+        },
+        "adapterInterface": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+        "candidateProducts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["product", "candidateRef", "selected", "reason"],
+            "additionalProperties": false,
+            "properties": {
+              "product": { "type": "string", "minLength": 2 },
+              "candidateRef": { "type": "string", "pattern": "^integration-candidate\\.[a-z0-9-]+\\.example\\.json$" },
+              "selected": { "type": "boolean" },
+              "reason": { "type": "string", "minLength": 10 }
+            }
+          }
+        },
+        "exclusions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/exclusion" }
+        }
+      }
+    },
+    "exclusion": {
+      "type": "object",
+      "required": ["candidate", "reason"],
+      "additionalProperties": false,
+      "properties": {
+        "candidate": { "type": "string", "minLength": 2 },
+        "reason": { "type": "string", "minLength": 20 }
+      }
+    }
+  }
+}

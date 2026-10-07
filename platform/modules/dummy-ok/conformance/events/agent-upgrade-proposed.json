@@ -1,0 +1,27 @@
+{
+  "specversion": "1.0",
+  "id": "018f3c2a-1b2c-7def-8a01-222222222222",
+  "source": "urn:platform:module:dummy-ok",
+  "type": "dk.platform.dummy-ok.upgrade.proposed",
+  "time": "2025-09-01T08:40:02Z",
+  "datacontenttype": "application/json",
+  "subject": "dummy-ok/api",
+  "tenantid": "acme",
+  "traceid": "5cf93f3577b34da6a3ce929d0e0e9999",
+  "spanid": "00f067aa0ba902b7",
+  "principal": {
+    "kind": "agent",
+    "id": "spiffe://platform.example.org/agents/dummy-ok-upgrader",
+    "spiffeId": "spiffe://platform.example.org/agents/dummy-ok-upgrader",
+    "agentManifestRef": "agents/backup-agent.json",
+    "autonomyClass": "A3",
+    "onBehalfOf": { "kind": "group", "id": "platform-approvers" }
+  },
+  "dataclassification": "operational",
+  "data": {
+    "verb": "upgrade",
+    "fromVersion": "1.1.0",
+    "toVersion": "1.2.0",
+    "approvalRequestId": "018f3c2a-1b2c-7def-8a01-333333333333"
+  }
+}

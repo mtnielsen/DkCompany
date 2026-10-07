@@ -1,0 +1,21 @@
+{
+  "verb": "subject.export",
+  "module": "openproject-adapter",
+  "moduleVersion": "1.0.0",
+  "capturedAt": "2026-09-24T12:51:03.375Z",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "http-200",
+      "status": "pass",
+      "detail": "HTTP 200"
+    }
+  ],
+  "measurements": {
+    "durationMs": 11
+  },
+  "artifact": {
+    "uri": "s3://evidence/openproject-adapter/subject.export.json",
+    "sha256": "d10c554d0bf6fbc8e5cf52c3c9648d265ee2ac7534fe9acd0156fd0b25f7bc9a"
+  }
+}

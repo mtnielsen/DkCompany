@@ -1,0 +1,10 @@
+{
+  "name": "@platform/reviewer",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Adversarial reviewer-agent: anden leverandør end forfatteren, ser ændring + rådata (ikke begrundelsen), kan kun flagge eller afvise.",
+  "scripts": {
+    "test": "node --test"
+  }
+}

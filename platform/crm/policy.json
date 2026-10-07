@@ -1,0 +1,63 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "CrmPolicy",
+  "metadata": {
+    "name": "platform-crm-policy",
+    "version": "1.0.0",
+    "description": "Adgangs-, reference-, dublethåndterings-, aktivitets- og retentionpolitik for CRM. Adgang er default-deny og tenantadskilt; et salgsteam kan ikke læse en anden kundes CRM; hver post har et entydigt ejerskab; import er idempotent på en idempotency-nøgle og dublerede forretningsposter flettes aldrig automatisk; tværgående sletning følger ejerskab og retention også i kopier.",
+    "accountableHuman": {
+      "subject": "oidc|anna.andersen",
+      "name": "Anna Andersen",
+      "role": "Platform Owner",
+      "substitute": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Platform Owner"
+      }
+    },
+    "labels": {
+      "tier": "adapter",
+      "upstream": "espocrm",
+      "wave": "4"
+    }
+  },
+  "authorization": {
+    "defaultDeny": true,
+    "tenantIsolation": true,
+    "salesCannotReadOtherCustomer": true,
+    "roleProtection": true,
+    "ownerRequired": true,
+    "revalidateAtRead": true
+  },
+  "references": {
+    "scheme": "platform-tenant-scoped",
+    "systemOfRecord": "upstream",
+    "stableReference": true,
+    "crossTenantReference": "denied"
+  },
+  "dedup": {
+    "retryIdempotent": true,
+    "idempotencyKeyRequired": true,
+    "dedupKeysRequired": true,
+    "businessRecordsNeverMerged": true,
+    "crossTenantDedup": false,
+    "conflictRequiresHuman": true
+  },
+  "activities": {
+    "appendOnly": true,
+    "immutable": true,
+    "recordsEveryTransition": true
+  },
+  "retention": {
+    "contactDays": 1095,
+    "activityDays": 730,
+    "copiesMustFollowDeletion": true,
+    "legalHoldBlocksDeletion": true,
+    "deletionIsTombstone": true
+  },
+  "export": {
+    "format": "json",
+    "stableReferences": true,
+    "includeActivities": true
+  }
+}

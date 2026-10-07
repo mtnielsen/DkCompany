@@ -1,0 +1,10 @@
+{
+  "name": "dkcompany-crm",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "DKC-030: CRM med entydigt ejerskab af kundedata. EspoCRM som første kandidat og system-of-record, tenantafgrænset stabil reference, import/eksport med idempotent retry og dublethåndtering uden automatisk fletning, kontaktaktiviteter, rollebeskyttelse og tværgående sletning der følger ejerskab og retention også i kopier.",
+  "scripts": {
+    "test": "node --test"
+  }
+}

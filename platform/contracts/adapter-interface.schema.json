@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/adapter-interface.schema.json",
+  "title": "Adapter Interface Catalog",
+  "description": "Adaptergrænsefladerne for forretningsmodulfamilierne. Hver grænseflade erklærer hvilke ops-verber den understøtter, hvilke scopes den må bruge, hvilke data-klasser den berører, og om den kræver en godkendt ekstern tjeneste. Betaling og bankadgang må kun gå gennem en godkendt ekstern tjeneste med begrænsede scopes; fuld bankadgang er eksplicit forbudt. Grænsefladen er en katalogkontrakt — den er ikke en kørende adapter.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "interfaces"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "AdapterInterfaceCatalog" },
+    "metadata": { "$ref": "#/$defs/metadata" },
+    "interfaces": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/adapterInterface" }
+    }
+  },
+  "$defs": {
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$" },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/accountableHuman" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "accountableHuman": {
+      "type": "object",
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": {
+          "type": "object",
+          "required": ["subject", "name"],
+          "additionalProperties": false,
+          "properties": {
+            "subject": { "type": "string", "minLength": 3 },
+            "name": { "type": "string", "minLength": 2 },
+            "role": { "type": "string" }
+          }
+        }
+      }
+    },
+    "adapterInterface": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "family",
+        "description",
+        "verbs",
+        "scopes",
+        "deniedScopes",
+        "externalServiceRequired",
+        "approvedExternalServiceRef",
+        "legalReviewRequired",
+        "dataClasses"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+        "title": { "type": "string", "minLength": 3 },
+        "family": { "enum": ["finance", "hr", "time", "invoicing", "commerce"] },
+        "description": { "type": "string", "minLength": 20 },
+        "verbs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["backup", "restore", "verify-restore", "drain", "upgrade.dry-run", "upgrade", "migrate", "rollback", "health", "slo"] }
+        },
+        "scopes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "access", "description"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string", "pattern": "^[a-z0-9:._-]{3,63}$" },
+              "access": { "enum": ["read", "write"] },
+              "description": { "type": "string", "minLength": 10 }
+            }
+          }
+        },
+        "deniedScopes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z0-9:._*-]{3,63}$" },
+          "description": "Scope-mønstre der aldrig må tildeles denne grænseflade, fx 'bank:full-access'."
+        },
+        "externalServiceRequired": { "type": "boolean" },
+        "approvedExternalServiceRef": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "string", "minLength": 3 }
+          ]
+        },
+        "legalReviewRequired": { "type": "boolean" },
+        "dataClasses": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["none", "operational", "personal", "special-category", "financial"] }
+        }
+      }
+    }
+  }
+}

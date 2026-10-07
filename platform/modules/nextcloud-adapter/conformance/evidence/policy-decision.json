@@ -1,0 +1,30 @@
+{
+  "decision": "allow-with-approval",
+  "pdp": {
+    "name": "platform-pdp",
+    "version": "1.0.0",
+    "bundleName": "platform",
+    "bundleVersion": "1.0.0",
+    "bundleSha256": "baeeeb11cb003454ccd12473856966c8769388870d74f30428dfc9bd20ba2d86"
+  },
+  "matchedRules": [
+    "privacy.erase.requires-approval"
+  ],
+  "reasons": [
+    "Sletning af persondata er irreversibel og skal kunne føres tilbage til en DPO-godkendelse."
+  ],
+  "evaluatedAt": "2026-09-24T10:59:05.784Z",
+  "inputSha256": "be0ac79485be34004608c65cf8711caeae5e1cca8be66825cce611e0664a8366",
+  "requiredApprovals": 1,
+  "requiredEvidence": [
+    "policy-allow"
+  ],
+  "obligations": [
+    {
+      "type": "audit-event"
+    },
+    {
+      "type": "dual-control"
+    }
+  ]
+}

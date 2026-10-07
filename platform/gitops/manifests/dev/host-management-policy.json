@@ -1,0 +1,21 @@
+{
+  "apiVersion": "v1",
+  "kind": "ConfigMap",
+  "metadata": {
+    "name": "host-management-policy",
+    "namespace": "platform",
+    "labels": {
+      "app.kubernetes.io/name": "host-management",
+      "app.kubernetes.io/managed-by": "gitops",
+      "platform.example.org/module": "host-management",
+      "platform.example.org/environment": "dev"
+    }
+  },
+  "data": {
+    "profile.json": "{\"apiVersion\":\"contracts.platform/v1alpha1\",\"kind\":\"HostProfile\",\"metadata\":{\"name\":\"linux-lts-host\",\"version\":\"1.0.0\",\"description\":\"Første host-styringsprofil: diagnose, godkendte pakkeopdateringer, drain/reboot, certifikatfornyelse og kapacitetsalarmer på Linux-LTS.\",\"accountableHuman\":{\"subject\":\"oidc|anna.andersen\",\"name\":\"Anna Andersen\",\"role\":\"Platform Owner\"}},\"platformRef\":\"linux-amd64-node22\",\"os\":{\"family\":\"linux\",\"supportTier\":\"lts\"},\"operations\":[{\"verb\":\"diagnose\",\"modes\":[\"dry-run\",\"apply\"],\"requiresApproval\":true,\"maxDurationSeconds\":120,\"closedParameters\":{\"type\":\"object\",\"additionalProperties\":false,\"properties\":{}}},{\"verb\":\"package-update\",\"modes\":[\"dry-run\",\"apply\"],\"requiresApproval\":true,\"maxDurationSeconds\":600,\"closedParameters\":{\"type\":\"object\",\"additionalProperties\":false,\"properties\":{}}},{\"verb\":\"drain\",\"modes\":[\"dry-run\",\"apply\"],\"requiresApproval\":true,\"maxDurationSeconds\":900,\"closedParameters\":{\"type\":\"object\",\"additionalProperties\":false,\"properties\":{\"nodeRef\":{\"type\":\"string\"}}}},{\"verb\":\"reboot\",\"modes\":[\"dry-run\",\"apply\"],\"requiresApproval\":true,\"maxDurationSeconds\":900,\"closedParameters\":{\"type\":\"object\",\"additionalProperties\":false,\"properties\":{\"nodeRef\":{\"type\":\"string\"},\"announcedDowntimeSeconds\":{\"type\":\"integer\"}}}},{\"verb\":\"certificate-renew\",\"modes\":[\"dry-run\",\"apply\"],\"requiresApproval\":true,\"maxDurationSeconds\":300,\"closedParameters\":{\"type\":\"object\",\"additionalProperties\":false,\"properties\":{\"certificateRef\":{\"type\":\"string\"}}}},{\"verb\":\"capacity-alert\",\"modes\":[\"dry-run\",\"apply\"],\"requiresApproval\":true,\"maxDurationSeconds\":60,\"closedParameters\":{\"type\":\"object\",\"additionalProperties\":false,\"properties\":{\"thresholds\":{\"type\":\"object\"}}}}],\"maintenanceWindow\":{\"schedule\":\"søndag 02:00-04:00\",\"timezone\":\"Europe/Copenhagen\",\"announcedLeadTimeSeconds\":86400},\"canary\":{\"maxHosts\":1,\"waitSeconds\":120,\"onFailure\":\"halt\"},\"backup\":{\"required\":true,\"verifiedBeforeMutation\":true},\"stopCriteria\":[\"canary utilgængelig i 60 sekunder\",\"fejlrate over 1% efter reboot\",\"recoverykonsol svarer ikke\",\"mere end én node ikke klar\"],\"recovery\":{\"outOfBandConsole\":true,\"separateSecurityDomain\":true},\"vps\":{\"controlsHypervisor\":false,\"controlsHardware\":false,\"note\":\"En VPS-profil styrer kun gæste-OS'et; udbyderens hypervisor og hardware er uden for scopet.\"},\"ha\":{\"minNodes\":3,\"drainRequiresHealthyReplicas\":true,\"rebootOneAtATime\":true},\"singleServer\":{\"announcedDowntime\":true,\"requiresExplicitDowntimeApproval\":true}}",
+    "enabledByDefault": "false",
+    "optIn": "true",
+    "recoveryConsole": "out-of-band",
+    "note": "Host-styring er slået fra som standard og kræver et eksplicit, menneskeligt opt-in pr. host."
+  }
+}

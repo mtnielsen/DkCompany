@@ -1,0 +1,96 @@
+{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "database-ha-staging-netpol",
+    "namespace": "platform-data",
+    "labels": {
+      "app.kubernetes.io/name": "database-ha-staging",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/environment": "staging"
+    }
+  },
+  "spec": {
+    "podSelector": {
+      "matchLabels": {
+        "app.kubernetes.io/name": "database-ha-staging"
+      }
+    },
+    "policyTypes": [
+      "Ingress",
+      "Egress"
+    ],
+    "ingress": [
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app.kubernetes.io/name": "database-ha-staging"
+              }
+            }
+          }
+        ],
+        "ports": [
+          {
+            "port": 5432,
+            "protocol": "TCP"
+          }
+        ]
+      },
+      {
+        "from": [
+          {
+            "namespaceSelector": {
+              "matchLabels": {
+                "platform.example.org/role": "control-plane"
+              }
+            }
+          }
+        ],
+        "ports": [
+          {
+            "port": 5432,
+            "protocol": "TCP"
+          }
+        ]
+      }
+    ],
+    "egress": [
+      {
+        "to": [
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app.kubernetes.io/name": "database-ha-staging"
+              }
+            }
+          }
+        ],
+        "ports": [
+          {
+            "port": 5432,
+            "protocol": "TCP"
+          }
+        ]
+      },
+      {
+        "to": [
+          {
+            "namespaceSelector": {
+              "matchLabels": {
+                "platform.example.org/role": "backup"
+              }
+            }
+          }
+        ],
+        "ports": [
+          {
+            "port": 443,
+            "protocol": "TCP"
+          }
+        ]
+      }
+    ]
+  }
+}

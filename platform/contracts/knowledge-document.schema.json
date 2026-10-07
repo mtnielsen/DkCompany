@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/knowledge-document.schema.json",
+  "title": "Knowledge Document",
+  "description": "DKC-028: et vidensdokument mappet fra en read-only kilde (fx en BookStack-side) med tenant, klassifikation og kilde-ACL. Dokumentet er den enhed indekset lagrer og søgningen filtrerer på — tenant og ACL anvendes før retrieval, ikke efter.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "id", "sourceId", "tenantId", "externalId", "title", "classification", "acl", "contentSha256", "updatedAt", "bookstack"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "KnowledgeDocument" },
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*:[a-z0-9][a-z0-9._-]{1,80}$" },
+    "sourceId": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$" },
+    "tenantId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+    "externalId": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "classification": { "enum": ["public", "internal", "personal", "special-category", "confidential"] },
+    "acl": { "$ref": "#/$defs/acl" },
+    "contentSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "deletedAt": { "type": ["string", "null"], "format": "date-time" },
+    "content": { "type": "string", "minLength": 1 },
+    "bookstack": { "$ref": "#/$defs/bookstack" }
+  },
+  "$defs": {
+    "acl": {
+      "type": "object",
+      "required": ["readGroups", "readSubjects", "denyGroups", "denySubjects", "ownerSubject"],
+      "additionalProperties": false,
+      "properties": {
+        "readGroups": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "readSubjects": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "denyGroups": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "denySubjects": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "ownerSubject": { "type": ["string", "null"] }
+      }
+    },
+    "bookstack": {
+      "type": "object",
+      "required": ["book", "chapter", "slug", "url"],
+      "additionalProperties": false,
+      "properties": {
+        "book": { "type": "string", "minLength": 1 },
+        "chapter": { "type": ["string", "null"] },
+        "slug": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "format": "uri" }
+      }
+    }
+  }
+}

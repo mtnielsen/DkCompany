@@ -1,0 +1,13 @@
+{
+  "apiVersion": "v1",
+  "kind": "Namespace",
+  "metadata": {
+    "name": "platform-storage",
+    "labels": {
+      "app.kubernetes.io/name": "platform-storage",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "platform-storage",
+      "platform.example.org/environment": "storage"
+    }
+  }
+}

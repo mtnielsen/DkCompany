@@ -1,0 +1,55 @@
+{
+  "apiVersion": "monitoring.coreos.com/v1",
+  "kind": "PrometheusRule",
+  "metadata": {
+    "name": "database-ha-staging-alerts",
+    "namespace": "platform-data",
+    "labels": {
+      "app.kubernetes.io/name": "database-ha-staging",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/environment": "staging"
+    }
+  },
+  "spec": {
+    "groups": [
+      {
+        "name": "database-ha-staging.replication",
+        "rules": [
+          {
+            "alert": "DatabaseSyncReplicaLow",
+            "expr": "cnpg_pg_replication_streaming_replicas{cluster=\"database-ha-staging\"} < 2",
+            "for": "5m",
+            "labels": {
+              "severity": "critical"
+            },
+            "annotations": {
+              "summary": "Færre sync-replikaer end politikken kræver — writes skal afvises."
+            }
+          },
+          {
+            "alert": "DatabaseWALArchiveFailing",
+            "expr": "cnpg_pg_stat_archiver_failed_total{cluster=\"database-ha-staging\"} > 0",
+            "for": "10m",
+            "labels": {
+              "severity": "critical"
+            },
+            "annotations": {
+              "summary": "WAL-arkivering fejler — PITR er i fare."
+            }
+          },
+          {
+            "alert": "DatabaseFencedNode",
+            "expr": "cnpg_collector_fencing_activetotal{cluster=\"database-ha-staging\"} > 0",
+            "for": "1m",
+            "labels": {
+              "severity": "warning"
+            },
+            "annotations": {
+              "summary": "En node er fenced efter promotion."
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

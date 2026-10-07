@@ -1,0 +1,530 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ProtectedDataRegister",
+  "metadata": {
+    "name": "platform-protected-data",
+    "version": "1.0.0",
+    "description": "Beskyttede dataklasser for platformen. Adskiller AI-ændringsforbud, WORM-retention og AI-læseforbud; erklærer ærligt at fysisk lager-/nøglehåndhævelse leveres af DKC-048.",
+    "lastReviewed": "2025-09-01"
+  },
+  "records": [
+    {
+      "id": "policy-bundle",
+      "name": "Signeret policy-bundle",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      },
+      "versionId": "policy-bundle@1.0.0",
+      "dataClass": "retention-locked",
+      "noAiAccess": false,
+      "dataCategories": [
+        "operational"
+      ],
+      "authoritativePointer": "policy/bundles/platform/current",
+      "keyDomain": "policy-signing",
+      "reclassifiers": [
+        {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        }
+      ],
+      "prohibitions": [
+        "direct-change",
+        "indirect-change",
+        "alias-pointer",
+        "authoritative-pointer",
+        "policy",
+        "lifecycle",
+        "keys",
+        "deletion"
+      ],
+      "retention": {
+        "purpose": "Revisionsspor for policy-versioner",
+        "maxDays": 3650,
+        "trigger": "event-age",
+        "hold": {
+          "status": "none"
+        },
+        "assessedBy": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "assessedAt": "2025-09-01"
+      },
+      "humanProcess": {
+        "newVersion": {
+          "ref": "docs/spec/data-protection.md#ny-version",
+          "responsible": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "legalDeletion": {
+          "ref": "docs/spec/data-protection.md#lovlig-sletning",
+          "responsible": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "retentionAssessment": {
+          "ref": "docs/spec/data-protection.md#retentionvurdering",
+          "responsible": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        }
+      },
+      "storageEnforcement": {
+        "status": "full",
+        "reason": "DKC-048 håndhæver fysisk WORM: object-lock i GOVERNANCE og COMPLIANCE, en rollematrix hvor AI/app-konti er nægtet alle muterende operationer, beskyttet nøglebutik og to-personers kontrol. Efterprøvet deterministisk af data-protection/src/storage-semantics.mjs, data-protection/test/worm-store.test.mjs og data-protection/test/enforcement.test.mjs.",
+        "deliveredBy": "DKC-048"
+      },
+      "consumerModules": [
+        "dummy-ok",
+        "audit-service",
+        "keycloak-adapter",
+        "mattermost-adapter"
+      ],
+      "evidence": [
+        "docs/compliance/protected-data.md",
+        "data-protection/enforcement/immutable-policy.json",
+        "data-protection/src/storage-semantics.mjs"
+      ]
+    },
+    {
+      "id": "signing-keys",
+      "name": "Signeringsnøgler og KMS-materiale",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      },
+      "versionId": "signing-keys@1.0.0",
+      "dataClass": "retention-locked",
+      "noAiAccess": true,
+      "dataCategories": [
+        "none"
+      ],
+      "authoritativePointer": "keys/current",
+      "keyDomain": "kms-root",
+      "reclassifiers": [
+        {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        }
+      ],
+      "prohibitions": [
+        "direct-change",
+        "indirect-change",
+        "alias-pointer",
+        "authoritative-pointer",
+        "policy",
+        "lifecycle",
+        "keys",
+        "deletion"
+      ],
+      "retention": {
+        "purpose": "Nøglehistorik til verifikation af tidligere signaturer",
+        "maxDays": 3650,
+        "trigger": "event-age",
+        "hold": {
+          "status": "none"
+        },
+        "assessedBy": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "assessedAt": "2025-09-01"
+      },
+      "humanProcess": {
+        "newVersion": {
+          "ref": "docs/spec/data-protection.md#ny-version",
+          "responsible": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "legalDeletion": {
+          "ref": "docs/spec/data-protection.md#lovlig-sletning",
+          "responsible": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "retentionAssessment": {
+          "ref": "docs/spec/data-protection.md#retentionvurdering",
+          "responsible": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        }
+      },
+      "storageEnforcement": {
+        "status": "full",
+        "reason": "DKC-048 håndhæver fysisk WORM: object-lock i GOVERNANCE og COMPLIANCE, en rollematrix hvor AI/app-konti er nægtet alle muterende operationer, beskyttet nøglebutik og to-personers kontrol. Efterprøvet deterministisk af data-protection/src/storage-semantics.mjs, data-protection/test/worm-store.test.mjs og data-protection/test/enforcement.test.mjs.",
+        "deliveredBy": "DKC-048"
+      },
+      "consumerModules": [
+        "audit-service"
+      ],
+      "evidence": [
+        "docs/compliance/protected-data.md",
+        "data-protection/enforcement/immutable-policy.json",
+        "data-protection/src/storage-semantics.mjs"
+      ]
+    },
+    {
+      "id": "audit-log",
+      "name": "Hash-kædet audit-log",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      },
+      "versionId": "audit-log@1.0.0",
+      "dataClass": "append-only",
+      "noAiAccess": false,
+      "dataCategories": [
+        "operational",
+        "personal"
+      ],
+      "authoritativePointer": "audit/log/current",
+      "keyDomain": "audit-integrity",
+      "reclassifiers": [
+        {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        }
+      ],
+      "prohibitions": [
+        "direct-change",
+        "indirect-change",
+        "alias-pointer",
+        "authoritative-pointer",
+        "policy",
+        "lifecycle",
+        "keys",
+        "deletion"
+      ],
+      "retention": {
+        "purpose": "Sporbarhed og hændelseshåndtering (NIS2)",
+        "maxDays": 1825,
+        "trigger": "legal-deadline",
+        "hold": {
+          "status": "none"
+        },
+        "assessedBy": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "assessedAt": "2025-09-01"
+      },
+      "humanProcess": {
+        "newVersion": {
+          "ref": "docs/spec/data-protection.md#ny-version",
+          "responsible": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "legalDeletion": {
+          "ref": "docs/spec/data-protection.md#lovlig-sletning",
+          "responsible": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "retentionAssessment": {
+          "ref": "docs/spec/data-protection.md#retentionvurdering",
+          "responsible": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        }
+      },
+      "storageEnforcement": {
+        "status": "full",
+        "reason": "DKC-048 håndhæver fysisk WORM: object-lock i GOVERNANCE og COMPLIANCE, en rollematrix hvor AI/app-konti er nægtet alle muterende operationer, beskyttet nøglebutik og to-personers kontrol. Efterprøvet deterministisk af data-protection/src/storage-semantics.mjs, data-protection/test/worm-store.test.mjs og data-protection/test/enforcement.test.mjs.",
+        "deliveredBy": "DKC-048"
+      },
+      "consumerModules": [
+        "audit-service"
+      ],
+      "evidence": [
+        "docs/compliance/protected-data.md",
+        "data-protection/enforcement/immutable-policy.json",
+        "data-protection/src/storage-semantics.mjs"
+      ]
+    },
+    {
+      "id": "audit-evidence",
+      "name": "Konformansbevis og verbeevidens",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      },
+      "versionId": "audit-evidence@1.0.0",
+      "dataClass": "append-only",
+      "noAiAccess": false,
+      "dataCategories": [
+        "operational"
+      ],
+      "authoritativePointer": "audit/evidence/current",
+      "keyDomain": "evidence-integrity",
+      "reclassifiers": [
+        {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        }
+      ],
+      "prohibitions": [
+        "direct-change",
+        "indirect-change",
+        "alias-pointer",
+        "authoritative-pointer",
+        "policy",
+        "lifecycle",
+        "keys",
+        "deletion"
+      ],
+      "retention": {
+        "purpose": "Dokumentation af kontroller og verber",
+        "maxDays": 1825,
+        "trigger": "event-age",
+        "hold": {
+          "status": "none"
+        },
+        "assessedBy": {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        },
+        "assessedAt": "2025-09-01"
+      },
+      "humanProcess": {
+        "newVersion": {
+          "ref": "docs/spec/data-protection.md#ny-version",
+          "responsible": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "legalDeletion": {
+          "ref": "docs/spec/data-protection.md#lovlig-sletning",
+          "responsible": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "retentionAssessment": {
+          "ref": "docs/spec/data-protection.md#retentionvurdering",
+          "responsible": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        }
+      },
+      "storageEnforcement": {
+        "status": "full",
+        "reason": "DKC-048 håndhæver fysisk WORM: object-lock i GOVERNANCE og COMPLIANCE, en rollematrix hvor AI/app-konti er nægtet alle muterende operationer, beskyttet nøglebutik og to-personers kontrol. Efterprøvet deterministisk af data-protection/src/storage-semantics.mjs, data-protection/test/worm-store.test.mjs og data-protection/test/enforcement.test.mjs.",
+        "deliveredBy": "DKC-048"
+      },
+      "consumerModules": [
+        "audit-service",
+        "mattermost-adapter",
+        "keycloak-adapter"
+      ],
+      "evidence": [
+        "docs/compliance/protected-data.md",
+        "data-protection/enforcement/immutable-policy.json",
+        "data-protection/src/storage-semantics.mjs"
+      ]
+    },
+    {
+      "id": "data-register",
+      "name": "Dataregister (GDPR art. 30)",
+      "owner": {
+        "subject": "oidc|bo.bertelsen",
+        "name": "Bo Bertelsen",
+        "role": "Operations Lead"
+      },
+      "versionId": "data-register@1.0.0",
+      "dataClass": "retention-locked",
+      "noAiAccess": true,
+      "dataCategories": [
+        "personal"
+      ],
+      "authoritativePointer": "compliance/data-register/current",
+      "keyDomain": "compliance-records",
+      "reclassifiers": [
+        {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen",
+          "role": "Operations Lead"
+        }
+      ],
+      "prohibitions": [
+        "direct-change",
+        "indirect-change",
+        "alias-pointer",
+        "authoritative-pointer",
+        "policy",
+        "lifecycle",
+        "keys",
+        "deletion"
+      ],
+      "retention": {
+        "purpose": "GDPR art. 30-fortegnelse",
+        "maxDays": 1825,
+        "trigger": "legal-deadline",
+        "hold": {
+          "status": "none"
+        },
+        "assessedBy": {
+          "subject": "oidc|bo.bertelsen",
+          "name": "Bo Bertelsen",
+          "role": "Operations Lead"
+        },
+        "assessedAt": "2025-09-01"
+      },
+      "humanProcess": {
+        "newVersion": {
+          "ref": "docs/spec/data-protection.md#ny-version",
+          "responsible": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Operations Lead"
+          }
+        },
+        "legalDeletion": {
+          "ref": "docs/spec/data-protection.md#lovlig-sletning",
+          "responsible": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Operations Lead"
+          }
+        },
+        "retentionAssessment": {
+          "ref": "docs/spec/data-protection.md#retentionvurdering",
+          "responsible": {
+            "subject": "oidc|bo.bertelsen",
+            "name": "Bo Bertelsen",
+            "role": "Operations Lead"
+          }
+        }
+      },
+      "storageEnforcement": {
+        "status": "full",
+        "reason": "DKC-048 håndhæver fysisk WORM: object-lock i GOVERNANCE og COMPLIANCE, en rollematrix hvor AI/app-konti er nægtet alle muterende operationer, beskyttet nøglebutik og to-personers kontrol. Efterprøvet deterministisk af data-protection/src/storage-semantics.mjs, data-protection/test/worm-store.test.mjs og data-protection/test/enforcement.test.mjs.",
+        "deliveredBy": "DKC-048"
+      },
+      "consumerModules": [
+        "audit-service"
+      ],
+      "evidence": [
+        "docs/compliance/protected-data.md",
+        "data-protection/enforcement/immutable-policy.json",
+        "data-protection/src/storage-semantics.mjs"
+      ]
+    },
+    {
+      "id": "tenant-records",
+      "name": "Kundens forretningsdata",
+      "owner": {
+        "subject": "oidc|anna.andersen",
+        "name": "Anna Andersen",
+        "role": "Platform Owner"
+      },
+      "versionId": "tenant-records@1.0.0",
+      "dataClass": "ai-read-only",
+      "noAiAccess": false,
+      "dataCategories": [
+        "operational",
+        "personal"
+      ],
+      "authoritativePointer": "tenants/current",
+      "keyDomain": "platform-data",
+      "reclassifiers": [
+        {
+          "subject": "oidc|anna.andersen",
+          "name": "Anna Andersen",
+          "role": "Platform Owner"
+        }
+      ],
+      "prohibitions": [
+        "direct-change",
+        "indirect-change",
+        "alias-pointer",
+        "authoritative-pointer",
+        "policy",
+        "lifecycle",
+        "keys",
+        "deletion"
+      ],
+      "humanProcess": {
+        "newVersion": {
+          "ref": "docs/spec/data-protection.md#ny-version",
+          "responsible": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "legalDeletion": {
+          "ref": "docs/spec/data-protection.md#lovlig-sletning",
+          "responsible": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        },
+        "retentionAssessment": {
+          "ref": "docs/spec/data-protection.md#retentionvurdering",
+          "responsible": {
+            "subject": "oidc|anna.andersen",
+            "name": "Anna Andersen",
+            "role": "Platform Owner"
+          }
+        }
+      },
+      "storageEnforcement": {
+        "status": "full",
+        "reason": "DKC-048 håndhæver fysisk WORM: object-lock i GOVERNANCE og COMPLIANCE, en rollematrix hvor AI/app-konti er nægtet alle muterende operationer, beskyttet nøglebutik og to-personers kontrol. Efterprøvet deterministisk af data-protection/src/storage-semantics.mjs, data-protection/test/worm-store.test.mjs og data-protection/test/enforcement.test.mjs.",
+        "deliveredBy": "DKC-048"
+      },
+      "consumerModules": [
+        "dummy-ok",
+        "audit-service",
+        "keycloak-adapter",
+        "mattermost-adapter"
+      ],
+      "evidence": [
+        "docs/compliance/protected-data.md",
+        "data-protection/enforcement/immutable-policy.json",
+        "data-protection/src/storage-semantics.mjs"
+      ]
+    }
+  ]
+}

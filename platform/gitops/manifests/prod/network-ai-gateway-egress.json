@@ -1,0 +1,43 @@
+{
+  "apiVersion": "cilium.io/v2",
+  "kind": "CiliumNetworkPolicy",
+  "metadata": {
+    "name": "model-egress-gateway-allow",
+    "namespace": "platform-prod",
+    "labels": {
+      "app.kubernetes.io/name": "ai-gateway",
+      "app.kubernetes.io/managed-by": "argocd",
+      "platform.example.org/module": "ai-gateway",
+      "platform.example.org/environment": "prod"
+    }
+  },
+  "spec": {
+    "endpointSelector": {
+      "matchLabels": {
+        "app.kubernetes.io/name": "ai-gateway"
+      }
+    },
+    "egress": [
+      {
+        "toFQDNs": [
+          {
+            "matchName": "api.anthropic.com"
+          },
+          {
+            "matchName": "api.openai.com"
+          }
+        ],
+        "toPorts": [
+          {
+            "ports": [
+              {
+                "port": "443",
+                "protocol": "TCP"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,259 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "EnterprisePackage",
+  "metadata": {
+    "name": "example-enterprise-package",
+    "version": "1.0.0",
+    "description": "Eksempel på en enkelt enterprise-pakke med arvede sikkerhedskontrakter, kapabilitetskrav, dataejerskab, isolation, faglige krav og en navngivet testkunde.",
+    "accountableHuman": {
+      "subject": "oidc|cecilia.christensen",
+      "name": "Cecilia Christensen",
+      "role": "Service Owner",
+      "substitute": {
+        "subject": "oidc|david.dahl",
+        "name": "David Dahl"
+      }
+    }
+  },
+  "capabilitiesRef": "enterprise/capabilities.json",
+  "securityContracts": {
+    "ref": "distribution/acceptance/gate-policy.json",
+    "sharedBy": [
+      "small-vps",
+      "ha-cluster",
+      "enterprise-dedicated"
+    ],
+    "contracts": [
+      {
+        "id": "security",
+        "title": "Fælles sikkerhedsgate",
+        "kind": "common",
+        "requirementRefs": [
+          "REQ-INSTALL-001",
+          "REQ-CONFIGURATION-001",
+          "REQ-LIFECYCLE-001",
+          "REQ-IDENTITY-001",
+          "REQ-POLICY-001",
+          "REQ-AUDIT-001",
+          "REQ-CREDENTIALS-001",
+          "REQ-TOOL-001",
+          "REQ-SECURITY-001",
+          "REQ-VULN-001"
+        ]
+      },
+      {
+        "id": "privacy",
+        "title": "Fælles privacygate",
+        "kind": "common",
+        "requirementRefs": [
+          "REQ-PRIVACY-001",
+          "REQ-PRIVACY-002",
+          "REQ-RETENTION-001",
+          "REQ-LOGGING-001"
+        ]
+      },
+      {
+        "id": "restore",
+        "title": "Fælles restoregate",
+        "kind": "common",
+        "requirementRefs": [
+          "REQ-BACKUP-001",
+          "REQ-BACKUP-002",
+          "REQ-DR-001",
+          "REQ-CONTINUITY-001",
+          "REQ-TAKEOVER-001"
+        ]
+      },
+      {
+        "id": "role",
+        "title": "Fælles rollegate",
+        "kind": "common",
+        "requirementRefs": [
+          "REQ-AGENT-ROLE-001",
+          "REQ-AGENT-HANDOFF-001",
+          "REQ-APPROVAL-001",
+          "REQ-CHANGE-001"
+        ]
+      }
+    ]
+  },
+  "packages": [
+    {
+      "id": "enterprise-core",
+      "title": "Enterprise-kernepakke",
+      "segment": "enterprise",
+      "order": 1,
+      "baseProfileRef": "enterprise-dedicated",
+      "selectionRationale": "Enterprise-kernen er den første pakke fordi den dedikerede enterprise-profil allerede er den eneste med kapacitet, egne app-instanser og databaser pr. kunde; den samler HR, indsigt, rapportering, økonomi, fakturering og tid uden at ændre sikkerhedskernen.",
+      "demand": {
+        "segments": [
+          "enterprise"
+        ],
+        "pilotProfileRefs": [
+          "enterprise"
+        ],
+        "businessProfileRefs": [
+          "enterprise"
+        ],
+        "demandRank": 1,
+        "rationale": "Enterprise Nord A/S (900 medarbejdere) efterspørger koncernøkonomi, HR og rapportering på en dedikeret installation, og metering-profilen 'enterprise' er den dokumenterede omkostningsramme."
+      },
+      "apps": [
+        "hr",
+        "bi",
+        "reporting",
+        "finance",
+        "invoicing",
+        "time"
+      ],
+      "capabilityConstraints": {
+        "required": [
+          "control-plane",
+          "identity-oidc",
+          "audit-log",
+          "hr",
+          "bi",
+          "reporting",
+          "finance",
+          "accounting",
+          "invoicing",
+          "time-tracking"
+        ],
+        "forbidden": [
+          "commerce",
+          "payment"
+        ],
+        "controlPlane": [
+          "control-plane",
+          "policy-decision",
+          "identity-oidc",
+          "audit-log"
+        ]
+      },
+      "dataOwnership": [
+        {
+          "dataClass": "financial",
+          "owner": {
+            "subject": "oidc|erik.eriksen",
+            "name": "Erik Eriksen",
+            "role": "Enterprise Delivery Owner"
+          },
+          "purpose": "Koncernøkonomi, bogføring og fakturering for enterprise-kunden.",
+          "residency": "dk",
+          "retentionRef": "retention/deletion-policy.json"
+        },
+        {
+          "dataClass": "personal",
+          "owner": {
+            "subject": "oidc|cecilia.christensen",
+            "name": "Cecilia Christensen",
+            "role": "Security Officer"
+          },
+          "purpose": "Medarbejderstamdata og HR-administration med beskyttet feltadgang.",
+          "residency": "eu",
+          "retentionRef": "retention/deletion-policy.json"
+        }
+      ],
+      "isolation": {
+        "level": "dedicated",
+        "dedicatedDatabases": true,
+        "networkSegmentation": true,
+        "immutableAudit": true,
+        "notes": "Kundens egne app-instanser og databaser i et dedikeret fejldomæne; audit er holdbar og WORM-beskyttet."
+      },
+      "integrations": [
+        {
+          "candidateRef": "integration-candidate.tryton.example.json",
+          "kind": "erp",
+          "purpose": "Dansk økonomi og bogføring som kandidat bag en fremtidig adapter.",
+          "availability": "included"
+        },
+        {
+          "candidateRef": "integration-candidate.frappe-hr.example.json",
+          "kind": "hr",
+          "purpose": "Medarbejderstamdata og HR-workflows som kandidat bag en fremtidig adapter.",
+          "availability": "included"
+        },
+        {
+          "candidateRef": "integration-candidate.kimai.example.json",
+          "kind": "time",
+          "purpose": "Tidsregistrering som kandidat bag en fremtidig adapter.",
+          "availability": "opt-in"
+        }
+      ],
+      "professionalRequirements": [
+        {
+          "id": "danish-accounting",
+          "title": "Dansk bogføring og moms",
+          "authority": "Erhvervsstyrelsen / registreret revisor",
+          "status": "unreviewed",
+          "blocksImplementation": true
+        },
+        {
+          "id": "payroll",
+          "title": "Løn og lønkørsel",
+          "authority": "Navngivet lønansvarlig",
+          "status": "unreviewed",
+          "blocksImplementation": true
+        },
+        {
+          "id": "e-invoicing",
+          "title": "E-faktura access point (OIOUBL/NemHandel)",
+          "authority": "NemHandel / godkendt access point",
+          "status": "pending",
+          "blocksImplementation": true
+        }
+      ],
+      "sectorRules": {
+        "regimes": [],
+        "status": "not-applicable",
+        "assessmentRef": null,
+        "notes": "Enterprise-kernen er ikke omfattet af en sektorspecifik regel ud over de generelle regnskabs- og momskrav, som håndteres som faglige krav."
+      },
+      "highRiskAi": {
+        "applicable": false,
+        "assessmentRef": null,
+        "status": "not-applicable",
+        "reason": "Enterprise-kernen aktiverer ingen AI-funktion; AI-komponenter er særskilte og kræver deres egen risikovurdering."
+      },
+      "productOwner": {
+        "subject": "oidc|erik.eriksen",
+        "name": "Erik Eriksen",
+        "role": "Enterprise Delivery Owner",
+        "substitute": {
+          "subject": "oidc|freja.fischer",
+          "name": "Freja Fischer"
+        }
+      },
+      "testCustomer": {
+        "name": "Enterprise Nord A/S",
+        "contact": {
+          "subject": "oidc|erik.eriksen",
+          "name": "Erik Eriksen",
+          "role": "CTO"
+        },
+        "status": "identified",
+        "contractRef": null,
+        "synthetic": true
+      },
+      "implementation": {
+        "status": "blocked",
+        "reason": "Blokeret indtil dansk bogføring, moms, e-faktura og løn er afklaret af navngivne fagpersoner, og testkundens aftale er underskrevet."
+      },
+      "tcoRef": {
+        "profileId": "enterprise",
+        "tcoComparisonRef": "metering/report/tco-comparison.json"
+      },
+      "exclusions": [
+        {
+          "candidate": "Egen bogføringsmotor",
+          "reason": "Egen bogføringsmotor ville være et parallelt ERP-produkt med dansk bogføringslov som vedvarende ansvar."
+        },
+        {
+          "candidate": "Fuld ERP på small-vps",
+          "reason": "En lille VPS har ikke kapaciteten; enterprise-kernen kræver den dedikerede enterprise-profil."
+        }
+      ]
+    }
+  ]
+}

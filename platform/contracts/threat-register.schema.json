@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/threat-register.schema.json",
+  "title": "Threat Register",
+  "description": "Konkret trusselmodel (DKC-063) bundet til de testede grænser: tenantgrænser, identiteter, agent-handoffs, privilegerede host-operationer, uforanderligt lager, telemetri og eksterne kilder. Hver trussel peger på de krav i testmatricen der efterprøver den, og på den resterende risiko. Dokumentet docs/security/threat-model.md genereres herfra.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "boundaries", "threats"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "ThreatRegister" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version", "description", "accountableHuman"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9-]{2,63}$" },
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$" },
+        "description": { "type": "string", "minLength": 10 },
+        "accountableHuman": { "$ref": "#/$defs/accountableHuman" },
+        "lastReviewed": { "type": "string", "format": "date" }
+      }
+    },
+    "boundaries": {
+      "type": "array",
+      "minItems": 7,
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "description", "requirementIds"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "enum": ["tenant-boundary", "identity", "agent-handoff", "privileged-host-operations", "immutable-storage", "telemetry", "external-sources"]
+          },
+          "title": { "type": "string", "minLength": 3 },
+          "description": { "type": "string", "minLength": 10 },
+          "requirementIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^REQ-[A-Z0-9-]{2,40}$" } }
+        }
+      }
+    },
+    "threats": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "boundary", "title", "description", "requirementIds", "residualRisk", "owner"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^THREAT-[A-Z0-9-]{2,40}$" },
+          "boundary": {
+            "enum": ["tenant-boundary", "identity", "agent-handoff", "privileged-host-operations", "immutable-storage", "telemetry", "external-sources"]
+          },
+          "title": { "type": "string", "minLength": 5 },
+          "description": { "type": "string", "minLength": 15 },
+          "requirementIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^REQ-[A-Z0-9-]{2,40}$" } },
+          "stride": { "type": "array", "uniqueItems": true, "items": { "enum": ["spoofing", "tampering", "repudiation", "information-disclosure", "denial-of-service", "elevation-of-privilege"] } },
+          "residualRisk": { "enum": ["low", "medium", "high", "unassessed"] },
+          "owner": { "$ref": "#/$defs/accountableHuman" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "accountableHuman": {
+      "type": "object",
+      "required": ["subject", "role", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 },
+        "substitute": {
+          "type": "object",
+          "required": ["subject", "name"],
+          "additionalProperties": false,
+          "properties": { "subject": { "type": "string", "minLength": 3 }, "name": { "type": "string", "minLength": 2 } }
+        }
+      }
+    }
+  }
+}

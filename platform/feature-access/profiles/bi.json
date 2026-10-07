@@ -1,0 +1,45 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "FeatureAccessProfile",
+  "metadata": {
+    "name": "bi",
+    "version": "1.0.0",
+    "description": "BI's funktionsprofil. Formålet er analyse og ledelsesinformation; følsomme HR-felter er nægtet som standard og skal hentes gennem HR.",
+    "accountableHuman": {
+      "subject": "oidc|cecilia.christensen",
+      "name": "Cecilia Christensen",
+      "role": "Service Owner",
+      "substitute": { "subject": "oidc|david.dahl", "name": "David Dahl" }
+    },
+    "labels": { "category": "bi" }
+  },
+  "id": "bi",
+  "purpose": "business-intelligence",
+  "purposeDescription": "Aggregeret analyse og ledelsesinformation over det kolonnebaserede analyticslager.",
+  "modules": ["platform-core", "identity-broker", "analytics-store", "bi"],
+  "capabilities": ["bi"],
+  "allowedDataClasses": ["internal", "personal"],
+  "fieldRules": {
+    "defaultDecision": "deny",
+    "fields": [
+      { "field": "metric", "dataClass": "internal", "decision": "allow" },
+      { "field": "dimension", "dataClass": "internal", "decision": "allow" },
+      { "field": "employee_name", "dataClass": "personal", "decision": "redact", "note": "BI ser ikke navne direkte; de skal hentes gennem HR med en eksplicit bevilling." },
+      { "field": "employee_id", "dataClass": "personal", "decision": "redact", "note": "Personhenførbare id'er tilbageholdes i BI-udtræk." }
+    ]
+  },
+  "rowPolicy": {
+    "tenantStrict": true,
+    "selfAttribute": "subject"
+  },
+  "externalSources": [],
+  "recipientTrust": [
+    {
+      "id": "bi-analysts",
+      "kind": "human",
+      "dataSharingRef": "docs/compliance/data-sharing.md#bi-analysts",
+      "revalidateAt": ["run"]
+    }
+  ],
+  "surfaces": ["ui", "api", "connector", "search", "export", "cache", "ai-tool"]
+}

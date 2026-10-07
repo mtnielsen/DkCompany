@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/security-posture.schema.json",
+  "title": "Security Posture",
+  "description": "Samlet sikkerhedsstatus udledt af navngivne sensorer. `overall` er den mest alvorlige sensorstatus; en forældet eller manglende sensor kan aldrig give `pass`.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "generatedAt", "overall", "sensors", "staleSensorIds", "missingSensorIds", "findings"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "SecurityPosture" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "overall": { "enum": ["pass", "partial", "fail", "stale", "missing", "unknown"] },
+    "sensors": { "type": "array", "items": { "$ref": "#/$defs/sensor" } },
+    "staleSensorIds": { "type": "array", "items": { "type": "string" } },
+    "missingSensorIds": { "type": "array", "items": { "type": "string" } },
+    "findings": {
+      "type": "object",
+      "required": ["critical", "high", "medium", "low", "total"],
+      "additionalProperties": false,
+      "properties": {
+        "critical": { "type": "integer", "minimum": 0 },
+        "high": { "type": "integer", "minimum": 0 },
+        "medium": { "type": "integer", "minimum": 0 },
+        "low": { "type": "integer", "minimum": 0 },
+        "total": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "notes": { "type": "array", "items": { "type": "string" } }
+  },
+  "$defs": {
+    "sensor": {
+      "type": "object",
+      "required": ["id", "source", "kind", "freshness", "status", "required"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "source": { "type": "string", "minLength": 1 },
+        "kind": { "type": "string", "minLength": 1 },
+        "capturedAt": { "type": ["string", "null"] },
+        "ageSeconds": { "type": ["number", "null"] },
+        "value": { "type": "number" },
+        "freshness": { "enum": ["fresh", "stale", "missing"] },
+        "status": { "enum": ["pass", "partial", "fail", "stale", "missing", "unknown"] },
+        "required": { "type": "boolean" },
+        "runbook": { "type": "string" },
+        "reason": { "type": "string" }
+      }
+    }
+  }
+}

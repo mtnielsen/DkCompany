@@ -1,0 +1,105 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "RetentionDeletionPolicy",
+  "metadata": {
+    "name": "platform-retention-deletion",
+    "version": "1.0.0",
+    "description": "Dokumenteret slette- og tilbageholdelsespolitik for platformens fem datalag plus eksterne modtagere.",
+    "lastReviewed": "2025-09-24"
+  },
+  "principals": {
+    "deletionRoles": ["privacy-officer", "data-protection-officer"],
+    "holdApproverRoles": ["legal-counsel", "data-protection-officer"],
+    "aiDenied": true
+  },
+  "surfaces": [
+    {
+      "id": "primary-object-store",
+      "kind": "primary",
+      "title": "Primært objektlager",
+      "coverage": "full",
+      "dataClasses": ["personal", "pseudonymised", "operational"],
+      "deleteMechanism": "versionssletning i det autoritative objektlager efter subjektets digest-indeks",
+      "retentionDays": 30,
+      "trigger": "dsar-erasure",
+      "legalHoldSupported": true,
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" }
+    },
+    {
+      "id": "rebuildable-index",
+      "kind": "index",
+      "title": "Genopbyggeligt indeks",
+      "coverage": "full",
+      "dataClasses": ["personal", "pseudonymised"],
+      "deleteMechanism": "indekset kastes og genopbygges fra det autoritative lager uden subjektets poster",
+      "retentionDays": 1,
+      "trigger": "dsar-erasure",
+      "legalHoldSupported": true,
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" }
+    },
+    {
+      "id": "ephemeral-cache",
+      "kind": "cache",
+      "title": "Ephemeral cache",
+      "coverage": "full",
+      "dataClasses": ["personal", "pseudonymised", "operational"],
+      "deleteMechanism": "cacheposter for subjektet fjernes og hele tenantcachen kan droppes uden at røre autoritative data",
+      "retentionDays": 1,
+      "trigger": "dsar-erasure",
+      "legalHoldSupported": true,
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" }
+    },
+    {
+      "id": "derived-ai-store",
+      "kind": "derived-ai",
+      "title": "Afledte AI-data (prompts og embeddings)",
+      "coverage": "partial",
+      "dataClasses": ["personal", "pseudonymised"],
+      "deleteMechanism": "lokale prompts/embeddings slettes; leverandørens trænings-/logkopi kan ikke slettes af platformen",
+      "retentionDays": 14,
+      "trigger": "dsar-erasure",
+      "legalHoldSupported": true,
+      "external": true,
+      "reason": "Modelleverandøren eksponerer ingen slette-API for afledte kopier; platformen kan kun slette sin egen lokale kopi og dokumentere den resterende leverandørkopi med udløb.",
+      "owner": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Security Owner" }
+    },
+    {
+      "id": "protected-backup",
+      "kind": "backup",
+      "title": "Beskyttede backups",
+      "coverage": "partial",
+      "dataClasses": ["personal", "pseudonymised"],
+      "deleteMechanism": "slettebeslutningen skrives til den append-only suppressionsjournal og genanvendes ved gendannelse; den historiske, WORM-låste backup slettes ikke fysisk",
+      "retentionDays": 365,
+      "trigger": "event-age",
+      "legalHoldSupported": false,
+      "reason": "Immutable backups må ikke kunne slettes af driftscredentials; i stedet filtreres subjektet ved restore via suppressionsjournalen, og kopien udløber med backupretentionen.",
+      "owner": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" }
+    },
+    {
+      "id": "upstream-model-provider",
+      "kind": "upstream",
+      "title": "Ekstern modelleverandør",
+      "coverage": "unsupported",
+      "dataClasses": ["personal", "pseudonymised"],
+      "deleteMechanism": "ingen; platformen kan hverken læse eller slette leverandørens kopi",
+      "retentionDays": 30,
+      "trigger": "event-age",
+      "legalHoldSupported": false,
+      "external": true,
+      "reason": "Leverandøren udstiller ingen slette-API og ingen læsbar kopi; dækningen rapporteres ærligt som 'unsupported' og håndteres gennem databehandleraftalen.",
+      "owner": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Security Owner" }
+    }
+  ],
+  "rules": {
+    "defaultDeny": true,
+    "holdRequiresJustification": true,
+    "holdRequiresSeparateApprover": true,
+    "holdBlocksDeletion": true,
+    "restoreRequiresDeletionDecisions": true,
+    "auditReceiptBeforeMutation": true,
+    "receiptStoresSubjectDigestOnly": true
+  },
+  "approvedBy": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" },
+  "approvedAt": "2025-09-24"
+}

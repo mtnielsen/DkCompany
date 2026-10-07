@@ -1,0 +1,127 @@
+{
+  "taskId": "S1-01",
+  "agentIdentity": "coding-agent implementer session on branch impl/S1-01-platform-source-tree (single agent; no independent verifier identity claimed)",
+  "role": "implementer",
+  "status": "awaiting-verification",
+  "sourceCommit": "19407f6d6d741f69e049d27729a8f987b47aff71",
+  "sourceTreeDigest": "sha256:f940d3000c27ce73c8971352b778d4e1dcccfeee0a82a4868b04fc8ff5fb7293",
+  "artifactDigests": [
+    {
+      "path": "platform/PROVENANCE.json",
+      "sha256": "4cd3529027de9f761924282ea408a29cc5fe99a64fe0abd2167ad42cb26a3c2f"
+    },
+    {
+      "path": "tools/assemble-platform.mjs",
+      "sha256": "ec4d0fad251fad1d6e4cb277832d35c902752e4985203107d5340a5e6ec7f43a"
+    },
+    {
+      "path": "tools/overlay-stack.json",
+      "sha256": "12709faaa0b8a2965d186e999b62ffdb5656219c9c57fc0653eb2c3898abd49c"
+    },
+    {
+      "path": "tools/test/assemble-platform.test.mjs",
+      "sha256": "ceb26b357df1666428b5ce2f900e51ba9e1a7a0077f5286614ee7f8cdc9eee8c"
+    }
+  ],
+  "commands": [
+    {
+      "where": "clean clone of the tested commit",
+      "command": "git clone --no-hardlinks /mnt/c/projects/DkCompany /tmp/dkc-s1-01-verify && git checkout --detach 19407f6d6d741f69e049d27729a8f987b47aff71",
+      "exitCode": 0,
+      "summary": "isolated clean checkout at the tested source commit; working tree clean"
+    },
+    {
+      "where": "clean clone",
+      "command": "make assemble-check",
+      "exitCode": 0,
+      "summary": "verified platform: 2176 files, 66 overlays, tree f940d3000c27ce73c8971352b778d4e1dcccfeee0a82a4868b04fc8ff5fb7293"
+    },
+    {
+      "where": "clean clone",
+      "command": "node tools/assemble-platform.mjs --target verify-a --json",
+      "exitCode": 0,
+      "summary": "fresh assembly A: 2176 files, 66 overlays, tree f940d300..."
+    },
+    {
+      "where": "clean clone",
+      "command": "node tools/assemble-platform.mjs --target verify-b --json",
+      "exitCode": 0,
+      "summary": "fresh assembly B: identical tree digest f940d300..."
+    },
+    {
+      "where": "clean clone",
+      "command": "diff -r verify-a verify-b && cmp verify-a/PROVENANCE.json verify-b/PROVENANCE.json",
+      "exitCode": 0,
+      "summary": "two independent materializations are byte-identical, including PROVENANCE.json; 2176 files all mode 100644; no timestamp or absolute path in provenance"
+    },
+    {
+      "where": "clean clone",
+      "command": "git status --porcelain -- 00-core 01-step1",
+      "exitCode": 0,
+      "summary": "empty; historical inputs are not mutated by assembly or by the test suites"
+    },
+    {
+      "where": "clean clone",
+      "command": "make install",
+      "exitCode": 0,
+      "summary": "npm ci in platform/conformance: added 6 packages"
+    },
+    {
+      "where": "clean clone",
+      "command": "make validate",
+      "exitCode": 0,
+      "summary": "schemas valid; lint OK (843 JSON files, 2177 files scanned)"
+    },
+    {
+      "where": "clean clone",
+      "command": "make test",
+      "exitCode": 0,
+      "summary": "assembler 12/12; runtime 114/114; approvals 30/30; identity 52/52; data-protection 41/41; agent-registry 33/33; conformance 528/528; total 810 pass, 0 fail"
+    },
+    {
+      "where": "clean clone",
+      "command": "node 02-stabilization/reference/security-probes.mjs platform /tmp/verify-probes.json",
+      "exitCode": 0,
+      "summary": "pre-fix findings reproduced against platform/: R1 caller_overrides_no_ai_access completed with 1 stub execution; R2 cross_tenant_revocation HTTP 200, state revoked; R3 runtime_pdp_requires_three_but_only_two_approved completed with 1 stub execution; R4 anonymous_global_approval_list HTTP 200. Positive controls: server no-AI-access denied; cross-tenant GET 403"
+    },
+    {
+      "where": "clean clone",
+      "command": "make assemble-check && git status --porcelain",
+      "exitCode": 0,
+      "summary": "tree still byte-identical after install and all suites; clean clone remains clean"
+    },
+    {
+      "where": "workspace",
+      "command": "node tools/assemble-platform.mjs --target platform --force --json",
+      "exitCode": 0,
+      "summary": "generated the committed platform/ tree and PROVENANCE.json (tool ec4d0fad..., stack 12709faa...)"
+    },
+    {
+      "where": "workspace",
+      "command": "node tools/assemble-platform.mjs --target platform --check --json",
+      "exitCode": 0,
+      "summary": "committed tree matches a fresh deterministic assembly"
+    }
+  ],
+  "changes": [
+    "platform/ — canonical maintained source tree (2176 files) assembled from 00-core plus all 66 overlays in apply.sh dependency order, tip dkc-036; includes platform/PROVENANCE.json",
+    "tools/assemble-platform.mjs — deterministic assembler; refuses cycles, missing/ unreachable dependencies, path escapes, symlinks, out-of-workspace targets and unsafe replacement; derives executable modes from the git index",
+    "tools/overlay-stack.json — declarative stack (tip, base, overlay predecessors, exclusions, pinned input commits) cross-checked against the historical apply.sh files",
+    "tools/test/assemble-platform.test.mjs — 12 end-to-end tests covering determinism, provenance accounting and every refusal path",
+    "Makefile — root entry points: assemble, assemble-force, assemble-check, install, validate, lint, assembler-test, security-test, conformance-test, test, probes, ci, clean",
+    "README.md — records platform/ as the maintained source and 00-core/ plus 01-step1/ as frozen historical inputs",
+    "02-stabilization/adr/0001-platform-source-tree.md and 02-stabilization/adr/README.md — ADR for the migration"
+  ],
+  "limitations": [
+    "The repository-reported 279-check historical baseline (218 PASS / 1 FAIL changelog-check / 60 NOT RUN) was NOT independently rerun; only the focused suites, the conformance suite, schema validation, lint and the local probes were run.",
+    "The 2026-10-06 review's single conformance failure was Windows-only (R7, C-004 path containment). On this Linux checkout the conformance suite passes 528/528. R7 remains open for the later portability task; it is not claimed fixed.",
+    "R1-R4 remain reproducible against the pre-fix platform/ tree; S1-02 through S1-05 are responsible for closing them. The probes are a local stub/loopback harness, not a penetration test.",
+    "GitHub CI is NOT RUN (S2-03); no live services, external scanning tools, real IdP, real database or staging host participated.",
+    "Implementation status is awaiting-verification. No independent verification, human acceptance, merge or deployment has been performed by the implementer.",
+    "The assembler is a one-time migration tool for the pre-fix tree; after subsequent tasks modify platform/, assemble-check is expected to fail until those tasks update or retire it."
+  ],
+  "blockedOn": [],
+  "nextAction": "independent-verification",
+  "verifierVerdict": null,
+  "humanAcceptance": null
+}

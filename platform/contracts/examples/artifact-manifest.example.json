@@ -1,0 +1,55 @@
+{
+  "apiVersion": "contracts.platform/v1alpha1",
+  "kind": "ArtifactManifest",
+  "metadata": {
+    "name": "platform-release-artifacts",
+    "version": "1.0.0",
+    "description": "Fortegnelse over de artefakter releasevejen må installere, med digest, SBOM, proveniens og signaturkrav.",
+    "accountableHuman": { "subject": "oidc|anna.andersen", "name": "Anna Andersen", "role": "Platform Owner" }
+  },
+  "sourceCommit": "83ad91a963d8055f77c29fb4361455689df95acb",
+  "trustAnchor": {
+    "keys": [
+      {
+        "keyId": "0123456789abcdef",
+        "algorithm": "ed25519",
+        "publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAexampleexampleexampleexampleexampleexampleexa=\n-----END PUBLIC KEY-----\n",
+        "owner": { "subject": "oidc|cecilia.christensen", "name": "Cecilia Christensen", "role": "Security Owner" }
+      }
+    ]
+  },
+  "policy": {
+    "requirePinnedDigest": true,
+    "requireSignature": true,
+    "requireSbom": true,
+    "requireProvenance": true
+  },
+  "artifacts": [
+    {
+      "name": "platform-sbom",
+      "type": "sbom",
+      "status": "built-unsigned",
+      "reason": "SBOM genereres deterministisk lokalt, men releasesignaturnøglen ligger i CI-hemmeligheden og er ikke tilgængelig i dette miljø.",
+      "builder": "supply-chain/src/sbom.mjs",
+      "sourceCommit": "83ad91a963d8055f77c29fb4361455689df95acb",
+      "builtAt": "2026-09-23T09:00:00.000Z",
+      "digest": "71f9e86661161b590a9a7057a3418e30c5ea3e045a2d2c1c1ea46c8c815022b1",
+      "signature": null,
+      "sbom": { "ref": "release/sbom/platform-sbom.cdx.json", "sha256": "71f9e86661161b590a9a7057a3418e30c5ea3e045a2d2c1c1ea46c8c815022b1" },
+      "provenance": null
+    },
+    {
+      "name": "ghcr.io/example/platform-pdp",
+      "type": "container-image",
+      "status": "not-built",
+      "reason": "Docker er ikke tilgængelig i dette miljø; containerbilledet kan ikke bygges eller signeres her.",
+      "repository": "ghcr.io/example/platform-pdp",
+      "builder": "containers/pdp/Dockerfile",
+      "sourceCommit": "83ad91a963d8055f77c29fb4361455689df95acb",
+      "digest": null,
+      "signature": null,
+      "sbom": null,
+      "provenance": null
+    }
+  ]
+}

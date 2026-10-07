@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/contracts/recovery-drill.schema.json",
+  "title": "RecoveryDrill",
+  "description": "DKC-052: struktureret evidens for en gentagelig overtagelses-, gendannelses- og failback-øvelse. Hvert trin er maskine- eller menneskestyret; menneskestyrte trin forbliver 'pending', indtil et navngivet menneske faktisk har udført dem. Resultatet er bundet til eksakte artefakter, profiler, operatører og tidsstempler. Agenten kan ikke godkende beredskab: agentCanApprove er altid false, og en kritisk incident lukkes først efter servicevalidering og menneskelig accept.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "drillId", "scenarioId", "scenarioKind", "environment", "status", "startedAt", "finishedAt", "planRef", "planVersion", "operators", "artifactBindings", "steps", "measurements", "decisions", "gate", "agentCanApprove", "requiresHumanAcceptance", "measured"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "contracts.platform/v1alpha1" },
+    "kind": { "const": "RecoveryDrill" },
+    "drillId": { "type": "string", "minLength": 1 },
+    "scenarioId": { "type": "string", "minLength": 1 },
+    "scenarioKind": { "enum": ["single-server", "ha", "ai-offline", "iam-loss", "site-catastrophe"] },
+    "environment": { "type": "string", "minLength": 3 },
+    "status": { "enum": ["validated", "awaiting-human", "blocked", "not-run"] },
+    "startedAt": { "type": "string", "minLength": 10 },
+    "finishedAt": { "type": "string", "minLength": 10 },
+    "planRef": { "type": "string", "minLength": 1 },
+    "planVersion": { "type": "string", "minLength": 1 },
+    "operators": { "type": "array", "items": { "$ref": "#/$defs/operator" } },
+    "artifactBindings": { "type": "array", "items": { "$ref": "#/$defs/artifactBinding" } },
+    "steps": { "type": "array", "minItems": 6, "items": { "$ref": "#/$defs/step" } },
+    "measurements": { "$ref": "#/$defs/measurements" },
+    "decisions": { "type": "array", "items": { "$ref": "#/$defs/decision" } },
+    "gate": { "$ref": "#/$defs/gate" },
+    "agentCanApprove": { "const": false },
+    "requiresHumanAcceptance": { "const": true },
+    "measured": { "const": false }
+  },
+  "$defs": {
+    "human": {
+      "type": ["object", "null"],
+      "required": ["subject", "name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "role": { "type": "string", "minLength": 2 }
+      }
+    },
+    "operator": {
+      "type": "object",
+      "required": ["role", "human"],
+      "additionalProperties": false,
+      "properties": {
+        "role": { "enum": ["serviceOwner", "substitute", "onCall", "incidentLead", "changeAuthority", "dataProtection"] },
+        "human": { "$ref": "#/$defs/human" }
+      }
+    },
+    "artifactBinding": {
+      "type": "object",
+      "required": ["kind", "ref", "digest", "present"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "type": "string", "minLength": 2 },
+        "ref": { "type": "string", "minLength": 3 },
+        "digest": { "type": ["string", "null"] },
+        "present": { "type": "boolean" }
+      }
+    },
+    "escalation": {
+      "type": "object",
+      "required": ["afterMinutes", "to"],
+      "additionalProperties": false,
+      "properties": {
+        "afterMinutes": { "type": "integer", "minimum": 0 },
+        "to": { "$ref": "#/$defs/human" }
+      }
+    },
+    "step": {
+      "type": "object",
+      "required": ["id", "phase", "kind", "status", "ownerRole", "owner", "at", "artifactRef", "artifactDigest", "evidenceKind", "probe", "result", "escalation", "notes"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "phase": { "enum": ["takeover", "restore", "failback", "validation"] },
+        "kind": { "enum": ["machine", "human"] },
+        "status": { "enum": ["pending", "pass", "fail", "blocked", "not-run"] },
+        "ownerRole": { "type": ["string", "null"] },
+        "owner": { "$ref": "#/$defs/human" },
+        "at": { "type": ["string", "null"] },
+        "artifactRef": { "type": ["string", "null"] },
+        "artifactDigest": { "type": ["string", "null"] },
+        "evidenceKind": { "type": "string", "minLength": 3 },
+        "probe": { "type": ["string", "null"] },
+        "result": { "type": ["string", "null"] },
+        "escalation": { "type": "array", "items": { "$ref": "#/$defs/escalation" } },
+        "notes": { "type": ["string", "null"] }
+      }
+    },
+    "measurements": {
+      "type": "object",
+      "required": ["dataIntegrityOk", "restoreVerified", "failbackVerified", "rpoMinutes", "rtoMinutes", "rpoTargetMinutes", "rtoTargetMinutes"],
+      "additionalProperties": false,
+      "properties": {
+        "dataIntegrityOk": { "type": ["boolean", "null"] },
+        "restoreVerified": { "type": ["boolean", "null"] },
+        "failbackVerified": { "type": ["boolean", "null"] },
+        "rpoMinutes": { "type": ["number", "null"], "minimum": 0 },
+        "rtoMinutes": { "type": ["number", "null"], "minimum": 0 },
+        "rpoTargetMinutes": { "type": ["number", "null"], "minimum": 0 },
+        "rtoTargetMinutes": { "type": ["number", "null"], "minimum": 0 }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "required": ["phase", "decision", "by", "at", "evidenceRef"],
+      "additionalProperties": false,
+      "properties": {
+        "phase": { "enum": ["restore", "failback", "validation"] },
+        "decision": { "type": "string", "minLength": 2 },
+        "by": { "$ref": "#/$defs/human" },
+        "at": { "type": "string", "minLength": 10 },
+        "evidenceRef": { "type": ["string", "null"] }
+      }
+    },
+    "gate": {
+      "type": "object",
+      "required": ["status", "reasons"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "enum": ["pass", "blocked", "awaiting-human"] },
+        "reasons": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

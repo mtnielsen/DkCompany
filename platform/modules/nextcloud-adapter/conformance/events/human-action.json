@@ -1,0 +1,20 @@
+{
+  "specversion": "1.0",
+  "id": "87ef5d7b-4033-49de-8615-cc4a55bf0274",
+  "source": "urn:platform:module:nextcloud-adapter",
+  "type": "dk.platform.nextcloud-adapter.subject-locate.completed",
+  "time": "2026-09-24T10:59:05.783Z",
+  "datacontenttype": "application/json",
+  "tenantid": "acme",
+  "traceid": "9ff783476a3159512ccfb20833588214",
+  "spanid": "d9540fc1b7843f90",
+  "principal": {
+    "kind": "human",
+    "id": "oidc|dpo@example.org"
+  },
+  "dataclassification": "personal",
+  "data": {
+    "verb": "subject.locate",
+    "decision": "allow"
+  }
+}
