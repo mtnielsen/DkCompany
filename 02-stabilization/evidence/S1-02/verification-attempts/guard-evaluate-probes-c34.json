@@ -1,0 +1,49 @@
+[
+  {
+    "probe": "foreign_tenant_guard_evaluate",
+    "result": {
+      "decision": "allow",
+      "allowed": true,
+      "reasons": [],
+      "obligations": []
+    }
+  },
+  {
+    "probe": "substring_target_guard_evaluate",
+    "result": {
+      "decision": "allow",
+      "allowed": true,
+      "reasons": [],
+      "obligations": []
+    }
+  },
+  {
+    "probe": "unknown_class_guard_evaluate",
+    "result": {
+      "decision": "allow",
+      "allowed": true,
+      "reasons": [],
+      "obligations": []
+    }
+  },
+  {
+    "probe": "malformed_noai_guard_evaluate",
+    "result": {
+      "decision": "allow",
+      "allowed": true,
+      "reasons": [],
+      "obligations": []
+    }
+  },
+  {
+    "probe": "unknown_target_guard_evaluate",
+    "result": {
+      "decision": "deny",
+      "allowed": false,
+      "reasons": [
+        "ukendt beskyttelsespost — fail-closed"
+      ],
+      "obligations": []
+    }
+  }
+]
