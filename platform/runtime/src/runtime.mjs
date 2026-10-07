@@ -9,6 +9,7 @@ import { digestOf } from "./digest.mjs";
 import { guardRoleAction } from "../../agent-registry/src/runtime-role-guard.mjs";
 import { evaluateProtectedData } from "../../data-protection/src/guard.mjs";
 import { defaultAccessPolicy } from "../../data-protection/src/policy.mjs";
+import { DATA_CLASSES } from "../../data-protection/src/classes.mjs";
 
 /**
  * DKC-009: et stabilt idempotency-ID pr. handling. Samme task+handling giver
@@ -284,6 +285,22 @@ export function createAgentRuntime({
         classification = await protectedData.classify({ target: action.target, tenantId: classificationTenant });
         if (classification?.status !== "classified" || !classification.record) throw new Error(classification?.status ?? "unknown classification");
         trustedRecord = classification.record;
+        if (typeof trustedRecord !== "object"
+          || !DATA_CLASSES.includes(trustedRecord.dataClass)
+          || (trustedRecord.noAiAccess !== true && trustedRecord.noAiAccess !== false)) {
+          throw new Error("malformed classification record");
+        }
+        if (trustedRecord.tenantId != null
+          && (classificationTenant == null || String(trustedRecord.tenantId).toLowerCase() !== String(classificationTenant).toLowerCase())) {
+          throw new Error("classification record tenant mismatch");
+        }
+        const target = String(action.target ?? "").trim();
+        const targetSegments = target.split("/");
+        const recordMatchesTarget = trustedRecord.id === target
+          || (trustedRecord.authoritativePointer && (target === trustedRecord.authoritativePointer || target.startsWith(`${trustedRecord.authoritativePointer}/`)))
+          || (trustedRecord.consumerModules ?? []).some((consumer) => targetSegments.includes(consumer))
+          || (trustedRecord.id && targetSegments.includes(trustedRecord.id));
+        if (!target || !recordMatchesTarget) throw new Error("classification record does not match target");
       } catch {
         const message = "beskyttelsesklassifikation ukendt eller utilgængelig — fail-closed";
         if (!(await tryAudit({ tenantId: classificationTenant, type: "agent.denied", verb: action.verb, payload: { reason: "beskyttelsesklassifikation afvist" } }))) {

@@ -114,8 +114,10 @@ export function createProtectedDataGuard({ register = loadRegister(), policy = l
       return { status: "classified", record };
     },
     /** Evaluer en operation mod en target (eller en eksplicit post). */
-    evaluate({ principal, operation, target = null, tenantId = null, record = null, destination = null, adapter = null } = {}) {
-      const resolved = record ?? (target ? resolveRecord(register, target, { tenantId }) : null);
+    evaluate({ principal, operation, target = null, tenantId = null, destination = null, adapter = null } = {}) {
+      // Callers may identify a target, never supply its classification. The
+      // record always comes from this guard's server-owned register.
+      const resolved = target ? resolveRecord(register, target, { tenantId }) : null;
       if (adapter) return guardAdapterCall({ adapter, principal, operation, record: resolved, destination, policy });
       return evaluateProtectedData({ principal, operation, record: resolved, destination, policy });
     },
