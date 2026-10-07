@@ -18,6 +18,7 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { createAgentRuntime } from "../src/runtime.mjs";
+import { ordinaryDataFixture } from "./protected-data-fixture.mjs";
 import { createMemoryAuditLog, createApprovalClient } from "../src/clients.mjs";
 import { createApprovalService } from "../../approvals/src/approval-service.mjs";
 import { createChangeService } from "../../approvals/src/change-service.mjs";
@@ -109,7 +110,7 @@ function setup({ postchecks = { healthcheck: () => "green" }, calendarOverrides 
     restart: async () => { record.push("restart"); return { summary: "restarted" }; },
     scale: async () => { record.push("scale"); return { summary: "scaled" }; },
   };
-  const runtime = createAgentRuntime({
+  const runtime = createAgentRuntime({ protectedData: ordinaryDataFixture,
     manifest,
     pdp: { decide: async (input) => validDecision(input, { decision: "allow" }) },
     auditLog,

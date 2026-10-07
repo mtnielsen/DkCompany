@@ -21,6 +21,7 @@ import { createSqliteAuditLog } from "../../persistence/src/adapters/audit.mjs";
 import { createSqliteActionJournal } from "../../persistence/src/adapters/audit-journal.mjs";
 import { createCheckpointStore } from "../../persistence/src/checkpoint.mjs";
 import { createAgentRuntime } from "../../runtime/src/runtime.mjs";
+import { ordinaryDataFixture } from "../../runtime/test/protected-data-fixture.mjs";
 import { createMemoryActionJournal, createMemoryAuditLog } from "../../runtime/src/clients.mjs";
 import { evidenceFixture } from "../../runtime/test/evidence-fixtures.mjs";
 import { validDecision } from "../../runtime/test/pdp-fixtures.mjs";
@@ -33,7 +34,7 @@ const makeAction = (extra = {}) => ({ verb: "upgrade.dry-run", target: "dummy-ok
 
 test("audit utilgængelig før handling giver nul eksterne ændringer", async () => {
   const record = [];
-  const runtime = createAgentRuntime({
+  const runtime = createAgentRuntime({ protectedData: ordinaryDataFixture,
     manifest,
     pdp: allowPdp(),
     auditLog: createMemoryAuditLog(),
@@ -49,7 +50,7 @@ test("crash mellem intent og outcome giver unknown og ingen ukritisk genudførel
   const record = [];
   const journal = createMemoryActionJournal();
   await journal.begin({ tenantId: "acme", idempotencyId: "conf-crash", verb: "upgrade.dry-run", target: "dummy-ok" });
-  const runtime = createAgentRuntime({
+  const runtime = createAgentRuntime({ protectedData: ordinaryDataFixture,
     manifest,
     pdp: allowPdp(),
     auditLog: createMemoryAuditLog(),

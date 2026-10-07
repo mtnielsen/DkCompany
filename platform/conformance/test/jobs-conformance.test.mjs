@@ -18,6 +18,7 @@ import { migrateDatabase } from "../../persistence/src/identities.mjs";
 import { createSqliteAuditLog } from "../../persistence/src/adapters/audit.mjs";
 import { createSqliteActionJournal } from "../../persistence/src/adapters/audit-journal.mjs";
 import { createAgentRuntime } from "../../runtime/src/runtime.mjs";
+import { ordinaryDataFixture } from "../../runtime/test/protected-data-fixture.mjs";
 import { createMemoryAuditLog } from "../../runtime/src/clients.mjs";
 import { validDecision } from "../../runtime/test/pdp-fixtures.mjs";
 import { createJobQueue, createJobRunner } from "../../jobs/src/index.mjs";
@@ -51,7 +52,7 @@ function fixture({ manifest, executors, pdp = null, approvalVerifier = null }) {
   const build = () => {
     const audit = createSqliteAuditLog({ db });
     const journal = createSqliteActionJournal({ db, audit });
-    const runtime = createAgentRuntime({
+    const runtime = createAgentRuntime({ protectedData: ordinaryDataFixture,
       manifest,
       pdp: { decide },
       auditLog: createMemoryAuditLog(),
@@ -166,7 +167,7 @@ test("4. et irreversibelt unknown outcome eskaleres frem for blind retry", async
     const real = createSqliteActionJournal({ db, audit });
     const journal = { ...real, complete: async () => { throw new Error("audit outcome utilgængelig"); } };
     const manifest = manifestWith([{ verb: "restore", target: "dummy-ok", autonomyClass: "A0", requiredEvidence: ["policy-allow"] }]);
-    const runtime = createAgentRuntime({
+    const runtime = createAgentRuntime({ protectedData: ordinaryDataFixture,
       manifest,
       pdp: { decide: async (input) => validDecision(input, { requiredEvidence: ["policy-allow"] }) },
       auditLog: createMemoryAuditLog(),

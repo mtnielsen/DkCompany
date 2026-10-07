@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import { createAgentRuntime } from "../src/runtime.mjs";
+import { ordinaryDataFixture } from "./protected-data-fixture.mjs";
 import { createMemoryAuditLog } from "../src/clients.mjs";
 import { evidenceFixture } from "./evidence-fixtures.mjs";
 import { validPdp } from "./pdp-fixtures.mjs";
@@ -14,7 +15,7 @@ const task = (tenantId, actions) => ({ apiVersion: "contracts.platform/v1alpha1"
 const allowPdp = validPdp({ requiredEvidence: ["policy-allow"] });
 
 function runtime(record, options = {}) {
-  return createAgentRuntime({
+  return createAgentRuntime({ protectedData: ordinaryDataFixture,
     manifest,
     pdp: allowPdp,
     auditLog: createMemoryAuditLog(),
@@ -36,7 +37,7 @@ test("baggrundsopgave der peger på en anden kunde afvises", async () => {
 test("opgave for agentens egen kunde udføres og audit bærer tenanten", async () => {
   const record = [];
   const auditLog = createMemoryAuditLog();
-  const rt = createAgentRuntime({
+  const rt = createAgentRuntime({ protectedData: ordinaryDataFixture,
     manifest,
     pdp: allowPdp,
     auditLog,

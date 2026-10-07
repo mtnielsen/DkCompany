@@ -6,7 +6,7 @@ CONF  := $(PLAT)/conformance
 
 .DEFAULT_GOAL := help
 
-.PHONY: help assemble assemble-force assemble-check install validate lint \
+.PHONY: help assemble assemble-force assemble-check historical-assemble-check install validate lint \
 	assembler-test security-test conformance-test test probes ci clean
 
 help: ## Vis tilgængelige mål
@@ -19,13 +19,15 @@ assemble: ## Materialisér platform/ deterministisk fra 00-core og de 66 histori
 assemble-force: ## Genskab platform/ (kræver at målet bærer denne staks PROVENANCE.json)
 	$(NODE) $(TOOLS)/assemble-platform.mjs --target $(PLAT) --force
 
-assemble-check: ## Verificér at platform/ er byte-identisk med en frisk deterministisk samling
-	$(NODE) $(TOOLS)/assemble-platform.mjs --target $(PLAT) --check
+assemble-check: historical-assemble-check ## Kontrollér reproducibiliteten af de historiske input
+
+historical-assemble-check: ## Saml de historiske input i et midlertidigt træ og kontrollér det
+	$(NODE) $(TOOLS)/check-historical-assembly.mjs
 
 install: ## Installér platformens testafhængigheder (npm ci)
 	$(MAKE) -C $(PLAT) install
 
-validate: assemble-check ## Validér samlingen og platformens kontrakter
+validate: ## Validér den vedligeholdte platformskilde og dens kontrakter
 	$(MAKE) -C $(PLAT) validate
 	$(MAKE) -C $(PLAT) lint
 
@@ -50,7 +52,7 @@ test: assembler-test security-test conformance-test ## Kør assembler-, sikkerhe
 probes: ## Kør 2026-10-06-reviewets lokale prober mod platform/ (PROBE_OUT=sti)
 	$(NODE) 02-stabilization/reference/security-probes.mjs $(PLAT) $(if $(PROBE_OUT),$(PROBE_OUT),probe-results.json)
 
-ci: assemble-check install validate test ## Fuld lokal validering (kræver netværk til npm ci)
+ci: historical-assemble-check install validate test ## Fuld lokal validering (kræver netværk til npm ci)
 
 clean: ## Fjern lokale probe- og testresultater (rører ikke platform/)
 	rm -rf probe-results.json $(CONF)/node_modules $(PLAT)/.conformance-out

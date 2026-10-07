@@ -11,6 +11,7 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { createAgentRuntime } from "../src/runtime.mjs";
+import { ordinaryDataFixture } from "./protected-data-fixture.mjs";
 import { createMemoryAuditLog } from "../src/clients.mjs";
 import { createApprovalService } from "../../approvals/src/approval-service.mjs";
 import { createChangeService } from "../../approvals/src/change-service.mjs";
@@ -128,7 +129,7 @@ const action = (extra = {}) => ({
 test("en forhåndsgodkendt standard-change udfører uden godkendelse pr. mutation", async () => {
   const { change } = setupChangeService();
   const record = [];
-  const runtime = createAgentRuntime({
+  const runtime = createAgentRuntime({ protectedData: ordinaryDataFixture,
     manifest,
     pdp: planningPdp,
     auditLog: createMemoryAuditLog(),
@@ -144,7 +145,7 @@ test("en forhåndsgodkendt standard-change udfører uden godkendelse pr. mutatio
 
 test("runtimen overskriver en klientmedsendt runbook-digest med den signerede", async () => {
   const { change } = setupChangeService();
-  const runtime = createAgentRuntime({
+  const runtime = createAgentRuntime({ protectedData: ordinaryDataFixture,
     manifest,
     pdp: planningPdp,
     auditLog: createMemoryAuditLog(),
@@ -164,7 +165,7 @@ test("en handling uden for runbookens scope afvises", async () => {
   const canary = runbook({ scope: { verbs: ["upgrade.patch"], targets: ["dummy-ok/canary"], environments: ["staging"], tenants: ["*"] } });
   const { change } = setupChangeService({ signed: canary });
   const record = [];
-  const runtime = createAgentRuntime({ manifest, pdp: planningPdp, auditLog: createMemoryAuditLog(), runbookResolver: change, executors: { "upgrade.patch": async () => { record.push(1); } } });
+  const runtime = createAgentRuntime({ protectedData: ordinaryDataFixture, manifest, pdp: planningPdp, auditLog: createMemoryAuditLog(), runbookResolver: change, executors: { "upgrade.patch": async () => { record.push(1); } } });
   const result = await runtime.runTask(task([action({ target: "dummy-ok" })]));
   assert.equal(result.status, "refused");
   assert.ok(result.runbookReasons.some((r) => /scope/.test(r)), JSON.stringify(result));
@@ -174,7 +175,7 @@ test("en handling uden for runbookens scope afvises", async () => {
 test("en parameter uden for runbookens skema afvises", async () => {
   const { change } = setupChangeService();
   const record = [];
-  const runtime = createAgentRuntime({ manifest, pdp: planningPdp, auditLog: createMemoryAuditLog(), runbookResolver: change, executors: { "upgrade.patch": async () => { record.push(1); } } });
+  const runtime = createAgentRuntime({ protectedData: ordinaryDataFixture, manifest, pdp: planningPdp, auditLog: createMemoryAuditLog(), runbookResolver: change, executors: { "upgrade.patch": async () => { record.push(1); } } });
   const result = await runtime.runTask(task([action({ parameters: { library: "libfoo", to: "1.2.0", region: "eu-west-1" } })]));
   assert.equal(result.status, "refused", JSON.stringify(result));
   assert.ok(result.runbookReasons.some((r) => /region/.test(r)));
@@ -191,7 +192,7 @@ test("en normal-runbook kræver en godkendelse pr. mutation", async () => {
   const reg = change.registerRunbook(normalRunbook);
   assert.equal(reg.ok, true, JSON.stringify(reg.errors));
   const record = [];
-  const runtime = createAgentRuntime({ manifest, pdp: planningPdp, auditLog: createMemoryAuditLog(), runbookResolver: change, executors: { "upgrade.patch": async () => { record.push(1); } } });
+  const runtime = createAgentRuntime({ protectedData: ordinaryDataFixture, manifest, pdp: planningPdp, auditLog: createMemoryAuditLog(), runbookResolver: change, executors: { "upgrade.patch": async () => { record.push(1); } } });
   const result = await runtime.runTask(task([action({ runbookRef: "patch-dummy-ok@1.0.0" })]));
   assert.equal(result.status, "escalated", JSON.stringify(result));
   assert.match(result.reason, /approvalId mangler/);
@@ -203,7 +204,7 @@ test("en normal-runbook kræver en godkendelse pr. mutation", async () => {
 /* -------------------------------------------------------------------------- */
 test("en fejlet postcheck efter handlingen ruller tilbage", async () => {
   const { change } = setupChangeService({ postchecks: { tests: () => "red" } });
-  const runtime = createAgentRuntime({ manifest, pdp: planningPdp, auditLog: createMemoryAuditLog(), runbookResolver: change, executors: { "upgrade.patch": async () => ({ summary: "patched" }) } });
+  const runtime = createAgentRuntime({ protectedData: ordinaryDataFixture, manifest, pdp: planningPdp, auditLog: createMemoryAuditLog(), runbookResolver: change, executors: { "upgrade.patch": async () => ({ summary: "patched" }) } });
   const result = await runtime.runTask(task([action()]));
   assert.equal(result.status, "escalated", JSON.stringify(result));
   assert.match(result.reason, /postcheck/);
@@ -216,7 +217,7 @@ test("en fejlet postcheck efter handlingen ruller tilbage", async () => {
 test("en A4-beskyttet ressource afvises før runbook-resolveren", async () => {
   const { change } = setupChangeService();
   const record = [];
-  const runtime = createAgentRuntime({ manifest, pdp: planningPdp, auditLog: createMemoryAuditLog(), runbookResolver: change, executors: { "upgrade.patch": async () => { record.push(1); } } });
+  const runtime = createAgentRuntime({ protectedData: ordinaryDataFixture, manifest, pdp: planningPdp, auditLog: createMemoryAuditLog(), runbookResolver: change, executors: { "upgrade.patch": async () => { record.push(1); } } });
   const result = await runtime.runTask(task([action({ target: "policy/bundles" })]));
   assert.equal(result.status, "refused");
   assert.match(result.reason, /A4/);

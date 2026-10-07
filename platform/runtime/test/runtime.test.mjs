@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import { createAgentRuntime } from "../src/runtime.mjs";
+import { ordinaryDataFixture } from "./protected-data-fixture.mjs";
 import { createMemoryAuditLog, GovernanceUnavailable } from "../src/clients.mjs";
 import { evidenceFixture } from "./evidence-fixtures.mjs";
 import { validDecision } from "./pdp-fixtures.mjs";
@@ -26,7 +27,7 @@ function executors(record = []) {
 }
 
 function makeRuntime({ pdp = allowPdp(), auditLog = createMemoryAuditLog(), executorRecord = [], clock, credentialIssuer, approvalVerifier } = {}) {
-  return createAgentRuntime({ manifest, pdp, auditLog, executors: executors(executorRecord), ...(clock ? { clock } : {}), ...(credentialIssuer ? { credentialIssuer } : {}), ...(approvalVerifier ? { approvalVerifier } : {}) });
+  return createAgentRuntime({ protectedData: ordinaryDataFixture, manifest, pdp, auditLog, executors: executors(executorRecord), ...(clock ? { clock } : {}), ...(credentialIssuer ? { credentialIssuer } : {}), ...(approvalVerifier ? { approvalVerifier } : {}) });
 }
 
 test("A1-verbum udføres end-to-end med audit-spor", async () => {
@@ -131,7 +132,7 @@ test("A4: agenten må ikke ændre policy (selv med bredt scope)", async () => {
   const record = [];
   const broadManifest = structuredClone(manifest);
   broadManifest.capabilities.push({ verb: "upgrade.patch", target: "policy", autonomyClass: "A3", requiredEvidence: ["policy-allow"] });
-  const runtime = createAgentRuntime({ manifest: broadManifest, pdp: allowPdp(), auditLog: createMemoryAuditLog(), executors: executors(record) });
+  const runtime = createAgentRuntime({ protectedData: ordinaryDataFixture, manifest: broadManifest, pdp: allowPdp(), auditLog: createMemoryAuditLog(), executors: executors(record) });
   const result = await runtime.runTask(task([action("upgrade.patch", { target: "policy/bundles/platform" })]));
   assert.equal(result.status, "refused");
   assert.match(result.reason, /A4/);
@@ -150,7 +151,7 @@ test("udløbet JIT-credential stopper videre handling", async () => {
   // Ny task hvor uret rykker mellem handling 1 og 2.
   const record = [];
   const timedExecutors = executors(record);
-  const timed = createAgentRuntime({
+  const timed = createAgentRuntime({ protectedData: ordinaryDataFixture,
     manifest,
     pdp: allowPdp(),
     auditLog: createMemoryAuditLog(),

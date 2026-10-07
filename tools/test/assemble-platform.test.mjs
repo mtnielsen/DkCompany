@@ -1,8 +1,8 @@
 // Tests for tools/assemble-platform.mjs (S1-01).
 //
 // The tests exercise the CLI end to end in disposable sandbox workspaces and,
-// when the canonical platform/ tree is present, verify that the committed tree
-// is exactly the deterministic assembly of the historical inputs.
+// when the historical provenance is present, verify a fresh temporary
+// assembly without treating maintained platform/ source as generated output.
 
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
@@ -342,7 +342,7 @@ test('uses git index modes instead of DrvFs-style executable bits', (t) => {
   }
 });
 
-test('canonical stack resolves every overlay and the committed platform matches', () => {
+test('canonical stack reproduces in a temporary tree without replacing maintained platform source', () => {
   const provenancePath = join(repoRoot, 'platform', 'PROVENANCE.json');
   let provenance;
   try {
@@ -356,7 +356,12 @@ test('canonical stack resolves every overlay and the committed platform matches'
   assert.equal(new Set(provenance.overlayOrder).size, 66);
   assert.equal(Object.keys(provenance.overlays).length, 66);
   assert.equal(provenance.fileCount, Object.keys(provenance.files).length);
-  const result = run(['--target', 'platform', '--check', '--json']);
+  const activeRuntimePath = join(repoRoot, 'platform', 'runtime', 'src', 'runtime.mjs');
+  const activeRuntimeBefore = readFileSync(activeRuntimePath);
+  const result = spawnSync(process.execPath, [join(repoRoot, 'tools', 'check-historical-assembly.mjs')], { cwd: repoRoot, encoding: 'utf8' });
   assert.equal(result.status, 0, result.stderr);
-  assert.equal(JSON.parse(result.stdout).treeDigest, provenance.treeDigest);
+  assert.match(result.stdout, /assembled .*2176 files, 66 overlays/);
+  assert.match(result.stdout, /verified .*2176 files, 66 overlays/);
+  assert.equal(readFileSync(activeRuntimePath).equals(activeRuntimeBefore), true, 'historical check must not overwrite maintained source');
+  assert.equal(provenance.treeDigest, 'f940d3000c27ce73c8971352b778d4e1dcccfeee0a82a4868b04fc8ff5fb7293');
 });

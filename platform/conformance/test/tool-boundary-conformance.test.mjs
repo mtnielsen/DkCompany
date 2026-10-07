@@ -14,6 +14,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import { createAgentRuntime } from "../../runtime/src/runtime.mjs";
+import { ordinaryDataFixture } from "../../runtime/test/protected-data-fixture.mjs";
 import { createMemoryAuditLog } from "../../runtime/src/clients.mjs";
 import { createToolBoundary } from "../../runtime/src/tools.mjs";
 import { digestOf } from "../../runtime/src/digest.mjs";
@@ -35,7 +36,7 @@ const pdp = {
 };
 
 function runtime(record = [], extra = {}) {
-  return createAgentRuntime({
+  return createAgentRuntime({ protectedData: ordinaryDataFixture,
     manifest,
     pdp,
     auditLog: createMemoryAuditLog(),
@@ -114,7 +115,7 @@ test("2b. fri shell afvises, også når manifestet erklærer det", async () => {
   const record = [];
   const m = structuredClone(manifest);
   m.capabilities.push({ verb: "shell.exec", target: "dummy-ok", autonomyClass: "A0", requiredEvidence: ["policy-allow"] });
-  const r = createAgentRuntime({ manifest: m, pdp, auditLog: createMemoryAuditLog(), toolBoundary: createToolBoundary({ allowGeneric: false }), executors: { "shell.exec": async () => { record.push("shell.exec"); } } });
+  const r = createAgentRuntime({ protectedData: ordinaryDataFixture, manifest: m, pdp, auditLog: createMemoryAuditLog(), toolBoundary: createToolBoundary({ allowGeneric: false }), executors: { "shell.exec": async () => { record.push("shell.exec"); } } });
   const result = await r.runTask(task([{ verb: "shell.exec", target: "dummy-ok", environment: "staging", evidence: ["policy-allow"] }]));
   assert.equal(result.status, "refused");
   assert.equal(record.length, 0);

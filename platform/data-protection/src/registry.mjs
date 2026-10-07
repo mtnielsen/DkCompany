@@ -64,37 +64,58 @@ export function loadRegister(path = registerPath, { ajv = buildAjv().ajv } = {})
 /**
  * Slå den beskyttelsespost op en target hører til. Rækkefølge: eksakt id,
  * autoritativ pointer (eller barn af den), forbruger-modul og til sidst en
- * normaliseret delstreng. Returnerer null hvis target ikke er beskyttet.
+ * normaliseret delstreng. Tenant-specifikke poster prioriteres, og en match
+ * for en anden tenant bliver synlig for klassifikatoren som mismatch.
  */
-export function resolveRecord(register, target) {
+export function resolveRecord(register, target, { tenantId = null } = {}) {
   const t = String(target ?? "").trim();
   if (!t) return null;
-  for (const record of register?.records ?? []) {
-    if (record.id === t) return record;
-    if (record.authoritativePointer && (t === record.authoritativePointer || t.startsWith(`${record.authoritativePointer}/`))) return record;
-  }
-  const segments = t.split("/");
-  for (const record of register?.records ?? []) {
-    for (const consumer of record.consumerModules ?? []) {
-      if (segments.includes(consumer)) return record;
+  const records = register?.records ?? [];
+  const matchingRecords = (candidates) => {
+    for (const record of candidates) {
+      if (record.id === t) return record;
+      if (record.authoritativePointer && (t === record.authoritativePointer || t.startsWith(`${record.authoritativePointer}/`))) return record;
     }
+    const segments = t.split("/");
+    for (const record of candidates) {
+      for (const consumer of record.consumerModules ?? []) {
+        if (segments.includes(consumer)) return record;
+      }
+    }
+    for (const record of candidates) if (t.includes(record.id)) return record;
+    return null;
+  };
+  if (tenantId != null) {
+    const tenantRecords = records.filter((record) => record.tenantId != null && String(record.tenantId).toLowerCase() === String(tenantId).toLowerCase());
+    const tenantMatch = matchingRecords(tenantRecords);
+    if (tenantMatch) return tenantMatch;
+    const foreignRecords = records.filter((record) => record.tenantId != null && String(record.tenantId).toLowerCase() !== String(tenantId).toLowerCase());
+    if (matchingRecords(foreignRecords)) return matchingRecords(foreignRecords);
   }
-  for (const record of register?.records ?? []) {
-    if (t.includes(record.id)) return record;
-  }
-  return null;
+  return matchingRecords(records.filter((record) => record.tenantId == null));
 }
 
 export function createProtectedDataGuard({ register = loadRegister(), policy = loadPolicy() } = {}) {
   return {
     policy,
     register,
-    resolve(target) {
-      return resolveRecord(register, target);
+    resolve(target, { tenantId = null } = {}) {
+      return resolveRecord(register, target, { tenantId });
+    },
+    classify({ target, tenantId = null } = {}) {
+      const record = resolveRecord(register, target, { tenantId });
+      if (!record) return { status: "unknown", record: null };
+      if (record.tenantId != null && String(record.tenantId).toLowerCase() !== String(tenantId ?? "").toLowerCase()) {
+        return { status: "tenant-mismatch", record: null };
+      }
+      if (!DATA_CLASSES.includes(record.dataClass) || (record.noAiAccess !== true && record.noAiAccess !== false)) {
+        return { status: "unknown", record: null };
+      }
+      return { status: "classified", record };
     },
     /** Evaluer en operation mod en target (eller en eksplicit post). */
-    evaluate({ principal, operation, target = null, record = null, destination = null, adapter = null } = {}) {
-      const resolved = record ?? (target ? resolveRecord(register, target) : null);
+    evaluate({ principal, operation, target = null, tenantId = null, record = null, destination = null, adapter = null } = {}) {
+      const resolved = record ?? (target ? resolveRecord(register, target, { tenantId }) : null);
       if (adapter) return guardAdapterCall({ adapter, principal, operation, record: resolved, destination, policy });
       return evaluateProtectedData({ principal, operation, record: resolved, destination, policy });
     },

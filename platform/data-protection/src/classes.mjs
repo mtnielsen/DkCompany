@@ -91,7 +91,7 @@ export function operationForVerb(verb) {
     slo: "read",
     "subject.locate": "retrieve",
     "retention.policy": "read",
-    backup: "read",
+    backup: "export",
     "subject.export": "export",
     "subject.erase": "delete",
     "subject.legal_hold": "update",

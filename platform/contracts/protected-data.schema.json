@@ -33,6 +33,7 @@
         "additionalProperties": false,
         "properties": {
           "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$" },
+          "tenantId": { "type": "string", "minLength": 1, "description": "Valgfri tenant-afgrænsning for tenant-specifikke klassifikationer. Udeladt betyder en global platformspost." },
           "name": { "type": "string", "minLength": 3 },
           "owner": { "$ref": "#/$defs/human" },
           "versionId": { "type": "string", "minLength": 3, "description": "Den beskyttede versions-ID. En ny version kræver en menneskelig proces." },

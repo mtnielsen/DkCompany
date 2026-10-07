@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import { createAgentRuntime } from "../../runtime/src/runtime.mjs";
+import { ordinaryDataFixture } from "../../runtime/test/protected-data-fixture.mjs";
 import { createMemoryAuditLog } from "../../runtime/src/clients.mjs";
 import { createApprovalService } from "../../approvals/src/approval-service.mjs";
 import { checkClaims } from "../../approvals/src/claims.mjs";
@@ -18,7 +19,7 @@ const TRAINING = ["evidence-over-prose", "when-to-reject"];
 const human = (id, groups = ["platform-approvers"]) => ({ kind: "human", id, tenantId: "acme", groups });
 
 function runtimeWith({ pdp, auditLog = createMemoryAuditLog(), executorRecord = [] } = {}) {
-  return createAgentRuntime({
+  return createAgentRuntime({ protectedData: ordinaryDataFixture,
     manifest: agentManifest,
     pdp: pdp ?? { decide: async (input) => validDecision(input, { requiredEvidence: ["policy-allow"] }) },
     auditLog,
@@ -144,7 +145,7 @@ test("6. A4: agenten kan ikke ændre policy, audit-log eller egne rettigheder", 
     const record = [];
     const manifest = structuredClone(agentManifest);
     manifest.capabilities.push({ verb: "upgrade.patch", target, autonomyClass: "A3", requiredEvidence: ["policy-allow"] });
-    const runtime = createAgentRuntime({
+    const runtime = createAgentRuntime({ protectedData: ordinaryDataFixture,
       manifest,
       pdp: { decide: async (input) => validDecision(input, { requiredEvidence: ["policy-allow"] }) },
       auditLog: createMemoryAuditLog(),

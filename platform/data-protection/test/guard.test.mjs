@@ -60,13 +60,20 @@ test("no-AI-access er et selvstændigt flag og udelukker alle AI-flows", () => {
   for (const op of ["read", "retrieve", "prompt", "train", "analyze", "log-access", "append", "update", "delete", "copy", "export", "restore"]) {
     assert.equal(evaluate(op, over).allowed, false, `'${op}' skulle være blokeret af no-AI-access`);
   }
+  assert.equal(evaluateProtectedData({ principal: agent, operation: "read", record: record(over), policy: { ...policy, noAiAccessDeniesAll: false } }).allowed, false);
 });
 
 test("app-, admin- og restore-adaptere kan ikke omgå beskyttelsen", () => {
-  for (const adapter of ["app", "admin", "restore"]) {
-    const result = guardAdapterCall({ adapter, principal: agent, operation: "update", record: record(), policy });
-    assert.equal(result.allowed, false, `'${adapter}'-adapteren slap igennem`);
-    assert.ok(result.reasons.some((r) => r.includes(adapter)));
+  for (const [adapter, operations] of Object.entries({
+    app: ["read", "append", "update"],
+    admin: ["retrieve", "log-access", "delete"],
+    restore: ["restore"],
+  })) {
+    for (const operation of operations) {
+      const result = guardAdapterCall({ adapter, principal: agent, operation, record: record({ dataClass: "ordinary", noAiAccess: true }), policy });
+      assert.equal(result.allowed, false, `'${adapter}'-adapteren slap igennem '${operation}'`);
+      assert.ok(result.reasons.some((r) => r.includes(adapter)));
+    }
   }
 });
 
@@ -100,4 +107,20 @@ test("registeret kan slå beskyttede targets op og guard'e dem", () => {
   assert.equal(guard.resolve("helt-ukendt"), null);
   assert.equal(guard.evaluate({ principal: agent, operation: "update", target: "policy-bundle" }).allowed, false);
   assert.equal(guard.evaluate({ principal: agent, operation: "read", target: "tenant-records" }).allowed, true);
+});
+
+test("klassifikation skelner mellem eksplicit ordinary, ukendt og forkert tenant", () => {
+  const guard = createProtectedDataGuard({
+    register: { records: [
+      { id: "ordinary-resource", dataClass: "ordinary", noAiAccess: false, authoritativePointer: "ordinary/data" },
+      { id: "tenant-resource", dataClass: "ai-read-only", noAiAccess: false, authoritativePointer: "tenant/data", tenantId: "acme" },
+      { id: "tenant-resource-globex", dataClass: "ordinary", noAiAccess: false, authoritativePointer: "tenant/data", tenantId: "globex" },
+    ] },
+    policy,
+  });
+  assert.equal(guard.classify({ target: "ordinary/data", tenantId: "acme" }).status, "classified");
+  assert.equal(guard.classify({ target: "ordinary/data/unregistered", tenantId: "acme" }).status, "classified");
+  assert.equal(guard.classify({ target: "unknown/data", tenantId: "acme" }).status, "unknown");
+  assert.equal(guard.classify({ target: "tenant/data", tenantId: "globex" }).record.dataClass, "ordinary");
+  assert.equal(guard.classify({ target: "tenant/data", tenantId: "contoso" }).status, "tenant-mismatch");
 });

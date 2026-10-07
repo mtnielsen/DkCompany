@@ -13,6 +13,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import { createAgentRuntime, RuntimeBoundaryError } from "../src/runtime.mjs";
+import { ordinaryDataFixture } from "./protected-data-fixture.mjs";
 import { createMemoryAuditLog } from "../src/clients.mjs";
 import { validatePolicyDecision } from "../src/boundary.mjs";
 import { createPdp } from "../../policy/pdp/src/pdp.mjs";
@@ -34,7 +35,7 @@ const task = (actions, extra = {}) => ({
 });
 
 function runtimeWith({ pdp, manifest: m = manifest(), record = [], evidenceIndex, artifactLoader } = {}) {
-  return createAgentRuntime({
+  return createAgentRuntime({ protectedData: ordinaryDataFixture,
     manifest: m,
     pdp: pdp ?? { decide: async (input) => validDecision(input, { requiredEvidence: ["policy-allow"] }) },
     auditLog: createMemoryAuditLog(),

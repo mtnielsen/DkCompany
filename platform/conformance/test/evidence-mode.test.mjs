@@ -30,6 +30,7 @@ import {
   PRODUCTION_MODES,
 } from "../src/evidence-mode.mjs";
 import { createAgentRuntime } from "../../runtime/src/runtime.mjs";
+import { ordinaryDataFixture } from "../../runtime/test/protected-data-fixture.mjs";
 import { createMemoryAuditLog, GovernanceUnavailable } from "../../runtime/src/clients.mjs";
 import { createWorkloadVerifier, principalAssertion } from "../../identity/src/identity.mjs";
 import { resolveIngressPrincipal } from "../../gateway/src/ingress.mjs";
@@ -183,7 +184,7 @@ const baseManifest = JSON.parse(readFileSync(new URL("../../modules/dummy-ok/age
 
 test("frakoblet PDP blokerer den faktiske mutation", async () => {
   const executed = [];
-  const runtime = createAgentRuntime({
+  const runtime = createAgentRuntime({ protectedData: ordinaryDataFixture,
     manifest: structuredClone(baseManifest),
     pdp: { decide: async () => { throw new GovernanceUnavailable("PDP utilgængelig: ECONNREFUSED"); } },
     auditLog: createMemoryAuditLog(),

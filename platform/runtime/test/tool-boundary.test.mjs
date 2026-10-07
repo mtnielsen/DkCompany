@@ -13,6 +13,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import { createAgentRuntime } from "../src/runtime.mjs";
+import { ordinaryDataFixture } from "./protected-data-fixture.mjs";
 import { createMemoryAuditLog } from "../src/clients.mjs";
 import { createToolBoundary, resolveTool, validateEgress, validateParams, validateToolCall } from "../src/tools.mjs";
 import { digestOf } from "../src/digest.mjs";
@@ -129,7 +130,7 @@ test("et deklareret men ukendt verbum får en konservativ, afgrænset fallback",
 /* --- Runtime-integration ------------------------------------------------- */
 
 function runtimeWith(record = [], m = manifest()) {
-  return createAgentRuntime({
+  return createAgentRuntime({ protectedData: ordinaryDataFixture,
     manifest: m,
     pdp,
     auditLog: createMemoryAuditLog(),

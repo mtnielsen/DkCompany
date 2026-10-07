@@ -13,6 +13,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import { createAgentRuntime } from "../src/runtime.mjs";
+import { ordinaryDataFixture } from "./protected-data-fixture.mjs";
 import { createMemoryAuditLog } from "../src/clients.mjs";
 import { scanUntrusted, decodeVariants } from "../src/injection.mjs";
 import { buildTaskFromProposal, parseModelOutput } from "../src/untrusted.mjs";
@@ -24,7 +25,7 @@ const corpus = JSON.parse(readFileSync(new URL("./fixtures/injection-corpus.json
 const allowPdp = { decide: async (input) => ({ decision: "allow", pdp: { name: "test", version: "1", bundleVersion: "1" }, matchedRules: ["r"], inputSha256: digestOf(input), requiredEvidence: ["policy-allow"] }) };
 
 function makeRuntime(record = []) {
-  return createAgentRuntime({
+  return createAgentRuntime({ protectedData: ordinaryDataFixture,
     manifest,
     pdp: allowPdp,
     auditLog: createMemoryAuditLog(),

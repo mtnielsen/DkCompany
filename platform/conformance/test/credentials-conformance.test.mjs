@@ -20,6 +20,7 @@ import { createExecutorGuard, CredentialRejected } from "../../credentials/src/r
 import { createRevocationList } from "../../credentials/src/revocation.mjs";
 import { createKillSwitch } from "../../credentials/src/kill-switch.mjs";
 import { createAgentRuntime } from "../../runtime/src/runtime.mjs";
+import { ordinaryDataFixture } from "../../runtime/test/protected-data-fixture.mjs";
 import { createMemoryAuditLog } from "../../runtime/src/clients.mjs";
 import { runVerify } from "../../gitops/src/verify.mjs";
 import { evidenceFixture } from "../../runtime/test/evidence-fixtures.mjs";
@@ -76,7 +77,7 @@ test("udløb og tilbagekaldelse afviser efterfølgende handlinger hos modtageren
 test("nødstop afviser nye handlinger inden fem sekunder i staging", async () => {
   const creds = credentials();
   creds.killSwitch.activate({ scope: "global", reason: "incident", principal: HUMAN });
-  const runtime = createAgentRuntime({
+  const runtime = createAgentRuntime({ protectedData: ordinaryDataFixture,
     manifest,
     pdp: allowPdp(),
     auditLog: createMemoryAuditLog(),
@@ -105,7 +106,7 @@ test("agenten kan ikke ændre sit eget manifest, deployment eller kontroltjenest
   // Runtimen afviser A4-handlinger mod egen registrering, deployment og kontroltjenester.
   const broad = structuredClone(manifest);
   for (const target of ["policy", "audit", "credentials", "agent-registry", "gitops"]) broad.capabilities.push({ verb: "upgrade.patch", target, autonomyClass: "A3", requiredEvidence: ["policy-allow"] });
-  const runtime = createAgentRuntime({ manifest: broad, pdp: allowPdp(), auditLog: createMemoryAuditLog(), credentialBroker: creds.broker, killSwitch: creds.killSwitch, clock: creds.clock, executors: creds.guard.guardAll({ "upgrade.patch": async () => { throw new Error("må ikke kaldes"); } }) });
+  const runtime = createAgentRuntime({ protectedData: ordinaryDataFixture, manifest: broad, pdp: allowPdp(), auditLog: createMemoryAuditLog(), credentialBroker: creds.broker, killSwitch: creds.killSwitch, clock: creds.clock, executors: creds.guard.guardAll({ "upgrade.patch": async () => { throw new Error("må ikke kaldes"); } }) });
   for (const target of ["policy/bundles", "audit/log", "credentials/keys", "agent-registry/agents", "gitops/manifests"]) {
     const task = { apiVersion: "contracts.platform/v1alpha1", kind: "AgentTask", taskId: randomUUID(), tenantId: "acme", agentRef: manifest.metadata.name, objective: "conf", evidenceIndex: EVIDENCE.index, actions: [{ verb: "upgrade.patch", target, environment: "staging", evidence: ["tests-pass", "dry-run-clean", "rollback-tested"], idempotencyId: `conf-${target}` }] };
     const result = await runtime.runTask(task);

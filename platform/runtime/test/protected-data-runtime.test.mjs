@@ -65,10 +65,97 @@ test("en restore-operation mod en beskyttet post afvises uanset godkendelse", as
   assert.equal(calls.length, 0);
 });
 
+test("R1: caller metadata cannot lower the trusted no-AI classification", async () => {
+  const calls = [];
+  const auditLog = createMemoryAuditLog();
+  const runtime = createAgentRuntime({
+    manifest,
+    pdp: { decide: async (input) => validDecision(input, { requiredEvidence: ["policy-allow"] }) },
+    auditLog,
+    executors: { "observe.read": async (input) => { calls.push(input); return { summary: "read" }; } },
+    protectedData: guardFor([record({ dataClass: "retention-locked", noAiAccess: true, secretValue: "must-not-be-logged" })]),
+  });
+  const result = await runtime.runTask(task([action("observe.read", {
+    protectedData: { dataClass: "ordinary", noAiAccess: false, secretValue: "must-not-be-logged" },
+    dataClass: "ordinary",
+    noAiAccess: false,
+  })]));
+  assert.equal(result.status, "denied");
+  assert.equal(calls.length, 0);
+  assert.doesNotMatch(JSON.stringify(auditLog.events), /must-not-be-logged/);
+  assert.equal(Object.hasOwn(result, "action"), false, "afvisningssvaret må ikke kopiere payloaden");
+});
+
+test("action.operation cannot disguise a registered mutation as a read", async () => {
+  const calls = [];
+  const runtime = makeRuntime({ protectedData: guardFor([record({ dataClass: "ai-read-only" })]), record: calls });
+  const result = await runtime.runTask(task([action("upgrade.patch", { operation: "read" })]));
+  assert.equal(result.status, "denied");
+  assert.match(result.reason, /update/);
+  assert.equal(calls.length, 0);
+});
+
+test("tilladte protected-data reads kopieres ikke ind i audit, observer eller journal", async () => {
+  const auditLog = createMemoryAuditLog();
+  const observed = [];
+  const journal = { begin: async (entry) => { observed.push(entry); return { ok: true }; }, complete: async (entry) => { observed.push(entry); return { ok: true }; } };
+  const runtime = createAgentRuntime({
+    manifest,
+    pdp: { decide: async (input) => validDecision(input, { requiredEvidence: ["policy-allow"] }) },
+    auditLog,
+    logObserver: async (entry) => observed.push(entry),
+    actionJournal: journal,
+    executors: { "observe.read": async () => ({ summary: "protected-secret-value" }) },
+    protectedData: guardFor([record({ dataClass: "ai-read-only", secret: "protected-secret-value" })]),
+  });
+  const result = await runtime.runTask(task([action("observe.read", { parameters: { query: "protected-secret-value" } })]));
+  assert.equal(result.status, "completed");
+  assert.doesNotMatch(JSON.stringify(auditLog.events), /protected-secret-value/);
+  assert.doesNotMatch(JSON.stringify(observed), /protected-secret-value/);
+  assert.equal(observed.find((entry) => entry.request)?.request.parameters, null);
+  assert.equal(observed.find((entry) => Object.hasOwn(entry, "result"))?.result, null);
+});
+
+test("unknown, cross-tenant and unavailable classifications fail closed", async () => {
+  const calls = [];
+  for (const protectedData of [
+    guardFor([]),
+    guardFor([record({ tenantId: "globex" })]),
+    { classify() { throw new Error("registry unavailable"); } },
+    undefined,
+  ]) {
+    const runtime = makeRuntime({ protectedData, record: calls });
+    const result = await runtime.runTask(task([action("observe.read")]));
+    assert.equal(result.status, "denied");
+    assert.match(result.reason, /klassifikation ukendt eller utilgængelig/);
+  }
+  assert.equal(calls.length, 0);
+});
+
 test("en almindelig post uden beskyttelse passerer uændret (kontrol)", async () => {
   const calls = [];
   const runtime = makeRuntime({ protectedData: guardFor([record({ dataClass: "ordinary", noAiAccess: false })]), record: calls });
   const result = await runtime.runTask(task([action("observe.read")]));
   assert.equal(result.status, "completed");
   assert.deepEqual(calls, ["observe.read"]);
+});
+
+test("executor modtager ikke callerens operation- eller klassifikationsfelter", async () => {
+  const received = [];
+  const runtime = createAgentRuntime({
+    manifest,
+    pdp: { decide: async (input) => validDecision(input, { requiredEvidence: ["policy-allow"] }) },
+    auditLog: createMemoryAuditLog(),
+    executors: { "observe.read": async (input) => { received.push(input); return { summary: "ordinary" }; } },
+    protectedData: guardFor([record({ dataClass: "ordinary", noAiAccess: false })]),
+  });
+  const result = await runtime.runTask(task([action("observe.read", {
+    operation: "read",
+    dataClass: "ordinary",
+    noAiAccess: false,
+    protectedData: { dataClass: "ordinary", noAiAccess: false },
+  })]));
+  assert.equal(result.status, "completed");
+  assert.equal(Object.hasOwn(received[0], "operation"), false);
+  assert.equal(Object.hasOwn(received[0], "protectedData"), false);
 });
