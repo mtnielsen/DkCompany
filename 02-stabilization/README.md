@@ -1,10 +1,10 @@
 # DkCompany stabilization sprints
 
-This package assigns executable coding work to turn the DKC-036 cumulative implementation into a verified, installable single-server staging platform. Start with S1-01. It does not claim the 66 historical outputs are a production platform or all business applications.
+This package assigns executable coding work to turn the DKC-036 cumulative implementation into a verified, installable single-server staging platform. S1-01 is independently verified on Windows and Linux; the owner authorized continuation. The current assignment is S1-02. It does not claim the 66 historical outputs are a production platform or all business applications.
 
 ## Start an agent
 
-Give the implementer `START-IMPLEMENTER.md`. For one explicit assignment, give it `prompts/S1-01-IMPLEMENT.md`. After it returns a tested source commit, start a different agent with `START-VERIFIER.md` and that task ID/commit. The human owner reviews both outputs. Then assign the next task whose dependencies have been accepted. One agent retains one role throughout; using separate prompts in the same agent does not establish independence.
+Give the implementer `START-IMPLEMENTER.md`. For the current explicit assignment, give it `prompts/S1-02-IMPLEMENT.md`. After it returns a tested source commit, start a different agent with `START-VERIFIER.md` and that task ID/commit. The human owner reviews both outputs. Then assign the next task whose dependencies have been accepted. One agent retains one role throughout; using separate prompts in the same agent does not establish independence.
 
 This package is initially published on `codex/sprint-handoff-20261006`. Agents may branch from it while its PR is open. After acceptance, branch from the current integration/main base containing the accepted dependency commits. Never assume these files are already on main.
 
@@ -19,3 +19,9 @@ These files instruct future implementation. Publishing this package does not clo
 ## Expected effort
 
 Budget two initial two-week timeboxes for security/integration and installation/CI, followed by a staging sprint. These are planning estimates, not a promise that missing service wiring will fit. Re-estimate after S1-01 establishes the integrated baseline and after S2-02 proves the real installation. Exit gates determine readiness. Provision the VPS after the Sprint 2 gate; use a disposable local Linux VM for earlier work.
+
+## Browser management delivery
+
+The owner requested a beginner-friendly web interface on 2026-10-07. Sprint 2 now includes S2-UI-01 through S2-UI-05 after the installer and CI foundation, before VPS readiness. These are executable implementation/verifier prompts covering setup/login, people and approvals, applications/settings, operations/agents, and real browser acceptance. Reuse platform/portal and existing backend modules; catalogue descriptions are not proof that business applications work.
+
+This adds work to Sprint 2; re-estimate rather than treating the earlier two-week timebox as a commitment. Keep security tasks S1-02 through S1-05 ahead of privileged management workflows. Ordinary browser operations use the same backend authorization and approval services as every other client.

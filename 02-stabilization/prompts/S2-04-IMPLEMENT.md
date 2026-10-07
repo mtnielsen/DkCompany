@@ -10,7 +10,7 @@ Return a reviewable PR/diff with the implementation SHA, exact commands/results,
 
 # S2-04 Prove readiness for VPS staging
 
-Dependencies: S2-03.
+Dependencies: S2-UI-05.
 
 Source hints (confirm against current code):
 
@@ -21,7 +21,7 @@ Source hints (confirm against current code):
 
 Required implementation:
 
-1. Automate a clean disposable Linux VM exercise: install, synthetic two-tenant login/API flow, service restart, full reboot, failure diagnostics and teardown limited to the test environment.
+1. Automate a clean disposable full Linux VM exercise: install, complete the real browser setup and synthetic two-company management journey from S2-UI-05, service restart, full reboot, failure diagnostics and teardown limited to the test environment. WSL source tests alone do not prove full-host reboot behavior.
 2. Bind evidence to exact commit/image digests and measured resource use. Derive a VPS sizing and storage specification from that evidence rather than inventing capacity.
 3. Create a staging input template for host/SSH identity, domain/DNS, secret references, backup endpoint, allowed CIDRs, named human owner and budget cap; keep credentials out of Git.
 4. Implement a readiness gate separating local functional success, GitHub CI, independent verification, human acceptance and missing infrastructure inputs.
@@ -29,6 +29,6 @@ Required implementation:
 Acceptance criteria:
 
 1. The clean-VM run is reproduced independently with real services and persisted state; supported OS/runtime are explicit.
-2. All S1 security gates and S2 installation/CI gates are met for the candidate commit. Missing admin settings remain a blocker, not a waiver.
+2. All S1 security gates and S2 installation, browser usability and CI gates are met for the candidate commit. Missing admin settings or required human usability observations remain a blocker, not a waiver.
 3. The report gives a concrete server specification, backup requirements and operating cost inputs for the human to approve before any purchase.
 4. S2 acceptance permits synthetic-data staging only; it does not assert HA, compliance certification or customer-production readiness.
