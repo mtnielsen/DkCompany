@@ -1,0 +1,511 @@
+{
+  "taskId": "S1-01",
+  "agentIdentity": "Codex verifier in the user handoff task; separate from the implementation agent; authored the earlier sprint assignment package but not this implementation",
+  "role": "verifier",
+  "reviewDate": "2026-10-07",
+  "sourceCommit": "19407f6d6d741f69e049d27729a8f987b47aff71",
+  "implementationBranchHead": "f8b9420d2dac81613685aff2f195af50f578a989",
+  "implementationAgentIdentity": "coding-agent implementer session on branch impl/S1-01-platform-source-tree (single agent; no independent verifier identity claimed)",
+  "independentSession": true,
+  "verdict": "FAIL",
+  "summary": "Canonical source and deterministic byte identity verified locally. Acceptance criterion 2 fails: missing targets beneath symlink/junction ancestors escape workspace/reserved-input boundaries. Clean Linux verification remains NOT_RUN.",
+  "sourceTreeDigest": "sha256:f940d3000c27ce73c8971352b778d4e1dcccfeee0a82a4868b04fc8ff5fb7293",
+  "headComparison": {
+    "sourceUnchanged": true,
+    "changesSinceSource": [
+      "02-stabilization/evidence/S1-01/implementation.json",
+      "02-stabilization/tasks.json"
+    ],
+    "assessment": "Evidence and task status only; no application/tool/Makefile changes"
+  },
+  "environment": {
+    "os": "Windows",
+    "node": "22.22.3",
+    "checkout": "Isolated worktree at exact tested source SHA, with core.autocrlf=false at checkout",
+    "dependencies": "Existing local dependency cache copied only after comparing package-lock bytes; no fresh npm ci claimed",
+    "linux": "NOT_RUN: WSL has no installed distributions and no Docker executable was found",
+    "githubCI": "NOT_RUN: workflow restoration is scheduled for S2-03"
+  },
+  "commands": [
+    {
+      "name": "assembly-check",
+      "command": [
+        "node",
+        "tools/assemble-platform.mjs",
+        "--check",
+        "--json"
+      ],
+      "workingDirectory": ".",
+      "exitCode": 0,
+      "logFile": "assembly-check.txt",
+      "logSha256": "c7cb0729e3ce44ba6134bfc9688b790dd32cfce627c953d9d4b69ee2c6d551a2",
+      "summary": [
+        "{",
+        "  \"mode\": \"check\",",
+        "  \"target\": \"platform\",",
+        "  \"fileCount\": 2176,",
+        "  \"treeDigest\": \"f940d3000c27ce73c8971352b778d4e1dcccfeee0a82a4868b04fc8ff5fb7293\",",
+        "  \"overlayCount\": 66,",
+        "  \"result\": \"ok\"",
+        "}"
+      ],
+      "logAvailability": "Verifier-local raw log; not published to GitHub. Reproduce with the recorded command."
+    },
+    {
+      "name": "assembly-a",
+      "command": [
+        "node",
+        "tools/assemble-platform.mjs",
+        "--target",
+        "verifier-assembly-a",
+        "--json"
+      ],
+      "workingDirectory": ".",
+      "exitCode": 0,
+      "logFile": "assembly-a.txt",
+      "logSha256": "4cd35153d1e3a0e3c480229725bd81595e2a0ce97247c5e39d4d86cfed55c673",
+      "summary": [
+        "{",
+        "  \"mode\": \"assemble\",",
+        "  \"target\": \"verifier-assembly-a\",",
+        "  \"fileCount\": 2176,",
+        "  \"treeDigest\": \"f940d3000c27ce73c8971352b778d4e1dcccfeee0a82a4868b04fc8ff5fb7293\",",
+        "  \"overlayCount\": 66,",
+        "  \"result\": \"ok\"",
+        "}"
+      ],
+      "logAvailability": "Verifier-local raw log; not published to GitHub. Reproduce with the recorded command."
+    },
+    {
+      "name": "assembly-b",
+      "command": [
+        "node",
+        "tools/assemble-platform.mjs",
+        "--target",
+        "verifier-assembly-b",
+        "--json"
+      ],
+      "workingDirectory": ".",
+      "exitCode": 0,
+      "logFile": "assembly-b.txt",
+      "logSha256": "2d79467356ae280186cd25fd30d32971fb026e0b72232893aa9350f5906488a6",
+      "summary": [
+        "{",
+        "  \"mode\": \"assemble\",",
+        "  \"target\": \"verifier-assembly-b\",",
+        "  \"fileCount\": 2176,",
+        "  \"treeDigest\": \"f940d3000c27ce73c8971352b778d4e1dcccfeee0a82a4868b04fc8ff5fb7293\",",
+        "  \"overlayCount\": 66,",
+        "  \"result\": \"ok\"",
+        "}"
+      ],
+      "logAvailability": "Verifier-local raw log; not published to GitHub. Reproduce with the recorded command."
+    },
+    {
+      "name": "assembler-tests",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "tools/test/assemble-platform.test.mjs"
+      ],
+      "workingDirectory": ".",
+      "exitCode": 1,
+      "logFile": "assembler-tests.txt",
+      "logSha256": "c003e9f9766027f5ce08128ba5b84080db6aa374b6b0f5c3a2a0cb61f1908ae9",
+      "summary": [
+        "1..12",
+        "# tests 12",
+        "# suites 0",
+        "# pass 10",
+        "# fail 2",
+        "# cancelled 0",
+        "# skipped 0",
+        "# todo 0",
+        "# duration_ms 4234.443"
+      ],
+      "logAvailability": "Verifier-local raw log; not published to GitHub. Reproduce with the recorded command."
+    },
+    {
+      "name": "runtime-tests",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap"
+      ],
+      "workingDirectory": "platform/runtime",
+      "exitCode": 0,
+      "logFile": "runtime-tests.txt",
+      "logSha256": "b473907469b0fc2a4e472bc84378c5e47996999e57804c34bc9c9d2c02e7cda6",
+      "summary": [
+        "1..114",
+        "# tests 114",
+        "# suites 0",
+        "# pass 114",
+        "# fail 0",
+        "# cancelled 0",
+        "# skipped 0",
+        "# todo 0",
+        "# duration_ms 743.053"
+      ],
+      "logAvailability": "Verifier-local raw log; not published to GitHub. Reproduce with the recorded command."
+    },
+    {
+      "name": "approvals-tests",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap"
+      ],
+      "workingDirectory": "platform/approvals",
+      "exitCode": 0,
+      "logFile": "approvals-tests.txt",
+      "logSha256": "f6770be4772884a0fb0b9cc7ac55317b7ee0946e483eb4152240286b5eb12a53",
+      "summary": [
+        "1..30",
+        "# tests 30",
+        "# suites 0",
+        "# pass 30",
+        "# fail 0",
+        "# cancelled 0",
+        "# skipped 0",
+        "# todo 0",
+        "# duration_ms 141.5363"
+      ],
+      "logAvailability": "Verifier-local raw log; not published to GitHub. Reproduce with the recorded command."
+    },
+    {
+      "name": "identity-tests",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap"
+      ],
+      "workingDirectory": "platform/identity",
+      "exitCode": 0,
+      "logFile": "identity-tests.txt",
+      "logSha256": "9962896834761dc77e60350287c8ae3b155d35cf45cc38b6cb069d36be9f1fad",
+      "summary": [
+        "1..52",
+        "# tests 52",
+        "# suites 0",
+        "# pass 52",
+        "# fail 0",
+        "# cancelled 0",
+        "# skipped 0",
+        "# todo 0",
+        "# duration_ms 330.2593"
+      ],
+      "logAvailability": "Verifier-local raw log; not published to GitHub. Reproduce with the recorded command."
+    },
+    {
+      "name": "data-protection-tests",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap"
+      ],
+      "workingDirectory": "platform/data-protection",
+      "exitCode": 0,
+      "logFile": "data-protection-tests.txt",
+      "logSha256": "0673d5f3e2f9a9f60c0976f03810e3edd4bf16789afec1f54bf395e35ed87858",
+      "summary": [
+        "1..41",
+        "# tests 41",
+        "# suites 0",
+        "# pass 41",
+        "# fail 0",
+        "# cancelled 0",
+        "# skipped 0",
+        "# todo 0",
+        "# duration_ms 535.2754"
+      ],
+      "logAvailability": "Verifier-local raw log; not published to GitHub. Reproduce with the recorded command."
+    },
+    {
+      "name": "agent-registry-tests",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap"
+      ],
+      "workingDirectory": "platform/agent-registry",
+      "exitCode": 0,
+      "logFile": "agent-registry-tests.txt",
+      "logSha256": "920747e762b1822d6b8177eaf7c37f9f437f594c1254bbde6343d73d56fdb719",
+      "summary": [
+        "1..33",
+        "# tests 33",
+        "# suites 0",
+        "# pass 33",
+        "# fail 0",
+        "# cancelled 0",
+        "# skipped 0",
+        "# todo 0",
+        "# duration_ms 111.022"
+      ],
+      "logAvailability": "Verifier-local raw log; not published to GitHub. Reproduce with the recorded command."
+    },
+    {
+      "name": "conformance-tests",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap"
+      ],
+      "workingDirectory": "platform/conformance",
+      "exitCode": 1,
+      "logFile": "conformance-tests.txt",
+      "logSha256": "7bacd06e114da5e37f6f0051523276d4f50d7de664d2e77edc541555a44328fb",
+      "summary": [
+        "1..528",
+        "# tests 528",
+        "# suites 0",
+        "# pass 527",
+        "# fail 1",
+        "# cancelled 0",
+        "# skipped 0",
+        "# todo 0",
+        "# duration_ms 5194.1578"
+      ],
+      "logAvailability": "Verifier-local raw log; not published to GitHub. Reproduce with the recorded command."
+    },
+    {
+      "name": "schema-validation",
+      "command": [
+        "node",
+        "platform/conformance/src/validate-schemas.mjs"
+      ],
+      "workingDirectory": ".",
+      "exitCode": 0,
+      "logFile": "schema-validation.txt",
+      "logSha256": "950463a4e57e8c7e4f688d97024fde5e875ee7be1ae62c71aa2e593e6bf101d1",
+      "summary": [
+        "✔ 1 platform-konfiguration valideret (skema + sikre standarder/retention/WORM/modelruter-semantik)",
+        "✔ 1 host-scope valideret (skema + supportmatrix/forbud/recovery-semantik)",
+        "✔ 1 installationsplan valideret (skema + preflight/trin/restriktioner/diagnostik-semantik)",
+        "✔ 1 retentionændrings-preview valideret (skema + holds/WORM/ramme-semantik)",
+        "✔ 1 host-enrollment valideret (skema + menneskelig bootstrap/trust/inventory/ejerskab-semantik)",
+        "✔ 1 host-profil valideret (skema + lukkede operationer/canary/backup/recovery-semantik)",
+        "✔ 1 host-operation valideret (skema + signatur/menneskeautorisation/restriktioner-semantik)",
+        "(node:52384) ExperimentalWarning: SQLite is an experimental feature and might change at any time",
+        "(Use `node --trace-warnings ...` to show where the warning was created)"
+      ],
+      "logAvailability": "Verifier-local raw log; not published to GitHub. Reproduce with the recorded command."
+    },
+    {
+      "name": "lint",
+      "command": [
+        "node",
+        "platform/conformance/src/lint.mjs"
+      ],
+      "workingDirectory": ".",
+      "exitCode": 0,
+      "logFile": "lint.txt",
+      "logSha256": "e5232060a15144781ea8f4cde08c72957d38aa286dff71ed95fb78a1272357d2",
+      "summary": [
+        "✔ Lint OK (843 JSON-filer, 2177 filer gennemgået)"
+      ],
+      "logAvailability": "Verifier-local raw log; not published to GitHub. Reproduce with the recorded command."
+    },
+    {
+      "name": "historical-security-probes",
+      "command": [
+        "node",
+        "02-stabilization/reference/security-probes.mjs",
+        "platform",
+        "VERIFIER_OUTPUT\\historical-security-probes.json"
+      ],
+      "workingDirectory": ".",
+      "exitCode": 0,
+      "logFile": "historical-security-probes.txt",
+      "logSha256": "51b015bb29ab20507e26cf7b77db8f9d4150bee3cbe0fd70d4a77e8fb10a5e5b",
+      "summary": [
+        "    {",
+        "      \"probe\": \"runtime_pdp_requires_three_but_only_two_approved\",",
+        "      \"pdpRequired\": 3,",
+        "      \"actualApprovers\": 2,",
+        "      \"status\": \"completed\",",
+        "      \"stubExecutions\": 1",
+        "    }",
+        "  ]",
+        "}"
+      ],
+      "logAvailability": "Verifier-local raw log; not published to GitHub. Reproduce with the recorded command."
+    },
+    {
+      "name": "preserved-inputs-status",
+      "command": [
+        "git",
+        "status",
+        "--porcelain",
+        "--",
+        "00-core",
+        "01-step1",
+        "platform",
+        "tools",
+        "Makefile"
+      ],
+      "workingDirectory": ".",
+      "exitCode": 0,
+      "logFile": "preserved-inputs-status.txt",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": [],
+      "logAvailability": "Verifier-local raw log; not published to GitHub. Reproduce with the recorded command."
+    }
+  ],
+  "testSummary": {
+    "total": 810,
+    "passed": 807,
+    "failed": 3,
+    "assembler": {
+      "passed": 10,
+      "failed": 2
+    },
+    "runtime": {
+      "passed": 114,
+      "failed": 0
+    },
+    "approvals": {
+      "passed": 30,
+      "failed": 0
+    },
+    "identity": {
+      "passed": 52,
+      "failed": 0
+    },
+    "dataProtection": {
+      "passed": 41,
+      "failed": 0
+    },
+    "agentRegistry": {
+      "passed": 33,
+      "failed": 0
+    },
+    "conformance": {
+      "passed": 527,
+      "failed": 1
+    },
+    "schemas": "PASS",
+    "lint": "PASS"
+  },
+  "artifactDigestVerification": [
+    {
+      "path": "platform/PROVENANCE.json",
+      "expected": "4cd3529027de9f761924282ea408a29cc5fe99a64fe0abd2167ad42cb26a3c2f",
+      "actual": "4cd3529027de9f761924282ea408a29cc5fe99a64fe0abd2167ad42cb26a3c2f"
+    },
+    {
+      "path": "tools/assemble-platform.mjs",
+      "expected": "ec4d0fad251fad1d6e4cb277832d35c902752e4985203107d5340a5e6ec7f43a",
+      "actual": "ec4d0fad251fad1d6e4cb277832d35c902752e4985203107d5340a5e6ec7f43a"
+    },
+    {
+      "path": "tools/overlay-stack.json",
+      "expected": "12709faaa0b8a2965d186e999b62ffdb5656219c9c57fc0653eb2c3898abd49c",
+      "actual": "12709faaa0b8a2965d186e999b62ffdb5656219c9c57fc0653eb2c3898abd49c"
+    },
+    {
+      "path": "tools/test/assemble-platform.test.mjs",
+      "expected": "ceb26b357df1666428b5ce2f900e51ba9e1a7a0077f5286614ee7f8cdc9eee8c",
+      "actual": "ceb26b357df1666428b5ce2f900e51ba9e1a7a0077f5286614ee7f8cdc9eee8c"
+    }
+  ],
+  "independentAssemblyComparison": {
+    "comparedAgainst": "Separate reviewer assembly created before this implementation was fetched, derived from Git archive bytes at 5e3706b through the historical apply.sh chain",
+    "fileCount": 2176,
+    "differentFiles": [],
+    "all66OverlayOrderMatches": true,
+    "twoFreshWindowsAssembliesIdenticalIncludingProvenance": true
+  },
+  "acceptanceCriteria": [
+    {
+      "number": 1,
+      "status": "NOT_RUN",
+      "detail": "All 2176 file contents and 66 overlay order verified independently; two fresh Windows assemblies including provenance match and historical inputs remain unchanged. The explicitly required clean Linux rerun has not been independently executed."
+    },
+    {
+      "number": 2,
+      "status": "FAIL",
+      "detail": "Literal ../ escape is refused, but a nonexistent target under an outside junction is accepted and written. An alias to 00-core also permits writing a new directory into preserved inputs. See V1 and boundary-probes.json."
+    },
+    {
+      "number": 3,
+      "status": "PASS",
+      "detail": "Historical probes run against platform and reproduce R1-R4 with positive controls. Review documents retain missing legacy logs; no historical logs were fabricated or source inputs changed."
+    },
+    {
+      "number": 4,
+      "status": "PASS",
+      "detail": "Maintained source is platform; future task source hints already reference it. Git diffs/status show no changes to 00-core or 01-step1. Root docs contain a remaining legacy quickstart noted as nonblocking feedback."
+    }
+  ],
+  "findings": [
+    {
+      "id": "V1",
+      "priority": "P1",
+      "blocking": true,
+      "title": "Resolve target ancestors before allowing assembly writes",
+      "file": "tools/assemble-platform.mjs",
+      "line": 535,
+      "relatedLines": [
+        103,
+        528,
+        530,
+        587
+      ],
+      "trigger": "Create a directory symlink (Linux) or junction (Windows) inside a disposable workspace that points to a sibling directory. Set --target to alias-outside/new-platform, where new-platform does not exist.",
+      "observed": "exit 0; base.txt and overlay.txt are written outside the chosen workspace. Pointing alias-input to 00-core similarly writes into preserved historical inputs.",
+      "rootCause": "resolveBeneath checks lexical paths only. The target realpath check runs only when the final target exists, so mkdirSync follows an existing linked ancestor. Reserved paths are compared using the lexical first segment.",
+      "requestedChange": "Validate every existing ancestor using lstat/realpath before creation or removal; reject symlink/junction traversal (or enforce canonical containment and canonical reserved-input exclusion). Apply equivalent source-root checks where the same helper is used. Cover nonexistent descendants, outside links and aliases into preserved directories with regression tests asserting zero writes.",
+      "reproduce": "node 02-stabilization/evidence/S1-01/verifier-boundary-probes.mjs . <verifier-output-directory>",
+      "scope": "Reproduced with verifier-owned synthetic fixture directories only. Linux symlink behavior inferred from the code path; Windows junction exploit directly observed."
+    },
+    {
+      "id": "V2",
+      "priority": "P2",
+      "blocking": false,
+      "title": "Assembler tests assume Unix symlink and executable-bit behavior",
+      "file": "tools/test/assemble-platform.test.mjs",
+      "line": 230,
+      "relatedLines": [
+        283,
+        294
+      ],
+      "observed": "One fixture cannot create /etc/passwd symlink on native Windows (EPERM); another expects chmod to make Git index mode 100755, but Windows records 100644. These explain 2 of 3 local failures, rather than demonstrating Linux failures.",
+      "requestedChange": "Use portable fixture symlinks/junctions where available and set intended fixture Git executable modes explicitly; report unsupported platform prerequisites truthfully. Keep this separate from the confirmed V1 security failure."
+    },
+    {
+      "id": "R7",
+      "priority": "P2",
+      "blocking": false,
+      "title": "Inherited Windows conformance failure remains",
+      "file": "platform/conformance/src/manifest.mjs",
+      "line": 38,
+      "observed": "dummy-ok C-004 rejects valid evidence paths; 527/528 conformance tests pass. This behavior is byte-identical to the historical platform and assigned to S2-01; not an S1-01 regression."
+    }
+  ],
+  "followUpNotes": [
+    "Keep S1-02 pending until S1-01 is corrected, independently reverified and accepted by the human owner.",
+    "Before the first maintained platform fix, retire or separate root validate/ci dependence on exact equality with the historical pre-fix tree. Current Makefile validate depends on assemble-check; do not regenerate old code to clear that expected drift.",
+    "Root README still contains a legacy quickstart pointing into 00-core; label it historical or direct normal development to platform.",
+    "R1-R4 remain intentionally unfixed in S1-01; their reproduction is not itself a rejection of this migration task."
+  ],
+  "artifactReferences": [
+    {
+      "path": "02-stabilization/evidence/S1-01/boundary-probes.json",
+      "sha256": "2987f1db4f981417dd026419e21fff395106cc5aea2af6fd9becfff8e092c3a3"
+    },
+    {
+      "path": "02-stabilization/evidence/S1-01/verifier-boundary-probes.mjs",
+      "sha256": "49ad75e47744af90d33569642a8df77c87f0de6bf24abc9c62df796814a7874b"
+    },
+    {
+      "path": "02-stabilization/evidence/S1-01/determinism.json",
+      "sha256": "0f33973634db6e4df5925fa39ecde7911172515a84b2c30867ed77c54c1c814e"
+    }
+  ],
+  "implementationPullRequest": "https://github.com/mtnielsen/DkCompany/pull/2",
+  "humanAcceptance": null,
+  "changesMade": "Verification artifacts only; no application fixes, approval, merge, deployment or human sign-off."
+}

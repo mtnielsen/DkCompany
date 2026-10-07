@@ -1,0 +1,29 @@
+{
+  "sourceCommit": "19407f6d6d741f69e049d27729a8f987b47aff71",
+  "platform": "win32",
+  "node": "v22.22.3",
+  "scope": "Disposable verifier-owned fixture only; no writes outside fixture root",
+  "records": [
+    {
+      "probe": "control_literal_parent_escape",
+      "exitCode": 2,
+      "stdout": "",
+      "stderr": "assemble-platform: refusing target with '..' segments: ../literal-escape\n",
+      "created": false
+    },
+    {
+      "probe": "missing_target_below_outside_symlink_parent",
+      "exitCode": 0,
+      "stdout": "{\n  \"mode\": \"assemble\",\n  \"target\": \"alias-outside/new-platform\",\n  \"fileCount\": 2,\n  \"treeDigest\": \"3b0a3bd1033c24f316627fcb827e61170c014b5e37298bd4aaee7861c1e5853c\",\n  \"overlayCount\": 1,\n  \"result\": \"ok\"\n}\n",
+      "stderr": "",
+      "outsideFileCreated": true
+    },
+    {
+      "probe": "missing_target_below_reserved_input_alias",
+      "exitCode": 0,
+      "stdout": "{\n  \"mode\": \"assemble\",\n  \"target\": \"alias-input/new-platform\",\n  \"fileCount\": 2,\n  \"treeDigest\": \"3b0a3bd1033c24f316627fcb827e61170c014b5e37298bd4aaee7861c1e5853c\",\n  \"overlayCount\": 1,\n  \"result\": \"ok\"\n}\n",
+      "stderr": "",
+      "historicalInputDirectoryModified": true
+    }
+  ]
+}
