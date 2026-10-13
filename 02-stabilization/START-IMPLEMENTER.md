@@ -1,6 +1,6 @@
 # Start the next implementer
 
-You are the IMPLEMENTER for DkCompany. Read 02-stabilization/README.md and WORKING-AGREEMENT.md. The current assignment is S1-03; execute prompts/S1-03-IMPLEMENT.md and produce code, tests, a reviewable PR and an implementation report. Do not return another plan.
+You are the IMPLEMENTER for DkCompany. Read 02-stabilization/README.md and WORKING-AGREEMENT.md. S1-03 source `1ec0b96615bf2e4b9434bcc88a345fb12afbf563` has independent technical verification PASS; human acceptance is pending. Do not rerun its implementation. After the owner accepts continuation, the next assignment is `prompts/S1-04-IMPLEMENT.md`: produce code, tests, a reviewable PR and an implementation report. Do not return another plan.
 
 If S1-01 has already been accepted, use tasks.json and recorded verification/human decisions to select the first unaccepted task whose dependencies are all accepted. If a task is awaiting verification, return its verifier prompt and tested SHA; do not approve it or skip forward. Do not switch into verifier/executor roles. Stop after completing the assigned task's implementation and handing it to independent verification.
 

@@ -103,10 +103,20 @@
         "Duplicate IDs, duplicate approvers, client-supplied identity/groups/training and client-supplied approved state fail safely.",
         "HTTP and in-process tests cover both permitted and forbidden calls, including workload versus human actors."
       ],
-      "status": "in-progress",
-      "implementationCommit": null,
-      "verification": null,
-      "humanAcceptance": null
+      "status": "awaiting-verification",
+      "implementationCommit": "1ec0b96615bf2e4b9434bcc88a345fb12afbf563",
+      "verification": {
+        "verdict": "PASS",
+        "sourceCommit": "1ec0b96615bf2e4b9434bcc88a345fb12afbf563",
+        "evidenceCommit": "d1a89e163b268875bdba1bc2bb15ac95e2db25e8",
+        "report": "02-stabilization/evidence/S1-03/verification.json",
+        "evidenceBranch": "verify/S1-03-approval-authorization"
+      },
+      "humanAcceptance": {
+        "status": "pending",
+        "sourceCommit": "1ec0b96615bf2e4b9434bcc88a345fb12afbf563"
+      },
+      "handoff": "Technical verification passed; human acceptance is pending. Do not start S1-04 from this task until the owner accepts continuation."
     },
     {
       "id": "S1-04",
@@ -165,7 +175,14 @@
       "status": "planned",
       "implementationCommit": null,
       "verification": null,
-      "humanAcceptance": null
+      "humanAcceptance": null,
+      "knownFollowups": [
+        {
+          "path": "platform/persistence/test/runtime-jobs.test.mjs",
+          "finding": "Two fixtures omit protectedData and fail at the S1-02 classification gate before exercising runtime job completion/escalation. Reproduced on both pre-S1-03 base 7bd3626 and tested S1-03 source 1ec0b96. Supply legitimate server-side classification in positive fixtures, retain denial controls, and include persistence coverage in integrated acceptance.",
+          "verificationEvidenceCommit": "d1a89e163b268875bdba1bc2bb15ac95e2db25e8"
+        }
+      ]
     },
     {
       "id": "S2-01",
