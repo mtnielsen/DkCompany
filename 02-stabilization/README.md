@@ -1,10 +1,10 @@
 # DkCompany stabilization sprints
 
-This package assigns executable coding work to turn the DKC-036 cumulative implementation into a verified, installable single-server staging platform. S1-01 is independently verified on Windows and Linux; the owner authorized continuation. The current assignment is S1-02. It does not claim the 66 historical outputs are a production platform or all business applications.
+This package assigns executable coding work to turn the DKC-036 cumulative implementation into a verified, installable single-server staging platform. S1-01 is independently verified on Windows and Linux; the owner authorized continuation. S1-02 protected-data changes are independently verified and authorized as the next dependency. The current assignment is S1-03. It does not claim the 66 historical outputs are a production platform or all business applications.
 
 ## Start an agent
 
-Give the implementer `START-IMPLEMENTER.md`. For the current explicit assignment, give it `prompts/S1-02-IMPLEMENT.md`. After it returns a tested source commit, start a different agent with `START-VERIFIER.md` and that task ID/commit. The human owner reviews both outputs. Then assign the next task whose dependencies have been accepted. One agent retains one role throughout; using separate prompts in the same agent does not establish independence.
+Give the implementer `START-IMPLEMENTER.md`. For the current explicit assignment, give it `prompts/S1-03-IMPLEMENT.md`. After it returns a tested source commit, start a different agent with `START-VERIFIER.md` and that task ID/commit. The human owner reviews both outputs. Then assign the next task whose dependencies have been accepted. One agent retains one role throughout; using separate prompts in the same agent does not establish independence.
 
 This package is initially published on `codex/sprint-handoff-20261006`. Agents may branch from it while its PR is open. After acceptance, branch from the current integration/main base containing the accepted dependency commits. Never assume these files are already on main.
 
