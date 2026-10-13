@@ -46,6 +46,7 @@ function nowIso(clock) {
  */
 export function createChangeService({
   approvalService = null,
+  approvalInternal = null,
   runbookKeyring = {},
   calendar = null,
   preconditions = {},
@@ -58,6 +59,8 @@ export function createChangeService({
   const versions = new Map(); // name → Map(version → runbook)
   const active = new Map(); // name → version
   const preApprovals = new Map(); // digest → pre-approval record
+
+  if (approvalService && !approvalInternal) throw new ChangeError("change-service kræver en separat approvalInternal capability", 500);
   const changes = new Map(); // changeId → record
 
   function calendarOrFail() {
@@ -136,11 +139,11 @@ export function createChangeService({
 
     let request;
     try {
-      request = approvalService.get(approvalId);
+      request = approvalInternal.get(approvalId);
     } catch (err) {
       throw new ChangeError(`godkendelsen '${approvalId}' findes ikke`, 404);
     }
-    const merge = approvalService.mergeCheck(approvalId);
+    const merge = approvalInternal.mergeCheck(approvalId);
     if (request.decision.state !== "approved" || !merge.mergeable) {
       throw new ChangeError(`godkendelsen er ikke en gyldig, eksplicit godkendelse (tilstand '${request.decision.state}')`, 409);
     }
@@ -343,7 +346,7 @@ export function createChangeService({
     if (!approvalService) return { ok: false, reasons: ["approval-service er ikke konfigureret"] };
     let request;
     try {
-      request = approvalService.get(emergencyAuthorization.approvalId);
+      request = approvalInternal.get(emergencyAuthorization.approvalId);
     } catch {
       return { ok: false, reasons: ["emergency-autorisationen findes ikke"] };
     }
@@ -362,7 +365,7 @@ export function createChangeService({
     if (verifier) {
       // Selve reservationen sker i runtimen lige før eksekvering; her
       // konstaterer vi blot at bindingen er intakt.
-      const merge = approvalService.mergeCheck(emergencyAuthorization.approvalId);
+      const merge = approvalInternal.mergeCheck(emergencyAuthorization.approvalId);
       if (!merge.mergeable) reasons.push(`autorisationen kan ikke anvendes: ${merge.reasons.join("; ")}`);
     }
     return { ok: reasons.length === 0, reasons, request };

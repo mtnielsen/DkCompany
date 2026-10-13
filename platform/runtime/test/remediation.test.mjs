@@ -86,10 +86,12 @@ function approvalPayload({ digest, targets }) {
 
 function setup({ postchecks = { healthcheck: () => "green" }, calendarOverrides = {} } = {}) {
   const auditLog = createMemoryAuditLog();
-  const approvalService = createApprovalService({ trainingRegistry: () => TRAINING, clock: () => NOW });
+  let approvalInternal;
+  const approvalService = createApprovalService({ trainingRegistry: () => TRAINING, clock: () => NOW, onTrustedCapability: (capability) => { approvalInternal = capability; } });
   const calendar = createChangeCalendar({ clock: () => NOW, ...calendarOverrides });
   const changeService = createChangeService({
     approvalService,
+    approvalInternal,
     runbookKeyring: keyring,
     calendar,
     preconditions: { healthcheck: () => "green", stateless: () => true, headroom: () => true },
@@ -100,7 +102,7 @@ function setup({ postchecks = { healthcheck: () => "green" }, calendarOverrides 
   for (const rb of [statelessRestart, boundedScale]) {
     const reg = changeService.registerRunbook(rb);
     assert.equal(reg.ok, true, JSON.stringify(reg.errors));
-    const req = approvalService.create(structuredClone(approvalPayload({ digest: runbookDigest(rb), targets: rb.scope.targets })));
+    const req = approvalService.create(structuredClone(approvalPayload({ digest: runbookDigest(rb), targets: rb.scope.targets })), { principal: human("oidc|requester") });
     approvalService.decide(req.id, { principal: human("oidc|one"), verdict: "approve" });
     approvalService.decide(req.id, { principal: human("oidc|two"), verdict: "approve" });
     changeService.approveRunbook({ runbookRef: `${rb.metadata.name}@${rb.metadata.version}`, approvalId: req.id });
@@ -115,7 +117,7 @@ function setup({ postchecks = { healthcheck: () => "green" }, calendarOverrides 
     pdp: { decide: async (input) => validDecision(input, { decision: "allow" }) },
     auditLog,
     runbookResolver: changeService,
-    approvalVerifier: createApprovalClient({ service: approvalService }),
+    approvalVerifier: createApprovalClient({ service: approvalService, executorPrincipal: { kind: "workload", id: "spiffe://platform.example.org/services/remediation", tenantId: "acme" } }),
     executors,
   });
   const lease = createResourceLease({ clock: () => NOW });

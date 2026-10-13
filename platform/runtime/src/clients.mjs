@@ -27,15 +27,18 @@ export class ApprovalUnavailable extends Error {
  * Understøtter både en in-process service (fx `createApprovalService`) og et
  * HTTP-endpoint. En utilgængelig tjeneste kaster `ApprovalUnavailable`.
  */
-export function createApprovalClient({ service = null, endpoint = null, fetchImpl = globalThis.fetch, timeoutMs = 2000 } = {}) {
+export function createApprovalClient({ service = null, endpoint = null, executorPrincipal = null, authorization = null, fetchImpl = globalThis.fetch, timeoutMs = 2000 } = {}) {
   if (!service && !endpoint) throw new Error("createApprovalClient kræver en 'service' eller et 'endpoint'");
+  if (service && (!executorPrincipal || executorPrincipal.kind !== "workload" || !executorPrincipal.id)) throw new Error("in-process approval client kræver en verificeret executorPrincipal");
+  if (endpoint && (typeof authorization !== "string" || !authorization.startsWith("Bearer "))) throw new Error("HTTP approval client kræver workload Bearer-token");
   return {
     kind: "approval",
     async authorizeExecution(descriptor) {
       if (service) {
         try {
-          return await service.authorizeExecution(descriptor.approvalId, descriptor);
+          return await service.authorizeExecution(descriptor.approvalId, descriptor, { principal: executorPrincipal });
         } catch (err) {
+          if ([401, 403].includes(err.status)) return { ok: false, approvalId: descriptor.approvalId, reasons: [err.message] };
           throw new ApprovalUnavailable(`approval-service utilgængelig: ${err.message}`);
         }
       }
@@ -44,12 +47,14 @@ export function createApprovalClient({ service = null, endpoint = null, fetchImp
       try {
         const res = await fetchImpl(`${endpoint.replace(/\/$/, "")}/v1/approvals/${encodeURIComponent(descriptor.approvalId)}/authorize`, {
           method: "POST",
-          headers: { "content-type": "application/json" },
+          headers: { "content-type": "application/json", authorization },
           body: JSON.stringify(descriptor),
           signal: controller.signal,
         });
+        const result = await res.json();
+        if (res.status === 401 || res.status === 403) return { ok: false, approvalId: descriptor.approvalId, reasons: [result.error ?? `HTTP ${res.status}`] };
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return await res.json();
+        return result;
       } catch (err) {
         throw new ApprovalUnavailable(`approval-service utilgængelig: ${err.message}`);
       } finally {

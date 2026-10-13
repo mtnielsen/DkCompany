@@ -27,6 +27,8 @@ function service() {
 }
 
 const human = (id) => ({ kind: "human", id, tenantId: "acme", groups: ["platform-approvers"] });
+const requester = human("oidc|requester");
+const executor = { kind: "workload", id: EXAMPLE.agent.spiffeId, tenantId: "acme" };
 
 function descriptorFor(req, extra = {}) {
   return {
@@ -48,7 +50,7 @@ function descriptorFor(req, extra = {}) {
 
 test("godkendelsen binder plan, runbook og producent", () => {
   const svc = service();
-  const req = svc.create(makeRequest());
+  const req = svc.create(makeRequest(), { principal: requester });
   svc.decide(req.id, { principal: human("oidc|one"), verdict: "approve" });
   svc.decide(req.id, { principal: human("oidc|two"), verdict: "approve" });
 
@@ -62,17 +64,17 @@ test("godkendelsen binder plan, runbook og producent", () => {
 
 test("executor kan ikke eksekvere en ændret plan", () => {
   const svc = service();
-  const req = svc.create(makeRequest());
+  const req = svc.create(makeRequest(), { principal: requester });
   svc.decide(req.id, { principal: human("oidc|one"), verdict: "approve" });
   svc.decide(req.id, { principal: human("oidc|two"), verdict: "approve" });
 
-  const wrongPlan = svc.authorizeExecution(req.id, descriptorFor(req, { executionId: "exec-wrong-plan", planSha256: "f".repeat(64) }));
+  const wrongPlan = svc.authorizeExecution(req.id, descriptorFor(req, { executionId: "exec-wrong-plan", planSha256: "f".repeat(64) }), { principal: executor });
   assert.equal(wrongPlan.ok, false);
   assert.ok(wrongPlan.reasons.some((r) => /binding/i.test(r)), wrongPlan.reasons.join("; "));
 
-  const wrongProducer = svc.authorizeExecution(req.id, descriptorFor(req, { executionId: "exec-wrong-producer", producer: "spiffe://evil.example.org/agents/x" }));
+  const wrongProducer = svc.authorizeExecution(req.id, descriptorFor(req, { executionId: "exec-wrong-producer", producer: "spiffe://evil.example.org/agents/x" }), { principal: executor });
   assert.equal(wrongProducer.ok, false);
 
-  const ok = svc.authorizeExecution(req.id, descriptorFor(req, { executionId: "exec-ok" }));
+  const ok = svc.authorizeExecution(req.id, descriptorFor(req, { executionId: "exec-ok" }), { principal: executor });
   assert.equal(ok.ok, true, ok.reasons?.join("; "));
 });

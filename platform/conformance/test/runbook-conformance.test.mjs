@@ -154,8 +154,9 @@ function approvalRequest(digest, { verb = "runbook.approve", targets = ["service
 }
 
 function service() {
-  const approval = createApprovalService({ trainingRegistry: () => TRAINING, clock: () => NOW });
-  const change = createChangeService({ approvalService: approval, runbookKeyring: { "runbook-fixed": "fixed-secret" }, calendar: createChangeCalendar({ clock: () => NOW }), preconditions: { healthcheck: () => "green" }, postchecks: { healthcheck: () => "green" }, rollbackExecutor: () => {}, clock: () => NOW });
+  let approvalInternal;
+  const approval = createApprovalService({ trainingRegistry: () => TRAINING, clock: () => NOW, onTrustedCapability: (capability) => { approvalInternal = capability; } });
+  const change = createChangeService({ approvalService: approval, approvalInternal, runbookKeyring: { "runbook-fixed": "fixed-secret" }, calendar: createChangeCalendar({ clock: () => NOW }), preconditions: { healthcheck: () => "green" }, postchecks: { healthcheck: () => "green" }, rollbackExecutor: () => {}, clock: () => NOW });
   return { approval, change };
 }
 
@@ -171,7 +172,7 @@ test("accept 2: en ny version med større scope kræver ny godkendelse", () => {
   const { approval, change } = service();
   const v1 = signedRunbook();
   const v2 = signedRunbook({ metadata: { name: "restart-svc", version: "1.1.0", description: "Genstart to tjenester.", owner: { team: "platform" }, accountableHuman: { subject: "oidc|anna.andersen", role: "Platform Owner" } }, scope: { verbs: ["restart"], targets: ["service/checkout", "service/payments"], environments: ["staging"], tenants: ["*"] } });
-  const req = approval.create(structuredClone(approvalRequest(runbookDigest(v1))));
+  const req = approval.create(structuredClone(approvalRequest(runbookDigest(v1))), { principal: { kind: "human", id: "oidc|requester", tenantId: "acme" } });
   approval.decide(req.id, { principal: { kind: "human", id: "oidc|one", tenantId: "acme", groups: ["platform-approvers"] }, verdict: "approve" });
   approval.decide(req.id, { principal: { kind: "human", id: "oidc|two", tenantId: "acme", groups: ["platform-approvers"] }, verdict: "approve" });
   change.registerRunbook(v1);
@@ -185,7 +186,7 @@ test("accept 3: en pending godkendelse er aldrig en pre-approval", () => {
   const { approval, change } = service();
   const rb = signedRunbook();
   change.registerRunbook(rb);
-  const pending = approval.create(structuredClone(approvalRequest(runbookDigest(rb))));
+  const pending = approval.create(structuredClone(approvalRequest(runbookDigest(rb))), { principal: { kind: "human", id: "oidc|requester", tenantId: "acme" } });
   assert.throws(() => change.approveRunbook({ runbookRef: "restart-svc@1.0.0", approvalId: pending.id }), /ikke en gyldig|godkendelse|pending/);
 });
 
@@ -201,7 +202,7 @@ test("accept 4: emergency kræver særskilt autorisation og A4 håndhæves uafh�
 test("accept 5: to samtidige changes på samme ressource koordineres", () => {
   const { approval, change } = service();
   const rb = signedRunbook();
-  const req = approval.create(structuredClone(approvalRequest(runbookDigest(rb))));
+  const req = approval.create(structuredClone(approvalRequest(runbookDigest(rb))), { principal: { kind: "human", id: "oidc|requester", tenantId: "acme" } });
   approval.decide(req.id, { principal: { kind: "human", id: "oidc|one", tenantId: "acme", groups: ["platform-approvers"] }, verdict: "approve" });
   approval.decide(req.id, { principal: { kind: "human", id: "oidc|two", tenantId: "acme", groups: ["platform-approvers"] }, verdict: "approve" });
   change.registerRunbook(rb);

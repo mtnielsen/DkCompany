@@ -13,28 +13,29 @@ function serviceWith() {
 }
 
 const human = (tenantId, id, extra = {}) => ({ kind: "human", id, tenantId, groups: ["platform-approvers"], ...extra });
+const requester = human("acme", "oidc|requester");
 
 test("en godkender fra en anden kunde kan ikke godkende uden scope", () => {
   const service = serviceWith();
-  const req = service.create(clone());
+  const req = service.create(clone(), { principal: requester });
   assert.throws(
     () => service.decide(req.id, { principal: human("globex", "oidc|outsider"), verdict: "approve" }),
-    (err) => err.status === 403 && /anden kunde/.test(err.message)
+    (err) => err.status === 403 && /kunden 'globex'/.test(err.message)
   );
-  assert.equal(req.decision.approvals.length, 0);
+  assert.equal(service.get(req.id, { principal: requester }).decision.approvals.length, 0);
 });
 
 test("platformrolle med eksplicit scope for kunden kan godkende", () => {
   const service = serviceWith();
-  const req = service.create(clone());
+  const req = service.create(clone(), { principal: requester });
   service.decide(req.id, { principal: human("globex", "oidc|platform.one", { roles: ["platform-admin:acme"] }), verdict: "approve" });
   service.decide(req.id, { principal: human("globex", "oidc|platform.two", { roles: ["platform-admin:acme"] }), verdict: "approve" });
-  assert.equal(req.decision.state, "approved");
+  assert.equal(service.get(req.id, { principal: requester }).decision.state, "approved");
 });
 
 test("platformrolle med scope for den forkerte kunde afvises", () => {
   const service = serviceWith();
-  const req = service.create(clone());
+  const req = service.create(clone(), { principal: requester });
   assert.throws(
     () => service.decide(req.id, { principal: human("globex", "oidc|platform.other", { roles: ["platform-admin:globex"] }), verdict: "approve" }),
     (err) => err.status === 403

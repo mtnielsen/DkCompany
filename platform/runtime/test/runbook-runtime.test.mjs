@@ -79,10 +79,12 @@ function approvalPayload({ id = `apr-${randomUUID()}`, digest, targets = ["dummy
 }
 
 function setupChangeService({ signed = runbook(), postchecks = { tests: () => "green" } } = {}) {
-  const approval = createApprovalService({ trainingRegistry: () => TRAINING, clock: () => NOW });
+  let approvalInternal;
+  const approval = createApprovalService({ trainingRegistry: () => TRAINING, clock: () => NOW, onTrustedCapability: (capability) => { approvalInternal = capability; } });
   const calendar = createChangeCalendar({ clock: () => NOW });
   const change = createChangeService({
     approvalService: approval,
+    approvalInternal,
     runbookKeyring: KEYRING,
     calendar,
     preconditions: { dryrun: () => "clean" },
@@ -91,7 +93,7 @@ function setupChangeService({ signed = runbook(), postchecks = { tests: () => "g
     clock: () => NOW,
   });
   change.registerRunbook(signed);
-  const req = approval.create(structuredClone(approvalPayload({ digest: runbookDigest(signed), targets: signed.scope.targets })));
+  const req = approval.create(structuredClone(approvalPayload({ digest: runbookDigest(signed), targets: signed.scope.targets })), { principal: human("oidc|requester") });
   approval.decide(req.id, { principal: human("oidc|one"), verdict: "approve" });
   approval.decide(req.id, { principal: human("oidc|two"), verdict: "approve" });
   change.approveRunbook({ runbookRef: "patch-dummy-ok@1.0.0", approvalId: req.id });
@@ -187,8 +189,9 @@ test("en parameter uden for runbookens skema afvises", async () => {
 /* -------------------------------------------------------------------------- */
 test("en normal-runbook kræver en godkendelse pr. mutation", async () => {
   const normalRunbook = runbook({ approval: { flow: "normal", preApproved: false, preApprovalRef: null, requiredApprovals: 2, eligibleGroups: ["platform-approvers"] } });
-  const approval = createApprovalService({ trainingRegistry: () => TRAINING, clock: () => NOW });
-  const change = createChangeService({ approvalService: approval, runbookKeyring: KEYRING, calendar: createChangeCalendar({ clock: () => NOW }), preconditions: { dryrun: () => "clean" }, postchecks: { tests: () => "green" }, clock: () => NOW });
+  let approvalInternal;
+  const approval = createApprovalService({ trainingRegistry: () => TRAINING, clock: () => NOW, onTrustedCapability: (capability) => { approvalInternal = capability; } });
+  const change = createChangeService({ approvalService: approval, approvalInternal, runbookKeyring: KEYRING, calendar: createChangeCalendar({ clock: () => NOW }), preconditions: { dryrun: () => "clean" }, postchecks: { tests: () => "green" }, clock: () => NOW });
   const reg = change.registerRunbook(normalRunbook);
   assert.equal(reg.ok, true, JSON.stringify(reg.errors));
   const record = [];

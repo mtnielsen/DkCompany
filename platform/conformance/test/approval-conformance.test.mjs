@@ -24,7 +24,11 @@ const TRAINING = ["evidence-over-prose", "when-to-reject"];
 const NOW = Date.parse("2025-09-02T00:00:00Z");
 
 const human = (id, groups = ["platform-approvers"], extra = {}) => ({ kind: "human", id, tenantId: "acme", groups, ...extra });
+const requester = human("oidc|requester", []);
 const cloneExample = () => structuredClone(approvalExample);
+const create = (service, payload = cloneExample()) => service.create(payload, { principal: requester });
+const current = (service, id) => service.get(id, { principal: requester });
+const mergeCheck = (service, id) => service.mergeCheck(id, { principal: requester });
 
 function serviceWith({ training = () => TRAINING, policy } = {}) {
   const state = { now: NOW };
@@ -34,7 +38,7 @@ function serviceWith({ training = () => TRAINING, policy } = {}) {
 
 /** Kør et helt forløb frem til `approved` med to unikke godkendere. */
 function approveWithTwo(service) {
-  const req = service.create(cloneExample());
+  const req = create(service);
   service.decide(req.id, { principal: human("oidc|approver.one"), verdict: "approve" });
   service.decide(req.id, { principal: human("oidc|approver.two"), verdict: "approve" });
   return req;
@@ -47,18 +51,18 @@ test("1. oprettelse med approved-state afvises", () => {
   const { service } = serviceWith();
   const payload = cloneExample();
   payload.decision.state = "approved";
-  assert.throws(() => service.create(payload), (err) => err.status === 400 && /pending/.test(err.message));
+  assert.throws(() => create(service, payload), (err) => err.status === 400 && /pending/.test(err.message));
 
   const rejected = cloneExample();
   rejected.decision.state = "rejected";
-  assert.throws(() => service.create(rejected), (err) => err.status === 400);
+  assert.throws(() => create(service, rejected), (err) => err.status === 400);
 });
 
 test("1b. oprettelse med medsendte godkendelser afvises", () => {
   const { service } = serviceWith();
   const payload = cloneExample();
   payload.decision.approvals = [{ subject: "oidc|forged", at: "2025-09-01T00:00:00Z", verdict: "approve" }];
-  assert.throws(() => service.create(payload), (err) => err.status === 400 && /godkendelser/.test(err.message));
+  assert.throws(() => create(service, payload), (err) => err.status === 400 && /godkendelser/.test(err.message));
 });
 
 test("1c. serveren overskriver klientens binding og sætter egen pending-tilstand", () => {
@@ -66,7 +70,7 @@ test("1c. serveren overskriver klientens binding og sætter egen pending-tilstan
   const payload = cloneExample();
   payload.decision.state = "pending";
   payload.decision.binding = { algorithm: "sha256", digest: "f".repeat(64) };
-  const req = service.create(payload);
+  const req = create(service, payload);
   assert.equal(req.decision.state, "pending");
   assert.notEqual(req.decision.binding.digest, "f".repeat(64));
   assert.equal(req.decision.binding.digest, computeBindingDigest(req));
@@ -77,14 +81,14 @@ test("1c. serveren overskriver klientens binding og sætter egen pending-tilstan
 /* -------------------------------------------------------------------------- */
 test("2. samme person kan ikke godkende to gange", () => {
   const { service } = serviceWith();
-  const req = service.create(cloneExample());
+  const req = create(service);
   service.decide(req.id, { principal: human("oidc|same.person"), verdict: "approve" });
   assert.throws(
     () => service.decide(req.id, { principal: human("oidc|same.person"), verdict: "approve" }),
     (err) => err.status === 409 && /samme person/.test(err.message)
   );
-  assert.equal(service.mergeCheck(req.id).mergeable, false, "én unik godkender er ikke nok til to");
-  assert.equal(req.decision.approvals.length, 1);
+  assert.equal(mergeCheck(service, req.id).mergeable, false, "én unik godkender er ikke nok til to");
+  assert.equal(current(service, req.id).decision.approvals.length, 1);
 });
 
 /* -------------------------------------------------------------------------- */
@@ -92,7 +96,7 @@ test("2. samme person kan ikke godkende to gange", () => {
 /* -------------------------------------------------------------------------- */
 test("3. klientens gruppepåstand ignoreres — verificeret gruppe er afgørende", () => {
   const { service } = serviceWith();
-  const req = service.create(cloneExample());
+  const req = create(service);
   // Identiteten er ikke i approver-gruppen, men påstår det i payloaden.
   assert.throws(
     () => service.decide(req.id, { principal: human("oidc|outsider", ["random-group"]), groups: ["platform-approvers"], verdict: "approve" }),
@@ -102,7 +106,7 @@ test("3. klientens gruppepåstand ignoreres — verificeret gruppe er afgørende
 
 test("3b. klientens kursusbevis ignoreres — serverens træningsopslag er afgørende", () => {
   const { service } = serviceWith({ training: () => [] });
-  const req = service.create(cloneExample());
+  const req = create(service);
   assert.throws(
     () => service.decide(req.id, { principal: human("oidc|liar"), completedTrainingModules: TRAINING, verdict: "approve" }),
     (err) => err.status === 428 && /træningsmoduler/.test(err.message)
@@ -111,7 +115,7 @@ test("3b. klientens kursusbevis ignoreres — serverens træningsopslag er afgø
 
 test("3c. uverificeret eller agent-identitet kan ikke godkende", () => {
   const { service } = serviceWith();
-  const req = service.create(cloneExample());
+  const req = create(service);
   assert.throws(() => service.decide(req.id, { verdict: "approve" }), (err) => err.status === 401);
   assert.throws(
     () => service.decide(req.id, { principal: { kind: "agent", id: "spiffe://platform/agent" }, verdict: "approve" }),
@@ -125,51 +129,51 @@ test("3c. uverificeret eller agent-identitet kan ikke godkende", () => {
 test("4. ændret diff ugyldiggør godkendelsen", () => {
   const { service } = serviceWith();
   const req = approveWithTwo(service);
-  assert.equal(service.mergeCheck(req.id).mergeable, true);
+  assert.equal(mergeCheck(service, req.id).mergeable, true);
 
-  service.amend(req.id, { change: { diff: { ...req.change.diff, sha256: "a".repeat(64) } } });
-  assert.equal(req.decision.state, "pending", "ændringen nulstiller til pending");
-  assert.equal(req.decision.approvals.length, 0, "tidligere godkendelser ryddes");
-  assert.equal(service.mergeCheck(req.id).mergeable, false);
+  service.amend(req.id, { change: { diff: { ...req.change.diff, sha256: "a".repeat(64) } } }, { principal: requester });
+  assert.equal(current(service, req.id).decision.state, "pending", "ændringen nulstiller til pending");
+  assert.equal(current(service, req.id).decision.approvals.length, 0, "tidligere godkendelser ryddes");
+  assert.equal(mergeCheck(service, req.id).mergeable, false);
 });
 
 test("4b. ændret tenant ugyldiggør godkendelsen", () => {
   const { service } = serviceWith();
   const req = approveWithTwo(service);
-  service.amend(req.id, { tenantId: "globex" });
-  assert.equal(service.mergeCheck(req.id).mergeable, false);
-  assert.equal(req.decision.state, "pending");
+  assert.throws(() => service.amend(req.id, { tenantId: "globex" }, { principal: requester }), (err) => err.status === 400);
+  assert.equal(mergeCheck(service, req.id).mergeable, true);
+  assert.equal(current(service, req.id).decision.state, "approved");
 });
 
 test("4c. ændret mål ugyldiggør godkendelsen", () => {
   const { service } = serviceWith();
   const req = approveWithTwo(service);
-  service.amend(req.id, { change: { targets: ["another-service"] } });
-  assert.equal(service.mergeCheck(req.id).mergeable, false);
+  service.amend(req.id, { change: { targets: ["another-service"] } }, { principal: requester });
+  assert.equal(mergeCheck(service, req.id).mergeable, false);
 });
 
 test("4d. ændrede parametre ugyldiggør godkendelsen", () => {
   const { service } = serviceWith();
   const req = approveWithTwo(service);
-  service.amend(req.id, { change: { parameters: { ...req.change.parameters, to: "9.9.9" } } });
-  assert.equal(service.mergeCheck(req.id).mergeable, false);
+  service.amend(req.id, { change: { parameters: { ...req.change.parameters, to: "9.9.9" } } }, { principal: requester });
+  assert.equal(mergeCheck(service, req.id).mergeable, false);
 });
 
 test("4e. ændret policy-bundle-version ugyldiggør godkendelsen", () => {
   const { service } = serviceWith();
   const req = approveWithTwo(service);
-  service.amend(req.id, { evidence: { policyEvaluation: { ...req.evidence.policyEvaluation, bundleVersion: "2099.01.01.1" } } });
-  assert.equal(service.mergeCheck(req.id).mergeable, false);
+  service.amend(req.id, { evidence: { policyEvaluation: { ...req.evidence.policyEvaluation, bundleVersion: "2099.01.01.1" } } }, { principal: requester });
+  assert.equal(mergeCheck(service, req.id).mergeable, false);
 });
 
 test("4f. en godkender med en forkert digest afvises, og godkendelsen ugyldiggøres", () => {
   const { service } = serviceWith();
-  const req = service.create(cloneExample());
+  const req = create(service);
   assert.throws(
     () => service.decide(req.id, { principal: human("oidc|a"), verdict: "approve", changeDigest: "b".repeat(64) }),
     (err) => err.status === 409 && /binding-mismatch/.test(err.message)
   );
-  assert.equal(req.decision.approvals.length, 0);
+  assert.equal(current(service, req.id).decision.approvals.length, 0);
 });
 
 /* -------------------------------------------------------------------------- */
@@ -177,23 +181,23 @@ test("4f. en godkender med en forkert digest afvises, og godkendelsen ugyldiggø
 /* -------------------------------------------------------------------------- */
 test("5a. en afvist beslutning kan ikke anvendes", () => {
   const { service } = serviceWith();
-  const req = service.create(cloneExample());
+  const req = create(service);
   service.decide(req.id, { principal: human("oidc|rejecter"), verdict: "reject", comment: "utilstrækkelig evidens" });
-  assert.equal(req.decision.state, "rejected");
-  assert.equal(service.mergeCheck(req.id).mergeable, false);
+  assert.equal(current(service, req.id).decision.state, "rejected");
+  assert.equal(mergeCheck(service, req.id).mergeable, false);
   assert.throws(() => service.decide(req.id, { principal: human("oidc|approver.one"), verdict: "approve" }), (err) => err.status === 409);
 });
 
 test("5b. en udløbet beslutning kan ikke anvendes", () => {
   const { service, state } = serviceWith();
-  const req = service.create(cloneExample());
+  const req = create(service);
   service.decide(req.id, { principal: human("oidc|approver.one"), verdict: "approve" });
   service.decide(req.id, { principal: human("oidc|approver.two"), verdict: "approve" });
-  assert.equal(service.mergeCheck(req.id).mergeable, true);
+  assert.equal(mergeCheck(service, req.id).mergeable, true);
 
   state.now = Date.parse(req.decision.expiresAt) + 1000;
-  assert.equal(service.get(req.id).decision.state, "expired");
-  const merge = service.mergeCheck(req.id);
+  assert.equal(current(service, req.id).decision.state, "expired");
+  const merge = mergeCheck(service, req.id);
   assert.equal(merge.mergeable, false);
   assert.ok(merge.reasons.some((r) => /udløbet/.test(r)));
 });
@@ -204,7 +208,7 @@ test("5c. en tilbagekaldt beslutning kan ikke anvendes", () => {
   const revoked = service.revoke(req.id, { principal: human("oidc|security", ["security-officer"]), reason: "mistanke om kompromittering" });
   assert.equal(revoked.decision.state, "revoked");
   assert.equal(revoked.decision.revokedBy, "oidc|security");
-  assert.equal(service.mergeCheck(req.id).mergeable, false);
+  assert.equal(mergeCheck(service, req.id).mergeable, false);
   assert.throws(() => service.decide(req.id, { principal: human("oidc|approver.three"), verdict: "approve" }), (err) => err.status === 409);
 });
 
@@ -215,7 +219,7 @@ test("5d. kun politikudpegede roller må tilbagekalde", () => {
     () => service.revoke(req.id, { principal: human("oidc|approver.one") }),
     (err) => err.status === 403 && /tilbagekalde/.test(err.message)
   );
-  assert.equal(service.mergeCheck(req.id).mergeable, true, "uautoriseret tilbagekaldelse må ikke ændre tilstanden");
+  assert.equal(mergeCheck(service, req.id).mergeable, true, "uautoriseret tilbagekaldelse må ikke ændre tilstanden");
 });
 
 /* -------------------------------------------------------------------------- */
@@ -223,7 +227,7 @@ test("5d. kun politikudpegede roller må tilbagekalde", () => {
 /* -------------------------------------------------------------------------- */
 test("6. anmoderen kan ikke godkende sin egen ændring", () => {
   const { service } = serviceWith();
-  const req = service.create(cloneExample(), { principal: human("oidc|requester") });
+  const req = service.create(cloneExample(), { principal: requester });
   assert.equal(req.decision.requestedBy, "oidc|requester");
   assert.throws(
     () => service.decide(req.id, { principal: human("oidc|requester"), verdict: "approve" }),
@@ -241,7 +245,7 @@ const OIDC_JWK = { ...OIDC_PUBLIC_KEY.export({ format: "jwk" }), kid: "test-key"
 
 function tokenFor(sub, groups, tenantId = "acme", extra = {}) {
   return signJwt(
-    { sub, tenant_id: tenantId, groups, roles: [], iss: OIDC_ISSUER, aud: OIDC_AUDIENCE, ...extra },
+    { sub, tenantId, tenant_id: tenantId, groups, roles: [], iss: OIDC_ISSUER, aud: OIDC_AUDIENCE, ...extra },
     { alg: "RS256", key: OIDC_PRIVATE_KEY, kid: "test-key" }
   );
 }

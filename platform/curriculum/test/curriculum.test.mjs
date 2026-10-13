@@ -57,13 +57,13 @@ test("approval-servicen håndhæver træningskravet fra 2.4", () => {
   const registry = trainingRegistryFromEvents(events, { curriculumVersion: curriculum.metadata.version });
   const service = createApprovalService({ trainingRegistry: registry, clock: () => Date.parse("2025-09-02T00:00:00Z") });
 
-  const withoutTraining = service.create({ ...structuredClone(approvalExample), id: "018f3c2a-1b2c-7def-8a01-111111111111" });
+  const withoutTraining = service.create({ ...structuredClone(approvalExample), id: "018f3c2a-1b2c-7def-8a01-111111111111" }, { principal: { kind: "human", id: "oidc|requester", tenantId: "acme" } });
   assert.throws(
     () => service.decide(withoutTraining.id, { principal: { kind: "human", id: "oidc|uden.traening", tenantId: "acme", groups: ["platform-approvers"] }, verdict: "approve" }),
     (err) => err.status === 428
   );
 
-  const withTraining = service.create({ ...structuredClone(approvalExample), id: "018f3c2a-1b2c-7def-8a01-222222222222" });
+  const withTraining = service.create({ ...structuredClone(approvalExample), id: "018f3c2a-1b2c-7def-8a01-222222222222" }, { principal: { kind: "human", id: "oidc|requester", tenantId: "acme" } });
   const decided = service.decide(withTraining.id, { principal: { kind: "human", id: "oidc|anna.andersen", tenantId: "acme", groups: ["platform-approvers"] }, verdict: "approve" });
   assert.equal(decided.decision.approvals.at(-1).trainingVerified, true);
   assert.equal(decided.decision.state, "pending", "to godkendelser kræves stadig");
