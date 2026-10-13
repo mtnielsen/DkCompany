@@ -2,12 +2,13 @@
   "taskId": "S1-03",
   "agentIdentity": "/root/s103_luna_verifier",
   "role": "independent verifier",
+  "requestedModel": "gpt-6-luna",
   "sourceCommit": "1ec0b96615bf2e4b9434bcc88a345fb12afbf563",
   "sourceTree": "6672d08a36ec3eff01013b232f7c18eda26816e3",
   "implementationAgentIdentity": "/root/s103_luna_implementer",
   "independentSession": "Fresh detached Linux checkout in DkCompany-Test WSL2, Ubuntu 24.04, uid 1000 dkcverify, linux-x64, Node v22.22.3, npm 10.9.8. The candidate checkout was clean before and after verification; the evidence worktree is separate.",
   "verdict": "PASS",
-  "summary": "Exact source passed install, historical assembly, validate, the full root test target (528/528), 42 approval tests, 3 approval restart tests, 5 curriculum tests, and seven independent HTTP/in-process adversarial probes. The maintained R1-R4 probe confirms R1, R2, and R4 behavior. A same-tenant null-requester withdrawal flaw found on failed candidate 3ea8ee4 was fixed on 1ec0b96 and the reproducer passes. Two persistence runtime-job failures also occur on pre-S1-03 base 7bd3626 and are recorded as inherited; the candidate persistence suite is 78/80.",
+  "summary": "Exact source passed install, historical assembly, validate, the full root test target (832/832: assembler 13, runtime 120, approvals 42, identity 52, data-protection 44, agent-registry 33, conformance 528), 3 approval restart tests, 5 curriculum tests, and seven independent HTTP/in-process adversarial probes. The maintained R1-R4 probe confirms R1, R2, and R4 behavior. A same-tenant null-requester withdrawal flaw found on failed candidate 3ea8ee4 was fixed on 1ec0b96 and the reproducer passes. Two persistence runtime-job failures also occur on pre-S1-03 base 7bd3626 and are recorded as inherited; the candidate persistence suite is 78/80.",
   "verificationAttempts": [
     {
       "sourceCommit": "3ea8ee48024f9f8dacb41a678412daf8d9718a27",
@@ -47,7 +48,7 @@
     {
       "command": "make test",
       "exitCode": 0,
-      "result": "528 passed, 0 failed across assembler, security, and conformance suites.",
+      "result": "832 passed, 0 failed total: assembler 13, runtime 120, approvals 42, identity 52, data-protection 44, agent-registry 33, conformance 528.",
       "log": "/home/dkcverify/logs/S1-03-1ec0b96/make-test.log",
       "logSha256": "194ec41b6ccb07060ab10c7ed5b21d26fa175458b1898853759ab9bc2e97f4b2"
     },
@@ -172,7 +173,7 @@
   "artifactReferences": [
     {
       "path": "02-stabilization/evidence/S1-03/adversarial-probes.mjs",
-      "sha256": "E4ACDD8CB6D25F6BCEF3A4507C03A921A3022587DB220E48EA1FDE045BC4F0C7"
+      "sha256": "ea5c93a59bf9c954994f471de648227b5a7a98b2b23106c6cdb9b0916ccf8fa7"
     },
     {
       "path": "02-stabilization/evidence/S1-03/README.md",
