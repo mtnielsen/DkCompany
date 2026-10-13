@@ -25,6 +25,9 @@ const NOW = Date.parse("2025-09-02T00:00:00Z");
 const A3_EVIDENCE = ["tests-pass", "dry-run-clean", "rollback-tested"];
 
 const human = (id) => ({ kind: "human", id, tenantId: "acme", groups: ["platform-approvers"] });
+const requester = human("oidc|requester");
+const executor = { kind: "workload", id: approvalExample.agent.spiffeId, tenantId: "acme" };
+const clientFor = (service) => createApprovalClient({ service, executorPrincipal: executor });
 const approvalPdp = (n) => ({ decide: async (input) => validDecision(input, { decision: "allow-with-approval", requiredApprovals: n, requiredEvidence: ["policy-allow"] }) });
 
 function makeService() {
@@ -32,7 +35,7 @@ function makeService() {
 }
 
 function approveWithTwo(service) {
-  const req = service.create(structuredClone(approvalExample));
+  const req = service.create(structuredClone(approvalExample), { principal: requester });
   service.decide(req.id, { principal: human("oidc|one"), verdict: "approve" });
   service.decide(req.id, { principal: human("oidc|two"), verdict: "approve" });
   return req;
@@ -90,15 +93,16 @@ function runtimeWith(record, approvalVerifier, pdp = approvalPdp(2)) {
 test("gyldig godkendelse virker gennem den rigtige service", async () => {
   const service = makeService();
   const req = approveWithTwo(service);
-  const client = createApprovalClient({ service });
+  const client = clientFor(service);
   const record = [];
   const runtime = runtimeWith(record, client);
 
   const result = await runtime.runTask(task([actionFrom(descriptorFor(req))]));
   assert.equal(result.status, "completed", JSON.stringify(result));
   assert.deepEqual(record, ["upgrade.patch"]);
-  assert.ok(req.decision.consumed, "godkendelsen skal være serverforbrugt");
-  assert.equal(req.decision.consumed.executionId.startsWith("exec-"), true);
+  const consumed = service.get(req.id, { principal: requester }).decision.consumed;
+  assert.ok(consumed, "godkendelsen skal være serverforbrugt");
+  assert.equal(consumed.executionId.startsWith("exec-"), true);
 });
 
 /* -------------------------------------------------------------------------- */
@@ -107,7 +111,7 @@ test("gyldig godkendelse virker gennem den rigtige service", async () => {
 test("en godkendelse kan kun forbruges én gang (replay afvises)", async () => {
   const service = makeService();
   const req = approveWithTwo(service);
-  const client = createApprovalClient({ service });
+  const client = clientFor(service);
   const record = [];
   const runtime = runtimeWith(record, client);
 
@@ -126,8 +130,8 @@ test("serviceens atomiske forbrug tillader kun én samtidig autorisation", async
   const first = descriptorFor(req);
   const second = descriptorFor(req);
   const results = await Promise.all([
-    service.authorizeExecution(req.id, first),
-    service.authorizeExecution(req.id, second),
+    service.authorizeExecution(req.id, first, { principal: executor }),
+    service.authorizeExecution(req.id, second, { principal: executor }),
   ]);
   assert.equal(results.filter((r) => r.ok).length, 1, "præcis én worker må vinde");
 });
@@ -135,7 +139,7 @@ test("serviceens atomiske forbrug tillader kun én samtidig autorisation", async
 test("to samtidige workers kan ikke forbruge samme godkendelse", async () => {
   const service = makeService();
   const req = approveWithTwo(service);
-  const client = createApprovalClient({ service });
+  const client = clientFor(service);
   const record = [];
   const runtime = runtimeWith(record, client);
 
@@ -153,7 +157,7 @@ test("to samtidige workers kan ikke forbruge samme godkendelse", async () => {
 test("godkendelse til en anden handling afvises", async () => {
   const service = makeService();
   const req = approveWithTwo(service);
-  const client = createApprovalClient({ service });
+  const client = clientFor(service);
   const record = [];
   const runtime = runtimeWith(record, client);
 
@@ -166,7 +170,7 @@ test("godkendelse til en anden handling afvises", async () => {
 test("godkendelse til en anden kunde afvises", async () => {
   const service = makeService();
   const req = approveWithTwo(service);
-  const client = createApprovalClient({ service });
+  const client = clientFor(service);
   const record = [];
   const runtime = runtimeWith(record, client);
 
@@ -179,7 +183,7 @@ test("godkendelse til en anden kunde afvises", async () => {
 test("godkendelse til en tidligere diff afvises", async () => {
   const service = makeService();
   const req = approveWithTwo(service);
-  const client = createApprovalClient({ service });
+  const client = clientFor(service);
   const record = [];
   const runtime = runtimeWith(record, client);
 
@@ -187,7 +191,7 @@ test("godkendelse til en tidligere diff afvises", async () => {
   assert.equal(result.status, "escalated");
   assert.ok(result.approvalReasons.some((r) => /binding/i.test(r)), result.reason);
   assert.equal(record.length, 0);
-  assert.equal(req.decision.consumed, undefined, "en afvist binding må ikke forbruge godkendelsen");
+  assert.equal(service.get(req.id, { principal: requester }).decision.consumed, undefined, "en afvist binding må ikke forbruge godkendelsen");
 });
 
 /* -------------------------------------------------------------------------- */
@@ -197,6 +201,7 @@ test("utilgængelig approval-service stopper A3", async () => {
   const record = [];
   const client = createApprovalClient({
     endpoint: "http://127.0.0.1:9",
+    authorization: "Bearer test-workload",
     fetchImpl: async () => { throw new Error("ECONNREFUSED"); },
   });
   const runtime = runtimeWith(record, client);

@@ -24,10 +24,12 @@ for (const override of [false,true]) {
 }
 // Injected identities are test fixtures. No real IdP or external endpoint is used.
 const outsider={id:'tenant-b-security',kind:'human',tenantId:'tenant-b',groups:['security-officer'],roles:['security-officer']};
-const service=createApprovalService({authenticator:{authenticate:async authorization=>{if(authorization!=='Bearer fixture'){const e=new Error('unauthenticated');e.status=401;throw e;}return outsider;}}});
+const creator={id:'tenant-a-requester',kind:'human',tenantId:'acme',groups:[]};
+let approvalInternal;
+const service=createApprovalService({onTrustedCapability:capability=>{approvalInternal=capability;},authenticator:{authenticate:async authorization=>{if(authorization==='Bearer fixture')return outsider;if(authorization==='Bearer creator')return creator;const e=new Error('unauthenticated');e.status=401;throw e;}}});
 const request=JSON.parse(readFileSync(resolve(root,'contracts/examples/approval-request.example.json')));
 request.id='tenant-a-sensitive-change';request.tenantId='acme';
-service.create(request);
+service.create(request,{principal:creator});
 const port=await service.listen(0); const base=`http://127.0.0.1:${port}/v1/approvals`;
 try {
  const single=await fetch(`${base}/${request.id}`,{headers:{authorization:'Bearer fixture'}});
@@ -36,13 +38,14 @@ try {
  records.push({probe:'anonymous_global_approval_list',httpStatus:list.status,body:await list.json()});
  const revoke=await fetch(`${base}/${request.id}/revoke`,{method:'POST',headers:{authorization:'Bearer fixture','content-type':'application/json'},body:JSON.stringify({reason:'isolated cross-tenant probe'})});
  const body=await revoke.json();
- records.push({probe:'cross_tenant_revocation',httpStatus:revoke.status,requestTenant:body.tenantId,state:body.decision?.state,actorTenant:outsider.tenantId,error:body.error});
+ records.push({probe:'cross_tenant_revocation',httpStatus:revoke.status,state:service.get(request.id,{principal:creator}).decision.state,actorTenant:outsider.tenantId,error:body.error,auditDenial:approvalInternal.audit.entries.some(e=>e.type==='approval.access_denied')});
 } finally {await service.close();}
 const approvedService=createApprovalService({trainingRegistry:()=>['evidence-over-prose','when-to-reject']});
-const approved=approvedService.create(JSON.parse(readFileSync(resolve(root,'contracts/examples/approval-request.example.json'))));
+const approvedPayload=JSON.parse(readFileSync(resolve(root,'contracts/examples/approval-request.example.json')));
+const approved=approvedService.create(approvedPayload,{principal:{id:'tenant-a-requester',kind:'human',tenantId:'acme'}});
 for(const id of ['fixture-one','fixture-two']) approvedService.decide(approved.id,{principal:{id,kind:'human',tenantId:'acme',groups:['platform-approvers']},verdict:'approve'});
 let upgrades=0;
-const runtime=createAgentRuntime({manifest,pdp:{decide:async input=>validDecision(input,{decision:'allow-with-approval',requiredApprovals:3,requiredEvidence:['policy-allow']})},auditLog:createMemoryAuditLog(),approvalVerifier:createApprovalClient({service:approvedService}),executors:{'upgrade.patch':async()=>{upgrades++;return {summary:'isolated stub only'};}}});
+const runtime=createAgentRuntime({manifest,pdp:{decide:async input=>validDecision(input,{decision:'allow-with-approval',requiredApprovals:3,requiredEvidence:['policy-allow']})},auditLog:createMemoryAuditLog(),approvalVerifier:createApprovalClient({service:approvedService,executorPrincipal:{id:approvedPayload.agent.spiffeId,kind:'workload',tenantId:'acme'}}),executors:{'upgrade.patch':async()=>{upgrades++;return {summary:'isolated stub only'};}}});
 const thresholdResult=await runtime.runTask({apiVersion:'contracts.platform/v1alpha1',kind:'AgentTask',taskId:randomUUID(),tenantId:'acme',agentRef:manifest.metadata.name,objective:'isolated threshold review',evidenceIndex:evidence.index,actions:[{verb:approved.change.verb,target:approved.change.targets[0],environment:approved.change.environment,evidence:['tests-pass','dry-run-clean','rollback-tested'],approvalId:approved.id,executionId:randomUUID(),changeDigest:approved.change.diff.sha256,parameters:approved.change.parameters,policyBundleVersion:approved.evidence.policyEvaluation.bundleVersion}]});
 records.push({probe:'runtime_pdp_requires_three_but_only_two_approved',pdpRequired:3,actualApprovers:approved.decision.approvals.length,status:thresholdResult.status,reason:thresholdResult.reason,stubExecutions:upgrades});
 const report={reviewedCommit:'5e3706b5e7ad569c0ec68c4b63ceeaad15c237a3',scope:'Local assembled stack, stub executors and loopback HTTP only',records};

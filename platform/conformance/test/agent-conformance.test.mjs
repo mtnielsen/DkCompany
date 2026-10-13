@@ -54,31 +54,31 @@ test("1. forklaring matcher faktisk diff: strukturerede påstande tjekkes mod ev
 // ---------------------------------------------------------------------------
 test("2. A3 kan ikke merges uden menneskelig godkendelse", () => {
   const service = createApprovalService({ trainingRegistry: () => TRAINING, clock: () => Date.parse("2025-09-02T00:00:00Z") });
-  const req = service.create(structuredClone(approvalExample)); // requiredApprovals: 2
-  assert.equal(service.mergeCheck(req.id).mergeable, false);
+  const req = service.create(structuredClone(approvalExample), { principal: human("oidc|requester") }); // requiredApprovals: 2
+  assert.equal(service.mergeCheck(req.id, { principal: human("oidc|requester") }).mergeable, false);
 
   service.decide(req.id, { principal: human("oidc|a"), verdict: "approve" });
-  assert.equal(service.mergeCheck(req.id).mergeable, false, "én af to godkendelser er ikke nok");
+  assert.equal(service.mergeCheck(req.id, { principal: human("oidc|requester") }).mergeable, false, "én af to godkendelser er ikke nok");
 
   service.decide(req.id, { principal: human("oidc|b"), verdict: "approve" });
-  assert.equal(service.mergeCheck(req.id).mergeable, true);
+  assert.equal(service.mergeCheck(req.id, { principal: human("oidc|requester") }).mergeable, true);
 });
 
 test("2b. godkender uden påkrævet træningsmodul afvises", () => {
   const service = createApprovalService({ trainingRegistry: () => ["evidence-over-prose"], clock: () => Date.parse("2025-09-02T00:00:00Z") });
-  const req = service.create(structuredClone(approvalExample));
+  const req = service.create(structuredClone(approvalExample), { principal: human("oidc|requester") });
   assert.throws(
     () => service.decide(req.id, { principal: human("oidc|c"), verdict: "approve" }),
     /træningsmoduler/
   );
-  assert.equal(service.mergeCheck(req.id).mergeable, false);
+  assert.equal(service.mergeCheck(req.id, { principal: human("oidc|requester") }).mergeable, false);
 });
 
 test("2c. godkender uden for approver-gruppen afvises", () => {
   const service = createApprovalService({ trainingRegistry: () => TRAINING, clock: () => Date.parse("2025-09-02T00:00:00Z") });
-  const req = service.create(structuredClone(approvalExample));
+  const req = service.create(structuredClone(approvalExample), { principal: human("oidc|requester") });
   assert.throws(
-    () => service.decide(req.id, { principal: { kind: "human", id: "oidc|d", groups: ["random-group"] }, verdict: "approve" }),
+    () => service.decide(req.id, { principal: { kind: "human", id: "oidc|d", tenantId: "acme", groups: ["random-group"] }, verdict: "approve" }),
     /gruppe/
   );
 });

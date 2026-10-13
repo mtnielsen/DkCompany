@@ -56,7 +56,7 @@ async function main() {
     pdp: createPdpClient({ endpoint: args.pdp }),
     auditLog: createMemoryAuditLog(),
     gateway: createGatewayClient({ endpoint: args.gateway }),
-    approvalVerifier: args.approval ? createApprovalClient({ endpoint: args.approval }) : null,
+    approvalVerifier: args.approval ? createApprovalClient({ endpoint: args.approval, authorization: process.env.DKC_APPROVAL_TOKEN ? `Bearer ${process.env.DKC_APPROVAL_TOKEN}` : null }) : null,
     tenantId: args.tenant ?? task.tenantId ?? null,
     evidenceIndex: args.evidenceIndex ? JSON.parse(readFileSync(args.evidenceIndex, "utf8")) : task.evidenceIndex ?? null,
     artifactLoader: createFileArtifactLoader({ baseDir: args.evidenceBase ?? null }),

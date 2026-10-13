@@ -28,16 +28,19 @@ function tempDir() {
 }
 
 function openService(dir, { ledgerSecret = "ledger-secret" } = {}) {
-  return createApprovalService({
+  let internal;
+  const service = createApprovalService({
     store: createFileStore({ dir: join(dir, "requests") }),
     ledger: createApprovalLedger({ path: join(dir, "approval-ledger.jsonl"), secret: ledgerSecret }),
     trainingRegistry: () => TRAINING,
     clock: () => NOW,
+    onTrustedCapability: (capability) => { internal = capability; },
   });
+  return { ...service, service, internal };
 }
 
 function approveWithTwo(service) {
-  const req = service.create(cloneExample());
+  const req = service.create(cloneExample(), { principal: human("oidc|requester") });
   service.decide(req.id, { principal: human("oidc|one"), verdict: "approve" });
   service.decide(req.id, { principal: human("oidc|two"), verdict: "approve" });
   return req;
@@ -48,16 +51,16 @@ test("godkendelse overlever genstart via filbaseret lager", () => {
   try {
     const first = openService(dir);
     const req = approveWithTwo(first);
-    assert.equal(first.mergeCheck(req.id).mergeable, true);
-    assert.equal(first.verifyAudit().ok, true);
+    assert.equal(first.mergeCheck(req.id, { principal: human("oidc|requester") }).mergeable, true);
+    assert.equal(first.internal.verifyAudit().ok, true);
 
     const restarted = openService(dir);
-    const restored = restarted.get(req.id);
+    const restored = restarted.get(req.id, { principal: human("oidc|requester") });
     assert.equal(restored.decision.state, "approved");
     assert.equal(restored.decision.approvals.length, 2);
-    assert.equal(restarted.mergeCheck(req.id).mergeable, true, "godkendelsen skal stadig være gyldig efter genstart");
-    assert.equal(restarted.verifyAudit().ok, true);
-    assert.ok(restarted.audit.entries.length >= 3, "oprettelse + to beslutninger skal være logget");
+    assert.equal(restarted.mergeCheck(req.id, { principal: human("oidc|requester") }).mergeable, true, "godkendelsen skal stadig være gyldig efter genstart");
+    assert.equal(restarted.internal.verifyAudit().ok, true);
+    assert.ok(restarted.internal.audit.entries.length >= 3, "oprettelse + to beslutninger skal være logget");
   } finally {
     cleanup();
   }
@@ -67,12 +70,12 @@ test("afvist beslutning forbliver afvist efter genstart", () => {
   const { dir, cleanup } = tempDir();
   try {
     const first = openService(dir);
-    const req = first.create(cloneExample());
+    const req = first.create(cloneExample(), { principal: human("oidc|requester") });
     first.decide(req.id, { principal: human("oidc|rejecter"), verdict: "reject" });
 
     const restarted = openService(dir);
-    assert.equal(restarted.get(req.id).decision.state, "rejected");
-    assert.equal(restarted.mergeCheck(req.id).mergeable, false);
+    assert.equal(restarted.get(req.id, { principal: human("oidc|requester") }).decision.state, "rejected");
+    assert.equal(restarted.mergeCheck(req.id, { principal: human("oidc|requester") }).mergeable, false);
     assert.throws(() => restarted.decide(req.id, { principal: human("oidc|late"), verdict: "approve" }), (err) => err.status === 409);
   } finally {
     cleanup();
@@ -84,7 +87,7 @@ test("et brud på audit-loggen opdages ved start (fail-closed)", () => {
   try {
     const ledgerPath = join(dir, "approval-ledger.jsonl");
     const service = openService(dir);
-    service.create(cloneExample());
+    service.create(cloneExample(), { principal: human("oidc|requester") });
 
     const lines = readFileSync(ledgerPath, "utf8").trim().split("\n");
     assert.ok(lines.length >= 1);
@@ -107,7 +110,7 @@ test("HMAC-hemmeligheden gør audit-loggen uforfalskelig uden nøglen", () => {
   try {
     const ledgerPath = join(dir, "approval-ledger.jsonl");
     const service = openService(dir, { ledgerSecret: "right-secret" });
-    service.create(cloneExample());
+    service.create(cloneExample(), { principal: human("oidc|requester") });
 
     // En angriber læser filen med den forkerte hemmelighed: kæden kan ikke
     // verificeres, fordi hash'en er en HMAC.
@@ -127,7 +130,7 @@ test("et ændret binding på disken opdages og ugyldiggør godkendelsen", () => 
   try {
     const first = openService(dir);
     const req = approveWithTwo(first);
-    assert.equal(first.mergeCheck(req.id).mergeable, true);
+    assert.equal(first.mergeCheck(req.id, { principal: human("oidc|requester") }).mergeable, true);
 
     const requestsDir = join(dir, "requests");
     const file = readdirSync(requestsDir).find((f) => f.endsWith(".json"));
@@ -137,7 +140,7 @@ test("et ændret binding på disken opdages og ugyldiggør godkendelsen", () => 
     writeFileSync(path, JSON.stringify(data, null, 2));
 
     const restarted = openService(dir);
-    const merge = restarted.mergeCheck(req.id);
+    const merge = restarted.mergeCheck(req.id, { principal: human("oidc|requester") });
     assert.equal(merge.mergeable, false);
     assert.ok(merge.reasons.some((r) => /binding/i.test(r)), `forventede binding-begrundelse, fik: ${merge.reasons.join("; ")}`);
   } finally {

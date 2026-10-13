@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "reviewedBaseCommit": "5e3706b5e7ad569c0ec68c4b63ceeaad15c237a3",
-  "firstTask": "S1-02",
+  "firstTask": "S1-03",
   "statusMeaning": "ready means assignable; in-progress means implementation started; awaiting-verification means a tested implementation commit exists and independent verification is pending; no task is done without recorded technical verification and human acceptance",
   "tasks": [
     {
@@ -65,10 +65,19 @@
         "A mutating verb cannot be disguised as a read by action.operation; unknown or failed classification does not silently allow it.",
         "Protected-data decisions preserve tenant scope and mandatory audit without copying forbidden data into logs; permitted ordinary reads still work."
       ],
-      "status": "in-progress",
-      "implementationCommit": null,
-      "verification": null,
-      "humanAcceptance": null
+      "status": "accepted",
+      "implementationCommit": "612bca5eaeb213e72c4f62f96e874625d50989f0",
+      "verification": {
+        "verdict": "PASS",
+        "sourceCommit": "612bca5eaeb213e72c4f62f96e874625d50989f0",
+        "evidenceCommit": "b171f361b6966941f86c85580ae855636ddfeaf2",
+        "report": "02-stabilization/evidence/S1-02/verification.json"
+      },
+      "humanAcceptance": {
+        "status": "accepted",
+        "sourceCommit": "612bca5eaeb213e72c4f62f96e874625d50989f0",
+        "record": "02-stabilization/evidence/S1-02/continuation-acceptance.json"
+      }
     },
     {
       "id": "S1-03",
@@ -94,10 +103,20 @@
         "Duplicate IDs, duplicate approvers, client-supplied identity/groups/training and client-supplied approved state fail safely.",
         "HTTP and in-process tests cover both permitted and forbidden calls, including workload versus human actors."
       ],
-      "status": "planned",
-      "implementationCommit": null,
-      "verification": null,
-      "humanAcceptance": null
+      "status": "awaiting-verification",
+      "implementationCommit": "1ec0b96615bf2e4b9434bcc88a345fb12afbf563",
+      "verification": {
+        "verdict": "PASS",
+        "sourceCommit": "1ec0b96615bf2e4b9434bcc88a345fb12afbf563",
+        "evidenceCommit": "d1a89e163b268875bdba1bc2bb15ac95e2db25e8",
+        "report": "02-stabilization/evidence/S1-03/verification.json",
+        "evidenceBranch": "verify/S1-03-approval-authorization"
+      },
+      "humanAcceptance": {
+        "status": "pending",
+        "sourceCommit": "1ec0b96615bf2e4b9434bcc88a345fb12afbf563"
+      },
+      "handoff": "Technical verification passed; human acceptance is pending. Do not start S1-04 from this task until the owner accepts continuation."
     },
     {
       "id": "S1-04",
@@ -156,7 +175,14 @@
       "status": "planned",
       "implementationCommit": null,
       "verification": null,
-      "humanAcceptance": null
+      "humanAcceptance": null,
+      "knownFollowups": [
+        {
+          "path": "platform/persistence/test/runtime-jobs.test.mjs",
+          "finding": "Two fixtures omit protectedData and fail at the S1-02 classification gate before exercising runtime job completion/escalation. Reproduced on both pre-S1-03 base 7bd3626 and tested S1-03 source 1ec0b96. Supply legitimate server-side classification in positive fixtures, retain denial controls, and include persistence coverage in integrated acceptance.",
+          "verificationEvidenceCommit": "d1a89e163b268875bdba1bc2bb15ac95e2db25e8"
+        }
+      ]
     },
     {
       "id": "S2-01",

@@ -24,6 +24,7 @@ import { join } from "node:path";
 const NOW = Date.parse("2025-09-02T00:00:00Z");
 const KEYRING = { "runbook-key-1": "synthetic-runbook-signing-secret" };
 const TRAINING = ["evidence-over-prose", "when-to-reject"];
+const approvalInternals = new WeakMap();
 
 function baseRunbook(overrides = {}) {
   const runbook = {
@@ -82,7 +83,10 @@ function signed(overrides = {}) {
 }
 
 function approvalService() {
-  return createApprovalService({ trainingRegistry: () => TRAINING, clock: () => NOW });
+  let internal;
+  const service = createApprovalService({ trainingRegistry: () => TRAINING, clock: () => NOW, onTrustedCapability: (capability) => { internal = capability; } });
+  approvalInternals.set(service, internal);
+  return service;
 }
 
 function approvalPayload({ id = `apr-${randomUUID()}`, digest, targets = ["service/checkout"], verb = "runbook.approve", emergency = false, tenantId = "acme", expiresInSeconds = 24 * 3600 } = {}) {
@@ -113,7 +117,7 @@ function approvalPayload({ id = `apr-${randomUUID()}`, digest, targets = ["servi
 }
 
 function approveFully(service, payload) {
-  const req = service.create(structuredClone(payload));
+  const req = service.create(structuredClone(payload), { principal: { kind: "human", id: "oidc|requester", tenantId: "acme" } });
   service.decide(req.id, { principal: { kind: "human", id: "oidc|approver.one", tenantId: "acme", groups: ["platform-approvers"] }, verdict: "approve" });
   service.decide(req.id, { principal: { kind: "human", id: "oidc|approver.two", tenantId: "acme", groups: ["platform-approvers"] }, verdict: "approve" });
   return req;
@@ -123,6 +127,7 @@ function makeChangeService({ approval, calendarOverrides = {}, postchecks = {}, 
   const calendar = createChangeCalendar({ clock: () => NOW, ...calendarOverrides });
   const service = createChangeService({
     approvalService: approval,
+    approvalInternal: approval ? approvalInternals.get(approval) : null,
     runbookKeyring: KEYRING,
     calendar,
     preconditions: { healthcheck: () => "green" },
@@ -215,19 +220,19 @@ test("accept 2b: pre-approval afvises hvis bindingen peger på en anden digest",
 test("accept 3: en pending eller udløbet godkendelse kan ikke blive pre-approval", () => {
   const approval = approvalService();
   const runbook = signed();
-  const pending = approval.create(structuredClone(approvalPayload({ digest: runbookDigest(runbook), expiresInSeconds: -10 })));
+  const pending = approval.create(structuredClone(approvalPayload({ digest: runbookDigest(runbook), expiresInSeconds: -10 })), { principal: { kind: "human", id: "oidc|requester", tenantId: "acme" } });
   const { service } = makeChangeService({ approval });
   service.registerRunbook(runbook);
   // Udløbet, aldrig godkendt.
   assert.throws(() => service.approveRunbook({ runbookRef: "restart-checkout@1.0.0", approvalId: pending.id }), /ikke en gyldig|godkendelse|pending|expired/);
-  const expired = approval.get(pending.id);
+  const expired = approval.get(pending.id, { principal: { kind: "human", id: "oidc|requester", tenantId: "acme" } });
   assert.notEqual(expired.decision.state, "approved");
 });
 
 test("accept 3b: en enkelt godkendelse er ikke nok når politikken kræver to", () => {
   const approval = approvalService();
   const runbook = signed();
-  const req = approval.create(structuredClone(approvalPayload({ digest: runbookDigest(runbook) })));
+  const req = approval.create(structuredClone(approvalPayload({ digest: runbookDigest(runbook) })), { principal: { kind: "human", id: "oidc|requester", tenantId: "acme" } });
   approval.decide(req.id, { principal: { kind: "human", id: "oidc|one", tenantId: "acme", groups: ["platform-approvers"] }, verdict: "approve" });
   const { service } = makeChangeService({ approval });
   service.registerRunbook(runbook);
@@ -259,7 +264,7 @@ test("en handling uden for runbookens scope afvises", () => {
 test("en uopfyldt forudsætning stopper runbooken", () => {
   const approval = approvalService();
   const calendar = createChangeCalendar({ clock: () => NOW });
-  const service = createChangeService({ approvalService: approval, runbookKeyring: KEYRING, calendar, preconditions: { healthcheck: () => "red" }, postchecks: {}, clock: () => NOW });
+  const service = createChangeService({ approvalService: approval, approvalInternal: approvalInternals.get(approval), runbookKeyring: KEYRING, calendar, preconditions: { healthcheck: () => "red" }, postchecks: {}, clock: () => NOW });
   service.registerRunbook(signed());
   const out = service.resolve({ runbookRef: "restart-checkout@1.0.0", verb: "restart", target: "service/checkout", environment: "staging", parameters: { maxDurationSeconds: 60, reason: "ok" } });
   assert.equal(out.ok, false);

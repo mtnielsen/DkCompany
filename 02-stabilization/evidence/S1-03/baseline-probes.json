@@ -1,0 +1,52 @@
+{
+  "reviewedCommit": "5e3706b5e7ad569c0ec68c4b63ceeaad15c237a3",
+  "scope": "Local assembled stack, stub executors and loopback HTTP only",
+  "records": [
+    {
+      "probe": "control_server_no_ai_access",
+      "status": "denied",
+      "reason": "beskyttet dataklasse afviste handlingen: no-AI-access: AI må ikke læse, hente, prompte, logge eller træne på 'rec'",
+      "stubExecutions": 0
+    },
+    {
+      "probe": "caller_overrides_no_ai_access",
+      "status": "denied",
+      "reason": "beskyttet dataklasse afviste handlingen: no-AI-access: AI må ikke læse, hente, prompte, logge eller træne på 'rec'",
+      "stubExecutions": 0
+    },
+    {
+      "probe": "control_cross_tenant_get",
+      "httpStatus": 403,
+      "body": {
+        "error": "principalen tilhører kunden 'tenant-b', ikke 'acme'"
+      }
+    },
+    {
+      "probe": "anonymous_global_approval_list",
+      "httpStatus": 200,
+      "body": {
+        "requests": [
+          {
+            "id": "tenant-a-sensitive-change",
+            "state": "pending"
+          }
+        ]
+      }
+    },
+    {
+      "probe": "cross_tenant_revocation",
+      "httpStatus": 200,
+      "requestTenant": "acme",
+      "state": "revoked",
+      "actorTenant": "tenant-b"
+    },
+    {
+      "probe": "runtime_pdp_requires_three_but_only_two_approved",
+      "pdpRequired": 3,
+      "actualApprovers": 2,
+      "status": "denied",
+      "reason": "beskyttelsesklassifikation ukendt eller utilgængelig — fail-closed",
+      "stubExecutions": 0
+    }
+  ]
+}
