@@ -5,6 +5,7 @@
   "status": "awaiting-verification",
   "sourceCommit": "1ec0b96615bf2e4b9434bcc88a345fb12afbf563",
   "sourceTreeDigest": "6672d08a36ec3eff01013b232f7c18eda26816e3",
+  "artifactDigestBasis": "SHA-256 over committed Git blob bytes, verified with git show <commit>:<path> and Node.js crypto; this avoids Windows checkout newline conversion.",
   "artifactDigests": [
     {
       "path": "02-stabilization/evidence/S1-03/baseline-probes.json",
@@ -40,7 +41,7 @@
       "command": "make -C /home/dkcverify/work/S1-02-baseline-probe probes PROBE_OUT=/home/dkcverify/work/S1-03-implement/02-stabilization/evidence/S1-03/baseline-probes.json",
       "environment": "Ubuntu 24.04 WSL2; Node v22.22.3; exact accepted S1-02 baseline SHA 612bca5eaeb213e72c4f62f96e874625d50989f0; explicit baseline rerun with original probe source",
       "exitCode": 0,
-      "result": "R2 anonymous listing returned HTTP 200 with a pending request ID; R4 cross-tenant revoke returned HTTP 200 and changed the tenant A request to revoked. Output and exact baseline probe source are preserved. This is a rerun, not the earlier transient observation."
+      "result": "R2 cross-tenant revoke returned HTTP 200 and changed the tenant A request to revoked; R4 anonymous listing returned HTTP 200 with a pending request ID. Output and exact baseline probe source are preserved. This is a rerun, not the earlier transient observation."
     },
     {
       "command": "node --test /home/dkcverify/work/S1-03-baseline-probe/platform/persistence/test/runtime-jobs.test.mjs",
@@ -76,7 +77,7 @@
       "command": "make -C /home/dkcverify/work/S1-03-implement probes PROBE_OUT=/tmp/s103-after-final.json",
       "environment": "Ubuntu 24.04 WSL2; exact final source SHA 1ec0b96615bf2e4b9434bcc88a345fb12afbf563",
       "exitCode": 0,
-      "result": "R2 anonymous listing returned 401. R4 cross-tenant revoke returned 403, request remained pending, and denial audit was present. Cross-tenant get returned 403. R3 remained fail-closed earlier on unknown protection classification, so this does not establish threshold behavior."
+      "result": "R2 cross-tenant revoke returned 403, request remained pending, and denial audit was present. R4 anonymous listing returned 401. Cross-tenant get returned 403. R3 remained fail-closed earlier on unknown protection classification, so this does not establish threshold behavior."
     }
   ],
   "changes": [
