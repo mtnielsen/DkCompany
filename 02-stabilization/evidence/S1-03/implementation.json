@@ -17,7 +17,7 @@
     },
     {
       "path": "02-stabilization/evidence/S1-03/baseline-security-probes.mjs",
-      "sha256": "e15fb76060ef14f634ee2e36e1dc99cd8c22773d67e7a4759532659420e409d"
+      "sha256": "e15fb76060ef14f634ee2ae36e1dc99cd8c22773d67e7a4759532659420e409d"
     },
     {
       "path": "02-stabilization/evidence/S1-03/after-security-probes.mjs",
