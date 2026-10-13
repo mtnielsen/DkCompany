@@ -201,6 +201,7 @@ test("utilgængelig approval-service stopper A3", async () => {
   const record = [];
   const client = createApprovalClient({
     endpoint: "http://127.0.0.1:9",
+    authorization: "Bearer test-workload",
     fetchImpl: async () => { throw new Error("ECONNREFUSED"); },
   });
   const runtime = runtimeWith(record, client);
