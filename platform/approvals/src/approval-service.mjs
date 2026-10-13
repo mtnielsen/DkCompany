@@ -366,7 +366,7 @@ export function createApprovalService({
   function withdraw(id, { principal, reason } = {}) {
     const req = authorizedRequest(id, principal, "withdraw", { expire: false });
     if (reason !== undefined && reason !== null && typeof reason !== "string") throw new ApprovalError("reason skal være en streng", 400);
-    if (principal && req.decision.requestedBy && principal.id !== req.decision.requestedBy) {
+    if (!req.decision.requestedBy || principal.id !== req.decision.requestedBy) {
       denied("withdraw", id, principal, new ApprovalError("kun den oprindelige anmoder kan trække anmodningen tilbage", 403));
     }
     expireIfNeeded(req);

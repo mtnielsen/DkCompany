@@ -192,6 +192,22 @@ test("same-tenant actors without the operation role cannot expire requests", () 
   assert.equal(internal.store.get(created.id).decision.state, "expired");
 });
 
+test("public withdraw permits the requester and denies unowned internal requests", () => {
+  const { service, internal, audit, setNow } = fixture();
+  const ownRequest = service.create(payload("s103-own-withdraw"), { principal: requester });
+  assert.equal(service.withdraw(ownRequest.id, { principal: requester }).decision.state, "withdrawn");
+
+  internal.create(payload("s103-no-requester"));
+  assert.equal(internal.store.get("s103-no-requester").decision.requestedBy, null);
+  const expiresAt = internal.store.get("s103-no-requester").decision.expiresAt;
+  setNow(Date.parse(expiresAt) + 1);
+  for (const principal of [tenantMember, workload]) {
+    assert.throws(() => service.withdraw("s103-no-requester", { principal }), (err) => err.status === 403);
+  }
+  assert.equal(internal.store.get("s103-no-requester").decision.state, "pending");
+  assert.ok(audit.filter((entry) => entry.type === "approval.access_denied" && entry.detail.operation === "withdraw").length >= 2);
+});
+
 test("in-process executor consumption rejects humans and mismatched workloads", () => {
   const { service, internal } = fixture();
   const created = service.create(payload("s103-consume"), { principal: requester });
