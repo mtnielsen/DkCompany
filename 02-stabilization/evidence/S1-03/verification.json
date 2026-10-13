@@ -1,0 +1,214 @@
+{
+  "taskId": "S1-03",
+  "agentIdentity": "/root/s103_luna_verifier",
+  "role": "independent verifier",
+  "sourceCommit": "1ec0b96615bf2e4b9434bcc88a345fb12afbf563",
+  "sourceTree": "6672d08a36ec3eff01013b232f7c18eda26816e3",
+  "implementationAgentIdentity": "/root/s103_luna_implementer",
+  "independentSession": "Fresh detached Linux checkout in DkCompany-Test WSL2, Ubuntu 24.04, uid 1000 dkcverify, linux-x64, Node v22.22.3, npm 10.9.8. The candidate checkout was clean before and after verification; the evidence worktree is separate.",
+  "verdict": "PASS",
+  "summary": "Exact source passed install, historical assembly, validate, the full root test target (528/528), 42 approval tests, 3 approval restart tests, 5 curriculum tests, and seven independent HTTP/in-process adversarial probes. The maintained R1-R4 probe confirms R1, R2, and R4 behavior. A same-tenant null-requester withdrawal flaw found on failed candidate 3ea8ee4 was fixed on 1ec0b96 and the reproducer passes. Two persistence runtime-job failures also occur on pre-S1-03 base 7bd3626 and are recorded as inherited; the candidate persistence suite is 78/80.",
+  "verificationAttempts": [
+    {
+      "sourceCommit": "3ea8ee48024f9f8dacb41a678412daf8d9718a27",
+      "verdict": "FAIL",
+      "findings": [
+        "Full make test stopped in runtime test utilgængelig approval-service stopper A3: createApprovalClient required an HTTP workload Bearer token absent from the test fixture (119 passed, 1 failed). The fixture was repaired in the follow-up source commit.",
+        "Independent adversarial probes passed 6/7. An unrelated same-tenant human could withdraw a server-created request with requestedBy=null, changing state pending to withdrawn. Fixed and retested on 1ec0b96."
+      ]
+    }
+  ],
+  "commands": [
+    {
+      "command": "git checkout --detach 1ec0b96615bf2e4b9434bcc88a345fb12afbf563; git rev-parse HEAD; git rev-parse HEAD^{tree}; git status --porcelain",
+      "exitCode": 0,
+      "result": "Fresh source clone matched the exact candidate SHA and tree 6672d08a36ec3eff01013b232f7c18eda26816e3; working tree clean."
+    },
+    {
+      "command": "make install",
+      "exitCode": 0,
+      "log": "/home/dkcverify/logs/S1-03-1ec0b96/install.log",
+      "logSha256": "caf97fa2534f47b3ed4627b480cd260e2c16f9df49c124a4d6bfb0285a8de64d"
+    },
+    {
+      "command": "make historical-assemble-check",
+      "exitCode": 0,
+      "result": "Verified 2176 files, 66 historical overlays, tree f940d3000c27ce73c8971352b778d4e1dcccfeee0a82a4868b04fc8ff5fb7293.",
+      "log": "/home/dkcverify/logs/S1-03-1ec0b96/historical-assemble-check.log",
+      "logSha256": "ca569647ec4c4642efbec7b94ab0bc318652221c0a7fa623c8b4ae73cab1de46"
+    },
+    {
+      "command": "make validate",
+      "exitCode": 0,
+      "result": "Schema validation and lint passed.",
+      "log": "/home/dkcverify/logs/S1-03-1ec0b96/validate.log",
+      "logSha256": "69eb36c46916d28a8cc03b3c1f129e49171d89d56039610a7e682fb299c214b4"
+    },
+    {
+      "command": "make test",
+      "exitCode": 0,
+      "result": "528 passed, 0 failed across assembler, security, and conformance suites.",
+      "log": "/home/dkcverify/logs/S1-03-1ec0b96/make-test.log",
+      "logSha256": "194ec41b6ccb07060ab10c7ed5b21d26fa175458b1898853759ab9bc2e97f4b2"
+    },
+    {
+      "command": "cd platform/approvals && node --test",
+      "exitCode": 0,
+      "result": "42 passed, 0 failed.",
+      "log": "/home/dkcverify/logs/S1-03-1ec0b96/approval-tests.log",
+      "logSha256": "4d9887b2745a680afc31e9086d83ded2f0a089ff3eddf2a435c275d2a045f095"
+    },
+    {
+      "command": "cd platform/persistence && node --test test/approval-service-restart.test.mjs",
+      "exitCode": 0,
+      "result": "3 passed, 0 failed.",
+      "log": "/home/dkcverify/logs/S1-03-1ec0b96/approval-service-restart.log",
+      "logSha256": "77a59ed94b47647dd1ac3551705e42133f3c3788b2630a90f2a157663e5b1ee8"
+    },
+    {
+      "command": "cd platform/curriculum && node --test",
+      "exitCode": 0,
+      "result": "5 passed, 0 failed.",
+      "log": "/home/dkcverify/logs/S1-03-1ec0b96/curriculum-tests.log",
+      "logSha256": "ac14d0372156a9c7bce29ac6a9b39afe44fff9b5afc9c868d6af04f2ffc69046"
+    },
+    {
+      "command": "cd platform/persistence && node --test",
+      "exitCode": 1,
+      "result": "78 passed, 2 failed. Both runtime-jobs failures reproduce identically on the pre-S1-03 base; see focused baseline command below.",
+      "log": "/home/dkcverify/logs/S1-03-1ec0b96/persistence-tests.log",
+      "logSha256": "a9e02e945ab5d397ef09926462416a6eba660bfcd77172d0f44bb98b1cb66d1a"
+    },
+    {
+      "command": "cd platform/persistence && node --test test/runtime-jobs.test.mjs (checkout 7bd36260aafc4d6fc74b0e3f622f168999926aa8)",
+      "exitCode": 1,
+      "result": "Same two inherited failures: task expected completed/escalated but got denied. The test fixture lacks protectedData; runtime fail-closed classification behavior is pre-S1-03.",
+      "log": "/home/dkcverify/logs/S1-03-1ec0b96/runtime-jobs-baseline-7bd.log",
+      "logSha256": "1383cf6159797144dad19d4587b7c099d69f3b48c1a20e26dfe6e64c2a9197695f"
+    },
+    {
+      "command": "node /mnt/c/Users/Zhalakin/Documents/Codex/2026-09-22/vi-er-igang-med-et-projekt/work/DkCompany-S1-03-verify/02-stabilization/evidence/S1-03/adversarial-probes.mjs /home/dkcverify/work/S1-03-verify-1ec0b96",
+      "exitCode": 0,
+      "result": "7/7 probes passed: R2/R4, tenant scope, public object isolation/duplicate IDs, executor identity, null-requester withdrawal, role-before-expiry, spoofed HTTP identity/groups/training/workload role, nested input aliasing, and sensitive field types.",
+      "log": "/home/dkcverify/logs/S1-03-1ec0b96/adversarial-probes.log",
+      "logSha256": "fb6ee9ba745d25c95feb0c8bdf516be223f0722a9e67918c0675e13a7365ba06",
+      "probeSource": "02-stabilization/evidence/S1-03/adversarial-probes.mjs"
+    },
+    {
+      "command": "make probes PROBE_OUT=/home/dkcverify/logs/S1-03-1ec0b96/reference-security-probes.json",
+      "exitCode": 0,
+      "result": "R1 paired cases deny with 0 executions; R2 cross-tenant revoke returns 403, stays pending, and audits denial; R4 anonymous list returns 401. R3-shaped case stops at unknown classification before approval-threshold behavior and is not assessed.",
+      "log": "/home/dkcverify/logs/S1-03-1ec0b96/reference-security-probes.stdout.log",
+      "logSha256": "e312514b3dcad840deb12eee3929f47ae9c8ed64f3de6dd08cb66c863acc787c",
+      "report": "/home/dkcverify/logs/S1-03-1ec0b96/reference-security-probes.json",
+      "reportSha256": "b7b83820c11185ef66f935d6392b3e013c9ddb68757983e64941cb903f3cdd3b"
+    },
+    {
+      "command": "node /mnt/c/Users/Zhalakin/Documents/Codex/2026-09-22/vi-er-igang-med-et-projekt/work/DkCompany-S1-03-verify/02-stabilization/evidence/S1-03/adversarial-probes.mjs /home/dkcverify/work/S1-03-verify (failed candidate 3ea8ee48024f9f8dacb41a678412daf8d9718a27)",
+      "exitCode": 1,
+      "result": "6/7 probes passed; null-requester withdrawal incorrectly changed pending to withdrawn. Preserved to show fix verification across source commits.",
+      "log": "/home/dkcverify/logs/S1-03/adversarial-probes-3ea8ee4.log",
+      "logSha256": "82ffaa89f6a0a43043bc4e3d4c1a1160e1108bd6d254aa90ec65fe28d5c56cd9",
+      "probeSource": "02-stabilization/evidence/S1-03/adversarial-probes.mjs"
+    },
+    {
+      "command": "make test (failed candidate 3ea8ee48024f9f8dacb41a678412daf8d9718a27)",
+      "exitCode": 1,
+      "result": "119 passed, 1 failed because the HTTP approval client now requires a workload Bearer token absent from one legacy runtime test fixture. The fixture was fixed on 1ec0b96.",
+      "log": "/home/dkcverify/logs/S1-03/make-test.log",
+      "logSha256": "a3924ab21dfe2ec48475b90316cb300a306b34f7db49f8df7e4217b85ca24834"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "id": "Anonymous list and cross-tenant list/read/view/decide/revoke/consume are denied without leaking request IDs",
+      "status": "PASS",
+      "detail": "Maintained tests and independent HTTP probes include negative cases and same-tenant/explicit-scope positive controls."
+    },
+    {
+      "id": "R2 revoke denies, leaves request pending, and audits denial; explicit tenant-scoped platform access and legitimate human decisions work",
+      "status": "PASS"
+    },
+    {
+      "id": "Duplicate IDs/approvers and client-supplied identity/groups/training/approved state fail safely; returned and input objects cannot mutate stored state",
+      "status": "PASS",
+      "detail": "Covered by approval tests and independent direct/HTTP probes; workload actors cannot approve as humans."
+    },
+    {
+      "id": "HTTP and in-process allowed/forbidden calls cover tenant and actor roles, including execution bound to the authenticated workload",
+      "status": "PASS"
+    },
+    {
+      "id": "R1 paired no-AI-access regression",
+      "status": "PASS",
+      "detail": "Maintained reference probe denied both server baseline and caller downgrade with zero stub executions."
+    },
+    {
+      "id": "R3 effective approval threshold at execution",
+      "status": "NOT_ASSESSED",
+      "detail": "The R3-shaped maintained probe reaches unknown-target classification denial first; threshold enforcement is S1-04 scope. No S1-03 closure is claimed."
+    },
+    {
+      "id": "GitHub CI",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "Live integrations and human approval exercise",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "Human acceptance",
+      "status": "PENDING"
+    }
+  ],
+  "findings": [],
+  "knownBaselineFailures": [
+    {
+      "test": "platform/persistence/test/runtime-jobs.test.mjs",
+      "status": "PRE_EXISTING",
+      "detail": "Both candidate failures reproduce unchanged on base 7bd36260aafc4d6fc74b0e3f622f168999926aa8. The test fixture does not provide protectedData, so S1-02 fail-closed classification returns denied."
+    }
+  ],
+  "artifactReferences": [
+    {
+      "path": "02-stabilization/evidence/S1-03/adversarial-probes.mjs",
+      "sha256": "E4ACDD8CB6D25F6BCEF3A4507C03A921A3022587DB220E48EA1FDE045BC4F0C7"
+    },
+    {
+      "path": "02-stabilization/evidence/S1-03/README.md",
+      "sha256": "092D3E64BC294562D0019B90F6D414A0F36FCBF1546A9AE94B3F8F6D9F286790"
+    },
+    {
+      "path": "/home/dkcverify/logs/S1-03-1ec0b96/install.log",
+      "sha256": "caf97fa2534f47b3ed4627b480cd260e2c16f9df49c124a4d6bfb0285a8de64d"
+    },
+    {
+      "path": "/home/dkcverify/logs/S1-03-1ec0b96/historical-assemble-check.log",
+      "sha256": "ca569647ec4c4642efbec7b94ab0bc318652221c0a7fa623c8b4ae73cab1de46"
+    },
+    {
+      "path": "/home/dkcverify/logs/S1-03-1ec0b96/validate.log",
+      "sha256": "69eb36c46916d28a8cc03b3c1f129e49171d89d56039610a7e682fb299c214b4"
+    },
+    {
+      "path": "/home/dkcverify/logs/S1-03-1ec0b96/make-test.log",
+      "sha256": "194ec41b6ccb07060ab10c7ed5b21d26fa175458b1898853759ab9bc2e97f4b2"
+    },
+    {
+      "path": "/home/dkcverify/logs/S1-03-1ec0b96/adversarial-probes.log",
+      "sha256": "fb6ee9ba745d25c95feb0c8bdf516be223f0722a9e67918c0675e13a7365ba06"
+    },
+    {
+      "path": "/home/dkcverify/logs/S1-03-1ec0b96/reference-security-probes.json",
+      "sha256": "b7b83820c11185ef66f935d6392b3e013c9ddb68757983e64941cb903f3cdd3b"
+    },
+    {
+      "path": "/home/dkcverify/logs/S1-03/adversarial-probes-3ea8ee4.log",
+      "sha256": "82ffaa89f6a0a43043bc4e3d4c1a1160e1108bd6d254aa90ec65fe28d5c56cd9"
+    },
+    {
+      "path": "/home/dkcverify/logs/S1-03/make-test.log",
+      "sha256": "a3924ab21dfe2ec48475b90316cb300a306b34f7db49f8df7e4217b85ca24834"
+    }
+  ]
+}
